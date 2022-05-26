@@ -31,7 +31,7 @@ class Movie {
   String? cinematography;
   String cast;
   String? producer;
-  List<dynamic> genres;
+  List<String> genres;
   List<dynamic>? groups;
   String synopsis;
   String poster;
@@ -52,7 +52,7 @@ class Movie {
         cinematography: json['cinematography'],
         cast: json['cast'],
         producer: json['producer'],
-        genres: json['genres'],
+        genres: List<String>.from(json['genres'].map((x) => x)),
         groups: json['groups'],
         synopsis: json['synopsis'],
         poster: json['poster'],

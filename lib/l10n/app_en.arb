@@ -5,7 +5,12 @@
     "search_film": "Search film",
     "see_more": "See more",
     "see_less": "See less",
-    "flatrate": "Flatrate",
+    "flatrate": "Subscrption",
     "rent": "Rent",
-    "buy": "Buy"
+    "buy": "Buy",
+    "cast": "Cast",
+    "synopsis": "Synopsis",
+    "watch_now": "Watch now",
+    "reviews": "Reviews",
+    "no_platforms": "No platforms"
 }

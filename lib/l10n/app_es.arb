@@ -7,5 +7,10 @@
   "see_less": "Ver menos",
   "flatrate": "Suscripción",
   "rent": "Alquiler",
-  "buy": "Compra"
+  "buy": "Compra",
+  "cast": "Reparto",
+  "synopsis": "Sinópsis",
+  "watch_now": "Ver ahora",
+  "reviews": "Críticas",
+  "no_platforms": "No hay plataformas disponibles"
 }
