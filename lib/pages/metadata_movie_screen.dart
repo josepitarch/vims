@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:diacritic/diacritic.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
@@ -26,7 +27,8 @@ class MetadataMovieScreen extends StatelessWidget {
                   _Genres(movie.genres),
                   _Cast(cast: movie.cast),
                   _Synopsis(overview: movie.synopsis),
-                  _Justwatch(justwatch: movie.justwatch)
+                  _Justwatch(justwatch: movie.justwatch),
+                  _Reviews(movie.reviews)
                 ],
               ),
             ),
@@ -43,65 +45,111 @@ class _Header extends StatelessWidget {
   const _Header({Key? key, required this.movie}) : super(key: key);
 
   final Movie movie;
+  final double _height = 220;
 
   @override
   Widget build(BuildContext context) {
     String flag = '';
     String aux = removeDiacritics(movie.country.trim().toLowerCase());
+    double sizeDirector = movie.director.length > 20 ? 14 : 16;
     FlagsAssets.flags.forEach((key, value) {
       if (value.contains(aux)) {
         flag = key;
       }
     });
-    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Flexible(
-        flex: 60,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(25),
-          child: FadeInImage(
-              placeholder: const AssetImage('assets/no-image.jpg'),
-              image: NetworkImage(movie.poster),
-              height: 220),
+    return SizedBox(
+      height: _height,
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Flexible(
+          flex: 60,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movie.poster),
+                height: _height),
+          ),
         ),
-      ),
-      Flexible(flex: 5, child: Container()),
-      Flexible(
-        flex: 70,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(movie.title,
-                  style: const TextStyle(
-                      fontSize: 19, fontWeight: FontWeight.bold),
+        Flexible(flex: 5, child: Container()),
+        Flexible(
+          flex: 70,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(movie.title,
+                    style: const TextStyle(
+                        fontSize: 19, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    maxLines: 2),
+              ),
+              Text(movie.director,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  maxLines: 2),
-            ),
-            Text(movie.director, style: const TextStyle(fontSize: 17)),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                if (flag.isNotEmpty)
-                  Image.asset(
-                    'assets/flags/$flag.png',
-                    width: 30,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.error),
+                  style: TextStyle(fontSize: sizeDirector)),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  if (flag.isNotEmpty)
+                    Image.asset(
+                      'assets/flags/$flag.png',
+                      width: 30,
+                      errorBuilder: (_, __, ___) => const Icon(Icons.error),
+                    ),
+                  const SizedBox(
+                    width: 10,
                   ),
-                const SizedBox(
-                  width: 10,
+                  Text(movie.country),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text('${movie.year} · ${movie.duration}',
+                  style: const TextStyle(fontSize: 17)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(children: [
+                        const Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 30,
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                          movie.average,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ]),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              MyIcons.heart_empty,
+                              size: 25,
+                            )),
+                      )
+                    ],
+                  ),
                 ),
-                Text(movie.country),
-              ],
-            ),
-            Text(movie.average)
-          ],
-        ),
-      )
-    ]);
+              )
+            ],
+          ),
+        )
+      ]),
+    );
   }
 }
 
@@ -158,7 +206,7 @@ class _Cast extends StatelessWidget {
       children: [
         _TitleSection(title: localization!.cast),
         Text(cast,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
             maxLines: _maxLines,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontSize: 17, height: 1.3))
@@ -204,7 +252,7 @@ class _SynopsisState extends State<_Synopsis> {
         _TitleSection(title: localization.synopsis),
         Text(widget.overview,
             style: const TextStyle(fontSize: 17, height: 1.3),
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
             maxLines: maxLines),
         if (widget.overview.length > delimiterLines)
@@ -272,29 +320,47 @@ class _JustwatchState extends State<_Justwatch> {
               )),
             if (widget.justwatch.flatrate.isNotEmpty)
               Container(
-                margin: const EdgeInsets.only(
-                    left: 10, right: 10, top: 0, bottom: 10),
-                child: ElevatedButton(
-                    onPressed: () {
-                      setPlatforms('flatrate');
-                    },
-                    child: Text(localization.flatrate)),
-              ),
+                  margin: const EdgeInsets.only(right: 10),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: TextButton(
+                      onPressed: () {
+                        setPlatforms('flatrate');
+                      },
+                      child: Text(localization.flatrate))),
             if (widget.justwatch.rent.isNotEmpty)
-              ElevatedButton(
-                  onPressed: () {
-                    setPlatforms('rent');
-                  },
-                  child: Text(localization.rent)),
+              Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: TextButton(
+                      onPressed: () {
+                        setPlatforms('rent');
+                      },
+                      child: Text(localization.rent))),
             if (widget.justwatch.buy.isNotEmpty)
-              ElevatedButton(
-                  onPressed: () {
-                    setPlatforms('buy');
-                  },
-                  child: Text(localization.buy)),
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: TextButton(
+                    onPressed: () {
+                      setPlatforms('buy');
+                    },
+                    child: Text(localization.buy)),
+              ),
           ],
         ),
-        SizedBox(
+        Container(
+          margin: const EdgeInsets.only(top: 10),
           height: height,
           child: ListView.builder(
               shrinkWrap: false,
@@ -342,6 +408,80 @@ class _TitleSection extends StatelessWidget {
         title,
         textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.headline5,
+      ),
+    );
+  }
+}
+
+class _Reviews extends StatelessWidget {
+  _Reviews(this.reviews, {Key? key}) : super(key: key);
+
+  List<Review> reviews;
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 70.0),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _TitleSection(title: localization!.reviews),
+          for (final review in reviews)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: _ReviewItem(review),
+            )
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewItem extends StatelessWidget {
+  const _ReviewItem(this.review, {Key? key}) : super(key: key);
+
+  final Review review;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          review.body.replaceAll("\"", ''),
+          style: const TextStyle(height: 1.25, fontSize: 15),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              review.author,
+            ),
+            buildInclination(review.inclination)
+          ],
+        )
+      ],
+    );
+  }
+
+  Container buildInclination(String inclination) {
+    Color backgroundColor;
+    if (inclination == 'positive') {
+      backgroundColor = Colors.green;
+    } else if (inclination == 'negative') {
+      backgroundColor = Colors.red;
+    } else {
+      backgroundColor = Colors.yellow;
+    }
+    return Container(
+      height: 20,
+      width: 20,
+      margin: const EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        shape: BoxShape.circle,
       ),
     );
   }
