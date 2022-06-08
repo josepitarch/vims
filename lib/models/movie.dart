@@ -2,6 +2,7 @@ import 'dart:convert' as json;
 
 class Movie {
   Movie({
+    required this.id,
     required this.title,
     required this.year,
     this.duration,
@@ -21,6 +22,7 @@ class Movie {
     required this.reviews,
   });
 
+  String id;
   String title;
   String year;
   String? duration;
@@ -42,6 +44,7 @@ class Movie {
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
+        id: json['id'],
         title: json['title'],
         year: json['year'],
         duration: json['duration'],
@@ -63,6 +66,7 @@ class Movie {
       );
 
   Map<String, dynamic> toMap() => {
+        'id': id,
         'title': title,
         'year': year,
         'duration': duration,

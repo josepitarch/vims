@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:card_swiper/card_swiper.dart';
-import 'package:scrapper_filmaffinity/models/homepage.dart';
-import 'package:scrapper_filmaffinity/providers/homepageProvider.dart';
+import 'package:scrapper_filmaffinity/models/section.dart';
+import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/homepageService.dart';
 import 'package:scrapper_filmaffinity/widgets/loading.dart';
 

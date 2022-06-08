@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:diacritic/diacritic.dart';
+import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
+import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
@@ -135,7 +138,14 @@ class _Header extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              FavoriteMovie favoriteMovie = FavoriteMovie(
+                                  id: movie.id,
+                                  imageUrl: movie.poster,
+                                  title: movie.title,
+                                  director: movie.director);
+                              FavoriteMovieProvider().addFavoriteMovie(favoriteMovie);
+                            },
                             icon: const Icon(
                               MyIcons.heart_empty,
                               size: 25,

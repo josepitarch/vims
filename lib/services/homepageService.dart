@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as json;
 
-import 'package:scrapper_filmaffinity/models/homepage.dart';
+import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class HomepageService {

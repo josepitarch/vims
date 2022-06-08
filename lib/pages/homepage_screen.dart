@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrapper_filmaffinity/pages/favorite_movies_screen.dart';
 import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
 import 'package:scrapper_filmaffinity/search/search_movie.dart';
 import 'package:scrapper_filmaffinity/widgets/card_swiper.dart';
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _widgetOptions = [
     const CardSwiper(),
     Container(),
+    FavouritesMovies(),
     const TopMoviesScreen()
   ];
 
@@ -51,6 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
             label: AppLocalizations.of(context)!.search,
             icon: const Icon(Icons.search_outlined),
           ),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.hourglass_empty_rounded),
+              label: AppLocalizations.of(context)!.favorites),
           BottomNavigationBarItem(
             label: AppLocalizations.of(context)!.top,
             icon: const Icon(Icons.list_alt_sharp),
