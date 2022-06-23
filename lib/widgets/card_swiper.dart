@@ -129,7 +129,11 @@ class _MovieCard extends StatelessWidget {
                     .then((value) {
                   homepageProvider.openedMovies
                       .addAll({films.elementAt(index).id: value});
-                  Navigator.pushNamed(context, 'details', arguments: value);
+                  Map<String, dynamic> arguments = {
+                    'movie': value,
+                    'isFavorite': false,
+                  };
+                  Navigator.pushNamed(context, 'details', arguments: arguments);
                 });
               }
             },

@@ -11,13 +11,17 @@ import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
+import 'package:scrapper_filmaffinity/widgets/loading.dart';
 
 class MetadataMovieScreen extends StatelessWidget {
   const MetadataMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     try {
-      final Movie movie = ModalRoute.of(context)!.settings.arguments as Movie;
+      final Map<String, dynamic> arguments =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final Movie movie = arguments['movie'] as Movie;
+      final bool? isFavorite = arguments['isFavorite'];
 
       return Scaffold(
         body: SafeArea(
@@ -26,7 +30,7 @@ class MetadataMovieScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               child: Column(
                 children: [
-                  _Header(movie: movie),
+                  _Header(movie: movie, isFavorite: isFavorite),
                   _Genres(movie.genres),
                   _Cast(cast: movie.cast),
                   _Synopsis(overview: movie.synopsis),
@@ -45,7 +49,9 @@ class MetadataMovieScreen extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({Key? key, required this.movie}) : super(key: key);
+  bool? isFavorite;
+  _Header({Key? key, required this.movie, required this.isFavorite})
+      : super(key: key);
 
   final Movie movie;
   final double _height = 220;
@@ -54,7 +60,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     String flag = '';
     String aux = removeDiacritics(movie.country.trim().toLowerCase());
-    double sizeDirector = movie.director.length > 20 ? 14 : 16;
+    double sizeDirector = movie.director!.length > 20 ? 14 : 16;
     FlagsAssets.flags.forEach((key, value) {
       if (value.contains(aux)) {
         flag = key;
@@ -88,7 +94,7 @@ class _Header extends StatelessWidget {
                     textAlign: TextAlign.start,
                     maxLines: 2),
               ),
-              Text(movie.director,
+              Text(movie.director!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: sizeDirector)),
@@ -135,22 +141,7 @@ class _Header extends StatelessWidget {
                           style: const TextStyle(fontSize: 18),
                         ),
                       ]),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: IconButton(
-                            onPressed: () {
-                              FavoriteMovie favoriteMovie = FavoriteMovie(
-                                  id: movie.id,
-                                  imageUrl: movie.poster,
-                                  title: movie.title,
-                                  director: movie.director);
-                              FavoriteMovieProvider().addFavoriteMovie(favoriteMovie);
-                            },
-                            icon: const Icon(
-                              MyIcons.heart_empty,
-                              size: 25,
-                            )),
-                      )
+                      _FavoriteMovie(isFavorite: isFavorite, movie: movie)
                     ],
                   ),
                 ),
@@ -160,6 +151,57 @@ class _Header extends StatelessWidget {
         )
       ]),
     );
+  }
+}
+
+class _FavoriteMovie extends StatefulWidget {
+  _FavoriteMovie({
+    Key? key,
+    required this.isFavorite,
+    required this.movie,
+  }) : super(key: key);
+
+  bool? isFavorite;
+  final Movie movie;
+
+  @override
+  State<_FavoriteMovie> createState() => _FavoriteMovieState();
+}
+
+class _FavoriteMovieState extends State<_FavoriteMovie> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isFavorite == null) {
+      FavoriteMovieDatabase.retrieveFavoriteMovies().then((value) {
+        setState(() {
+          widget.isFavorite =
+              value.any((element) => element.id == widget.movie.id);
+        });
+      });
+    }
+    Widget body = widget.isFavorite != null
+      ? Align(
+        alignment: Alignment.bottomRight,
+        child: IconButton(
+            onPressed: () {
+              if (!widget.isFavorite!) {
+                FavoriteMovieProvider().addFavoriteMovie(widget.movie);
+              } else {
+                FavoriteMovieDatabase.deleteFavoriteMovie(widget.movie.id);
+                FavoriteMovieProvider().deleteFavoriteMovie(widget.movie.id);
+              }
+
+              setState(() {
+                widget.isFavorite = !widget.isFavorite!;
+              });
+            },
+            icon: Icon(
+              !widget.isFavorite! ? MyIcons.heart_empty : Icons.save,
+              size: 25,
+            )))
+      : const SizedBox();
+
+    return body;
   }
 }
 

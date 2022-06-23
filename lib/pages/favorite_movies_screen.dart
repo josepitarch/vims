@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
+import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 
@@ -13,8 +14,7 @@ class FavouritesMovies extends StatelessWidget {
 
     favoriteMovieProvider.getFavoriteMovies();
 
-    final List<FavoriteMovie> favoriteMovies =
-        favoriteMovieProvider.favoriteMovies;
+    final List<FavoriteMovie> favoriteMovies = favoriteMovieProvider.favoriteMovies;
 
     Widget body = favoriteMovies.isNotEmpty
         ? FavoriteMoviesList(favoriteMovies)
@@ -36,9 +36,7 @@ class FavoriteMoviesList extends StatelessWidget {
             itemCount: favoriteMovies.length,
             itemBuilder: (_, index) {
               return MovieItem(
-                imageUrl: favoriteMovies[index].imageUrl,
-                title: favoriteMovies[index].title,
-                director: favoriteMovies[index].director,
+                movie: favoriteMovies[index].toMovie(),
               );
             }));
   }

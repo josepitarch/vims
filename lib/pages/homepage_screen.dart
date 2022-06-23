@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _widgetOptions = [
     const CardSwiper(),
     Container(),
-    FavouritesMovies(),
+    const FavouritesMovies(),
     const TopMoviesScreen()
   ];
 

@@ -20,7 +20,8 @@ class SearchMovieService {
         return suggestions;
       }
 
-      final request = Uri.http(url, '/api/search/film', {'film': query});
+      final request =
+          Uri.http(url, '/api/search/film', {'film': query, 'lang': 'es'});
 
       final response = await http
           .get(request)

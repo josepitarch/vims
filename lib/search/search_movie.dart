@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
+
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/searchMovieService.dart';
@@ -35,22 +37,15 @@ class MovieSearchDelegate extends SearchDelegate {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
+          if (snapshot.hasError) print(snapshot.error);
 
           List<Movie> movies = snapshot.data!;
 
           return ListView.builder(
               itemCount: movies.length,
               itemBuilder: (_, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, 'details',
-                        arguments: movies[index]);
-                  },
-                  child: MovieItem(
-                    imageUrl: movies[index].poster,
-                    title: movies[index].title,
-                    director: movies[index].director,
-                  ),
+                return MovieItem(
+                  movie: movies[index],
                 );
               });
         });

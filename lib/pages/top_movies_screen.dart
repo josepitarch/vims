@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/loading.dart';
@@ -37,17 +38,8 @@ class _Body extends StatelessWidget {
           child: ListView.builder(
               itemCount: movies.length,
               itemBuilder: (_, index) {
-                return GestureDetector(
-                  onTap: () {
-                    //topMoviesProvider.selectedMovie = movies[index];
-                    Navigator.pushNamed(context, 'details',
-                        arguments: movies[index]);
-                  },
-                  child: MovieItem(
-                    title: movies[index].title,
-                    imageUrl: movies[index].poster,
-                    director: movies[index].director,
-                  ),
+                return MovieItem(
+                  movie: movies[index],
                 );
               })),
     );

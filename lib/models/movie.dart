@@ -5,21 +5,21 @@ class Movie {
     required this.id,
     required this.title,
     required this.year,
-    this.duration,
     required this.country,
-    required this.director,
-    this.screenwriter,
-    this.music,
-    this.cinematography,
     required this.cast,
-    this.producer,
     required this.genres,
-    this.groups,
     required this.synopsis,
     required this.poster,
     required this.average,
     required this.justwatch,
     required this.reviews,
+    this.duration,
+    this.director,
+    this.screenwriter,
+    this.music,
+    this.cinematography,
+    this.producer,
+    this.groups,
   });
 
   String id;
@@ -27,14 +27,14 @@ class Movie {
   String year;
   String? duration;
   String country;
-  String director;
+  String? director;
   String? screenwriter;
   String? music;
   String? cinematography;
   String cast;
   String? producer;
   List<String> genres;
-  List<dynamic>? groups;
+  List<String>? groups;
   String synopsis;
   String poster;
   String average;
@@ -55,8 +55,8 @@ class Movie {
         cinematography: json['cinematography'],
         cast: json['cast'],
         producer: json['producer'],
-        genres: List<String>.from(json['genres'].map((x) => x)),
-        groups: json['groups'],
+        genres: json['genres'] == null ? [] : List<String>.from(json['genres'].map((x) => x)),
+        groups: json['groups'] == null ? [] :List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
         poster: json['poster'],
         average: json['average'],
@@ -82,7 +82,7 @@ class Movie {
         'poster': poster,
         'average': average,
         'justwatch': justwatch,
-        'reviews': List<dynamic>.from(reviews.map((x) => x.toMap())),
+        'reviews': List<Review>.from(reviews.map((x) => x.toMap())),
       };
 }
 
