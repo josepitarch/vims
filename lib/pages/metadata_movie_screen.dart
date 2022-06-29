@@ -3,15 +3,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:diacritic/diacritic.dart';
 import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
-import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
+import 'package:scrapper_filmaffinity/services/metadataMovieService.dart';
 import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
-import 'package:scrapper_filmaffinity/widgets/loading.dart';
 
 class MetadataMovieScreen extends StatelessWidget {
   const MetadataMovieScreen({Key? key}) : super(key: key);
@@ -20,28 +19,43 @@ class MetadataMovieScreen extends StatelessWidget {
     try {
       final Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      final Movie movie = arguments['movie'] as Movie;
-      final bool? isFavorite = arguments['isFavorite'];
+      Movie movie = arguments['movie'] as Movie;
+      final bool isFavorite = arguments['isFavorite'] ?? false;
 
-      return Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-              child: Column(
-                children: [
-                  _Header(movie: movie, isFavorite: isFavorite),
-                  _Genres(movie.genres),
-                  _Cast(cast: movie.cast),
-                  _Synopsis(overview: movie.synopsis),
-                  _Justwatch(justwatch: movie.justwatch),
-                  _Reviews(movie.reviews)
-                ],
+      return FutureBuilder(
+          future: isFavorite
+              ? MetadataMovieService().getMetadataMovie(movie.id)
+              : Future<Movie>.value(movie),
+          builder: (_, AsyncSnapshot<Movie> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (isFavorite) {
+              movie = snapshot.data!;
+            }
+
+            return Scaffold(
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 12),
+                    child: Column(
+                      children: [
+                        _Header(movie: movie, isFavorite: isFavorite),
+                        _Genres(movie.genres),
+                        _Cast(cast: movie.cast),
+                        _Synopsis(overview: movie.synopsis),
+                        _Justwatch(justwatch: movie.justwatch),
+                        _Reviews(movie.reviews)
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      );
+            );
+          });
     } catch (e) {
       return Center(child: Text(e.toString()));
     }
@@ -169,6 +183,8 @@ class _FavoriteMovie extends StatefulWidget {
 }
 
 class _FavoriteMovieState extends State<_FavoriteMovie> {
+  //TODO
+  //Replace to FutureBuilder
   @override
   Widget build(BuildContext context) {
     if (widget.isFavorite == null) {
@@ -180,26 +196,27 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
       });
     }
     Widget body = widget.isFavorite != null
-      ? Align(
-        alignment: Alignment.bottomRight,
-        child: IconButton(
-            onPressed: () {
-              if (!widget.isFavorite!) {
-                FavoriteMovieProvider().addFavoriteMovie(widget.movie);
-              } else {
-                FavoriteMovieDatabase.deleteFavoriteMovie(widget.movie.id);
-                FavoriteMovieProvider().deleteFavoriteMovie(widget.movie.id);
-              }
+        ? Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+                onPressed: () {
+                  if (!widget.isFavorite!) {
+                    FavoriteMovieProvider().addFavoriteMovie(widget.movie);
+                  } else {
+                    FavoriteMovieDatabase.deleteFavoriteMovie(widget.movie.id);
+                    FavoriteMovieProvider()
+                        .deleteFavoriteMovie(widget.movie.id);
+                  }
 
-              setState(() {
-                widget.isFavorite = !widget.isFavorite!;
-              });
-            },
-            icon: Icon(
-              !widget.isFavorite! ? MyIcons.heart_empty : Icons.save,
-              size: 25,
-            )))
-      : const SizedBox();
+                  setState(() {
+                    widget.isFavorite = !widget.isFavorite!;
+                  });
+                },
+                icon: Icon(
+                  !widget.isFavorite! ? MyIcons.heart_empty : Icons.save,
+                  size: 25,
+                )))
+        : const SizedBox();
 
     return body;
   }
@@ -343,11 +360,23 @@ class _Justwatch extends StatefulWidget {
 }
 
 class _JustwatchState extends State<_Justwatch> {
-  List<Platform> platforms = [];
+  late List<Platform> platforms;
+  bool isFlatrateSelected = false;
+  bool isRentSelected = false;
+  bool isBuySelected = false;
 
   @override
   void initState() {
     platforms = widget.justwatch.flatrate;
+
+    if (widget.justwatch.flatrate.isNotEmpty) {
+      isFlatrateSelected = true;
+    } else if (widget.justwatch.rent.isNotEmpty) {
+      isRentSelected = true;
+    } else {
+      isBuySelected = true;
+    }
+
     super.initState();
   }
 
@@ -355,6 +384,16 @@ class _JustwatchState extends State<_Justwatch> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     const double height = 75;
+
+    BoxDecoration decoratorSelectedButton() {
+      return BoxDecoration(
+          color: Colors.black, borderRadius: BorderRadius.circular(20));
+    }
+
+    BoxDecoration decoratorUnselectedButton() {
+      return BoxDecoration(
+          color: Colors.transparent, borderRadius: BorderRadius.circular(20));
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,10 +413,9 @@ class _JustwatchState extends State<_Justwatch> {
               Container(
                   margin: const EdgeInsets.only(right: 10),
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                  decoration: isFlatrateSelected
+                      ? decoratorSelectedButton()
+                      : decoratorUnselectedButton(),
                   child: TextButton(
                       onPressed: () {
                         setPlatforms('flatrate');
@@ -387,10 +425,9 @@ class _JustwatchState extends State<_Justwatch> {
               Container(
                   margin: const EdgeInsets.only(right: 10),
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                  decoration: isRentSelected
+                      ? decoratorSelectedButton()
+                      : decoratorUnselectedButton(),
                   child: TextButton(
                       onPressed: () {
                         setPlatforms('rent');
@@ -399,10 +436,9 @@ class _JustwatchState extends State<_Justwatch> {
             if (widget.justwatch.buy.isNotEmpty)
               Container(
                 height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                decoration: isBuySelected
+                    ? decoratorSelectedButton()
+                    : decoratorUnselectedButton(),
                 child: TextButton(
                     onPressed: () {
                       setPlatforms('buy');
@@ -437,10 +473,19 @@ class _JustwatchState extends State<_Justwatch> {
   setPlatforms(String platform) {
     if (platform == 'flatrate') {
       platforms = widget.justwatch.flatrate;
+      isFlatrateSelected = true;
+      isRentSelected = false;
+      isBuySelected = false;
     } else if (platform == 'rent') {
       platforms = widget.justwatch.rent;
+      isRentSelected = true;
+      isFlatrateSelected = false;
+      isBuySelected = false;
     } else if (platform == 'buy') {
       platforms = widget.justwatch.buy;
+      isBuySelected = true;
+      isRentSelected = false;
+      isFlatrateSelected = false;
     }
 
     setState(() {});

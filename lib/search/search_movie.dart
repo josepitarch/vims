@@ -37,7 +37,6 @@ class MovieSearchDelegate extends SearchDelegate {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (snapshot.hasError) print(snapshot.error);
 
           List<Movie> movies = snapshot.data!;
 

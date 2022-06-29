@@ -5,6 +5,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/homepageService.dart';
+import 'package:scrapper_filmaffinity/services/metadataMovieService.dart';
 import 'package:scrapper_filmaffinity/widgets/loading.dart';
 
 import '../models/movie.dart';
@@ -124,7 +125,7 @@ class _MovieCard extends StatelessWidget {
                 Navigator.pushNamed(context, 'details',
                     arguments: openedMovies[films.elementAt(index).id]);
               } else {
-                HomepageService()
+                MetadataMovieService()
                     .getMetadataMovie(films.elementAt(index).id)
                     .then((value) {
                   homepageProvider.openedMovies
