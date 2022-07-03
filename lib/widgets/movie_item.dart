@@ -22,14 +22,17 @@ class MovieItem extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: FadeInImage(
-                  height: 200,
-                  width: 130,
-                  fit: BoxFit.cover,
-                  image: NetworkImage(movie.poster),
-                  placeholder: const AssetImage('assets/loading.gif')),
+            Hero(
+              tag: movie.id,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: FadeInImage(
+                    height: 200,
+                    width: 130,
+                    fit: BoxFit.cover,
+                    image: NetworkImage(movie.poster),
+                    placeholder: const AssetImage('assets/loading.gif')),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),

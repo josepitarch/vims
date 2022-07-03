@@ -31,9 +31,7 @@ class MetadataMovieScreen extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (isFavorite) {
-              movie = snapshot.data!;
-            }
+            movie = snapshot.data!;
 
             return Scaffold(
               body: SafeArea(
@@ -85,12 +83,15 @@ class _Header extends StatelessWidget {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Flexible(
           flex: 60,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(25),
-            child: FadeInImage(
-                placeholder: const AssetImage('assets/no-image.jpg'),
-                image: NetworkImage(movie.poster),
-                height: _height),
+          child: Hero(
+            tag: movie.id,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.jpg'),
+                  image: NetworkImage(movie.poster),
+                  height: _height),
+            ),
           ),
         ),
         Flexible(flex: 5, child: Container()),

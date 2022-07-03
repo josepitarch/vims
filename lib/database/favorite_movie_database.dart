@@ -8,7 +8,7 @@ class FavoriteMovieDatabase {
     openDatabase(join(await getDatabasesPath(), 'favorite_movies.db'),
         onCreate: (db, version) {
       // Run the CREATE TABLE statement on the database.
-      db.delete('favorite_movies');
+      db.execute(createTableFavoriteMovie);
     }, onUpgrade: (db, oldVersion, newVersion) {
       db.execute(deleteTableFavoriteMovie);
       db.execute(createTableFavoriteMovie);
