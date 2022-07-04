@@ -3,11 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavouritesMovies extends StatelessWidget {
   const FavouritesMovies({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+
     final FavoriteMovieProvider favoriteMovieProvider =
         Provider.of<FavoriteMovieProvider>(context);
 
@@ -18,7 +21,7 @@ class FavouritesMovies extends StatelessWidget {
 
     Widget body = favoriteMovies.isNotEmpty
         ? FavoriteMoviesList(favoriteMovies)
-        : const Text('No favorites');
+        : Center(child: Text(localization!.no_favorites));
 
     return body;
   }

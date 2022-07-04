@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/pages/favorite_movies_screen.dart';
 import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
 import 'package:scrapper_filmaffinity/search/search_movie.dart';
-import 'package:scrapper_filmaffinity/widgets/card_swiper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/widgets/section_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = [
-    const CardSwiper(),
+    const SectionList(),
     Container(),
     const FavouritesMovies(),
     const TopMoviesScreen()

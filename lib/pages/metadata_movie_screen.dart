@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:diacritic/diacritic.dart';
+import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
+import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/metadataMovieService.dart';
 import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
@@ -19,19 +21,27 @@ class MetadataMovieScreen extends StatelessWidget {
     try {
       final Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      Movie movie = arguments['movie'] as Movie;
+
       final bool isFavorite = arguments['isFavorite'] ?? false;
+      final bool isOpened = arguments['isOpened'] ?? true;
+      final String id = arguments['id'];
 
       return FutureBuilder(
-          future: isFavorite
-              ? MetadataMovieService().getMetadataMovie(movie.id)
-              : Future<Movie>.value(movie),
+          future: isFavorite || !isOpened
+              ? MetadataMovieService().getMetadataMovie(id)
+              : Future<Movie>.value(arguments['movie'] as Movie),
           builder: (_, AsyncSnapshot<Movie> snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            movie = snapshot.data!;
+            Movie movie = snapshot.data!;
+
+            if (!isOpened) {
+              final HomepageProvider homepageProvider =
+                  Provider.of<HomepageProvider>(context);
+              homepageProvider.openedMovies.addAll({movie.id: movie});
+            }
 
             return Scaffold(
               body: SafeArea(
@@ -46,7 +56,9 @@ class MetadataMovieScreen extends StatelessWidget {
                         _Cast(cast: movie.cast),
                         _Synopsis(overview: movie.synopsis),
                         _Justwatch(justwatch: movie.justwatch),
-                        _Reviews(movie.reviews)
+                        movie.reviews.isNotEmpty
+                            ? _Reviews(movie.reviews)
+                            : const SizedBox()
                       ],
                     ),
                   ),
@@ -70,9 +82,10 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String director = movie.director ?? '';
     String flag = '';
     String aux = removeDiacritics(movie.country.trim().toLowerCase());
-    double sizeDirector = movie.director!.length > 20 ? 14 : 16;
+    double sizeDirector = director.length > 20 ? 14 : 16;
     FlagsAssets.flags.forEach((key, value) {
       if (value.contains(aux)) {
         flag = key;
@@ -109,13 +122,15 @@ class _Header extends StatelessWidget {
                     textAlign: TextAlign.start,
                     maxLines: 2),
               ),
-              Text(movie.director!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: sizeDirector)),
-              const SizedBox(
-                height: 10,
-              ),
+              if (director.isNotEmpty)
+                Text(director,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: sizeDirector)),
+              if (director.isNotEmpty)
+                const SizedBox(
+                  height: 10,
+                ),
               Row(
                 children: [
                   if (flag.isNotEmpty)
@@ -152,7 +167,7 @@ class _Header extends StatelessWidget {
                           width: 7,
                         ),
                         Text(
-                          movie.average,
+                          movie.average.isNotEmpty ? movie.average : '---',
                           style: const TextStyle(fontSize: 18),
                         ),
                       ]),
@@ -273,13 +288,14 @@ class _Cast extends StatelessWidget {
     final localization = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _TitleSection(title: localization!.cast),
         Text(cast,
             textAlign: TextAlign.start,
             maxLines: _maxLines,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 17, height: 1.3))
+            style: const TextStyle(fontSize: 17, height: 1.3)),
       ],
     );
   }
@@ -501,6 +517,7 @@ class _TitleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 20.0),
       child: Text(
         title,
