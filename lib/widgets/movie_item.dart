@@ -3,9 +3,8 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class MovieItem extends StatelessWidget {
   final Movie movie;
-  final bool? isFavorite;
 
-  const MovieItem({Key? key, required this.movie, this.isFavorite})
+  const MovieItem({Key? key, required this.movie})
       : super(key: key);
 
   @override
@@ -16,7 +15,6 @@ class MovieItem extends StatelessWidget {
         Map<String, dynamic> arguments = {
           'id': movie.id,
           'movie': movie,
-          'isFavorite': isFavorite,
         };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },

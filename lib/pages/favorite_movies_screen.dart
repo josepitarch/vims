@@ -40,7 +40,6 @@ class FavoriteMoviesList extends StatelessWidget {
             itemBuilder: (_, index) {
               return MovieItem(
                 movie: favoriteMovies[index].toMovie(),
-                isFavorite: true,
               );
             }));
   }

@@ -22,12 +22,11 @@ class MetadataMovieScreen extends StatelessWidget {
       final Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-      final bool isFavorite = arguments['isFavorite'] ?? false;
-      final bool isOpened = arguments['isOpened'] ?? true;
+      final bool isOpened = arguments['isOpened'] ?? false;
       final String id = arguments['id'];
 
       return FutureBuilder(
-          future: isFavorite || !isOpened
+          future: !isOpened
               ? MetadataMovieService().getMetadataMovie(id)
               : Future<Movie>.value(arguments['movie'] as Movie),
           builder: (_, AsyncSnapshot<Movie> snapshot) {
@@ -51,7 +50,7 @@ class MetadataMovieScreen extends StatelessWidget {
                         vertical: 10, horizontal: 12),
                     child: Column(
                       children: [
-                        _Header(movie: movie, isFavorite: isFavorite),
+                        _Header(movie: movie),
                         _Genres(movie.genres),
                         _Cast(cast: movie.cast),
                         _Synopsis(overview: movie.synopsis),
@@ -73,9 +72,7 @@ class MetadataMovieScreen extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  bool? isFavorite;
-  _Header({Key? key, required this.movie, required this.isFavorite})
-      : super(key: key);
+  const _Header({Key? key, required this.movie}) : super(key: key);
 
   final Movie movie;
   final double _height = 220;
@@ -134,21 +131,28 @@ class _Header extends StatelessWidget {
               Row(
                 children: [
                   if (flag.isNotEmpty)
-                    Image.asset(
-                      'assets/flags/$flag.png',
-                      width: 30,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.error),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        'assets/flags/$flag.png',
+                        width: 30,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(Icons.error),
+                      ),
                     ),
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(movie.country),
+                  Text(
+                    movie.country,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ],
               ),
               const SizedBox(
                 height: 10,
               ),
-              Text('${movie.year} · ${movie.duration}',
+              Text('${movie.year}  ·  ${movie.duration}',
                   style: const TextStyle(fontSize: 17)),
               Expanded(
                 child: Padding(
@@ -171,7 +175,7 @@ class _Header extends StatelessWidget {
                           style: const TextStyle(fontSize: 18),
                         ),
                       ]),
-                      _FavoriteMovie(isFavorite: isFavorite, movie: movie)
+                      _FavoriteMovie(movie: movie)
                     ],
                   ),
                 ),
@@ -185,13 +189,11 @@ class _Header extends StatelessWidget {
 }
 
 class _FavoriteMovie extends StatefulWidget {
-  _FavoriteMovie({
+  const _FavoriteMovie({
     Key? key,
-    required this.isFavorite,
     required this.movie,
   }) : super(key: key);
 
-  bool? isFavorite;
   final Movie movie;
 
   @override
@@ -199,42 +201,40 @@ class _FavoriteMovie extends StatefulWidget {
 }
 
 class _FavoriteMovieState extends State<_FavoriteMovie> {
-  //TODO
-  //Replace to FutureBuilder
+  bool? isFavorite;
+
+  @override
+  void initState() {
+    FavoriteMovieDatabase.retrieveFavoriteMovies().then((value) => setState(() {
+          isFavorite = value.any((element) => element.id == widget.movie.id);
+        }));
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.isFavorite == null) {
-      FavoriteMovieDatabase.retrieveFavoriteMovies().then((value) {
-        setState(() {
-          widget.isFavorite =
-              value.any((element) => element.id == widget.movie.id);
-        });
-      });
+    if (isFavorite == null) {
+      return const SizedBox();
     }
-    Widget body = widget.isFavorite != null
-        ? Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-                onPressed: () {
-                  if (!widget.isFavorite!) {
-                    FavoriteMovieProvider().addFavoriteMovie(widget.movie);
-                  } else {
-                    FavoriteMovieDatabase.deleteFavoriteMovie(widget.movie.id);
-                    FavoriteMovieProvider()
-                        .deleteFavoriteMovie(widget.movie.id);
-                  }
 
-                  setState(() {
-                    widget.isFavorite = !widget.isFavorite!;
-                  });
-                },
-                icon: Icon(
-                  !widget.isFavorite! ? MyIcons.heart_empty : Icons.save,
-                  size: 25,
-                )))
-        : const SizedBox();
+    return Align(
+        alignment: Alignment.bottomRight,
+        child: IconButton(
+            onPressed: () {
+              if (!isFavorite!) {
+                FavoriteMovieProvider().addFavoriteMovie(widget.movie);
+              } else {
+                FavoriteMovieDatabase.deleteFavoriteMovie(widget.movie.id);
+                FavoriteMovieProvider().deleteFavoriteMovie(widget.movie.id);
+              }
 
-    return body;
+              setState(() => isFavorite = !isFavorite!);
+            },
+            icon: Icon(
+              isFavorite! ? Icons.save : MyIcons.heart_empty,
+              size: 25,
+            )));
   }
 }
 
