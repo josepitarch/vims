@@ -4,6 +4,7 @@ import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
 import 'package:scrapper_filmaffinity/search/search_movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/section_list.dart';
+import 'package:scrapper_filmaffinity/widgets/shimmer/homepage_shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

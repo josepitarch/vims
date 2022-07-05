@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/widgets/loading.dart';
+import 'package:scrapper_filmaffinity/widgets/shimmer/homepage_shimmer.dart';
 
 class SectionList extends StatelessWidget {
   const SectionList({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class SectionList extends StatelessWidget {
                   .toList(),
             )),
           )
-        : const Loading();
+        : const ShimmerHomepage();
   }
 }
 
@@ -53,7 +53,7 @@ class _Section extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: section.films.length,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (_, int index) {
               return _SectionMovie(
                 film: section.films[index],
               );
@@ -74,8 +74,8 @@ class _SectionMovie extends StatelessWidget {
     final HomepageProvider homepageProvider =
         Provider.of<HomepageProvider>(context);
 
-    double width = 120;
-    double height = 190;
+    const double width = 120;
+    const double height = 190;
 
     return GestureDetector(
       onTap: () {
