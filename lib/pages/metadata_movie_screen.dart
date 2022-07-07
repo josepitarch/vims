@@ -16,6 +16,7 @@ import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
 import 'package:scrapper_filmaffinity/widgets/shimmer/metadata_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 class MetadataMovieScreen extends StatelessWidget {
   const MetadataMovieScreen({Key? key}) : super(key: key);
@@ -307,7 +308,7 @@ class _Cast extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _TitleSection(title: localization!.cast),
+        TitleSection(title: localization!.cast),
         Text(cast,
             textAlign: TextAlign.start,
             maxLines: _maxLines,
@@ -352,7 +353,7 @@ class _SynopsisState extends State<_Synopsis> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TitleSection(title: localization.synopsis),
+        TitleSection(title: localization.synopsis),
         Text(widget.overview,
             style: const TextStyle(fontSize: 17, height: 1.3),
             textAlign: TextAlign.start,
@@ -429,10 +430,13 @@ class _JustwatchState extends State<_Justwatch> {
           color: Colors.transparent, borderRadius: BorderRadius.circular(20));
     }
 
+    // TODO
+    // refactor through a map
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TitleSection(title: localization!.watch_now),
+        TitleSection(title: localization!.watch_now),
         Row(
           children: [
             if (widget.justwatch.flatrate.isEmpty &&
@@ -481,25 +485,28 @@ class _JustwatchState extends State<_Justwatch> {
               ),
           ],
         ),
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          height: height,
-          child: ListView.builder(
-              shrinkWrap: false,
-              scrollDirection: Axis.horizontal,
-              itemCount: platforms.length,
-              itemBuilder: (BuildContext context, int index) {
-                String name = platforms[index].name;
-                String asset = '';
-                JustwatchAssets.justwatchAssets.forEach((key, value) {
-                  if (value.contains(name.toLowerCase())) {
-                    asset = key;
-                  }
-                });
+        if (widget.justwatch.flatrate.isNotEmpty &&
+            widget.justwatch.rent.isNotEmpty &&
+            widget.justwatch.buy.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            height: height,
+            child: ListView.builder(
+                shrinkWrap: false,
+                scrollDirection: Axis.horizontal,
+                itemCount: platforms.length,
+                itemBuilder: (BuildContext context, int index) {
+                  String name = platforms[index].name;
+                  String asset = '';
+                  JustwatchAssets.justwatchAssets.forEach((key, value) {
+                    if (value.contains(name.toLowerCase())) {
+                      asset = key;
+                    }
+                  });
 
-                return JustwatchItem(asset: asset);
-              }),
-        ),
+                  return JustwatchItem(asset: asset);
+                }),
+          ),
       ],
     );
   }
@@ -526,25 +533,6 @@ class _JustwatchState extends State<_Justwatch> {
   }
 }
 
-class _TitleSection extends StatelessWidget {
-  const _TitleSection({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Text(
-        title,
-        textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.headline5,
-      ),
-    );
-  }
-}
-
 class _Reviews extends StatelessWidget {
   _Reviews(this.reviews, {Key? key}) : super(key: key);
 
@@ -559,7 +547,7 @@ class _Reviews extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TitleSection(title: localization!.reviews),
+          TitleSection(title: localization!.reviews),
           for (final review in reviews)
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),

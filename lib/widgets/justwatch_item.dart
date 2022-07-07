@@ -14,7 +14,7 @@ class JustwatchItem extends StatelessWidget {
         child: Image.asset(
           'assets/justwatch/$asset.jpg',
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => const Icon(Icons.error),
+          errorBuilder: (_, __, ___) => Container(),
         ),
       ),
     );
