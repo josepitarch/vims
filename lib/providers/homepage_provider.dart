@@ -22,7 +22,6 @@ class HomepageProvider extends ChangeNotifier {
 
   getHomepageMovies() async {
     try {
-      await Future.delayed(const Duration(seconds: 4));
       homepage = await HomepageService().getHomepageMovies();
     } on SocketException catch (e) {
       existsError = true;

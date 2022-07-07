@@ -9,23 +9,23 @@ class FavoriteMovieProvider extends ChangeNotifier {
 
   FavoriteMovieProvider();
 
-  addFavoriteMovie(Movie movie) {
+  addFavoriteMovie(Movie movie) async {
     FavoriteMovie favoriteMovie = FavoriteMovie(
         id: movie.id,
         poster: movie.poster,
         title: movie.title,
         director: movie.director ?? '');
-    
+
+    bool response = await FavoriteMovieDatabase.insertFavoriteMovie(favoriteMovie);
     favoriteMovies.add(favoriteMovie);
+    notifyListeners();
     
-    FavoriteMovieDatabase.insertFavoriteMovie(favoriteMovie).then((_) {
-      notifyListeners();
-    });
+    return response;
   }
 
   deleteFavoriteMovie(String id) {
     favoriteMovies.removeWhere((movie) => movie.id == id);
-    
+
     FavoriteMovieDatabase.deleteFavoriteMovie(id).then((_) {
       notifyListeners();
     });

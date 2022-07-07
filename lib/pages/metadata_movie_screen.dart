@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
 
@@ -223,15 +224,29 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
     return Align(
         alignment: Alignment.bottomRight,
         child: IconButton(
-            onPressed: () {
-              if (!isFavorite!) {
-                FavoriteMovieProvider().addFavoriteMovie(widget.movie);
-              } else {
-                FavoriteMovieDatabase.deleteFavoriteMovie(widget.movie.id);
-                FavoriteMovieProvider().deleteFavoriteMovie(widget.movie.id);
+            onPressed: () async {
+              // Check if the device can vibrate
+              bool canVibrate = await Vibrate.canVibrate;
+
+              if (canVibrate) {
+                Vibrate.feedback(FeedbackType.medium);
               }
 
-              setState(() => isFavorite = !isFavorite!);
+              bool isSuccess;
+
+              if (!isFavorite!) {
+                isSuccess = await FavoriteMovieProvider()
+                    .addFavoriteMovie(widget.movie);
+              } else {
+                isSuccess = await FavoriteMovieDatabase.deleteFavoriteMovie(
+                    widget.movie.id);
+              }
+
+              if (isSuccess) {
+                setState(() {
+                  isFavorite = !isFavorite!;
+                });
+              }
             },
             icon: Icon(
               isFavorite! ? Icons.save : MyIcons.heart_empty,

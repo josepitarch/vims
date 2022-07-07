@@ -19,13 +19,13 @@ class FavoriteMovieDatabase {
     final db = await openDatabase(
         join(await getDatabasesPath(), 'favorite_movies.db'));
 
-    db.insert(
+    int response = await db.insert(
       'favorite_movies',
       favoriteMovie.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    return true;
+    return response == 0 ? false : true;
   }
 
   static Future<bool> deleteFavoriteMovie(String id) async {

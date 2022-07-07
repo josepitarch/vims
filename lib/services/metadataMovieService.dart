@@ -10,7 +10,6 @@ class MetadataMovieService {
   final timeout = dotenv.env['TIMEOUT']!;
 
   Future<Movie> getMetadataMovie(String id) async {
-    await Future.delayed(const Duration(seconds: 4));
     var request = Uri.http(url, '/api/metadata/film', {'id': id});
     var response = await http.get(request);
 

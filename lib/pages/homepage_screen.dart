@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:scrapper_filmaffinity/pages/favorite_movies_screen.dart';
 import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
 import 'package:scrapper_filmaffinity/search/search_movie.dart';
@@ -32,7 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: Colors.white.withOpacity(.60),
         selectedFontSize: 16,
         unselectedFontSize: 14,
-        onTap: (index) {
+        onTap: (index) async {
+          bool canVibrate = await Vibrate.canVibrate;
+
+          if (canVibrate) {
+            Vibrate.feedback(FeedbackType.medium);
+          }
           setState(() {
             if (index == 1) {
               index = 0;
