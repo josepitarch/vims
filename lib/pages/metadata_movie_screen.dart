@@ -485,8 +485,8 @@ class _JustwatchState extends State<_Justwatch> {
               ),
           ],
         ),
-        if (widget.justwatch.flatrate.isNotEmpty &&
-            widget.justwatch.rent.isNotEmpty &&
+        if (widget.justwatch.flatrate.isNotEmpty ||
+            widget.justwatch.rent.isNotEmpty ||
             widget.justwatch.buy.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(top: 10),
