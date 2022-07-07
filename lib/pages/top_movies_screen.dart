@@ -40,6 +40,7 @@ class _Body extends StatelessWidget {
               itemBuilder: (_, index) {
                 return MovieItem(
                   movie: movies[index],
+                  isOpened: true,
                 );
               })),
     );

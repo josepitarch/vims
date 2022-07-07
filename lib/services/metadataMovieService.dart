@@ -2,21 +2,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as json;
 
-import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class MetadataMovieService {
-
   final url = dotenv.env['URL']!;
   final timeout = dotenv.env['TIMEOUT']!;
 
   Future<Movie> getMetadataMovie(String id) async {
+    await Future.delayed(const Duration(seconds: 4));
     var request = Uri.http(url, '/api/metadata/film', {'id': id});
     var response = await http.get(request);
 
     return Movie.fromJson(response.body);
   }
-
 }

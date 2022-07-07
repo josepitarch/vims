@@ -13,6 +13,8 @@ import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
+import 'package:scrapper_filmaffinity/widgets/review_item.dart';
+import 'package:scrapper_filmaffinity/widgets/shimmer/metadata_shimmer.dart';
 
 class MetadataMovieScreen extends StatelessWidget {
   const MetadataMovieScreen({Key? key}) : super(key: key);
@@ -31,7 +33,7 @@ class MetadataMovieScreen extends StatelessWidget {
               : Future<Movie>.value(arguments['movie'] as Movie),
           builder: (_, AsyncSnapshot<Movie> snapshot) {
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return const MetadataShimmer();
             }
 
             Movie movie = snapshot.data!;
@@ -546,57 +548,9 @@ class _Reviews extends StatelessWidget {
           for (final review in reviews)
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
-              child: _ReviewItem(review),
+              child: ReviewItem(review: review),
             )
         ],
-      ),
-    );
-  }
-}
-
-class _ReviewItem extends StatelessWidget {
-  const _ReviewItem(this.review, {Key? key}) : super(key: key);
-
-  final Review review;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          review.body.replaceAll("\"", ''),
-          style: const TextStyle(height: 1.25, fontSize: 15),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              review.author,
-            ),
-            buildInclination(review.inclination)
-          ],
-        )
-      ],
-    );
-  }
-
-  Container buildInclination(String inclination) {
-    Color backgroundColor;
-    if (inclination == 'positive') {
-      backgroundColor = Colors.green;
-    } else if (inclination == 'negative') {
-      backgroundColor = Colors.red;
-    } else {
-      backgroundColor = Colors.yellow;
-    }
-    return Container(
-      height: 20,
-      width: 20,
-      margin: const EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        shape: BoxShape.circle,
       ),
     );
   }
