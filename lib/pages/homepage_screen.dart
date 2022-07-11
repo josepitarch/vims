@@ -4,6 +4,7 @@ import 'package:scrapper_filmaffinity/pages/favorite_movies_screen.dart';
 import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
 import 'package:scrapper_filmaffinity/search/search_movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/widgets/section_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,47 +27,51 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange[600],
-        unselectedItemColor: Colors.white.withOpacity(.60),
-        selectedFontSize: 16,
-        unselectedFontSize: 14,
-        onTap: (index) async {
-          bool canVibrate = await Vibrate.canVibrate;
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: Colors.grey, width: 1.5))),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.orange[600],
+          unselectedItemColor: Colors.white.withOpacity(.60),
+          selectedFontSize: 16,
+          unselectedFontSize: 14,
+          onTap: (index) async {
+            bool canVibrate = await Vibrate.canVibrate;
 
-          if (canVibrate) {
-            Vibrate.feedback(FeedbackType.medium);
-          }
-          setState(() {
-            if (index == 1) {
-              index = 0;
-              showSearch(
-                context: context,
-                delegate: MovieSearchDelegate(context: context),
-              );
+            if (canVibrate) {
+              Vibrate.feedback(FeedbackType.medium);
             }
-            _selectedIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            label: AppLocalizations.of(context)!.home,
-            icon: const Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            label: AppLocalizations.of(context)!.search,
-            icon: const Icon(Icons.search_outlined),
-          ),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.hourglass_empty_rounded),
-              label: AppLocalizations.of(context)!.favorites),
-          BottomNavigationBarItem(
-            label: AppLocalizations.of(context)!.top,
-            icon: const Icon(Icons.list_alt_sharp),
-          ),
-        ],
+            setState(() {
+              if (index == 1) {
+                index = 0;
+                showSearch(
+                  context: context,
+                  delegate: MovieSearchDelegate(context: context),
+                );
+              }
+              _selectedIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              label: AppLocalizations.of(context)!.home,
+              icon: const Icon(Icons.home),
+            ),
+            BottomNavigationBarItem(
+              label: AppLocalizations.of(context)!.search,
+              icon: const Icon(Icons.search_outlined),
+            ),
+            BottomNavigationBarItem(
+                icon: const Icon(MyIcons.heart_empty),
+                label: AppLocalizations.of(context)!.favorites),
+            BottomNavigationBarItem(
+              label: AppLocalizations.of(context)!.top,
+              icon: const Icon(Icons.list_alt_sharp),
+            ),
+          ],
+        ),
       ),
     );
   }

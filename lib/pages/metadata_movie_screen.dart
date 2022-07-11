@@ -156,7 +156,7 @@ class _Header extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Text('${movie.year}  ·  ${movie.duration}',
+              Text('${movie.year}  ·  ${movie.duration ?? '---'}',
                   style: const TextStyle(fontSize: 17)),
               Expanded(
                 child: Padding(
@@ -224,35 +224,37 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
 
     return Align(
         alignment: Alignment.bottomRight,
-        child: IconButton(
-            onPressed: () async {
-              // Check if the device can vibrate
-              bool canVibrate = await Vibrate.canVibrate;
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: IconButton(
+              onPressed: () async {
+                bool canVibrate = await Vibrate.canVibrate;
 
-              if (canVibrate) {
-                Vibrate.feedback(FeedbackType.medium);
-              }
+                if (canVibrate) {
+                  Vibrate.feedback(FeedbackType.medium);
+                }
 
-              bool isSuccess;
+                bool isSuccess;
 
-              if (!isFavorite!) {
-                isSuccess = await FavoriteMovieProvider()
-                    .addFavoriteMovie(widget.movie);
-              } else {
-                isSuccess = await FavoriteMovieDatabase.deleteFavoriteMovie(
-                    widget.movie.id);
-              }
+                if (!isFavorite!) {
+                  isSuccess = await FavoriteMovieProvider()
+                      .addFavoriteMovie(widget.movie);
+                } else {
+                  isSuccess = await FavoriteMovieDatabase.deleteFavoriteMovie(
+                      widget.movie.id);
+                }
 
-              if (isSuccess) {
-                setState(() {
-                  isFavorite = !isFavorite!;
-                });
-              }
-            },
-            icon: Icon(
-              isFavorite! ? Icons.save : MyIcons.heart_empty,
-              size: 25,
-            )));
+                if (isSuccess) {
+                  setState(() {
+                    isFavorite = !isFavorite!;
+                  });
+                }
+              },
+              icon: Icon(
+                isFavorite! ? Icons.save : MyIcons.heart_empty,
+                size: 25,
+              )),
+        ));
   }
 }
 
@@ -422,7 +424,7 @@ class _JustwatchState extends State<_Justwatch> {
 
     BoxDecoration decoratorSelectedButton() {
       return BoxDecoration(
-          color: Colors.black, borderRadius: BorderRadius.circular(20));
+          color: Colors.black26, borderRadius: BorderRadius.circular(20));
     }
 
     BoxDecoration decoratorUnselectedButton() {

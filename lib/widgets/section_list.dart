@@ -22,11 +22,10 @@ class SectionList extends StatelessWidget {
     return sections.isNotEmpty
         ? SafeArea(
             child: SingleChildScrollView(
-                child: Column(
-              children: sections
-                  .map((section) => _Section(section: section))
-                  .toList(),
-            )),
+                child: Column(children: [
+              ...sections.map((section) => _Section(section: section)).toList(),
+              const SizedBox(height: 30),
+            ])),
           )
         : const ShimmerHomepage();
   }
