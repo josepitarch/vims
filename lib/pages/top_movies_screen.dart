@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/loading.dart';
@@ -40,7 +39,7 @@ class _Body extends StatelessWidget {
               itemBuilder: (_, index) {
                 return MovieItem(
                   movie: movies[index],
-                  isOpened: true,
+                  hasAllAttributes: true,
                 );
               })),
     );

@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/services/topMoviesService.dart';
+import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
 
 class TopMoviesProvider extends ChangeNotifier {
   Movie? selectedMovie;

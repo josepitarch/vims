@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/services/homepageService.dart';
-import 'package:scrapper_filmaffinity/services/metadataMovieService.dart';
+import 'package:scrapper_filmaffinity/services/homepage_service.dart';
+import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
 import 'package:scrapper_filmaffinity/widgets/loading.dart';
 
 import '../models/movie.dart';

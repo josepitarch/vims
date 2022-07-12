@@ -3,9 +3,9 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class MovieItem extends StatelessWidget {
   final Movie movie;
-  final bool? isOpened;
+  final bool? hasAllAttributes;
 
-  const MovieItem({Key? key, required this.movie, this.isOpened})
+  const MovieItem({Key? key, required this.movie, this.hasAllAttributes})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class MovieItem extends StatelessWidget {
         Map<String, dynamic> arguments = {
           'id': movie.id,
           'movie': movie,
-          'isOpened': isOpened ?? false,
+          'isOpened': hasAllAttributes ?? false,
         };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },

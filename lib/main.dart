@@ -10,6 +10,7 @@ import 'package:scrapper_filmaffinity/pages/homepage_screen.dart';
 import 'package:scrapper_filmaffinity/pages/metadata_movie_screen.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
+import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 
 Future<void> main() async {
@@ -26,6 +27,7 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => HomepageProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: true),
       ChangeNotifierProvider(
           create: (_) => FavoriteMovieProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => TopMoviesProvider(), lazy: false)

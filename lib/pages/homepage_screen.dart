@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:scrapper_filmaffinity/pages/favorite_movies_screen.dart';
+import 'package:scrapper_filmaffinity/pages/search_movie.dart';
 import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
-import 'package:scrapper_filmaffinity/search/search_movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/widgets/section_list.dart';
@@ -16,11 +16,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = [
-    const SectionList(),
-    Container(),
-    const FavouritesMovies(),
-    const TopMoviesScreen()
+  final List<Widget> _widgetOptions = const [
+    SectionList(),
+    SearchMovieScreen(),
+    FavouritesMovies(),
+    TopMoviesScreen()
   ];
 
   @override
@@ -44,13 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Vibrate.feedback(FeedbackType.medium);
             }
             setState(() {
-              if (index == 1) {
-                index = 0;
-                showSearch(
-                  context: context,
-                  delegate: MovieSearchDelegate(context: context),
-                );
-              }
               _selectedIndex = index;
             });
           },

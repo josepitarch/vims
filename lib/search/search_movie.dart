@@ -5,7 +5,7 @@ import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
 
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/services/searchMovieService.dart';
+import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 
 class MovieSearchDelegate extends SearchDelegate {

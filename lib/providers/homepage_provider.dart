@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 
 import 'package:scrapper_filmaffinity/models/section.dart';
-import 'package:scrapper_filmaffinity/services/homepageService.dart';
+import 'package:scrapper_filmaffinity/services/homepage_service.dart';
 
 import '../models/movie.dart';
 

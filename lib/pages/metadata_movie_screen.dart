@@ -9,7 +9,7 @@ import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/services/metadataMovieService.dart';
+import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
 import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
