@@ -8,6 +8,11 @@ class SearchMovieProvider extends ChangeNotifier {
 
   SearchMovieProvider();
 
+  setSearch(String value) {
+    search = value;
+    notifyListeners();
+  }
+
   getSearchMovie(String search) async {
     this.search = search;
     movies = await SearchMovieService().getSuggestions(search);

@@ -34,7 +34,15 @@ String createTableReviews = """
     );
     """;
 
+String createTableHistorySearch = """
+    CREATE TABLE history_search (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      search TEXT NOT NULL UNIQUE
+    );
+    """;
+
 String deleteTableFavoriteMovie = "DROP TABLE favorite_movies";
 String deleteTableGroups = "DROP TABLE groups";
 String deleteTableJustwatch = "DROP TABLE justwatch";
 String deleteTableReviews = "DROP TABLE reviews";
+String deleteTableHistorySearch = "DROP TABLE history_search";

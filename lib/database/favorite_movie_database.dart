@@ -4,6 +4,7 @@ import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 import 'package:sqflite/sqflite.dart';
 
 class FavoriteMovieDatabase {
+  
   static initDatabase() async {
     openDatabase(join(await getDatabasesPath(), 'favorite_movies.db'),
         onCreate: (db, version) {

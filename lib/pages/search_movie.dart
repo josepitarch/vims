@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 
@@ -25,22 +26,32 @@ class _SearchMovieForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchMovieProvider = Provider.of<SearchMovieProvider>(context);
+    final provider = Provider.of<SearchMovieProvider>(context);
+    final TextEditingController controller = TextEditingController();
 
     return Column(
       children: [
         TextFormField(
-          decoration: const InputDecoration(
+          controller: controller..text = provider.search,
+          decoration: InputDecoration(
             labelText: 'Search movie',
+            suffixIcon: IconButton(
+              onPressed: () {
+                controller.clear;
+                provider.setSearch('');
+              },
+              icon: const Icon(Icons.clear),
+            ),
           ),
-          controller: TextEditingController()
-            ..text = searchMovieProvider.search,
+          onChanged: (value) {
+            value.isEmpty ? provider.setSearch('') : null;
+          },
           onFieldSubmitted: (String value) {
-            searchMovieProvider.getSearchMovie(value);
-            print(value);
+            provider.getSearchMovie(value);
+            HistorySearchDatabase.insertSearch(value);
           },
         ),
-        searchMovieProvider.search.isNotEmpty
+        provider.search.isNotEmpty
             ? const _Suggestions()
             : const _SearchHistory()
       ],
@@ -72,6 +83,38 @@ class _SearchHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return FutureBuilder<List<String>>(
+      future: HistorySearchDatabase.retrieveSearchs(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => ListTile(
+                    title: GestureDetector(
+                        onTap: () {
+                          final searchMovieProvider =
+                              Provider.of<SearchMovieProvider>(context,
+                                  listen: false);
+                          searchMovieProvider
+                              .getSearchMovie(snapshot.data![index]);
+                        },
+                        child: Text(snapshot.data![index])),
+                  ),
+                ),
+                MaterialButton(
+                    onPressed: () => HistorySearchDatabase.deleteAllSearchs(),
+                    child: const Text('Delete last searchers')),
+              ],
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 }
