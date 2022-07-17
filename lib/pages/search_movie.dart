@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
+import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 
@@ -68,10 +69,16 @@ class _Suggestions extends StatelessWidget {
       return Expanded(
         child: ListView.builder(
           itemCount: provider.movies.length,
-          itemBuilder: (context, index) => MovieItem(
-            movie: provider.movies[index],
-            hasAllAttributes: true,
-          ),
+          itemBuilder: (context, index) {
+            bool hasAllAttributes = index <= 2;
+            Movie movie = index <= 2
+                ? Movie.fromMap(provider.movies[index])
+                : Movie.toMovie(provider.movies[index]);
+            return MovieItem(
+              movie: movie,
+              hasAllAttributes: hasAllAttributes,
+            );
+          },
         ),
       );
     });

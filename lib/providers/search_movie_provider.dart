@@ -4,7 +4,7 @@ import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
 
 class SearchMovieProvider extends ChangeNotifier {
   String search = '';
-  List<Movie> movies = [];
+  List<dynamic> movies = [];
 
   SearchMovieProvider();
 

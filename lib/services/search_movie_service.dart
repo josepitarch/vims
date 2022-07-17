@@ -6,15 +6,13 @@ import 'dart:async';
 import 'dart:convert' as json;
 import 'package:http/http.dart' as http;
 
-import 'package:scrapper_filmaffinity/models/movie.dart';
-
 class SearchMovieService {
   final url = dotenv.env['URL']!;
   final timeout = dotenv.env['TIMEOUT']!;
   final logger = Logger();
 
-  Future<List<Movie>> getSuggestions(String query) async {
-    List<Movie> suggestions = [];
+  Future<List<dynamic>> getSuggestions(String query) async {
+    List<dynamic> suggestions = [];
     try {
       if (query.isEmpty) {
         return suggestions;
@@ -28,10 +26,7 @@ class SearchMovieService {
           .timeout(Duration(seconds: int.parse(timeout)));
 
       if (response.statusCode == 200) {
-        List<dynamic> aux = json.jsonDecode(response.body);
-        for (var element in aux) {
-          suggestions.add(Movie.fromMap(element));
-        }
+        suggestions = json.jsonDecode(response.body);
       }
     } on SocketException catch (e) {
       logger.e(e.toString());

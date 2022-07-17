@@ -65,6 +65,21 @@ class Movie {
             List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
       );
 
+      factory Movie.toMovie(Map<String, dynamic> json) => Movie(
+        id: json['id'],
+        title: json['title'],
+        year: json['year'],
+        country: json['country'],
+        cast: '',
+        genres: [],
+        synopsis: '',
+        poster: json['poster'],
+        justwatch: Justwatch(buy: [], rent: [], flatrate: []),
+        director: json['director'],
+        average: json['average'],
+        reviews: []
+      );
+
   Map<String, dynamic> toMap() => {
         'id': id,
         'title': title,

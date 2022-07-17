@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
-
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
@@ -33,18 +31,20 @@ class MovieSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
         future: searchMovieService.getSuggestions(query),
-        builder: (_, AsyncSnapshot<List<Movie>> snapshot) {
+        builder: (_, AsyncSnapshot<List<dynamic>> snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          List<Movie> movies = snapshot.data!;
+          List<dynamic> suggestions = snapshot.data!;
 
           return ListView.builder(
-              itemCount: movies.length,
+              itemCount: suggestions.length,
               itemBuilder: (_, index) {
+                bool hasAllAttributes = index <= 2;
                 return MovieItem(
-                  movie: movies[index],
+                  movie: Movie.fromMap(suggestions[index]),
+                  hasAllAttributes: hasAllAttributes,
                 );
               });
         });
