@@ -38,8 +38,10 @@ class _SearchMovieForm extends StatelessWidget {
             labelText: 'Search movie',
             suffixIcon: IconButton(
               onPressed: () {
-                controller.clear;
-                provider.setSearch('');
+                if (controller.text.isNotEmpty) {
+                  controller.clear;
+                  provider.setSearch('');
+                }
               },
               icon: const Icon(Icons.clear),
             ),
@@ -53,75 +55,73 @@ class _SearchMovieForm extends StatelessWidget {
           },
         ),
         provider.search.isNotEmpty
-            ? const _Suggestions()
-            : const _SearchHistory()
+            ? _Suggestions(movies: provider.movies)
+            : _SearchHistory(
+                historySearchers: provider.historySearchers,
+                provider: provider),
       ],
     );
   }
 }
 
 class _Suggestions extends StatelessWidget {
-  const _Suggestions({Key? key}) : super(key: key);
+  final List<dynamic> movies;
+  const _Suggestions({Key? key, required this.movies}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SearchMovieProvider>(builder: (context, provider, _) {
-      return Expanded(
-        child: ListView.builder(
-          itemCount: provider.movies.length,
-          itemBuilder: (context, index) {
-            bool hasAllAttributes = index <= 2;
-            Movie movie = index <= 2
-                ? Movie.fromMap(provider.movies[index])
-                : Movie.toMovie(provider.movies[index]);
-            return MovieItem(
-              movie: movie,
-              hasAllAttributes: hasAllAttributes,
-            );
-          },
-        ),
-      );
-    });
+    return Expanded(
+      child: ListView.builder(
+        itemCount: movies.length,
+        itemBuilder: (context, index) {
+          bool hasAllAttributes = index <= 2;
+          Movie movie = index <= 2
+              ? Movie.fromMap(movies[index])
+              : Movie.toMovie(movies[index]);
+          return MovieItem(
+            movie: movie,
+            hasAllAttributes: hasAllAttributes,
+          );
+        },
+      ),
+    );
   }
 }
 
 class _SearchHistory extends StatelessWidget {
-  const _SearchHistory({Key? key}) : super(key: key);
+  final List<String> historySearchers;
+  final SearchMovieProvider provider;
+  const _SearchHistory(
+      {Key? key, required this.historySearchers, required this.provider})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: HistorySearchDatabase.retrieveSearchs(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: GestureDetector(
-                        onTap: () {
-                          final searchMovieProvider =
-                              Provider.of<SearchMovieProvider>(context,
-                                  listen: false);
-                          searchMovieProvider
-                              .getSearchMovie(snapshot.data![index]);
-                        },
-                        child: Text(snapshot.data![index])),
-                  ),
-                ),
-                MaterialButton(
-                    onPressed: () => HistorySearchDatabase.deleteAllSearchs(),
-                    child: const Text('Delete last searchers')),
-              ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: historySearchers.length,
+            itemBuilder: (context, index) => ListTile(
+              title: GestureDetector(
+                  onTap: () {
+                    provider.getSearchMovie(provider.historySearchers[index]);
+                  },
+                  child: Text(historySearchers[index])),
             ),
-          );
-        } else {
-          return Container();
-        }
-      },
+          ),
+          if (historySearchers.isNotEmpty)
+            MaterialButton(
+                onPressed: () => provider.deleteAllSearchers(),
+                child: const Text('Delete last searchers',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                    ))),
+        ],
+      ),
     );
   }
 }

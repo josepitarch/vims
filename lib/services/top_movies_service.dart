@@ -15,7 +15,7 @@ class TopMoviesService {
   Future<List<Movie>> getTopMovies() async {
     List<Movie> topMovies = [];
 
-    final request = Uri.http(url, '/api/top/films', {});
+    final request = Uri.http(url, '/api/my/top/films', {});
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
