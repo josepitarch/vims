@@ -4,6 +4,7 @@ import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
@@ -77,7 +78,7 @@ class _Suggestions extends StatelessWidget {
           bool hasAllAttributes = index <= 2;
           Movie movie = index <= 2
               ? Movie.fromMap(movies[index])
-              : Movie.toMovie(movies[index]);
+              : Movie.fromIncompleteMovie(movies[index]);
           return MovieItem(
             movie: movie,
             hasAllAttributes: hasAllAttributes,
@@ -97,6 +98,7 @@ class _SearchHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -114,8 +116,8 @@ class _SearchHistory extends StatelessWidget {
           if (historySearchers.isNotEmpty)
             MaterialButton(
                 onPressed: () => provider.deleteAllSearchers(),
-                child: const Text('Delete last searchers',
-                    style: TextStyle(
+                child: Text(localization.delete_all_searchers,
+                    style: const TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.w500,
                       fontSize: 18,

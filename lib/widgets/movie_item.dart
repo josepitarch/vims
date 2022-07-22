@@ -32,7 +32,12 @@ class MovieItem extends StatelessWidget {
                   width: 120,
                   fit: BoxFit.cover,
                   image: NetworkImage(movie.poster),
-                  placeholder: const AssetImage('assets/loading.gif')),
+                  placeholder: const AssetImage('assets/loading.gif'),
+                  imageErrorBuilder: (_, __, ___) => Image.asset(
+                      'assets/no-image.jpg',
+                      height: height,
+                      fit: BoxFit.cover,
+                      width: 120)),
             ),
           ),
           Expanded(

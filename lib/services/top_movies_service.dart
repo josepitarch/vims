@@ -12,8 +12,8 @@ class TopMoviesService {
   final timeout = dotenv.env['TIMEOUT']!;
   final logger = Logger();
 
-  Future<List<Movie>> getTopMovies() async {
-    List<Movie> topMovies = [];
+  Future<List<Movie>> getMyTopMovies() async {
+    List<Movie> myTopMovies = [];
 
     final request = Uri.http(url, '/api/my/top/films', {});
 
@@ -23,7 +23,25 @@ class TopMoviesService {
     if (response.statusCode == 200) {
       List<dynamic> aux = json.jsonDecode(response.body);
       for (var element in aux) {
-        topMovies.add(Movie.fromMap(element));
+        myTopMovies.add(Movie.fromMap(element));
+      }
+    }
+
+    return myTopMovies;
+  }
+
+  Future<List<Movie>> getMopMovies() async {
+    List<Movie> topMovies = [];
+
+    final request = Uri.http(url, '/api/top/films', {});
+
+    final response =
+        await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
+
+    if (response.statusCode == 200) {
+      List<dynamic> aux = json.jsonDecode(response.body);
+      for (var element in aux) {
+        topMovies.add(Movie.fromIncompleteMovie(element));
       }
     }
 

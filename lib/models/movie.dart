@@ -1,26 +1,26 @@
 import 'dart:convert' as json;
 
 class Movie {
-  Movie({
-    required this.id,
-    required this.title,
-    required this.year,
-    required this.country,
-    required this.cast,
-    required this.genres,
-    required this.synopsis,
-    required this.poster,
-    required this.average,
-    required this.justwatch,
-    required this.reviews,
-    this.duration,
-    this.director,
-    this.screenwriter,
-    this.music,
-    this.cinematography,
-    this.producer,
-    this.groups,
-  });
+  Movie(
+      {required this.id,
+      required this.title,
+      required this.year,
+      required this.country,
+      required this.cast,
+      required this.genres,
+      required this.synopsis,
+      required this.poster,
+      required this.average,
+      required this.justwatch,
+      required this.reviews,
+      this.duration,
+      this.director,
+      this.screenwriter,
+      this.music,
+      this.cinematography,
+      this.producer,
+      this.groups,
+      this.platforms});
 
   String id;
   String title;
@@ -40,6 +40,7 @@ class Movie {
   String average;
   Justwatch justwatch;
   List<Review> reviews;
+  List<String>? platforms;
 
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 
@@ -55,8 +56,12 @@ class Movie {
         cinematography: json['cinematography'],
         cast: json['cast'],
         producer: json['producer'],
-        genres: json['genres'] == null ? [] : List<String>.from(json['genres'].map((x) => x)),
-        groups: json['groups'] == null ? [] :List<String>.from(json['groups'].map((x) => x)),
+        genres: json['genres'] == null
+            ? []
+            : List<String>.from(json['genres'].map((x) => x)),
+        groups: json['groups'] == null
+            ? []
+            : List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
         poster: json['poster'],
         average: json['average'],
@@ -65,20 +70,22 @@ class Movie {
             List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
       );
 
-      factory Movie.toMovie(Map<String, dynamic> json) => Movie(
-        id: json['id'],
-        title: json['title'],
-        year: json['year'],
-        country: json['country'],
-        cast: '',
-        genres: [],
-        synopsis: '',
-        poster: json['poster'],
-        justwatch: Justwatch(buy: [], rent: [], flatrate: []),
-        director: json['director'],
-        average: json['average'],
-        reviews: []
-      );
+  factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
+      id: json['id'],
+      title: json['title'],
+      year: json['year'] ?? '',
+      country: json['country'] ?? '',
+      cast: '',
+      genres: [],
+      synopsis: '',
+      poster: json['poster'],
+      justwatch: Justwatch(buy: [], rent: [], flatrate: []),
+      director: json['director'],
+      average: json['average'] ?? '',
+      reviews: [],
+      platforms: json['platforms'] == null
+          ? []
+          : List<String>.from(json['platforms'].map((x) => x)));
 
   Map<String, dynamic> toMap() => {
         'id': id,

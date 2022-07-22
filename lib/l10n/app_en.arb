@@ -14,5 +14,6 @@
     "synopsis": "Synopsis",
     "watch_now": "Watch now",
     "no_platforms": "No platforms",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "delete_all_searchers": "Delete all searchers"
 }

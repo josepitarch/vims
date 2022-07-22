@@ -20,7 +20,7 @@ class TopMoviesProvider extends ChangeNotifier {
 
   getTopMovies() async {
     try {
-      movies = await TopMoviesService().getTopMovies();
+      movies = await TopMoviesService().getMopMovies();
     } on SocketException catch (e) {
       existsError = true;
       logger.e(e.toString());
