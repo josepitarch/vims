@@ -18,5 +18,7 @@
     "search_movie": "Search movie",
     "delete_all_searchers": "Delete all searchers",
     "title_favorite_movies_page": "Your favorite movies",
-    "title_top_movies_page": "If you don't know to see"
+    "title_top_movies_page": "If you don't know to see",
+    "delete_filters": "Delete filters",
+    "apply_filters": "Apply filters"
 }

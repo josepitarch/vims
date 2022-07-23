@@ -92,6 +92,7 @@ class _PlatformsFilter extends StatefulWidget {
 class _PlatformsFilterState extends State<_PlatformsFilter> {
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     Map<String, bool> platforms = Map.from(widget.provider.platforms);
     List<String> names = platforms.keys.toList();
     return Padding(
@@ -142,14 +143,21 @@ class _PlatformsFilterState extends State<_PlatformsFilter> {
                 }),
           ),
           Wrap(
-            spacing: -10,
+            spacing: 15,
             children: [
               MaterialButton(
                   onPressed: () => widget.provider.removeFilters(),
-                  child: const Text('Eliminar filtros')),
+                  shape: RoundedRectangleBorder(
+                      side: const BorderSide(color: Colors.red, width: 2),
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Text(localization.delete_filters)),
               MaterialButton(
+                  color: Colors.orange,
+                  shape: RoundedRectangleBorder(
+                      side: const BorderSide(color: Colors.orange),
+                      borderRadius: BorderRadius.circular(30)),
                   onPressed: () => widget.provider.applyFilters(),
-                  child: const Text('Aplicar filtros')),
+                  child: Text(localization.apply_filters)),
             ],
           ),
         ],

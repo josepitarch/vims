@@ -18,5 +18,7 @@
   "search_movie": "Buscar película",
   "delete_all_searchers": "Eliminar búsquedas recientes",
   "title_favorite_movies_page": "Tus favoritos",
-  "title_top_movies_page": "Si no sabes que ver"
+  "title_top_movies_page": "Si no sabes que ver",
+  "delete_filters": "Eliminar filtros",
+  "apply_filters": "Aplicar filtros"
 }

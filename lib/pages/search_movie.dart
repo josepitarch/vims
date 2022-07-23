@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
+import 'package:scrapper_filmaffinity/ui/input_decoration.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -36,18 +37,9 @@ class _SearchMovieForm extends StatelessWidget {
       children: [
         TextFormField(
           controller: controller..text = provider.search,
-          decoration: InputDecoration(
-            labelText: localization.search_movie,
-            suffixIcon: IconButton(
-              onPressed: () {
-                if (controller.text.isNotEmpty) {
-                  controller.clear;
-                  provider.setSearch('');
-                }
-              },
-              icon: const Icon(Icons.clear),
-            ),
-          ),
+          keyboardType: TextInputType.text,
+          decoration: InputDecorations.searchMovieDecoration(
+              localization, controller, provider),
           onChanged: (value) {
             value.isEmpty ? provider.setSearch('') : null;
           },
@@ -111,7 +103,15 @@ class _SearchHistory extends StatelessWidget {
                   onTap: () {
                     provider.getSearchMovie(provider.historySearchers[index]);
                   },
-                  child: Text(historySearchers[index])),
+                  child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(historySearchers[index]),
+                          const Icon(Icons.arrow_forward_ios, size: 15.0),
+                        ],
+                      ))),
             ),
           ),
           if (historySearchers.isNotEmpty)
