@@ -15,5 +15,8 @@
     "watch_now": "Watch now",
     "no_platforms": "No platforms",
     "reviews": "Reviews",
-    "delete_all_searchers": "Delete all searchers"
+    "search_movie": "Search movie",
+    "delete_all_searchers": "Delete all searchers",
+    "title_favorite_movies_page": "Your favorite movies",
+    "title_top_movies_page": "If you don't know to see"
 }

@@ -66,4 +66,12 @@ class TopMoviesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  removeFilters() {
+    platforms.forEach((key, value) {
+      platforms[key] = false;
+    });
+    filteredMovies = List.from(movies);
+    notifyListeners();
+  }
 }

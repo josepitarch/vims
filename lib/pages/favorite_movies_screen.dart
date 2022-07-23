@@ -10,12 +10,12 @@ class FavouritesMovies extends StatelessWidget {
   const FavouritesMovies({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
-   
+    final localization = AppLocalizations.of(context)!;
+
     return Consumer(builder: (context, FavoriteMovieProvider provider, _) {
       provider.getFavoriteMovies();
       return provider.favoriteMovies.isEmpty
-          ? Center(child: Text(localization!.no_favorites))
+          ? Center(child: Text(localization.no_favorites))
           : FavoriteMoviesList(provider.favoriteMovies);
     });
   }
@@ -28,12 +28,13 @@ class FavoriteMoviesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
         body: SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const TitlePage('Tus favoritos'),
+          TitlePage(localization.title_favorite_movies_page),
           Expanded(
             child: ListView.builder(
                 itemCount: favoriteMovies.length,

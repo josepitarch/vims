@@ -30,13 +30,14 @@ class _SearchMovieForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<SearchMovieProvider>(context);
     final TextEditingController controller = TextEditingController();
+    final localization = AppLocalizations.of(context)!;
 
     return Column(
       children: [
         TextFormField(
           controller: controller..text = provider.search,
           decoration: InputDecoration(
-            labelText: 'Search movie',
+            labelText: localization.search_movie,
             suffixIcon: IconButton(
               onPressed: () {
                 if (controller.text.isNotEmpty) {

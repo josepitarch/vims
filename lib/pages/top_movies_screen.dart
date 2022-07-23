@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/movie_item.dart';
 
@@ -28,25 +29,48 @@ class TopMoviesScreen extends StatelessWidget {
   }
 }
 
-class _TopMovies extends StatelessWidget {
+class _TopMovies extends StatefulWidget {
   final TopMoviesProvider provider;
   const _TopMovies({Key? key, required this.provider}) : super(key: key);
 
   @override
+  State<_TopMovies> createState() => _TopMoviesState();
+}
+
+class _TopMoviesState extends State<_TopMovies> {
+  final _scrollController = ScrollController();
+  double _height = 150;
+
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      _scrollController.position.pixels > 60.0 ? _height = 0 : _height = 150;
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const TitlePage('Si no sabes que ver'),
-          _PlatformsFilter(provider: provider),
+          TitlePage(localization.title_top_movies_page),
+          AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              height: _height,
+              child: SingleChildScrollView(
+                  child: _PlatformsFilter(provider: widget.provider))),
           Expanded(
             child: ListView.builder(
-                itemCount: provider.filteredMovies.length,
+                controller: _scrollController,
+                itemCount: widget.provider.filteredMovies.length,
                 itemBuilder: (_, index) {
                   return MovieItem(
-                    movie: provider.filteredMovies[index],
+                    movie: widget.provider.filteredMovies[index],
                     hasAllAttributes: false,
                   );
                 }),
@@ -117,9 +141,17 @@ class _PlatformsFilterState extends State<_PlatformsFilter> {
                   );
                 }),
           ),
-          MaterialButton(
-              onPressed: () => widget.provider.applyFilters(),
-              child: const Text('Aplicar filtros')),
+          Wrap(
+            spacing: -10,
+            children: [
+              MaterialButton(
+                  onPressed: () => widget.provider.removeFilters(),
+                  child: const Text('Eliminar filtros')),
+              MaterialButton(
+                  onPressed: () => widget.provider.applyFilters(),
+                  child: const Text('Aplicar filtros')),
+            ],
+          ),
         ],
       ),
     );

@@ -15,5 +15,8 @@
   "watch_now": "Ver ahora",
   "no_platforms": "No hay plataformas disponibles",
   "reviews": "Críticas",
-  "delete_all_searchers": "Eliminar búsquedas recientes"
+  "search_movie": "Buscar película",
+  "delete_all_searchers": "Eliminar búsquedas recientes",
+  "title_favorite_movies_page": "Tus favoritos",
+  "title_top_movies_page": "Si no sabes que ver"
 }
