@@ -7,6 +7,7 @@ class JustwatchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: change size of asset
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: ClipRRect(

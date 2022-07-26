@@ -10,22 +10,28 @@ class SectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomepageProvider homepageProvider =
-        Provider.of<HomepageProvider>(context);
+    final HomepageProvider provider = Provider.of<HomepageProvider>(context);
 
-    final List<Section> sections = homepageProvider.homepage;
+    final List<Section> sections = provider.sections;
 
-    if (homepageProvider.existsError) {
+    if (provider.existsError) {
       return const Center(child: Text('Error'));
     }
 
     return sections.isNotEmpty
         ? SafeArea(
-            child: SingleChildScrollView(
-                child: Column(children: [
-              ...sections.map((section) => _Section(section: section)).toList(),
-              const SizedBox(height: 30),
-            ])),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                provider.refresh();
+              },
+              child: SingleChildScrollView(
+                  child: Column(children: [
+                ...sections
+                    .map((section) => _Section(section: section))
+                    .toList(),
+                const SizedBox(height: 30),
+              ])),
+            ),
           )
         : const ShimmerHomepage();
   }

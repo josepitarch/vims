@@ -64,21 +64,31 @@ class _Suggestions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: movies.length,
-        itemBuilder: (context, index) {
-          bool hasAllAttributes = index <= 2;
-          Movie movie = index <= 2
-              ? Movie.fromMap(movies[index])
-              : Movie.fromIncompleteMovie(movies[index]);
-          return MovieItem(
-            movie: movie,
-            hasAllAttributes: hasAllAttributes,
+    final localization = AppLocalizations.of(context)!;
+    return movies.isNotEmpty
+        ? Expanded(
+            child: ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                bool hasAllAttributes = index <= 2;
+                Movie movie = index <= 2
+                    ? Movie.fromMap(movies[index])
+                    : Movie.fromIncompleteMovie(movies[index]);
+                return MovieItem(
+                  movie: movie,
+                  hasAllAttributes: hasAllAttributes,
+                );
+              },
+            ),
+          )
+        : Expanded(
+            child: Center(
+              child: Text(
+                localization.no_results,
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
           );
-        },
-      ),
-    );
   }
 }
 
@@ -104,6 +114,7 @@ class _SearchHistory extends StatelessWidget {
                     provider.getSearchMovie(provider.historySearchers[index]);
                   },
                   child: Container(
+                      color: Colors.red,
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

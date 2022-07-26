@@ -19,9 +19,21 @@ class TopMoviesProvider extends ChangeNotifier {
     'rakuten': false,
   };
 
+  String orderBy = '';
+
+  final Map<String, Function> sorts = {
+    'average': (List<Movie> movies) => movies.sort((a, b) =>
+        double.parse(b.average.replaceFirst(',', '.'))
+            .compareTo(double.parse(a.average.replaceFirst(',', '.')))),
+    'year': (List<Movie> movies) =>
+        movies.sort((a, b) => int.parse(a.year).compareTo(int.parse(b.year))),
+    'random': (List<Movie> movies) => movies.shuffle(),
+  };
+
   List<Movie> movies = [];
   List<Movie> filteredMovies = [];
   bool existsError = false;
+  bool hasFilters = false;
   var logger = Logger();
 
   TopMoviesProvider() {
@@ -64,6 +76,12 @@ class TopMoviesProvider extends ChangeNotifier {
       }
     }
 
+    if (orderBy.isNotEmpty) {
+      sorts[orderBy.toLowerCase()]!(filteredMovies);
+    }
+
+    hasFilters = true;
+
     notifyListeners();
   }
 
@@ -72,6 +90,7 @@ class TopMoviesProvider extends ChangeNotifier {
       platforms[key] = false;
     });
     filteredMovies = List.from(movies);
+    hasFilters = false;
     notifyListeners();
   }
 }

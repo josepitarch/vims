@@ -10,6 +10,7 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
+import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
 import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
@@ -251,7 +252,7 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
                 }
               },
               icon: Icon(
-                isFavorite! ? Icons.save : MyIcons.heart_empty,
+                isFavorite! ? Icons.save : MyIcons.heartEmpty,
                 size: 25,
               )),
         ));
@@ -404,14 +405,15 @@ class _JustwatchState extends State<_Justwatch> {
 
   @override
   void initState() {
-    platforms = widget.justwatch.flatrate;
-
     if (widget.justwatch.flatrate.isNotEmpty) {
       isFlatrateSelected = true;
+      platforms = widget.justwatch.flatrate;
     } else if (widget.justwatch.rent.isNotEmpty) {
       isRentSelected = true;
+      platforms = widget.justwatch.rent;
     } else {
       isBuySelected = true;
+      platforms = widget.justwatch.buy;
     }
 
     super.initState();
@@ -421,19 +423,6 @@ class _JustwatchState extends State<_Justwatch> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     const double height = 75;
-
-    BoxDecoration decoratorSelectedButton() {
-      return BoxDecoration(
-          color: Colors.black26, borderRadius: BorderRadius.circular(20));
-    }
-
-    BoxDecoration decoratorUnselectedButton() {
-      return BoxDecoration(
-          color: Colors.transparent, borderRadius: BorderRadius.circular(20));
-    }
-
-    // TODO
-    // refactor through a map
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -454,8 +443,8 @@ class _JustwatchState extends State<_Justwatch> {
                   margin: const EdgeInsets.only(right: 10),
                   height: 40,
                   decoration: isFlatrateSelected
-                      ? decoratorSelectedButton()
-                      : decoratorUnselectedButton(),
+                      ? BoxDecorators.decoratorSelectedButton()
+                      : BoxDecorators.decoratorUnselectedButton(),
                   child: TextButton(
                       onPressed: () {
                         setPlatforms('flatrate');
@@ -466,8 +455,8 @@ class _JustwatchState extends State<_Justwatch> {
                   margin: const EdgeInsets.only(right: 10),
                   height: 40,
                   decoration: isRentSelected
-                      ? decoratorSelectedButton()
-                      : decoratorUnselectedButton(),
+                      ? BoxDecorators.decoratorSelectedButton()
+                      : BoxDecorators.decoratorUnselectedButton(),
                   child: TextButton(
                       onPressed: () {
                         setPlatforms('rent');
@@ -477,8 +466,8 @@ class _JustwatchState extends State<_Justwatch> {
               Container(
                 height: 40,
                 decoration: isBuySelected
-                    ? decoratorSelectedButton()
-                    : decoratorUnselectedButton(),
+                    ? BoxDecorators.decoratorSelectedButton()
+                    : BoxDecorators.decoratorUnselectedButton(),
                 child: TextButton(
                     onPressed: () {
                       setPlatforms('buy');
@@ -536,9 +525,9 @@ class _JustwatchState extends State<_Justwatch> {
 }
 
 class _Reviews extends StatelessWidget {
-  _Reviews(this.reviews, {Key? key}) : super(key: key);
+  const _Reviews(this.reviews, {Key? key}) : super(key: key);
 
-  List<Review> reviews;
+  final List<Review> reviews;
 
   @override
   Widget build(BuildContext context) {

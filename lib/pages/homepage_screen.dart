@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.search_outlined),
             ),
             BottomNavigationBarItem(
-                icon: const Icon(MyIcons.heart_empty),
+                icon: const Icon(MyIcons.heartEmpty),
                 label: AppLocalizations.of(context)!.favorites),
             BottomNavigationBarItem(
               label: AppLocalizations.of(context)!.top,

@@ -10,7 +10,7 @@ class HistorySearchDatabase {
       // Run the CREATE TABLE statement on the database.
       db.execute(createTableHistorySearch);
     }, onUpgrade: (db, oldVersion, newVersion) {
-      db.execute(deleteTableFavoriteMovie);
+      db.execute(deleteTableHistorySearch);
       db.execute(createTableHistorySearch);
     }, version: 3);
   }
