@@ -54,7 +54,7 @@ class _Section extends StatelessWidget {
         ),
         Container(
           margin: const EdgeInsets.only(right: 10.0),
-          height: 200,
+          height: 210,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: section.films.length,
