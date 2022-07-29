@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/enums/order_item.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -124,19 +125,10 @@ class _PlatformsFilter extends StatefulWidget {
 }
 
 class _PlatformsFilterState extends State<_PlatformsFilter> {
-  late Map<String, bool> platforms;
-  late List<String> names;
-
-  @override
-  initState() {
-    platforms = Map.from(widget.provider.platforms);
-    names = platforms.keys.toList();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    Map<String, bool> platforms = Map.from(widget.provider.platforms);
+    List<String> names = platforms.keys.toList();
     return Column(
       children: [
         SizedBox(
@@ -195,25 +187,10 @@ class _OrderFilter extends StatefulWidget {
 }
 
 class _OrderFilterState extends State<_OrderFilter> {
-  final List<String> dropdownValues = ['Average', 'Year', 'Random'];
-  late String selectedValue;
-
-  @override
-  initState() {
-    if (widget.provider.orderBy.isEmpty) {
-      selectedValue = dropdownValues.first;
-      widget.provider.orderBy = selectedValue;
-    } else {
-      selectedValue = widget.provider.orderBy.substring(0, 1).toUpperCase() +
-          widget.provider.orderBy.substring(1);
-    }
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
+    OrderItem selectedValue = widget.provider.orderBy;
+    return DropdownButton<OrderItem>(
       value: selectedValue,
       icon: const Icon(Icons.arrow_downward),
       elevation: 16,
@@ -222,16 +199,16 @@ class _OrderFilterState extends State<_OrderFilter> {
         height: 2,
         color: Colors.deepPurpleAccent,
       ),
-      onChanged: (String? newValue) {
+      onChanged: (OrderItem? newValue) {
         setState(() {
           selectedValue = newValue!;
-          widget.provider.orderBy = newValue.toLowerCase();
+          widget.provider.orderBy = newValue;
         });
       },
-      items: dropdownValues.map((String value) {
-        return DropdownMenuItem<String>(
+      items: OrderItem.values.map((OrderItem value) {
+        return DropdownMenuItem<OrderItem>(
           value: value,
-          child: Text(value),
+          child: Text(value.name[0].toUpperCase() + value.name.substring(1)),
         );
       }).toList(),
     );

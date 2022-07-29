@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
+import 'package:scrapper_filmaffinity/enums/order_item.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
@@ -19,7 +20,7 @@ class TopMoviesProvider extends ChangeNotifier {
     'rakuten': false,
   };
 
-  String orderBy = '';
+  OrderItem orderBy = OrderItem.average;
 
   final Map<String, Function> sorts = {
     'average': (List<Movie> movies) => movies.sort((a, b) =>
@@ -76,8 +77,8 @@ class TopMoviesProvider extends ChangeNotifier {
       }
     }
 
-    if (orderBy.isNotEmpty) {
-      sorts[orderBy.toLowerCase()]!(filteredMovies);
+    if (orderBy.name.isNotEmpty) {
+      sorts[orderBy.name]!(filteredMovies);
     }
 
     hasFilters = true;
@@ -90,6 +91,7 @@ class TopMoviesProvider extends ChangeNotifier {
       platforms[key] = false;
     });
     filteredMovies = List.from(movies);
+    orderBy = OrderItem.average;
     hasFilters = false;
     notifyListeners();
   }
