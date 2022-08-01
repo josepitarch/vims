@@ -105,7 +105,7 @@ class _FiltersSection extends StatelessWidget {
             runAlignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Text('Order by'),
+              Text(localization.order_by),
               _OrderFilter(provider: provider)
             ],
           ),
@@ -194,10 +194,9 @@ class _OrderFilterState extends State<_OrderFilter> {
       value: selectedValue,
       icon: const Icon(Icons.arrow_downward),
       elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
       underline: Container(
         height: 2,
-        color: Colors.deepPurpleAccent,
+        color: Colors.orange,
       ),
       onChanged: (OrderItem? newValue) {
         setState(() {

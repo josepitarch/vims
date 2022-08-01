@@ -14,10 +14,7 @@ class SearchMovieScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
         body: SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(15.0),
-        child: _SearchMovieForm(),
-      ),
+      child: _SearchMovieForm(),
     ));
   }
 }
@@ -35,18 +32,21 @@ class _SearchMovieForm extends StatelessWidget {
 
     return Column(
       children: [
-        TextFormField(
-          controller: controller..text = provider.search,
-          keyboardType: TextInputType.text,
-          decoration: InputDecorations.searchMovieDecoration(
-              localization, controller, provider),
-          onChanged: (value) {
-            value.isEmpty ? provider.setSearch('') : null;
-          },
-          onFieldSubmitted: (String value) {
-            provider.getSearchMovie(value);
-            HistorySearchDatabase.insertSearch(value);
-          },
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: TextFormField(
+            controller: controller..text = provider.search,
+            keyboardType: TextInputType.text,
+            decoration: InputDecorations.searchMovieDecoration(
+                localization, controller, provider),
+            onChanged: (value) {
+              value.isEmpty ? provider.setSearch('') : null;
+            },
+            onFieldSubmitted: (String value) {
+              provider.getSearchMovie(value);
+              HistorySearchDatabase.insertSearch(value);
+            },
+          ),
         ),
         provider.search.isNotEmpty
             ? _Suggestions(movies: provider.movies)
@@ -109,20 +109,12 @@ class _SearchHistory extends StatelessWidget {
             shrinkWrap: true,
             itemCount: historySearchers.length,
             itemBuilder: (context, index) => ListTile(
-              title: GestureDetector(
-                  onTap: () {
-                    provider.getSearchMovie(provider.historySearchers[index]);
-                  },
-                  child: Container(
-                      color: Colors.red,
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(historySearchers[index]),
-                          const Icon(Icons.arrow_forward_ios, size: 15.0),
-                        ],
-                      ))),
+              leading: const Icon(Icons.history),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              title: Text(historySearchers[index]),
+              onTap: () {
+                provider.getSearchMovie(historySearchers[index]);
+              },
             ),
           ),
           if (historySearchers.isNotEmpty)
