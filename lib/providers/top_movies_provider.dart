@@ -10,6 +10,10 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
 
 class TopMoviesProvider extends ChangeNotifier {
+  String from = '0';
+  String to = '30';
+  bool excludeAnimation = true;
+
   final Map<String, bool> platforms = {
     'netflix': false,
     'amazon': false,
@@ -43,7 +47,8 @@ class TopMoviesProvider extends ChangeNotifier {
 
   getTopMovies() async {
     try {
-      movies = await TopMoviesService().getMopMovies();
+      List<String> selectedPlatforms = platforms.keys.where((key) => platforms[key] == true).toList();
+      movies = await TopMoviesService().getMopMovies(from, to, selectedPlatforms, [], excludeAnimation);
       filteredMovies = List.from(movies);
     } on SocketException catch (e) {
       existsError = true;

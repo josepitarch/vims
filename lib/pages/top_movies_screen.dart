@@ -45,7 +45,7 @@ class _TopMoviesState extends State<_TopMovies> {
   @override
   void initState() {
     _scrollController.addListener(() {
-      _scrollController.position.pixels > 60.0 ? _height = 0 : _height = 200;
+      _scrollController.position.pixels > 90.0 ? _height = 0 : _height = 200;
       setState(() {});
     });
     super.initState();
@@ -207,7 +207,7 @@ class _OrderFilterState extends State<_OrderFilter> {
       items: OrderItem.values.map((OrderItem value) {
         return DropdownMenuItem<OrderItem>(
           value: value,
-          child: Text(value.name[0].toUpperCase() + value.name.substring(1)),
+          child: Text(value.value),
         );
       }).toList(),
     );
@@ -243,7 +243,7 @@ class _ButtonsFilter extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   side: const BorderSide(color: Colors.orange),
                   borderRadius: BorderRadius.circular(30)),
-              onPressed: () => provider.applyFilters(),
+              onPressed: () => provider.getTopMovies(),
               child: Text(localization.apply_filters)),
         ],
       ),
