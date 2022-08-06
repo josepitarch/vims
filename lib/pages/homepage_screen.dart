@@ -18,9 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = const [
     SectionList(),
-    SearchMovieScreen(),
+    TopMoviesScreen(),
     FavouritesMovies(),
-    TopMoviesScreen()
+    SearchMovieScreen(),
   ];
 
   @override
@@ -53,16 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.home),
             ),
             BottomNavigationBarItem(
-              label: AppLocalizations.of(context)!.search,
-              icon: const Icon(Icons.search_outlined),
+              label: AppLocalizations.of(context)!.top,
+              icon: const Icon(Icons.list_alt_sharp),
             ),
             BottomNavigationBarItem(
                 icon: const Icon(MyIcons.heartEmpty),
                 label: AppLocalizations.of(context)!.favorites),
             BottomNavigationBarItem(
-              label: AppLocalizations.of(context)!.top,
-              icon: const Icon(Icons.list_alt_sharp),
-            ),
+              label: AppLocalizations.of(context)!.search,
+              icon: const Icon(Icons.search_outlined),
+            )
           ],
         ),
       ),

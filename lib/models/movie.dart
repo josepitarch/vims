@@ -81,7 +81,7 @@ class Movie {
       poster: json['poster'],
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
-      average: json['average'] ?? '0.0',
+      average: json['position'] ?? '0.0',
       reviews: [],
       platforms: json['platforms'] == null
           ? []

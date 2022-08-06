@@ -16,7 +16,7 @@ class MovieItem extends StatelessWidget {
         Map<String, dynamic> arguments = {
           'id': movie.id,
           'movie': movie,
-          'isOpened': hasAllAttributes ?? false,
+          'hasAllAttributes': hasAllAttributes ?? false,
         };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
@@ -57,8 +57,17 @@ class MovieItem extends StatelessWidget {
                       movie.director ?? '',
                       style: const TextStyle(fontStyle: FontStyle.italic),
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    )
+                      maxLines: 1,
+                    ),
+                    SizedBox(
+                        height: height - 30,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.star, color: Colors.yellow),
+                            const SizedBox(width: 5),
+                            Text(movie.average)
+                          ],
+                        )),
                   ],
                 )),
           ),

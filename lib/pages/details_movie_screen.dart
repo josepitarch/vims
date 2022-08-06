@@ -27,11 +27,11 @@ class MetadataMovieScreen extends StatelessWidget {
       final Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-      final bool isOpened = arguments['isOpened'] ?? false;
+      final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
       final String id = arguments['id'];
 
       return FutureBuilder(
-          future: !isOpened
+          future: !hasAllAttributes
               ? MetadataMovieService().getMetadataMovie(id)
               : Future<Movie>.value(arguments['movie'] as Movie),
           builder: (_, AsyncSnapshot<Movie> snapshot) {
@@ -41,7 +41,7 @@ class MetadataMovieScreen extends StatelessWidget {
 
             Movie movie = snapshot.data!;
 
-            if (!isOpened) {
+            if (!hasAllAttributes) {
               final HomepageProvider homepageProvider =
                   Provider.of<HomepageProvider>(context);
               homepageProvider.openedMovies.addAll({movie.id: movie});

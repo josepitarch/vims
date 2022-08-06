@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/enums/order_item.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
+import 'package:scrapper_filmaffinity/widgets/shimmer/movie_item_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,10 +20,8 @@ class TopMoviesScreen extends StatelessWidget {
         );
       }
 
-      return provider.filteredMovies.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+      return provider.movies.isEmpty
+          ? const MovieItemShimmer()
           : _TopMovies(
               provider: provider,
             );
@@ -45,8 +44,21 @@ class _TopMoviesState extends State<_TopMovies> {
   @override
   void initState() {
     _scrollController.addListener(() {
-      _scrollController.position.pixels > 90.0 ? _height = 0 : _height = 200;
-      setState(() {});
+      if (_scrollController.position.pixels > 90.0) {
+        _height = 0;
+        setState(() {});
+      } else {
+        _height = 200;
+        setState(() {});
+      }
+
+      if (_scrollController.position.pixels + 100 >
+              _scrollController.position.maxScrollExtent &&
+          !widget.provider.isLoading) {
+        widget.provider.from = widget.provider.to;
+        widget.provider.to += 30;
+        widget.provider.getTopMovies();
+      }
     });
     super.initState();
   }
@@ -74,10 +86,10 @@ class _TopMoviesState extends State<_TopMovies> {
           Expanded(
             child: ListView.builder(
                 controller: _scrollController,
-                itemCount: widget.provider.filteredMovies.length,
+                itemCount: widget.provider.movies.length,
                 itemBuilder: (_, index) {
                   return MovieItem(
-                    movie: widget.provider.filteredMovies[index],
+                    movie: widget.provider.movies[index],
                     hasAllAttributes: false,
                   );
                 }),
@@ -110,6 +122,7 @@ class _FiltersSection extends StatelessWidget {
             ],
           ),
         ),
+        _ExcludeFilter(provider: provider),
         _ButtonsFilter(provider: provider, localization: localization),
       ],
     );
@@ -243,10 +256,41 @@ class _ButtonsFilter extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   side: const BorderSide(color: Colors.orange),
                   borderRadius: BorderRadius.circular(30)),
-              onPressed: () => provider.getTopMovies(),
+              onPressed: () => provider.applyFilters(),
               child: Text(localization.apply_filters)),
         ],
       ),
     );
+  }
+}
+
+class _ExcludeFilter extends StatefulWidget {
+  final TopMoviesProvider provider;
+  const _ExcludeFilter({Key? key, required this.provider}) : super(key: key);
+
+  @override
+  State<_ExcludeFilter> createState() => _ExcludeFilterState();
+}
+
+class _ExcludeFilterState extends State<_ExcludeFilter> {
+  late bool _isExcluded;
+
+  @override
+  initState() {
+    _isExcluded = widget.provider.excludeAnimation;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile.adaptive(
+        title: const Text('Exclude animation'),
+        value: _isExcluded,
+        onChanged: (bool? value) {
+          widget.provider.excludeAnimation = value!;
+          setState(() {
+            _isExcluded = value;
+          });
+        });
   }
 }

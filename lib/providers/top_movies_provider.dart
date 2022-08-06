@@ -10,11 +10,15 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
 
 class TopMoviesProvider extends ChangeNotifier {
-  String from = '0';
-  String to = '30';
-  bool excludeAnimation = true;
-
-  final Map<String, bool> platforms = {
+  int from = 0;
+  int to = 30;
+  bool excludeAnimation = false;
+  OrderItem orderBy = OrderItem.average;
+  List<Movie> movies = [];
+  bool isLoading = false;
+  bool existsError = false;
+  bool hasFilters = false;
+  Map<String, bool> platforms = {
     'netflix': false,
     'amazon': false,
     'hbo': false,
@@ -23,8 +27,40 @@ class TopMoviesProvider extends ChangeNotifier {
     'filmin': false,
     'rakuten': false,
   };
+  var logger = Logger();
 
-  OrderItem orderBy = OrderItem.average;
+  TopMoviesProvider() {
+    getTopMovies().then((value) {
+      movies = value;
+      notifyListeners();
+    });
+  }
+
+  Future<List<Movie>> getTopMovies(
+      [selectedPlatforms = const <String>[]]) async {
+    try {
+      if (isLoading) return [];
+      isLoading = true;
+      await Future.delayed(const Duration(seconds: 2));
+      return await TopMoviesService()
+          .getMopMovies(from, to, selectedPlatforms, [], excludeAnimation);
+    } on SocketException catch (e) {
+      existsError = true;
+      logger.e(e.toString());
+    } on TimeoutException catch (e) {
+      existsError = true;
+      logger.e(e.toString());
+    } finally {
+      isLoading = false;
+    }
+
+    return [];
+  }
+
+  void setPlatform(String platform) {
+    bool value = platforms[platform]!;
+    platforms[platform] = !value;
+  }
 
   final Map<String, Function> sorts = {
     'average': (List<Movie> movies) => movies.sort((a, b) =>
@@ -35,69 +71,26 @@ class TopMoviesProvider extends ChangeNotifier {
     'random': (List<Movie> movies) => movies.shuffle(),
   };
 
-  List<Movie> movies = [];
-  List<Movie> filteredMovies = [];
-  bool existsError = false;
-  bool hasFilters = false;
-  var logger = Logger();
-
-  TopMoviesProvider() {
-    getTopMovies();
-  }
-
-  getTopMovies() async {
-    try {
-      List<String> selectedPlatforms = platforms.keys.where((key) => platforms[key] == true).toList();
-      movies = await TopMoviesService().getMopMovies(from, to, selectedPlatforms, [], excludeAnimation);
-      filteredMovies = List.from(movies);
-    } on SocketException catch (e) {
-      existsError = true;
-      logger.e(e.toString());
-    } on TimeoutException catch (e) {
-      existsError = true;
-      logger.e(e.toString());
-    } finally {
-      notifyListeners();
-    }
-    notifyListeners();
-  }
-
-  void setPlatform(String platform) {
-    bool value = platforms[platform]!;
-    platforms[platform] = !value;
-  }
-
   applyFilters() {
     List<String> selectedPlatforms =
         platforms.keys.where((key) => platforms[key] == true).toList();
-
-    if (selectedPlatforms.isEmpty) {
-      filteredMovies = List.from(movies);
-    } else {
-      for (var platform in selectedPlatforms) {
-        filteredMovies = movies
-            .where((movie) => movie.platforms!
-                .any((element) => element.toLowerCase().contains(platform)))
-            .toList();
-      }
-    }
-
-    if (orderBy.name.isNotEmpty) {
-      sorts[orderBy.name]!(filteredMovies);
-    }
-
     hasFilters = true;
 
-    notifyListeners();
+    getTopMovies(selectedPlatforms).then((value) {
+      movies = value;
+      notifyListeners();
+    });
   }
 
   removeFilters() {
     platforms.forEach((key, value) {
       platforms[key] = false;
     });
-    filteredMovies = List.from(movies);
-    orderBy = OrderItem.average;
     hasFilters = false;
-    notifyListeners();
+
+    getTopMovies().then((value) {
+      movies = value;
+      notifyListeners();
+    });
   }
 }

@@ -87,7 +87,7 @@ class _SectionMovie extends StatelessWidget {
         Map<String, Movie> openedMovies = homepageProvider.openedMovies;
 
         Map<String, dynamic> arguments = {
-          'isOpened': openedMovies.containsKey(film.id),
+          'hasAllAttributes': openedMovies.containsKey(film.id),
           'movie': openedMovies[film.id],
           'id': film.id
         };
