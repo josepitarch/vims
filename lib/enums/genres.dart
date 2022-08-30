@@ -1,25 +1,18 @@
 enum Genres {
-  action('Action'),
-  adventure('Adventure'),
-  animation('Animation'),
-  comedy('Comedy'),
-  crime('Crime'),
-  documentary('Documentary'),
-  drama('Drama'),
-  family('Family'),
-  fantasy('Fantasy'),
-  history('History'),
-  horror('Horror'),
-  music('Music'),
-  mystery('Mystery'),
-  romance('Romance'),
-  sciFi('Sci-Fi'),
-  tvMovie('TV Movie'),
-  thriller('Thriller'),
-  war('War'),
-  western('Western');
+  action({'en': 'Action', 'es': 'Acción'}),
+  adventure({'en': 'Adventure', 'es': 'Aventura'}),
+  comedy({'en': 'Comedy', 'es': 'Comedia'}),
+  drama({'en': 'Drama', 'es': 'Drama'}),
+  terror({'en': 'Terror', 'es': 'Terror'}),
+  musical({'en': 'Music', 'es': 'Música'}),
+  romance({'en': 'Romance', 'es': 'Romance'}),
+  war({'en': 'War', 'es': 'Guerra'}),
+  thriller({'en': 'Thriller', 'es': 'Thriller'}),
+  mystery({'en': 'Mystery', 'es': 'Misterio'}),
+  western({'en': 'Western', 'es': 'Western'}),
+  kids({'en': 'Infantil', 'es': 'Infantil'});
 
   const Genres(this._value);
-  final String _value;
-  String get value => _value;
+  final Map<String, String> _value;
+  Map<String, String> get value => _value;
 }

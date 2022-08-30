@@ -59,15 +59,17 @@ class MovieItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    SizedBox(
-                        height: height - 30,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.star, color: Colors.yellow),
-                            const SizedBox(width: 5),
-                            Text(movie.average)
-                          ],
-                        )),
+                    movie.average.isNotEmpty
+                        ? SizedBox(
+                            height: height - 30,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.star, color: Colors.yellow),
+                                const SizedBox(width: 5),
+                                Text(movie.average)
+                              ],
+                            ))
+                        : Container()
                   ],
                 )),
           ),

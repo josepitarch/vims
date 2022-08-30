@@ -34,11 +34,13 @@ class TopMoviesService {
       List<String> genres, bool excludeAnimation) async {
     List<Movie> topMovies = [];
 
+    print(genres);
+
     final request = Uri.http(url, '/api/top/films', {
       'from': from.toString(),
       'to': to.toString(),
-      'platforms': platforms,
-      'genres': genres,
+      'platforms': platforms.join(','),
+      'genres': genres.join(','),
       'exclude_animation': excludeAnimation.toString()
     });
 
