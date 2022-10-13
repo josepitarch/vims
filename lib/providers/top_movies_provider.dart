@@ -7,30 +7,38 @@ import 'package:logger/logger.dart';
 import 'package:scrapper_filmaffinity/enums/genres.dart';
 import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/enums/platforms.dart';
+import 'package:scrapper_filmaffinity/models/filters.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:scrapper_filmaffinity/utils/current_year.dart';
 
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
   int to = 30;
-  bool excludeAnimation = false;
+
   OrderItem orderBy = OrderItem.average;
   List<Movie> movies = [];
   bool isLoading = false;
   bool existsError = false;
   bool hasFilters = false;
-  Map<String, bool> platforms = {};
 
-  Map<String, bool> genres = {};
+  Filters filters = Filters(
+      platforms: {},
+      genres: {},
+      isAnimationExcluded: false,
+      yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
+      yearTo: getCurrentYear());
+
   var logger = Logger();
 
-  TopMoviesProvider() {
+  TopMoviesProvider(String language) {
     for (var genre in Genres.values) {
-      genres[genre.value['es']!] = false;
+      filters.genres[genre] = false;
     }
     for (var platform in Platforms.values) {
-      platforms[platform.value] = false;
+      filters.platforms[platform.value] = false;
     }
     getTopMovies().then((value) {
       movies = value;
@@ -44,13 +52,23 @@ class TopMoviesProvider extends ChangeNotifier {
       isLoading = true;
 
       //await Future.delayed(const Duration(seconds: 2));
-      List<String> selectedPlatforms =
-          platforms.keys.where((key) => platforms[key] == true).toList();
+      List<String> selectedPlatforms = filters.platforms.keys
+          .where((key) => filters.platforms[key] == true)
+          .toList();
 
-      List<String> selectedGenres = genres.keys.where((key) => genres[key] == true).toList();
+      List<String> selectedGenres = filters.genres.keys
+          .where((key) => filters.genres[key] == true)
+          .map((genre) => genre.name)
+          .toList();
 
-      return await TopMoviesService()
-          .getMopMovies(from, to, selectedPlatforms, selectedGenres, excludeAnimation);
+      return await TopMoviesService().getMopMovies(
+          from,
+          to,
+          selectedPlatforms,
+          selectedGenres,
+          filters.isAnimationExcluded,
+          filters.yearFrom,
+          filters.yearTo);
     } on SocketException catch (e) {
       existsError = true;
       logger.e(e.toString());
@@ -65,8 +83,8 @@ class TopMoviesProvider extends ChangeNotifier {
   }
 
   void setPlatform(String platform) {
-    bool value = platforms[platform]!;
-    platforms[platform] = !value;
+    bool value = filters.platforms[platform]!;
+    filters.platforms[platform] = !value;
   }
 
   final Map<String, Function> sorts = {
@@ -78,18 +96,22 @@ class TopMoviesProvider extends ChangeNotifier {
     'random': (List<Movie> movies) => movies.shuffle(),
   };
 
-  applyFilters(Map<String, bool> selectedPlatforms, Map<String, bool> selectedGenres) {
+  applyFilters(Filters filters) {
     hasFilters = true;
     movies = [];
     notifyListeners();
-    platforms = {
-      ...platforms,
-      ...selectedPlatforms,
+    filters.platforms = {
+      ...this.filters.platforms,
+      ...filters.platforms,
     };
-    genres = {
-      ...genres,
-      ...selectedGenres,
+    this.filters.genres = {
+      ...this.filters.genres,
+      ...filters.genres,
     };
+
+    this.filters.yearFrom = filters.yearFrom;
+    this.filters.yearTo = filters.yearTo;
+    this.filters.isAnimationExcluded = filters.isAnimationExcluded;
 
     getTopMovies().then((value) {
       movies = value;
@@ -98,8 +120,8 @@ class TopMoviesProvider extends ChangeNotifier {
   }
 
   removeFilters() {
-    platforms.forEach((key, value) {
-      platforms[key] = false;
+    filters.platforms.forEach((key, value) {
+      filters.platforms[key] = false;
     });
     hasFilters = false;
     from = 0;

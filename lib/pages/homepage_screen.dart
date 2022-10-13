@@ -37,6 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
           unselectedItemColor: Colors.white.withOpacity(.60),
           selectedFontSize: 16,
           unselectedFontSize: 14,
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
           onTap: (index) async {
             bool canVibrate = await Vibrate.canVibrate;
 

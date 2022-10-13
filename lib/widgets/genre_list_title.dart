@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+//ignore: must_be_immutable
 class GenreListTitle extends StatelessWidget {
+  final String genre;
+  bool isSelected;
+  final Function onTap;
+
   GenreListTitle({
     Key? key,
     required this.genre,
@@ -8,9 +13,7 @@ class GenreListTitle extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
-  final String genre;
-  bool isSelected;
-  final Function onTap;
+
 
   @override
   Widget build(BuildContext context) {

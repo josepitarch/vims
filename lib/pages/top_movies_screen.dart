@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/enums/genres.dart';
 import 'package:scrapper_filmaffinity/enums/orders.dart';
+import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/genre_list_title.dart';
 import 'package:scrapper_filmaffinity/widgets/shimmer/movie_item_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
 
 import '../widgets/movie_item.dart';
 
@@ -108,9 +111,13 @@ class _FiltersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
-    final Map<String, bool> platforms = Map.from(provider.platforms);
-    final Map<String, bool> genres = Map.from(provider.genres);
+    final Filters filters = Filters(
+        platforms: Map.from(provider.filters.platforms),
+        genres: Map.from(provider.filters.genres),
+        isAnimationExcluded: provider.filters.isAnimationExcluded,
+        yearFrom: provider.filters.yearFrom,
+        yearTo: provider.filters.yearTo);
+
     return Container(
       padding: const EdgeInsets.all(8.0),
       height: double.infinity,
@@ -124,34 +131,83 @@ class _FiltersSection extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
-          _PlatformsFilter(platforms: platforms),
-          // Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Wrap(
-          //     spacing: 10,
-          //     runAlignment: WrapAlignment.center,
-          //     crossAxisAlignment: WrapCrossAlignment.center,
-          //     children: [
-          //       Text(localization.order_by),
-          //       _OrderFilter(provider: provider)
-          //     ],
-          //   ),
-          // ),
-          _ExcludeFilter(provider: provider),
-          _GenresFilter(genres: genres),
-          _ButtonsFilter(
-              provider: provider, platforms: platforms, genres: genres),
+          _PlatformsFilter(filters: filters),
+          _YearsFilter(filters: filters),
+          _ExcludeAnimationFilter(filters: filters),
+          _GenresFilter(filters: filters),
+          _ButtonsFilter(provider: provider, filters: filters),
         ],
       ),
     );
   }
 }
 
+//ignore: must_be_immutable
+class _YearsFilter extends StatefulWidget {
+  final Filters filters;
+
+  const _YearsFilter({Key? key, required this.filters}) : super(key: key);
+
+  @override
+  State<_YearsFilter> createState() => _YearsFilterState();
+}
+
+class _YearsFilterState extends State<_YearsFilter> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        MaterialButton(
+            onPressed: () {
+              showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return YearPickerCupertino(
+                        isReverse: false, onItemSelectedChanged: setYearFrom);
+                  }).then((value) => print(value));
+            },
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(30)),
+            child: Text(widget.filters.yearFrom.toString())),
+        const SizedBox(
+          width: 10,
+        ),
+        MaterialButton(
+            onPressed: () {
+              showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return YearPickerCupertino(
+                        isReverse: true, onItemSelectedChanged: setYearTo);
+                  });
+            },
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(30)),
+            child: Text(widget.filters.yearTo.toString())),
+      ],
+    );
+  }
+
+  void setYearFrom(int year) {
+    setState(() {
+      widget.filters.yearFrom = year;
+    });
+  }
+
+  void setYearTo(int year) {
+    setState(() {
+      widget.filters.yearTo = year;
+    });
+  }
+}
+
 class _GenresFilter extends StatefulWidget {
-  final Map<String, bool> genres;
+  final Filters filters;
   const _GenresFilter({
     Key? key,
-    required this.genres,
+    required this.filters,
   }) : super(key: key);
 
   @override
@@ -159,27 +215,33 @@ class _GenresFilter extends StatefulWidget {
 }
 
 class _GenresFilterState extends State<_GenresFilter> {
+  late String language;
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+    language = localization.localeName;
     return Expanded(
         child: ListView(
-            children: widget.genres.keys
+            children: widget.filters.genres.keys
                 .map((key) => GenreListTitle(
-                    genre: key, isSelected: widget.genres[key]!, onTap: onTap))
+                    genre: key.value[localization.localeName]!,
+                    isSelected: widget.filters.genres[key]!,
+                    onTap: onTap))
                 .toList()));
   }
 
-  void onTap(String genre) {
+  void onTap(String name) {
     setState(() {
-      widget.genres[genre] = !widget.genres[genre]!;
+      Genres genre = Genres.getGenre(name, language);
+      widget.filters.genres[genre] = !widget.filters.genres[genre]!;
     });
   }
 }
 
 class _PlatformsFilter extends StatefulWidget {
-  const _PlatformsFilter({Key? key, required this.platforms}) : super(key: key);
+  final Filters filters;
 
-  final Map<String, bool> platforms;
+  const _PlatformsFilter({Key? key, required this.filters}) : super(key: key);
 
   @override
   State<_PlatformsFilter> createState() => _PlatformsFilterState();
@@ -188,7 +250,7 @@ class _PlatformsFilter extends StatefulWidget {
 class _PlatformsFilterState extends State<_PlatformsFilter> {
   @override
   Widget build(BuildContext context) {
-    final List<String> names = widget.platforms.keys.toList();
+    final List<String> names = widget.filters.platforms.keys.toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,7 +259,7 @@ class _PlatformsFilterState extends State<_PlatformsFilter> {
         SizedBox(
           height: 70,
           child: ListView.builder(
-              itemCount: widget.platforms.length,
+              itemCount: widget.filters.platforms.length,
               scrollDirection: Axis.horizontal,
               itemBuilder: (_, index) {
                 return Container(
@@ -205,13 +267,13 @@ class _PlatformsFilterState extends State<_PlatformsFilter> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        bool value = widget.platforms[names[index]]!;
-                        widget.platforms[names[index]] = !value;
+                        bool value = widget.filters.platforms[names[index]]!;
+                        widget.filters.platforms[names[index]] = !value;
                       });
                     },
                     child: _PlatformItem(
                         assetName: names[index],
-                        isSelected: widget.platforms[names[index]]!),
+                        isSelected: widget.filters.platforms[names[index]]!),
                   ),
                 );
               }),
@@ -293,14 +355,9 @@ class _OrderFilterState extends State<_OrderFilter> {
 
 class _ButtonsFilter extends StatelessWidget {
   final TopMoviesProvider provider;
-  final Map<String, bool> platforms;
-  final Map<String, bool> genres;
-
+  final Filters filters;
   const _ButtonsFilter(
-      {Key? key,
-      required this.provider,
-      required this.platforms,
-      required this.genres})
+      {Key? key, required this.provider, required this.filters})
       : super(key: key);
 
   @override
@@ -328,7 +385,7 @@ class _ButtonsFilter extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () {
                 Navigator.pop(context);
-                provider.applyFilters(platforms, genres);
+                provider.applyFilters(filters);
               },
               child: Text(localization.apply_filters)),
         ],
@@ -337,32 +394,28 @@ class _ButtonsFilter extends StatelessWidget {
   }
 }
 
-class _ExcludeFilter extends StatefulWidget {
-  final TopMoviesProvider provider;
-  const _ExcludeFilter({Key? key, required this.provider}) : super(key: key);
+class _ExcludeAnimationFilter extends StatefulWidget {
+  final Filters filters;
+
+  const _ExcludeAnimationFilter({Key? key, required this.filters})
+      : super(key: key);
 
   @override
-  State<_ExcludeFilter> createState() => _ExcludeFilterState();
+  State<_ExcludeAnimationFilter> createState() =>
+      _ExcludeAnimationFilterState();
 }
 
-class _ExcludeFilterState extends State<_ExcludeFilter> {
-  late bool _isExcluded;
-
-  @override
-  initState() {
-    _isExcluded = widget.provider.excludeAnimation;
-    super.initState();
-  }
-
+class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     return SwitchListTile.adaptive(
-        title: const Text('Exclude animation'),
-        value: _isExcluded,
+        title: Text(localization.exclude_animation),
+        value: widget.filters.isAnimationExcluded,
         onChanged: (bool? value) {
-          widget.provider.excludeAnimation = value!;
+          widget.filters.isAnimationExcluded = value!;
           setState(() {
-            _isExcluded = value;
+            widget.filters.isAnimationExcluded = value;
           });
         });
   }
