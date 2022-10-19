@@ -19,12 +19,10 @@ class HomepageService {
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
 
     if (response.statusCode == 200) {
-      List<dynamic> aux = json.jsonDecode(response.body);
-      for (var element in aux) {
-        homepageMovies.add(Section.fromMap(element));
-      }
+      List aux = json.jsonDecode(response.body);
+      aux.forEach((element) => homepageMovies.add(Section.fromMap(element)));
     }
 
-    return homepageMovies;
+    return homepageMovies.sublist(0, homepageMovies.length - 1);
   }
 }

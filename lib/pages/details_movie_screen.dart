@@ -11,7 +11,6 @@ import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
-import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
@@ -252,7 +251,7 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
                 }
               },
               icon: Icon(
-                isFavorite! ? Icons.save : MyIcons.heartEmpty,
+                isFavorite! ? Icons.bookmark : Icons.bookmark_border_outlined,
                 size: 25,
               )),
         ));

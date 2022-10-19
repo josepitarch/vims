@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/widgets/shimmer/homepage_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/shimmer/sections_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
-class SectionList extends StatelessWidget {
-  const SectionList({Key? key}) : super(key: key);
+class Sections extends StatelessWidget {
+  const Sections({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,7 @@ class SectionList extends StatelessWidget {
     return sections.isNotEmpty
         ? SafeArea(
             child: RefreshIndicator(
-              onRefresh: () async {
-                provider.refresh();
-              },
+              onRefresh: () async => provider.refresh(),
               child: SingleChildScrollView(
                   child: Column(children: [
                 ...sections
@@ -33,7 +32,7 @@ class SectionList extends StatelessWidget {
               ])),
             ),
           )
-        : const ShimmerHomepage();
+        : const SectionsShimmer();
   }
 }
 
@@ -42,16 +41,13 @@ class _Section extends StatelessWidget {
 
   const _Section({Key? key, required this.section}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text(section.titleSection,
-              style: const TextStyle(fontSize: 20.0)),
-        ),
+        TitleSection(title: section.title),
         Container(
           margin: const EdgeInsets.only(right: 10.0),
           height: 210,

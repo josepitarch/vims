@@ -48,9 +48,9 @@ class _TitleSectionState extends State<_TitleSection> {
 
   @override
   void initState() {
-    currentTitle = widget.sections.first.titleSection;
+    currentTitle = widget.sections.first.title;
     for (var section in widget.sections) {
-      data.addAll({section.titleSection: section.films});
+      data.addAll({section.title: section.films});
     }
     super.initState();
   }
@@ -68,9 +68,9 @@ class _TitleSectionState extends State<_TitleSection> {
           alignment: AlignmentDirectional.topCenter,
           items: widget.sections.map((item) {
             return DropdownMenuItem<String>(
-              value: item.titleSection,
+              value: item.title,
               child: Text(
-                item.titleSection,
+                item.title,
                 style:
                     const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,

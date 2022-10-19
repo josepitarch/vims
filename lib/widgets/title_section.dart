@@ -5,15 +5,32 @@ class TitleSection extends StatelessWidget {
 
   final String title;
 
+  static const Map<String, String> titleSectionsMapper = {
+    'Cartelera España': 'Cartelera',
+    'Próximos estrenos España': 'Próximos estrenos',
+    'Netflix (estrenos destacados)': 'Netflix',
+    'Disney+': 'Disney+',
+    'Movistar Plus+': 'Movistar+',
+    'HBO Max España': 'HBO Max',
+    'Amazon Prime Video España': 'Amazon Prime',
+    'Filmin (últ. incorporaciones)': 'Filmin',
+    'Apple TV+ (estrenos destacados)': 'Apple TV+',
+  };
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 20.0),
+      margin: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
       child: Text(
-        title,
+        titleSectionsMapper[title] ?? title,
         textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.headline5,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 21,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.1,
+        ),
       ),
     );
   }
