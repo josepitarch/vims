@@ -13,4 +13,14 @@ class Filters {
       required this.isAnimationExcluded,
       required this.yearFrom,
       required this.yearTo});
+
+  removeFiltes() {
+    platforms.forEach((key, value) {
+      platforms[key] = false;
+    });
+    genres.forEach((key, value) {
+      genres[key] = false;
+    });
+    isAnimationExcluded = false;
+  }
 }

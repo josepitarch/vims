@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
+import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
@@ -15,11 +15,11 @@ import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
-import 'package:scrapper_filmaffinity/widgets/shimmer/metadata_shimmer.dart';
+import 'package:scrapper_filmaffinity/shimmer/metadata_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
-class MetadataMovieScreen extends StatelessWidget {
-  const MetadataMovieScreen({Key? key}) : super(key: key);
+class DetailsMovieScreen extends StatelessWidget {
+  const DetailsMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     try {
@@ -209,9 +209,11 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
 
   @override
   void initState() {
-    FavoriteMovieDatabase.retrieveFavoriteMovies().then((value) => setState(() {
-          isFavorite = value.any((element) => element.id == widget.movie.id);
-        }));
+    BookmarkMoviesDatabase.retrieveFavoriteMovies()
+        .then((value) => setState(() {
+              isFavorite =
+                  value.any((element) => element.id == widget.movie.id);
+            }));
 
     super.initState();
   }
@@ -240,7 +242,7 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
                   isSuccess = await FavoriteMovieProvider()
                       .addFavoriteMovie(widget.movie);
                 } else {
-                  isSuccess = await FavoriteMovieDatabase.deleteFavoriteMovie(
+                  isSuccess = await BookmarkMoviesDatabase.deleteFavoriteMovie(
                       widget.movie.id);
                 }
 
@@ -315,7 +317,7 @@ class _Cast extends StatelessWidget {
             textAlign: TextAlign.start,
             maxLines: _maxLines,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 17, height: 1.3)),
+            style: Theme.of(context).textTheme.bodyText1),
       ],
     );
   }
@@ -357,9 +359,9 @@ class _SynopsisState extends State<_Synopsis> {
       children: [
         TitleSection(title: localization.synopsis),
         Text(widget.overview,
-            style: const TextStyle(fontSize: 17, height: 1.3),
             textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyText1,
             maxLines: maxLines),
         if (widget.overview.length > delimiterLines)
           Padding(
@@ -436,6 +438,7 @@ class _JustwatchState extends State<_Justwatch> {
                   child: Text(
                 localization.no_platforms,
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyText1,
               )),
             if (widget.justwatch.flatrate.isNotEmpty)
               Container(

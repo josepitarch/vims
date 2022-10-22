@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 
-class FavouritesMovies extends StatelessWidget {
-  const FavouritesMovies({Key? key}) : super(key: key);
+class BookmarkMoviesScreen extends StatelessWidget {
+  const BookmarkMoviesScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -15,7 +15,7 @@ class FavouritesMovies extends StatelessWidget {
     return Consumer(builder: (context, FavoriteMovieProvider provider, _) {
       provider.getFavoriteMovies();
       return provider.favoriteMovies.isEmpty
-          ? Center(child: Text(localization.no_favorites))
+          ? Center(child: Text(localization.no_bookmarks))
           : FavoriteMoviesList(provider.favoriteMovies);
     });
   }
@@ -34,7 +34,7 @@ class FavoriteMoviesList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitlePage(localization.title_favorite_movies_page),
+          TitlePage(localization.title_bookmarks_page),
           Expanded(
             child: ListView.builder(
                 itemCount: favoriteMovies.length,

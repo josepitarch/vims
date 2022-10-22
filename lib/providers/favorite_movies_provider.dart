@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:scrapper_filmaffinity/database/favorite_movie_database.dart';
+import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
@@ -16,23 +16,24 @@ class FavoriteMovieProvider extends ChangeNotifier {
         title: movie.title,
         director: movie.director ?? '');
 
-    bool response = await FavoriteMovieDatabase.insertFavoriteMovie(favoriteMovie);
+    bool response =
+        await BookmarkMoviesDatabase.insertFavoriteMovie(favoriteMovie);
     favoriteMovies.add(favoriteMovie);
     notifyListeners();
-    
+
     return response;
   }
 
   deleteFavoriteMovie(String id) {
     favoriteMovies.removeWhere((movie) => movie.id == id);
 
-    FavoriteMovieDatabase.deleteFavoriteMovie(id).then((_) {
+    BookmarkMoviesDatabase.deleteFavoriteMovie(id).then((_) {
       notifyListeners();
     });
   }
 
   getFavoriteMovies() async {
-    FavoriteMovieDatabase.retrieveFavoriteMovies().then((value) => {
+    BookmarkMoviesDatabase.retrieveFavoriteMovies().then((value) => {
           favoriteMovies = value,
           isEmpty = value.isEmpty,
           notifyListeners(),

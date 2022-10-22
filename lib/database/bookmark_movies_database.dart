@@ -3,38 +3,40 @@ import 'package:scrapper_filmaffinity/database/querys.dart';
 import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 import 'package:sqflite/sqflite.dart';
 
-class FavoriteMovieDatabase {
-  
+class BookmarkMoviesDatabase {
+  static const String _databaseName = 'bookmark_movies.db';
+  static const String _tableName = 'bookmark_movies';
+
   static initDatabase() async {
-    openDatabase(join(await getDatabasesPath(), 'favorite_movies.db'),
+    openDatabase(join(await getDatabasesPath(), _databaseName),
         onCreate: (db, version) {
       // Run the CREATE TABLE statement on the database.
-      db.execute(createTableFavoriteMovie);
+      db.execute(createBookmarkMovieTable(_tableName));
     }, onUpgrade: (db, oldVersion, newVersion) {
-      db.execute(deleteTableFavoriteMovie);
-      db.execute(createTableFavoriteMovie);
+      db.execute(deleteBookmarkMovieTable(_tableName));
+      db.execute(createBookmarkMovieTable(_tableName));
     }, version: 8);
   }
 
   static Future<bool> insertFavoriteMovie(FavoriteMovie favoriteMovie) async {
-    final db = await openDatabase(
-        join(await getDatabasesPath(), 'favorite_movies.db'));
+    final db =
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     int response = await db.insert(
-      'favorite_movies',
+      _tableName,
       favoriteMovie.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
+      conflictAlgorithm: ConflictAlgorithm.abort,
     );
 
     return response == 0 ? false : true;
   }
 
   static Future<bool> deleteFavoriteMovie(String id) async {
-    final db = await openDatabase(
-        join(await getDatabasesPath(), 'favorite_movies.db'));
+    final db =
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     await db.delete(
-      'favorite_movies',
+      _tableName,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -43,10 +45,10 @@ class FavoriteMovieDatabase {
   }
 
   static Future<List<FavoriteMovie>> retrieveFavoriteMovies() async {
-    final db = await openDatabase(
-        join(await getDatabasesPath(), 'favorite_movies.db'));
+    final db =
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
 
-    final List<Map<String, dynamic>> maps = await db.query('favorite_movies');
+    final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
     return List.generate(maps.length, (i) {
       return FavoriteMovie(

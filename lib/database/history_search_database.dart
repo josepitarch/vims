@@ -4,14 +4,16 @@ import 'package:scrapper_filmaffinity/database/querys.dart';
 import 'package:logger/logger.dart';
 
 class HistorySearchDatabase {
+  static const String _databaseName = 'history_search.db';
+  static const String _tableName = 'history_search';
   static initDatabase() async {
-    openDatabase(join(await getDatabasesPath(), 'history_search.db'),
+    openDatabase(join(await getDatabasesPath(), _databaseName),
         onCreate: (db, version) {
       // Run the CREATE TABLE statement on the database.
-      db.execute(createTableHistorySearch);
+      db.execute(createHistorySearchTable(_tableName));
     }, onUpgrade: (db, oldVersion, newVersion) {
-      db.execute(deleteTableHistorySearch);
-      db.execute(createTableHistorySearch);
+      db.execute(deleteHistorySearchTable(_tableName));
+      db.execute(createHistorySearchTable(_tableName));
     }, version: 3);
   }
 
@@ -19,11 +21,11 @@ class HistorySearchDatabase {
     final logger = Logger();
 
     final db =
-        await openDatabase(join(await getDatabasesPath(), 'history_search.db'));
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     try {
       await db.insert(
-        'history_search',
+        _tableName,
         {'search': search},
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
@@ -36,10 +38,10 @@ class HistorySearchDatabase {
 
   static Future<bool> deleteAllSearchs() async {
     final db =
-        await openDatabase(join(await getDatabasesPath(), 'history_search.db'));
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     await db.delete(
-      'history_search',
+      _tableName,
     );
 
     return true;
@@ -47,10 +49,10 @@ class HistorySearchDatabase {
 
   static Future<List<String>> retrieveSearchs() async {
     final db =
-        await openDatabase(join(await getDatabasesPath(), 'history_search.db'));
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     final List<Map<String, dynamic>> maps =
-        await db.query('history_search', orderBy: 'id DESC', limit: 5);
+        await db.query(_tableName, orderBy: 'id DESC', limit: 5);
 
     return List.generate(maps.length, (i) {
       return maps[i]['search'];

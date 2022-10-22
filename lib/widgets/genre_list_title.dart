@@ -13,15 +13,13 @@ class GenreListTitle extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
         genre,
         style: TextStyle(
-          color: isSelected ? Colors.white : Colors.orange,
+          color: isSelected ? Colors.orange : Colors.white,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
       ),

@@ -47,6 +47,7 @@ dependencies:
   shimmer: 2.0.0
   flutter_vibrate: 1.3.0
   flutter_native_splash: 2.2.8
+  google_fonts: 3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -91,7 +92,24 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  #fonts:
+  fonts:
+      - family: Lato
+        fonts:
+          - asset: assets/fonts/Lato/Lato-Regular.ttf
+            style: normal
+          - asset: assets/fonts/Lato/Lato-Italic.ttf
+            style: italic
+      - family: OpenSans
+        fonts:
+          - asset: assets/fonts/OpenSans/OpenSans-Medium.ttf
+            style: normal 
+          - asset: assets/fonts/OpenSans/OpenSans-Regular.ttf
+            style: normal
+          - asset: assets/fonts/OpenSans/OpenSans-Italic.ttf
+            style: italic
+          - asset: assets/fonts/OpenSans/OpenSans-Semibold.ttf
+            weight: 700
+
         
   #   - family: Schyler
   #     fonts:

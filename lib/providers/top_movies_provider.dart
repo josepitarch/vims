@@ -16,7 +16,7 @@ import 'package:scrapper_filmaffinity/utils/current_year.dart';
 
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
-  int to = 30;
+  int to = 210;
 
   OrderItem orderBy = OrderItem.average;
   List<Movie> movies = [];
@@ -51,7 +51,6 @@ class TopMoviesProvider extends ChangeNotifier {
       if (isLoading) return [];
       isLoading = true;
 
-      //await Future.delayed(const Duration(seconds: 2));
       List<String> selectedPlatforms = filters.platforms.keys
           .where((key) => filters.platforms[key] == true)
           .toList();
@@ -100,7 +99,7 @@ class TopMoviesProvider extends ChangeNotifier {
     hasFilters = true;
     movies = [];
     notifyListeners();
-    filters.platforms = {
+    this.filters.platforms = {
       ...this.filters.platforms,
       ...filters.platforms,
     };
@@ -120,9 +119,7 @@ class TopMoviesProvider extends ChangeNotifier {
   }
 
   removeFilters() {
-    filters.platforms.forEach((key, value) {
-      filters.platforms[key] = false;
-    });
+    filters.removeFiltes();
     hasFilters = false;
     from = 0;
     to = 30;
