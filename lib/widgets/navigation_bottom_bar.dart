@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:scrapper_filmaffinity/pages/bookmark_movies_screen.dart';
-import 'package:scrapper_filmaffinity/pages/search_movie.dart';
+import 'package:scrapper_filmaffinity/pages/search_movie_screen.dart';
 import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/pages/homepage_screen.dart';
@@ -15,11 +15,11 @@ class NavigatorBottomBarApp extends StatefulWidget {
 
 class _NavigatorBottomBarAppState extends State<NavigatorBottomBarApp> {
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = const [
-    HomepageScreen(),
-    TopMoviesScreen(),
-    BookmarkMoviesScreen(),
-    SearchMovieScreen(),
+  final List<Widget> _widgetOptions = [
+    const HomepageScreen(),
+    const TopMoviesScreen(),
+    const BookmarkMoviesScreen(),
+    const SearchMovieScreen(),
   ];
 
   @override

@@ -48,14 +48,17 @@ class MovieItem extends StatelessWidget {
                   children: [
                     Text(
                       movie.title,
-                      style: const TextStyle(fontSize: 19),
+                      style: Theme.of(context).textTheme.headline3,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
                     const SizedBox(height: 10.0),
                     Text(
                       movie.director ?? '',
-                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                            fontStyle: FontStyle.italic,
+                            //color: Theme.of(context).colorScheme.secondary
+                          ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),

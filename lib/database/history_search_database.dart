@@ -27,7 +27,7 @@ class HistorySearchDatabase {
       await db.insert(
         _tableName,
         {'search': search},
-        conflictAlgorithm: ConflictAlgorithm.fail,
+        conflictAlgorithm: ConflictAlgorithm.abort,
       );
       return true;
     } on DatabaseException catch (e) {

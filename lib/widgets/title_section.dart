@@ -25,8 +25,7 @@ class TitleSection extends StatelessWidget {
       child: Text(
         titleSectionsMapper[title] ?? title,
         textAlign: TextAlign.start,
-        style: const TextStyle(
-            fontSize: 21, fontWeight: FontWeight.w700, fontFamily: "OpenSans"),
+        style: Theme.of(context).textTheme.headline2,
       ),
     );
   }

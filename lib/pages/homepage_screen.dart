@@ -134,7 +134,7 @@ class _SectionMovie extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.headline4,
             )
           ])),
     );

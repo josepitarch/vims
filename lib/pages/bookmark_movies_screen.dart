@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
 import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/widgets/layout.dart';
 import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 
@@ -29,23 +30,15 @@ class FavoriteMoviesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    return Scaffold(
-        body: SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TitlePage(localization.title_bookmarks_page),
-          Expanded(
-            child: ListView.builder(
-                itemCount: favoriteMovies.length,
-                itemBuilder: (_, index) {
-                  return MovieItem(
-                    movie: favoriteMovies[index].toMovie(),
-                  );
-                }),
-          ),
-        ],
-      ),
-    ));
+    return Layout(
+      header: TitlePage(localization.bookmarks),
+      body: ListView.builder(
+          itemCount: favoriteMovies.length,
+          itemBuilder: (_, index) {
+            return MovieItem(
+              movie: favoriteMovies[index].toMovie(),
+            );
+          }),
+    );
   }
 }

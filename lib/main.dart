@@ -6,8 +6,6 @@ import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/l10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/pages/bookmark_movies_screen.dart';
-import 'package:scrapper_filmaffinity/pages/search_movie.dart';
 
 import 'package:scrapper_filmaffinity/widgets/navigation_bottom_bar.dart';
 import 'package:scrapper_filmaffinity/pages/details_movie_screen.dart';
@@ -61,8 +59,6 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (_) => const NavigatorBottomBarApp(),
           'details': (_) => const DetailsMovieScreen(),
-          'bookmark': (_) => const BookmarkMoviesScreen(),
-          'search': (_) => const SearchMovieScreen(),
         },
         theme: ThemeData.dark().copyWith(
           useMaterial3: true,
@@ -70,7 +66,9 @@ class MyApp extends StatelessWidget {
           primaryColorDark: Colors.orange,
           splashColor: Colors.orange,
           textTheme: const TextTheme(
+            headline2: TextThemeCustom.headline2,
             headline3: TextThemeCustom.headline3,
+            headline4: TextThemeCustom.headline4,
             headline5: TextThemeCustom.headline5,
             bodyText1: TextThemeCustom.bodyText1,
             bodyText2: TextThemeCustom.bodyText2,
@@ -98,6 +96,33 @@ class MyApp extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w700,
             ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            prefixIconColor: Colors.grey,
+            suffixIconColor: Colors.grey,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(color: Colors.grey),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(color: Colors.orange),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(color: Colors.grey),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            labelStyle: const TextStyle(color: Colors.grey),
+            hintStyle: const TextStyle(color: Colors.grey),
+            errorStyle: const TextStyle(color: Colors.red),
           ),
         ));
   }
