@@ -3,11 +3,11 @@ import 'dart:convert';
 class Section {
   Section({
     required this.title,
-    required this.films,
+    required this.movies,
   });
 
   String title;
-  List<Film> films;
+  List<MovieSection> movies;
 
   factory Section.fromJson(String str) => Section.fromMap(json.decode(str));
 
@@ -15,17 +15,18 @@ class Section {
 
   factory Section.fromMap(Map<String, dynamic> json) => Section(
         title: json['title_section'],
-        films: List<Film>.from(json['films'].map((x) => Film.fromMap(x))),
+        movies: List<MovieSection>.from(
+            json['films'].map((x) => MovieSection.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         'title_section': title,
-        'films': List<dynamic>.from(films.map((x) => x.toMap())),
+        'movies': List<dynamic>.from(movies.map((x) => x.toMap())),
       };
 }
 
-class Film {
-  Film({
+class MovieSection {
+  MovieSection({
     required this.id,
     required this.reference,
     required this.image,
@@ -39,11 +40,12 @@ class Film {
   String title;
   String premiereDay;
 
-  factory Film.fromJson(String str) => Film.fromMap(json.decode(str));
+  factory MovieSection.fromJson(String str) =>
+      MovieSection.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Film.fromMap(Map<String, dynamic> json) => Film(
+  factory MovieSection.fromMap(Map<String, dynamic> json) => MovieSection(
         id: json['id'],
         reference: json['reference'],
         image: json['image'],

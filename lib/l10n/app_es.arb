@@ -23,5 +23,8 @@
   "exclude_animation": "Excluir animación",
   "order_by": "Ordenar por",
   "delete_filters": "Eliminar filtros",
-  "apply_filters": "Aplicar filtros"
+  "apply_filters": "Aplicar filtros",
+  "timeout_error": "¡Ups! Parece que ha habido un problema con el servidor.",
+  "retry": "Reintentar"
+
 }

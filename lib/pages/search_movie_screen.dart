@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
+import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/input_decoration.dart';
-import 'package:scrapper_filmaffinity/widgets/movie_item.dart';
+import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchMovieScreen extends StatelessWidget {
@@ -11,10 +12,28 @@ class SearchMovieScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        body: SafeArea(
-      child: _SearchMovieForm(),
-    ));
+    return Consumer<SearchMovieProvider>(builder: (context, provider, child) {
+      if (provider.isLoading) {
+        return SafeArea(
+          child: Column(children: [
+            const _SearchMovieForm(),
+            Expanded(
+                child: ListView(
+                    children:
+                        List.generate(20, (index) => const CardMovieShimmer())))
+          ]),
+        );
+      }
+      return SafeArea(
+        child: Column(children: [
+          const _SearchMovieForm(),
+          provider.search.isNotEmpty
+              ? _Suggestions(movies: provider.movies)
+              : _SearchHistory(
+                  historySearchers: provider.searchs, provider: provider)
+        ]),
+      );
+    });
   }
 }
 
@@ -25,7 +44,6 @@ class _SearchMovieForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build _SearchMovieForm');
     final provider = Provider.of<SearchMovieProvider>(context);
     final TextEditingController controller = TextEditingController();
     final FocusNode focusNode = FocusNode();
@@ -52,26 +70,21 @@ class _SearchMovieForm extends StatelessWidget {
               value.isEmpty ? provider.setSearch('') : null;
             },
             onFieldSubmitted: (String value) {
-              provider.searchAndInsertMovie(value);
+              provider.insertAndSearchMovie(value);
             },
           ),
         ),
-        provider.search.isNotEmpty
-            ? _Suggestions(movies: provider.movies)
-            : _SearchHistory(
-                historySearchers: provider.searchs, provider: provider),
       ],
     );
   }
 }
 
 class _Suggestions extends StatelessWidget {
-  final List<dynamic> movies;
+  final List movies;
   const _Suggestions({Key? key, required this.movies}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print('build _Suggestions');
     final localization = AppLocalizations.of(context)!;
     return movies.isNotEmpty
         ? Expanded(
@@ -82,7 +95,7 @@ class _Suggestions extends StatelessWidget {
                 Movie movie = index <= 2
                     ? Movie.fromMap(movies[index])
                     : Movie.fromIncompleteMovie(movies[index]);
-                return MovieItem(
+                return CardMovie(
                   movie: movie,
                   hasAllAttributes: hasAllAttributes,
                 );

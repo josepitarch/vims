@@ -18,7 +18,7 @@ class BookmarkMoviesDatabase {
     }, version: 8);
   }
 
-  static Future<bool> insertFavoriteMovie(FavoriteMovie favoriteMovie) async {
+  static Future<bool> insertBookmarkMovie(BookmarkMovie favoriteMovie) async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 
@@ -31,7 +31,7 @@ class BookmarkMoviesDatabase {
     return response == 0 ? false : true;
   }
 
-  static Future<bool> deleteFavoriteMovie(String id) async {
+  static Future<bool> deleteBookmarkMovie(String id) async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 
@@ -44,14 +44,14 @@ class BookmarkMoviesDatabase {
     return true;
   }
 
-  static Future<List<FavoriteMovie>> retrieveFavoriteMovies() async {
+  static Future<List<BookmarkMovie>> getBookmarkMovies() async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
     return List.generate(maps.length, (i) {
-      return FavoriteMovie(
+      return BookmarkMovie(
           id: maps[i]['id'],
           poster: maps[i]['poster'],
           title: maps[i]['title'],

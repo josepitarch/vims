@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
-class MovieItem extends StatelessWidget {
+class CardMovie extends StatelessWidget {
   final Movie movie;
   final bool? hasAllAttributes;
 
-  const MovieItem({Key? key, required this.movie, this.hasAllAttributes})
+  const CardMovie({Key? key, required this.movie, this.hasAllAttributes})
       : super(key: key);
 
   @override

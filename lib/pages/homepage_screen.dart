@@ -4,6 +4,7 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 class HomepageScreen extends StatelessWidget {
@@ -15,30 +16,31 @@ class HomepageScreen extends StatelessWidget {
 
     final List<Section> sections = provider.sections;
 
-    if (provider.existsError) {
-      return const Center(child: Text('Error'));
-    }
+    return Consumer<HomepageProvider>(builder: (_, provider, __) {
+      if (provider.existsError) {
+        return TimeoutError(onPressed: () => provider.onRefresh());
+      }
 
-    return sections.isNotEmpty
-        ? SafeArea(
-            child: RefreshIndicator(
-              backgroundColor: Colors.white,
-              color: Colors.orange.shade300,
-              onRefresh: () async => provider.refresh(),
-              child: SingleChildScrollView(
-                  child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                child: Column(children: [
-                  ...sections
-                      .map((section) => _Section(section: section))
-                      .toList(),
-                  const SizedBox(height: 30),
-                ]),
-              )),
-            ),
-          )
-        : const SectionsShimmer();
+      return !provider.isLoading
+          ? SafeArea(
+              child: RefreshIndicator(
+                backgroundColor: Colors.white,
+                color: Colors.orange.shade300,
+                onRefresh: () => provider.onRefresh(),
+                child: SingleChildScrollView(
+                    child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Column(children: [
+                    ...sections
+                        .map((section) => _Section(section: section))
+                        .toList(),
+                    const SizedBox(height: 30),
+                  ]),
+                )),
+              ),
+            )
+          : const SectionsShimmer();
+    });
   }
 }
 
@@ -52,17 +54,20 @@ class _Section extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(title: section.title),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: TitleSection(title: section.title),
+        ),
         SizedBox(
           height: 210,
-          child: ListView.builder(
+          child: ListView(
             scrollDirection: Axis.horizontal,
-            itemCount: section.films.length,
-            itemBuilder: (_, int index) {
-              return _SectionMovie(
-                film: section.films[index],
-              );
-            },
+            children: [
+              const SizedBox(width: 12),
+              ...section.movies
+                  .map((movie) => _SectionMovie(film: movie))
+                  .toList(),
+            ],
           ),
         )
       ],
@@ -71,7 +76,7 @@ class _Section extends StatelessWidget {
 }
 
 class _SectionMovie extends StatelessWidget {
-  final Film film;
+  final MovieSection film;
   const _SectionMovie({Key? key, required this.film}) : super(key: key);
 
   @override

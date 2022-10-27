@@ -6,6 +6,7 @@ class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<dynamic> movies = [];
   List<String> searchs = [];
+  bool isLoading = false;
 
   SearchMovieProvider() {
     getHistorySearchers();
@@ -29,13 +30,19 @@ class SearchMovieProvider extends ChangeNotifier {
   }
 
   searchMovie(String search) async {
+    isLoading = true;
     SearchMovieService()
         .getSuggestions(search)
         .then((value) => movies = value)
-        .whenComplete(() => notifyListeners());
+        .whenComplete(() {
+      isLoading = false;
+      notifyListeners();
+    });
   }
 
-  searchAndInsertMovie(String search) {
+  insertAndSearchMovie(String search) {
+    isLoading = true;
+    notifyListeners();
     HistorySearchDatabase.insertSearch(search);
     this.search = search;
     searchs.insert(0, search);
@@ -45,6 +52,7 @@ class SearchMovieProvider extends ChangeNotifier {
 
   onTap(String search) {
     this.search = search;
+    isLoading = true;
     notifyListeners();
     searchMovie(search);
   }

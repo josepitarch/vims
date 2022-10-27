@@ -6,12 +6,13 @@ import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/genre_list_title.dart';
-import 'package:scrapper_filmaffinity/shimmer/movie_item_shimmer.dart';
+import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
 
-import '../widgets/movie_item.dart';
+import '../widgets/card_movie.dart';
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -46,36 +47,26 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
       if (provider.existsError) {
-        return const Center(
-          child: Text('Error'),
-        );
+        return TimeoutError(onPressed: () => provider.onFresh());
       }
 
       return Scaffold(
           body: SafeArea(
               child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TitlePage(localization.title_top_movies_page),
-              Expanded(
-                  child: ListView(
-                controller: scrollController,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.filter_list_outlined),
-                      onPressed: () => showDialogFilters(context, provider),
-                    ),
-                  ),
-                  if (provider.movies.isEmpty)
-                    ...List.generate(10, (index) => const MovieItemShimmer())
-                  else
-                    ...provider.movies.map((movie) => MovieItem(movie: movie)),
-                ],
-              )),
-            ],
-          )),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                TitlePage(localization.title_top_movies_page),
+                Expanded(
+                    child: ListView(
+                  controller: scrollController,
+                  children: [
+                    if (provider.movies.isEmpty)
+                      ...List.generate(20, (index) => const CardMovieShimmer())
+                    else
+                      ...provider.movies.map((movie) => CardMovie(movie: movie))
+                  ],
+                ))
+              ])),
           floatingActionButton: showFloatingActionButton
               ? FloatingActionButton(
                   shape: const CircleBorder(),

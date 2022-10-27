@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/providers/favorite_movies_provider.dart';
+import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
@@ -179,7 +179,7 @@ class _Header extends StatelessWidget {
                           style: const TextStyle(fontSize: 18),
                         ),
                       ]),
-                      _FavoriteMovie(movie: movie)
+                      _BookmarkMovie(movie: movie)
                     ],
                   ),
                 ),
@@ -192,8 +192,8 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _FavoriteMovie extends StatefulWidget {
-  const _FavoriteMovie({
+class _BookmarkMovie extends StatefulWidget {
+  const _BookmarkMovie({
     Key? key,
     required this.movie,
   }) : super(key: key);
@@ -201,19 +201,17 @@ class _FavoriteMovie extends StatefulWidget {
   final Movie movie;
 
   @override
-  State<_FavoriteMovie> createState() => _FavoriteMovieState();
+  State<_BookmarkMovie> createState() => _BookmarkMovieState();
 }
 
-class _FavoriteMovieState extends State<_FavoriteMovie> {
+class _BookmarkMovieState extends State<_BookmarkMovie> {
   bool? isFavorite;
 
   @override
   void initState() {
-    BookmarkMoviesDatabase.retrieveFavoriteMovies()
-        .then((value) => setState(() {
-              isFavorite =
-                  value.any((element) => element.id == widget.movie.id);
-            }));
+    BookmarkMoviesDatabase.getBookmarkMovies().then((value) => setState(() {
+          isFavorite = value.any((element) => element.id == widget.movie.id);
+        }));
 
     super.initState();
   }
@@ -229,27 +227,40 @@ class _FavoriteMovieState extends State<_FavoriteMovie> {
         child: Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: IconButton(
-              onPressed: () async {
-                bool canVibrate = await Vibrate.canVibrate;
+              onPressed: () {
+                Vibrate.canVibrate.then((value) {
+                  if (value) {
+                    Vibrate.feedback(FeedbackType.medium);
+                  }
+                });
+                final snackBar = SnackBar(
+                  content: const Text('Movie added to bookmarks successfully'),
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    onPressed: () {
+                      // Some code to undo the change.
+                    },
+                  ),
+                );
 
-                if (canVibrate) {
-                  Vibrate.feedback(FeedbackType.medium);
-                }
-
-                bool isSuccess;
+                //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                //TODO: call search movie provider, no database
 
                 if (!isFavorite!) {
-                  isSuccess = await FavoriteMovieProvider()
-                      .addFavoriteMovie(widget.movie);
-                } else {
-                  isSuccess = await BookmarkMoviesDatabase.deleteFavoriteMovie(
-                      widget.movie.id);
-                }
-
-                if (isSuccess) {
-                  setState(() {
-                    isFavorite = !isFavorite!;
+                  BookmarkMoviesProvider()
+                      .insertBookmarkMovie(widget.movie)
+                      .then((value) {
+                    if (value) {
+                      setState(() {
+                        isFavorite = !isFavorite!;
+                      });
+                    }
                   });
+                } else {
+                  BookmarkMoviesDatabase.deleteBookmarkMovie(widget.movie.id)
+                      .then((value) => setState(() {
+                            isFavorite = !isFavorite!;
+                          }));
                 }
               },
               icon: Icon(

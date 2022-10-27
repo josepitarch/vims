@@ -15,7 +15,7 @@ class Layout extends StatelessWidget {
       body: SafeArea(
         child: Column(children: [
           Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(15),
               height: 80,
               width: double.infinity,
               child: header),
