@@ -11,6 +11,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, BookmarkMoviesProvider provider, _) {
       final i18n = AppLocalizations.of(context)!;
+      provider.getBookmarkMovies();
       if (provider.bookmarkMovies.isEmpty) {
         return Center(
             child: Text(i18n.no_bookmarks,

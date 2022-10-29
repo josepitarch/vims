@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MetadataShimmer extends StatelessWidget {
-  const MetadataShimmer({Key? key}) : super(key: key);
+class DetailsMovieShimmer extends StatelessWidget {
+  const DetailsMovieShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

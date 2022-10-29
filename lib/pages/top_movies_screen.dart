@@ -56,6 +56,12 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 TitlePage(localization.title_top_movies_page),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      onPressed: () => showDialogFilters(context, provider),
+                      icon: const Icon(Icons.filter_list_rounded)),
+                ),
                 Expanded(
                     child: ListView(
                   controller: scrollController,
