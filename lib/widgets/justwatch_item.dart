@@ -9,8 +9,8 @@ class JustwatchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: change size of asset
     String asset = '';
+
     JustwatchAssets.justwatchAssets.forEach((key, value) {
       if (value.contains(platform.name.toLowerCase())) {
         asset = key;
@@ -19,15 +19,15 @@ class JustwatchItem extends StatelessWidget {
 
     return asset.isNotEmpty
         ? Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            height: 60,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 'assets/justwatch/$asset.jpg',
                 fit: BoxFit.cover,
+                height: 50,
+                width: 50,
                 errorBuilder: (_, __, ___) => const SizedBox(),
               ),
             ),

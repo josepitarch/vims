@@ -506,15 +506,16 @@ class _JustwatchState extends State<_Justwatch> {
                             .copyWith(color: Colors.blue))));
           }).toList()),
         if (platforms.isNotEmpty)
-          Container(
-              margin: const EdgeInsets.only(top: 10),
-              height: 50,
-              child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: false,
-                  children: platforms
-                      .map((platform) => JustwatchItem(platform: platform))
-                      .toList())),
+          SizedBox(
+            height: 60,
+            child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(top: 10),
+                shrinkWrap: false,
+                children: platforms
+                    .map((platform) => JustwatchItem(platform: platform))
+                    .toList()),
+          ),
       ],
     );
   }
