@@ -49,7 +49,6 @@ class BookmarkMoviesDatabase {
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
-    print('jdfhjksdlfhjsdhf');
 
     return List.generate(maps.length, (i) {
       return BookmarkMovie(
