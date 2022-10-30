@@ -31,9 +31,10 @@ class BookmarkMoviesProvider extends ChangeNotifier {
     return response;
   }
 
-  deleteBookmarkMovie(String id) async {
-    bool response = await BookmarkMoviesDatabase.deleteBookmarkMovie(id);
-    if (response) bookmarkMovies.removeWhere((movie) => movie.id == id);
+  deleteBookmarkMovie(Movie movie) async {
+    bool response = await BookmarkMoviesDatabase.deleteBookmarkMovie(movie.id);
+    if (response)
+      bookmarkMovies.removeWhere((element) => element.id == movie.id);
     notifyListeners();
 
     return response;

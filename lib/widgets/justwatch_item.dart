@@ -27,7 +27,7 @@ class JustwatchItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 'assets/justwatch/$asset.jpg',
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => const SizedBox(),
               ),
             ),

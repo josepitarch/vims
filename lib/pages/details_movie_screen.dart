@@ -17,6 +17,7 @@ import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
 import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 class DetailsMovieScreen extends StatelessWidget {
@@ -270,52 +271,16 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
 
   @override
   Widget build(BuildContext context) {
+    final BookmarkMoviesProvider provider =
+        Provider.of<BookmarkMoviesProvider>(context);
+    final i18n = AppLocalizations.of(context)!;
     try {
       return Align(
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: IconButton(
-                onPressed: () {
-                  Vibrate.canVibrate.then((value) {
-                    if (value) {
-                      Vibrate.feedback(FeedbackType.medium);
-                    }
-                  });
-                  final snackBar = SnackBar(
-                    content: Text('Película añadida a marcados correctamente',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5!
-                            .copyWith(color: Colors.black)),
-                    action: SnackBarAction(
-                      label: '',
-                      onPressed: () {
-                        // Some code to undo the change.
-                      },
-                    ),
-                  );
-
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                  if (!isFavorite) {
-                    BookmarkMoviesProvider()
-                        .insertBookmarkMovie(widget.movie)
-                        .then((value) {
-                      if (value) {
-                        setState(() {
-                          isFavorite = !isFavorite;
-                        });
-                      }
-                    });
-                  } else {
-                    BookmarkMoviesProvider()
-                        .deleteBookmarkMovie(widget.movie.id)
-                        .then((value) => setState(() {
-                              isFavorite = !isFavorite;
-                            }));
-                  }
-                },
+                onPressed: () => onPressed(provider, i18n),
                 icon: Icon(
                   isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
                   size: 25,
@@ -323,6 +288,28 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
           ));
     } catch (e) {
       return const SizedBox();
+    }
+  }
+
+  onPressed(BookmarkMoviesProvider provider, AppLocalizations i18n) async {
+    Vibrate.canVibrate.then((value) {
+      if (value) {
+        Vibrate.feedback(FeedbackType.medium);
+      }
+    });
+    bool response = isFavorite
+        ? await provider.deleteBookmarkMovie(widget.movie)
+        : await provider.insertBookmarkMovie(widget.movie);
+
+    if (response) {
+      final String text = isFavorite ? i18n.delete_bookmark : i18n.add_bookmark;
+      SnackbarApp snackBar = SnackbarApp(text);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      setState(() {
+        isFavorite = !isFavorite;
+      });
     }
   }
 }
@@ -482,7 +469,6 @@ class _JustwatchState extends State<_Justwatch> {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
-    const double height = 75;
     Map<String, String> textButton = {
       'flatrate': i18n.flatrate,
       'rent': i18n.rent,
@@ -522,7 +508,7 @@ class _JustwatchState extends State<_Justwatch> {
         if (platforms.isNotEmpty)
           Container(
               margin: const EdgeInsets.only(top: 10),
-              height: height,
+              height: 50,
               child: ListView(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: false,
