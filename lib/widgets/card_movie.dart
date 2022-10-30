@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
-class MovieItem extends StatelessWidget {
+class CardMovie extends StatelessWidget {
   final Movie movie;
   final bool? hasAllAttributes;
 
-  const MovieItem({Key? key, required this.movie, this.hasAllAttributes})
+  const CardMovie({Key? key, required this.movie, this.hasAllAttributes})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Limit width of title and director
     double height = 170.0;
     return GestureDetector(
       onTap: () {
         Map<String, dynamic> arguments = {
           'id': movie.id,
           'movie': movie,
-          'isOpened': hasAllAttributes ?? false,
+          'hasAllAttributes': hasAllAttributes ?? false,
         };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
@@ -48,17 +49,33 @@ class MovieItem extends StatelessWidget {
                   children: [
                     Text(
                       movie.title,
-                      style: const TextStyle(fontSize: 19),
+                      style: Theme.of(context).textTheme.headline3,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
                     const SizedBox(height: 10.0),
                     Text(
                       movie.director ?? '',
-                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                            fontStyle: FontStyle.italic,
+                            //color: Theme.of(context).colorScheme.secondary
+                          ),
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    )
+                      maxLines: 1,
+                    ),
+                    movie.average.isNotEmpty
+                        ? SizedBox(
+                            height: height - 30,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.star, color: Colors.yellow),
+                                const SizedBox(width: 5),
+                                Text(movie.average,
+                                    style:
+                                        Theme.of(context).textTheme.headline4),
+                              ],
+                            ))
+                        : Container()
                   ],
                 )),
           ),

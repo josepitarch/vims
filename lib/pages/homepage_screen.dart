@@ -1,71 +1,147 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:scrapper_filmaffinity/pages/favorite_movies_screen.dart';
-import 'package:scrapper_filmaffinity/pages/search_movie.dart';
-import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/ui/custom_icons.dart';
-import 'package:scrapper_filmaffinity/widgets/section_list.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:scrapper_filmaffinity/models/section.dart';
+import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
+import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
+import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = const [
-    SectionList(),
-    SearchMovieScreen(),
-    FavouritesMovies(),
-    TopMoviesScreen()
-  ];
+class HomepageScreen extends StatelessWidget {
+  const HomepageScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: 1.5))),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.orange[600],
-          unselectedItemColor: Colors.white.withOpacity(.60),
-          selectedFontSize: 16,
-          unselectedFontSize: 14,
-          onTap: (index) async {
-            bool canVibrate = await Vibrate.canVibrate;
+    final HomepageProvider provider = Provider.of<HomepageProvider>(context);
 
-            if (canVibrate) {
-              Vibrate.feedback(FeedbackType.medium);
-            }
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              label: AppLocalizations.of(context)!.home,
-              icon: const Icon(Icons.home),
-            ),
-            BottomNavigationBarItem(
-              label: AppLocalizations.of(context)!.search,
-              icon: const Icon(Icons.search_outlined),
-            ),
-            BottomNavigationBarItem(
-                icon: const Icon(MyIcons.heartEmpty),
-                label: AppLocalizations.of(context)!.favorites),
-            BottomNavigationBarItem(
-              label: AppLocalizations.of(context)!.top,
-              icon: const Icon(Icons.list_alt_sharp),
-            ),
-          ],
+    final List<Section> sections = provider.sections;
+
+    return Consumer<HomepageProvider>(builder: (_, provider, __) {
+      if (provider.existsError) {
+        return TimeoutError(onPressed: () => provider.onRefresh());
+      }
+
+      return !provider.isLoading
+          ? SafeArea(
+              child: RefreshIndicator(
+                backgroundColor: Colors.white,
+                color: Colors.orange.shade300,
+                onRefresh: () => provider.onRefresh(),
+                child: SingleChildScrollView(
+                    child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Column(children: [
+                    ...sections
+                        .map((section) => _Section(section: section))
+                        .toList(),
+                    const SizedBox(height: 30),
+                  ]),
+                )),
+              ),
+            )
+          : const SectionsShimmer();
+    });
+  }
+}
+
+class _Section extends StatelessWidget {
+  final Section section;
+
+  const _Section({Key? key, required this.section}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: TitleSection(title: section.title),
         ),
-      ),
+        SizedBox(
+          height: 210,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              const SizedBox(width: 12),
+              ...section.movies
+                  .map((movie) => _SectionMovie(film: movie))
+                  .toList(),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _SectionMovie extends StatelessWidget {
+  final MovieSection film;
+  const _SectionMovie({Key? key, required this.film}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final HomepageProvider homepageProvider =
+        Provider.of<HomepageProvider>(context);
+
+    const double width = 120;
+    const double height = 190;
+
+    return GestureDetector(
+      onTap: () {
+        Map<String, Movie> openedMovies = homepageProvider.openedMovies;
+
+        Map<String, dynamic> arguments = {
+          'hasAllAttributes': openedMovies.containsKey(film.id),
+          'movie': openedMovies[film.id],
+          'id': film.id
+        };
+        Navigator.pushNamed(context, 'details', arguments: arguments);
+      },
+      child: Container(
+          margin: const EdgeInsets.only(right: 15),
+          width: width,
+          height: height,
+          child: Column(children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Hero(
+                    tag: film.id,
+                    child: FadeInImage(
+                        placeholder: const AssetImage('assets/loading.gif'),
+                        image: NetworkImage(film.image),
+                        width: width,
+                        height: height - 30,
+                        fit: BoxFit.cover),
+                  ),
+                  Container(
+                    height: 40,
+                    width: double.infinity,
+                    color: Colors.orange.withOpacity(0.8),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        film.premiereDay,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 7),
+            Text(
+              film.title,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline4,
+            )
+          ])),
     );
   }
 }

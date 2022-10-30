@@ -30,10 +30,25 @@ class TopMoviesService {
     return myTopMovies;
   }
 
-  Future<List<Movie>> getMopMovies() async {
+  Future<List<Movie>> getMopMovies(
+      int from,
+      int to,
+      List<String> platforms,
+      List<String> genres,
+      bool excludeAnimation,
+      int yearFrom,
+      int yearTo) async {
     List<Movie> topMovies = [];
 
-    final request = Uri.http(url, '/api/top/films', {});
+    final request = Uri.http(url, '/api/top/films', {
+      'from': from.toString(),
+      'to': to.toString(),
+      'platforms': platforms.join(','),
+      'genres': genres.join(','),
+      'exclude_animation': excludeAnimation.toString(),
+      'from_year': yearFrom.toString(),
+      'to_year': yearTo.toString()
+    });
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));

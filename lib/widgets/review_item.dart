@@ -12,7 +12,7 @@ class ReviewItem extends StatelessWidget {
       children: [
         Text(
           review.body.replaceAll("\"", ''),
-          style: const TextStyle(height: 1.25, fontSize: 15),
+          style: Theme.of(context).textTheme.bodyText1,
         ),
         const SizedBox(height: 10),
         Row(
@@ -20,6 +20,9 @@ class ReviewItem extends StatelessWidget {
           children: [
             Text(
               review.author,
+              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
             buildInclination(review.inclination)
           ],
@@ -29,20 +32,18 @@ class ReviewItem extends StatelessWidget {
   }
 
   Container buildInclination(String inclination) {
-    Color backgroundColor;
-    if (inclination == 'positive') {
-      backgroundColor = Colors.green;
-    } else if (inclination == 'negative') {
-      backgroundColor = Colors.red;
-    } else {
-      backgroundColor = Colors.yellow;
-    }
+    Map inclinationColors = {
+      'positive': Colors.green,
+      'negative': Colors.red,
+      'neutral': Colors.yellow,
+    };
+
     return Container(
       height: 20,
       width: 20,
       margin: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: inclinationColors[inclination] ?? Colors.yellow,
         shape: BoxShape.circle,
       ),
     );

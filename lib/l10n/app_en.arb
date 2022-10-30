@@ -1,10 +1,9 @@
 {
     "home": "Home",
-    "search": "Search",
-    "favorites": "Favorites",
-    "no_favorites": "No favorites yet",
     "top": "Top",
-    "search_film": "Search film",
+    "bookmarks": "Bookmarks",
+    "search": "Search",
+    "no_bookmarks": "No bookmarks yet",
     "see_more": "See more",
     "see_less": "See less",
     "flatrate": "Subscription",
@@ -18,8 +17,14 @@
     "search_movie": "Search movie",
     "no_results": "No results",
     "delete_all_searchers": "Delete all searchers",
-    "title_favorite_movies_page": "Your favorite movies",
+    "title_bookmarks_page": "Your bookmarks",
     "title_top_movies_page": "If you don't know to see",
+    "exclude_animation": "Exclude animation",
+    "order_by": "Order by",
     "delete_filters": "Delete filters",
-    "apply_filters": "Apply filters"
+    "apply_filters": "Apply filters",
+    "add_bookmark": "Movie added successfully",
+    "delete_bookmark": "Movie removed successfully",
+    "timeout_error": "Ups! Something went wrong with the server.",
+    "retry": "Retry"
 }

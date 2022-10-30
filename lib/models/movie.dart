@@ -81,7 +81,7 @@ class Movie {
       poster: json['poster'],
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
-      average: json['average'] ?? '0.0',
+      average: json['average'] ?? '',
       reviews: [],
       platforms: json['platforms'] == null
           ? []
@@ -128,10 +128,10 @@ class Justwatch {
     );
   }
 
-  Map<String, dynamic> toMap() => {
-        'flatrate': List<dynamic>.from(flatrate.map((x) => x.toMap())),
-        'rent': List<dynamic>.from(rent.map((x) => x.toMap())),
-        'buy': List<dynamic>.from(buy.map((x) => x.toMap())),
+  Map<String, List<Platform>> toMap() => {
+        'flatrate': List<Platform>.from(flatrate.map((x) => x)),
+        'rent': List<Platform>.from(rent.map((x) => x)),
+        'buy': List<Platform>.from(buy.map((x) => x)),
       };
 }
 

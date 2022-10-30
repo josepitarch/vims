@@ -1,10 +1,9 @@
 {
   "home": "Inicio",
-  "search": "Buscar",
-  "favorites": "Favoritos",
-  "no_favorites": "No hay favoritos",
   "top": "Top",
-  "search_film": "Buscar película",
+  "bookmarks": "Marcados",
+  "search": "Buscar",
+  "no_bookmarks": "No has marcado ninguna película",
   "see_more": "Ver más",
   "see_less": "Ver menos",
   "flatrate": "Suscripción",
@@ -18,8 +17,14 @@
   "search_movie": "Buscar película",
   "no_results": "No hay resultados",
   "delete_all_searchers": "Eliminar búsquedas recientes",
-  "title_favorite_movies_page": "Tus favoritos",
+  "title_bookmarks_page": "Tus marcadores",
   "title_top_movies_page": "Si no sabes qué ver",
+  "exclude_animation": "Excluir animación",
+  "order_by": "Ordenar por",
   "delete_filters": "Eliminar filtros",
-  "apply_filters": "Aplicar filtros"
+  "apply_filters": "Aplicar filtros",
+  "add_bookmark": "Película añadida correctamente",
+  "delete_bookmark": "Película eliminada correctamente",
+  "timeout_error": "¡Ups! Parece que ha habido un problema con el servidor.",
+  "retry": "Reintentar"
 }
