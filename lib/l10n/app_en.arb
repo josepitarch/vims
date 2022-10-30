@@ -1,10 +1,9 @@
 {
     "home": "Home",
-    "search": "Search",
-    "bookmarks": "Bookmarks",
-    "no_bookmarks": "No bookmarks yet",
     "top": "Top",
-    "search_film": "Search film",
+    "bookmarks": "Bookmarks",
+    "search": "Search",
+    "no_bookmarks": "No bookmarks yet",
     "see_more": "See more",
     "see_less": "See less",
     "flatrate": "Subscription",
@@ -24,6 +23,8 @@
     "order_by": "Order by",
     "delete_filters": "Delete filters",
     "apply_filters": "Apply filters",
+    "add_bookmark": "Movie added successfully",
+    "delete_bookmark": "Movie removed successfully",
     "timeout_error": "Ups! Something went wrong with the server.",
     "retry": "Retry"
 }

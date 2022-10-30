@@ -10,6 +10,7 @@ class CardMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Limit width of title and director
     double height = 170.0;
     return GestureDetector(
       onTap: () {
@@ -69,7 +70,9 @@ class CardMovie extends StatelessWidget {
                               children: [
                                 const Icon(Icons.star, color: Colors.yellow),
                                 const SizedBox(width: 5),
-                                Text(movie.average)
+                                Text(movie.average,
+                                    style:
+                                        Theme.of(context).textTheme.headline4),
                               ],
                             ))
                         : Container()

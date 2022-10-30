@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,66 +14,59 @@ import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
-import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
-import 'package:scrapper_filmaffinity/shimmer/metadata_shimmer.dart';
+import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 class DetailsMovieScreen extends StatelessWidget {
   const DetailsMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    try {
-      final Map<String, dynamic> arguments =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-      final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
-      final String id = arguments['id'];
+    final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
+    final String id = arguments['id'];
 
-      return FutureBuilder(
-          future: !hasAllAttributes
-              ? MetadataMovieService().getMetadataMovie(id)
-              : Future<Movie>.value(arguments['movie'] as Movie),
-          builder: (_, AsyncSnapshot<Movie> snapshot) {
-            if (!snapshot.hasData) {
-              return const MetadataShimmer();
-            }
+    return FutureBuilder(
+        future: !hasAllAttributes
+            ? MetadataMovieService().getMetadataMovie(id)
+            : Future<Movie>.value(arguments['movie'] as Movie),
+        builder: (_, AsyncSnapshot<Movie> snapshot) {
+          if (!snapshot.hasData) return const DetailsMovieShimmer();
+          Movie movie = snapshot.data!;
 
-            Movie movie = snapshot.data!;
+          if (!hasAllAttributes) {
+            final HomepageProvider homepageProvider =
+                Provider.of<HomepageProvider>(context);
+            homepageProvider.openedMovies.addAll({movie.id: movie});
+          }
 
-            if (!hasAllAttributes) {
-              final HomepageProvider homepageProvider =
-                  Provider.of<HomepageProvider>(context);
-              homepageProvider.openedMovies.addAll({movie.id: movie});
-            }
-
-            return Scaffold(
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 12),
-                    child: Column(
-                      children: [
-                        _Header(movie: movie),
-                        _Genres(movie.genres),
-                        _Cast(cast: movie.cast),
-                        _Synopsis(overview: movie.synopsis),
-                        _Justwatch(justwatch: movie.justwatch),
-                        movie.reviews.isNotEmpty
-                            ? _Reviews(movie.reviews)
-                            : const SizedBox()
-                      ],
-                    ),
+          return Scaffold(
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  child: Column(
+                    children: [
+                      _Header(movie: movie),
+                      _Genres(movie.genres),
+                      _Cast(cast: movie.cast),
+                      _Synopsis(overview: movie.synopsis),
+                      _Justwatch(justwatch: movie.justwatch),
+                      movie.reviews.isNotEmpty
+                          ? _Reviews(movie.reviews)
+                          : const SizedBox()
+                    ],
                   ),
                 ),
               ),
-            );
-          });
-    } catch (e) {
-      return Center(child: Text(e.toString()));
-    }
+            ),
+          );
+        });
   }
 }
 
@@ -84,29 +79,14 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String director = movie.director ?? '';
-    String flag = '';
-    String aux = removeDiacritics(movie.country.trim().toLowerCase());
     double sizeDirector = director.length > 20 ? 14 : 16;
-    FlagsAssets.flags.forEach((key, value) {
-      if (value.contains(aux)) {
-        flag = key;
-      }
-    });
+
     return SizedBox(
       height: _height,
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Flexible(
           flex: 60,
-          child: Hero(
-            tag: movie.id,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: FadeInImage(
-                  placeholder: const AssetImage('assets/no-image.jpg'),
-                  image: NetworkImage(movie.poster),
-                  height: _height),
-            ),
-          ),
+          child: _Poster(movie: movie, height: _height),
         ),
         Flexible(flex: 5, child: Container()),
         Flexible(
@@ -117,8 +97,7 @@ class _Header extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(movie.title,
-                    style: const TextStyle(
-                        fontSize: 19, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headline2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
                     maxLines: 2),
@@ -127,37 +106,17 @@ class _Header extends StatelessWidget {
                 Text(director,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: sizeDirector)),
+                    style: Theme.of(context).textTheme.headline5),
               if (director.isNotEmpty)
                 const SizedBox(
                   height: 10,
                 ),
-              Row(
-                children: [
-                  if (flag.isNotEmpty)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'assets/flags/$flag.png',
-                        width: 30,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.error),
-                      ),
-                    ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    movie.country,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
+              _Country(country: movie.country),
               const SizedBox(
                 height: 10,
               ),
-              Text('${movie.year}  ·  ${movie.duration ?? '---'}',
-                  style: const TextStyle(fontSize: 17)),
+              Text('${movie.year}  ·  ${transformDuration(movie.duration)}',
+                  style: Theme.of(context).textTheme.headline5),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -165,20 +124,7 @@ class _Header extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(children: [
-                        const Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                          size: 30,
-                        ),
-                        const SizedBox(
-                          width: 7,
-                        ),
-                        Text(
-                          movie.average.isNotEmpty ? movie.average : '---',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ]),
+                      _Average(movie: movie),
                       _BookmarkMovie(movie: movie)
                     ],
                   ),
@@ -188,6 +134,113 @@ class _Header extends StatelessWidget {
           ),
         )
       ]),
+    );
+  }
+}
+
+transformDuration(String? duration) {
+  if (duration == null) return '';
+  int total = int.parse(duration.replaceAll(' min.', ''));
+  int hours = total ~/ 60;
+  int minutes = total % 60;
+  String hoursString = hours > 0 ? '$hours H ' : '';
+  String minutesString = minutes > 0 ? '$minutes MIN' : '';
+  return '$hoursString$minutesString';
+}
+
+class _Average extends StatelessWidget {
+  const _Average({
+    Key? key,
+    required this.movie,
+  }) : super(key: key);
+
+  final Movie movie;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      const Icon(
+        Icons.star,
+        color: Colors.yellow,
+        size: 30,
+      ),
+      const SizedBox(
+        width: 7,
+      ),
+      Text(
+        movie.average.isNotEmpty ? movie.average : '---',
+        style: Theme.of(context).textTheme.headline3,
+      ),
+    ]);
+  }
+}
+
+class _Country extends StatelessWidget {
+  final String country;
+
+  const _Country({
+    Key? key,
+    required this.country,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String flag = '';
+    String countryNormalize = removeDiacritics(country.trim().toLowerCase());
+
+    FlagsAssets.flags.forEach((key, value) {
+      if (value.contains(countryNormalize)) {
+        flag = key;
+      }
+    });
+
+    return flag.isNotEmpty
+        ? Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/flags/$flag.png',
+                  width: 30,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox(),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                country,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ],
+          )
+        : const SizedBox();
+  }
+}
+
+class _Poster extends StatelessWidget {
+  const _Poster({
+    Key? key,
+    required this.movie,
+    required double height,
+  })  : _height = height,
+        super(key: key);
+
+  final Movie movie;
+  final double _height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: movie.id,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(25),
+        child: FadeInImage(
+            placeholder: const AssetImage('assets/no-image.jpg'),
+            image: NetworkImage(movie.poster),
+            height: _height),
+      ),
     );
   }
 }
@@ -205,7 +258,7 @@ class _BookmarkMovie extends StatefulWidget {
 }
 
 class _BookmarkMovieState extends State<_BookmarkMovie> {
-  bool? isFavorite;
+  late bool isFavorite;
 
   @override
   void initState() {
@@ -218,94 +271,78 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
 
   @override
   Widget build(BuildContext context) {
-    if (isFavorite == null) {
+    final BookmarkMoviesProvider provider =
+        Provider.of<BookmarkMoviesProvider>(context);
+    final i18n = AppLocalizations.of(context)!;
+    try {
+      return Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: IconButton(
+                onPressed: () => onPressed(provider, i18n),
+                icon: Icon(
+                  isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
+                  size: 25,
+                )),
+          ));
+    } catch (e) {
       return const SizedBox();
     }
+  }
 
-    return Align(
-        alignment: Alignment.bottomRight,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: IconButton(
-              onPressed: () {
-                Vibrate.canVibrate.then((value) {
-                  if (value) {
-                    Vibrate.feedback(FeedbackType.medium);
-                  }
-                });
-                final snackBar = SnackBar(
-                  content: const Text('Movie added to bookmarks successfully'),
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    onPressed: () {
-                      // Some code to undo the change.
-                    },
-                  ),
-                );
+  onPressed(BookmarkMoviesProvider provider, AppLocalizations i18n) async {
+    Vibrate.canVibrate.then((value) {
+      if (value) {
+        Vibrate.feedback(FeedbackType.medium);
+      }
+    });
+    bool response = isFavorite
+        ? await provider.deleteBookmarkMovie(widget.movie)
+        : await provider.insertBookmarkMovie(widget.movie);
 
-                //ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                //TODO: call search movie provider, no database
+    if (response) {
+      final String text = isFavorite ? i18n.delete_bookmark : i18n.add_bookmark;
+      SnackbarApp snackBar = SnackbarApp(text);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-                if (!isFavorite!) {
-                  BookmarkMoviesProvider()
-                      .insertBookmarkMovie(widget.movie)
-                      .then((value) {
-                    if (value) {
-                      setState(() {
-                        isFavorite = !isFavorite!;
-                      });
-                    }
-                  });
-                } else {
-                  BookmarkMoviesDatabase.deleteBookmarkMovie(widget.movie.id)
-                      .then((value) => setState(() {
-                            isFavorite = !isFavorite!;
-                          }));
-                }
-              },
-              icon: Icon(
-                isFavorite! ? Icons.bookmark : Icons.bookmark_border_outlined,
-                size: 25,
-              )),
-        ));
+      setState(() {
+        isFavorite = !isFavorite;
+      });
+    }
   }
 }
 
 class _Genres extends StatelessWidget {
-  const _Genres(this.genres, {Key? key}) : super(key: key);
-
   final List<String> genres;
-  final int maxGenres = 4;
+
+  const _Genres(this.genres, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int end = genres.length >= maxGenres ? maxGenres : genres.length;
-    List<String> subGenres = genres.sublist(0, end);
-    //subGenres.sort((a, b) => a.length.compareTo(b.length));
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 15, left: 10),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Wrap(spacing: 10, runSpacing: 10, children: [
-          for (final genre in subGenres)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                  color: Colors.blue,
-                  width: genre.length > 15 ? 110 : 80,
-                  height: 30,
-                  child: Center(
-                      child: Text(
-                    genre,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: genre.length > 15 ? 11 : 12,
-                        fontWeight: FontWeight.w500),
-                  ))),
-            )
-        ]),
-      ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      height: 50,
+      width: double.infinity,
+      child: ListView(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          children: genres.map((genre) {
+            return Container(
+                margin: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Center(
+                    child: Text(genre,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontWeight: FontWeight.bold))));
+          }).toList()),
     );
   }
 }
@@ -318,12 +355,12 @@ class _Cast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
+    final i18n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TitleSection(title: localization!.cast),
+        TitleSection(title: i18n!.cast),
         Text(cast,
             textAlign: TextAlign.start,
             maxLines: _maxLines,
@@ -359,16 +396,16 @@ class _SynopsisState extends State<_Synopsis> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
+    final i18n = AppLocalizations.of(context)!;
     Map<int, String> textButton = {
-      0: localization!.see_more,
-      1: localization.see_less,
+      0: i18n.see_more,
+      1: i18n.see_less,
     };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(title: localization.synopsis),
+        TitleSection(title: i18n.synopsis),
         Text(widget.overview,
             textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
@@ -410,22 +447,20 @@ class _Justwatch extends StatefulWidget {
 }
 
 class _JustwatchState extends State<_Justwatch> {
-  late List<Platform> platforms;
-  bool isFlatrateSelected = false;
-  bool isRentSelected = false;
-  bool isBuySelected = false;
+  late List<Platform> platforms = [];
+  late Map<String, List<Platform>> justwatch;
+  late String justwatchMode;
 
   @override
   void initState() {
-    if (widget.justwatch.flatrate.isNotEmpty) {
-      isFlatrateSelected = true;
-      platforms = widget.justwatch.flatrate;
-    } else if (widget.justwatch.rent.isNotEmpty) {
-      isRentSelected = true;
-      platforms = widget.justwatch.rent;
+    justwatch = widget.justwatch.toMap();
+    justwatch.removeWhere((key, value) => value.isEmpty);
+
+    if (justwatch.isNotEmpty) {
+      platforms = justwatch.values.first;
+      justwatchMode = justwatch.keys.first;
     } else {
-      isBuySelected = true;
-      platforms = widget.justwatch.buy;
+      platforms = [];
     }
 
     super.initState();
@@ -433,107 +468,64 @@ class _JustwatchState extends State<_Justwatch> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
-    const double height = 75;
+    final i18n = AppLocalizations.of(context)!;
+    Map<String, String> textButton = {
+      'flatrate': i18n.flatrate,
+      'rent': i18n.rent,
+      'buy': i18n.buy,
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(title: localization!.watch_now),
-        Row(
-          children: [
-            if (widget.justwatch.flatrate.isEmpty &&
-                widget.justwatch.rent.isEmpty &&
-                widget.justwatch.buy.isEmpty)
-              Expanded(
-                  child: Text(
-                localization.no_platforms,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyText1,
-              )),
-            if (widget.justwatch.flatrate.isNotEmpty)
-              Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  height: 40,
-                  decoration: isFlatrateSelected
-                      ? BoxDecorators.decoratorSelectedButton()
-                      : BoxDecorators.decoratorUnselectedButton(),
-                  child: TextButton(
-                      onPressed: () {
-                        setPlatforms('flatrate');
-                      },
-                      child: Text(localization.flatrate))),
-            if (widget.justwatch.rent.isNotEmpty)
-              Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  height: 40,
-                  decoration: isRentSelected
-                      ? BoxDecorators.decoratorSelectedButton()
-                      : BoxDecorators.decoratorUnselectedButton(),
-                  child: TextButton(
-                      onPressed: () {
-                        setPlatforms('rent');
-                      },
-                      child: Text(localization.rent))),
-            if (widget.justwatch.buy.isNotEmpty)
-              Container(
+        TitleSection(title: i18n.watch_now),
+        if (platforms.isEmpty)
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              i18n.no_platforms,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+          ),
+        if (platforms.isNotEmpty)
+          Row(
+              children: justwatch.keys.map((key) {
+            return Container(
+                margin: const EdgeInsets.only(right: 10),
                 height: 40,
-                decoration: isBuySelected
+                decoration: key == justwatchMode
                     ? BoxDecorators.decoratorSelectedButton()
                     : BoxDecorators.decoratorUnselectedButton(),
                 child: TextButton(
-                    onPressed: () {
-                      setPlatforms('buy');
-                    },
-                    child: Text(localization.buy)),
-              ),
-          ],
-        ),
-        if (widget.justwatch.flatrate.isNotEmpty ||
-            widget.justwatch.rent.isNotEmpty ||
-            widget.justwatch.buy.isNotEmpty)
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: height,
-            child: ListView.builder(
-                shrinkWrap: false,
+                    onPressed: () => setPlatforms(key),
+                    child: Text(textButton[key]!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: Colors.blue))));
+          }).toList()),
+        if (platforms.isNotEmpty)
+          SizedBox(
+            height: 60,
+            child: ListView(
                 scrollDirection: Axis.horizontal,
-                itemCount: platforms.length,
-                itemBuilder: (BuildContext context, int index) {
-                  String name = platforms[index].name;
-                  String asset = '';
-                  JustwatchAssets.justwatchAssets.forEach((key, value) {
-                    if (value.contains(name.toLowerCase())) {
-                      asset = key;
-                    }
-                  });
-
-                  return JustwatchItem(asset: asset);
-                }),
+                padding: const EdgeInsets.only(top: 10),
+                shrinkWrap: false,
+                children: platforms
+                    .map((platform) => JustwatchItem(platform: platform))
+                    .toList()),
           ),
       ],
     );
   }
 
   setPlatforms(String platform) {
-    if (platform == 'flatrate') {
-      platforms = widget.justwatch.flatrate;
-      isFlatrateSelected = true;
-      isRentSelected = false;
-      isBuySelected = false;
-    } else if (platform == 'rent') {
-      platforms = widget.justwatch.rent;
-      isRentSelected = true;
-      isFlatrateSelected = false;
-      isBuySelected = false;
-    } else if (platform == 'buy') {
-      platforms = widget.justwatch.buy;
-      isBuySelected = true;
-      isRentSelected = false;
-      isFlatrateSelected = false;
+    if (justwatchMode != platform) {
+      justwatchMode = platform;
+      platforms = justwatch[platform]!;
+      setState(() {});
     }
-
-    setState(() {});
   }
 }
 
@@ -544,14 +536,14 @@ class _Reviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
+    final i18n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 70.0),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleSection(title: localization!.reviews),
+          TitleSection(title: i18n!.reviews),
           for (final review in reviews)
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
