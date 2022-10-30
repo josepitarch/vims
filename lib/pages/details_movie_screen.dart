@@ -78,14 +78,8 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String director = movie.director ?? '';
-    String flag = '';
-    String aux = removeDiacritics(movie.country.trim().toLowerCase());
     double sizeDirector = director.length > 20 ? 14 : 16;
-    FlagsAssets.flags.forEach((key, value) {
-      if (value.contains(aux)) {
-        flag = key;
-      }
-    });
+
     return SizedBox(
       height: _height,
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -102,8 +96,7 @@ class _Header extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(movie.title,
-                    style: const TextStyle(
-                        fontSize: 19, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headline2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
                     maxLines: 2),
@@ -112,17 +105,17 @@ class _Header extends StatelessWidget {
                 Text(director,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: sizeDirector)),
+                    style: Theme.of(context).textTheme.headline5),
               if (director.isNotEmpty)
                 const SizedBox(
                   height: 10,
                 ),
-              _Country(flag: flag, movie: movie),
+              _Country(country: movie.country),
               const SizedBox(
                 height: 10,
               ),
               Text('${movie.year}  ·  ${transformDuration(movie.duration)}',
-                  style: const TextStyle(fontSize: 17)),
+                  style: Theme.of(context).textTheme.headline5),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -175,45 +168,53 @@ class _Average extends StatelessWidget {
       ),
       Text(
         movie.average.isNotEmpty ? movie.average : '---',
-        style: const TextStyle(fontSize: 18),
+        style: Theme.of(context).textTheme.headline3,
       ),
     ]);
   }
 }
 
 class _Country extends StatelessWidget {
+  final String country;
+
   const _Country({
     Key? key,
-    required this.flag,
-    required this.movie,
+    required this.country,
   }) : super(key: key);
-
-  final String flag;
-  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (flag.isNotEmpty)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              'assets/flags/$flag.png',
-              width: 30,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const SizedBox(),
-            ),
-          ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          movie.country,
-          style: const TextStyle(fontSize: 16),
-        ),
-      ],
-    );
+    String flag = '';
+    String countryNormalize = removeDiacritics(country.trim().toLowerCase());
+
+    FlagsAssets.flags.forEach((key, value) {
+      if (value.contains(countryNormalize)) {
+        flag = key;
+      }
+    });
+
+    return flag.isNotEmpty
+        ? Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/flags/$flag.png',
+                  width: 30,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox(),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                country,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ],
+          )
+        : const SizedBox();
   }
 }
 
@@ -282,17 +283,20 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
                     }
                   });
                   final snackBar = SnackBar(
-                    content:
-                        const Text('Movie added to bookmarks successfully'),
+                    content: Text('Película añadida a marcados correctamente',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5!
+                            .copyWith(color: Colors.black)),
                     action: SnackBarAction(
-                      label: 'Undo',
+                      label: '',
                       onPressed: () {
                         // Some code to undo the change.
                       },
                     ),
                   );
 
-                  //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                   if (!isFavorite) {
                     BookmarkMoviesProvider()
