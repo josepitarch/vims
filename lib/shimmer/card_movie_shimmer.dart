@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MovieItemShimmer extends StatelessWidget {
-  const MovieItemShimmer({Key? key}) : super(key: key);
+class CardMovieShimmer extends StatelessWidget {
+  const CardMovieShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +14,12 @@ class MovieItemShimmer extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Container(
-                height: height,
-                width: 120,
-                color: Colors.grey[300],
-              ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(25)),
+              height: height,
+              width: 120,
             ),
             Expanded(
               child: Container(
@@ -29,15 +28,19 @@ class MovieItemShimmer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10)),
                         height: 20,
-                        width: double.infinity,
-                        color: Colors.grey[300],
+                        width: 180,
                       ),
                       const SizedBox(height: 10.0),
                       Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10)),
                         height: 20,
-                        width: double.infinity,
-                        color: Colors.grey[300],
+                        width: 150,
                       ),
                     ],
                   )),

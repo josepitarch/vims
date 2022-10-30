@@ -6,12 +6,13 @@ import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/genre_list_title.dart';
-import 'package:scrapper_filmaffinity/widgets/shimmer/movie_item_shimmer.dart';
+import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
 
-import '../widgets/movie_item.dart';
+import '../widgets/card_movie.dart';
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -46,36 +47,32 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
       if (provider.existsError) {
-        return const Center(
-          child: Text('Error'),
-        );
+        return TimeoutError(onPressed: () => provider.onFresh());
       }
 
       return Scaffold(
           body: SafeArea(
               child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TitlePage(localization.title_top_movies_page),
-              Expanded(
-                  child: ListView(
-                controller: scrollController,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.filter_list_outlined),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                TitlePage(localization.title_top_movies_page),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
                       onPressed: () => showDialogFilters(context, provider),
-                    ),
-                  ),
-                  if (provider.movies.isEmpty)
-                    ...List.generate(10, (index) => const MovieItemShimmer())
-                  else
-                    ...provider.movies.map((movie) => MovieItem(movie: movie)),
-                ],
-              )),
-            ],
-          )),
+                      icon: const Icon(Icons.filter_list_rounded)),
+                ),
+                Expanded(
+                    child: ListView(
+                  controller: scrollController,
+                  children: [
+                    if (provider.movies.isEmpty)
+                      ...List.generate(20, (index) => const CardMovieShimmer())
+                    else
+                      ...provider.movies.map((movie) => CardMovie(movie: movie))
+                  ],
+                ))
+              ])),
           floatingActionButton: showFloatingActionButton
               ? FloatingActionButton(
                   shape: const CircleBorder(),
@@ -164,7 +161,7 @@ class _YearsFilterState extends State<_YearsFilter> {
                   builder: (BuildContext context) {
                     return YearPickerCupertino(
                         isReverse: false, onItemSelectedChanged: setYearFrom);
-                  }).then((value) => print(value));
+                  });
             },
             shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.red, width: 2),
@@ -248,13 +245,15 @@ class _PlatformsFilter extends StatefulWidget {
 }
 
 class _PlatformsFilterState extends State<_PlatformsFilter> {
+  //TODO: all platforms are rendering when one is selected
   @override
   Widget build(BuildContext context) {
     final List<String> names = widget.filters.platforms.keys.toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('¿Qué plataformas tienes?'),
+        Text('¿Qué plataformas tienes?',
+            style: Theme.of(context).textTheme.headline6),
         const SizedBox(height: 10),
         SizedBox(
           height: 70,
@@ -412,6 +411,8 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
     return SwitchListTile.adaptive(
         title: Text(localization.exclude_animation),
         value: widget.filters.isAnimationExcluded,
+        activeColor: Colors.orange,
+        activeTrackColor: Colors.orange.withOpacity(0.3),
         onChanged: (bool? value) {
           widget.filters.isAnimationExcluded = value!;
           setState(() {

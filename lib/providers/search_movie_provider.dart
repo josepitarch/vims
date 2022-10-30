@@ -5,7 +5,8 @@ import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
 class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<dynamic> movies = [];
-  List<String> historySearchers = [];
+  List<String> searchs = [];
+  bool isLoading = false;
 
   SearchMovieProvider() {
     getHistorySearchers();
@@ -17,28 +18,42 @@ class SearchMovieProvider extends ChangeNotifier {
   }
 
   getHistorySearchers() {
-    HistorySearchDatabase.retrieveSearchs().then((value) {
-      historySearchers = value;
-      notifyListeners();
-    });
+    HistorySearchDatabase.retrieveSearchs()
+        .then((value) => searchs = value)
+        .whenComplete(() => notifyListeners());
   }
 
   deleteAllSearchers() {
-    HistorySearchDatabase.deleteAllSearchs().then((value) {
-      historySearchers.clear();
+    HistorySearchDatabase.deleteAllSearchs()
+        .then((value) => searchs.clear())
+        .whenComplete(() => notifyListeners());
+  }
+
+  searchMovie(String search) async {
+    isLoading = true;
+    SearchMovieService()
+        .getSuggestions(search)
+        .then((value) => movies = value)
+        .whenComplete(() {
+      isLoading = false;
       notifyListeners();
     });
   }
 
-  getSearchMovie(String search) {
+  insertAndSearchMovie(String search) {
+    isLoading = true;
+    notifyListeners();
+    HistorySearchDatabase.insertSearch(search);
     this.search = search;
-    SearchMovieService().getSuggestions(search).then((value) {
-      movies = value;
-      bool hasSearch = historySearchers.contains(search);
-      if (!hasSearch) {
-        historySearchers.add(search);
-      }
-      notifyListeners();
-    });
+    searchs.insert(0, search);
+    searchs = searchs.length >= 5 ? searchs.sublist(0, 5) : searchs;
+    searchMovie(search);
+  }
+
+  onTap(String search) {
+    this.search = search;
+    isLoading = true;
+    notifyListeners();
+    searchMovie(search);
   }
 }

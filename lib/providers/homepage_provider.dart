@@ -13,6 +13,7 @@ import '../models/movie.dart';
 class HomepageProvider extends ChangeNotifier {
   List<Section> sections = [];
   bool existsError = false;
+  bool isLoading = false;
   Map<String, Movie> openedMovies = {};
   final logger = Logger();
 
@@ -22,7 +23,9 @@ class HomepageProvider extends ChangeNotifier {
 
   getHomepageMovies() async {
     try {
+      isLoading = true;
       sections = await HomepageService().getHomepageMovies();
+      existsError = false;
     } on SocketException catch (e) {
       existsError = true;
       logger.e(e.toString());
@@ -30,12 +33,14 @@ class HomepageProvider extends ChangeNotifier {
       existsError = true;
       logger.e(e.toString());
     } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> refresh() async {
+  onRefresh() async {
     sections.clear();
+    isLoading = true;
     notifyListeners();
     getHomepageMovies();
   }

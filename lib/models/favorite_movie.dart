@@ -1,7 +1,7 @@
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
-class FavoriteMovie {
-  FavoriteMovie(
+class BookmarkMovie {
+  BookmarkMovie(
       {required this.id,
       required this.poster,
       required this.title,
@@ -23,18 +23,17 @@ class FavoriteMovie {
 
   Movie toMovie() {
     return Movie(
-      id: id,
-      title: title,
-      year: '',
-      country: '',
-      cast: '',
-      genres: [],
-      synopsis: '',
-      poster: poster,
-      justwatch: Justwatch(buy: [], rent: [], flatrate: []),
-      director: director,
-      average: '',
-      reviews: []
-    );
+        id: id,
+        title: title,
+        year: '',
+        country: '',
+        cast: '',
+        genres: [],
+        synopsis: '',
+        poster: poster,
+        justwatch: Justwatch(buy: [], rent: [], flatrate: []),
+        director: director,
+        average: '',
+        reviews: []);
   }
 }

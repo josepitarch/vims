@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:scrapper_filmaffinity/utils/justwatch.dart';
 
 class JustwatchItem extends StatelessWidget {
-  const JustwatchItem({Key? key, required this.asset}) : super(key: key);
+  final Platform platform;
 
-  final String asset;
+  const JustwatchItem({Key? key, required this.platform}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: change size of asset
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.asset(
-          'assets/justwatch/$asset.jpg',
-          fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => Container(),
-        ),
-      ),
-    );
+    String asset = '';
+
+    JustwatchAssets.justwatchAssets.forEach((key, value) {
+      if (value.contains(platform.name.toLowerCase())) {
+        asset = key;
+      }
+    });
+
+    return asset.isNotEmpty
+        ? Container(
+            height: 60,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/justwatch/$asset.jpg',
+                fit: BoxFit.cover,
+                height: 50,
+                width: 50,
+                errorBuilder: (_, __, ___) => const SizedBox(),
+              ),
+            ),
+          )
+        : const SizedBox();
   }
 }
