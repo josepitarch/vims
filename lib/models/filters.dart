@@ -1,8 +1,10 @@
 import 'package:scrapper_filmaffinity/enums/genres.dart';
+import 'package:scrapper_filmaffinity/enums/orders.dart';
 
 class Filters {
   Map<String, bool> platforms;
   Map<Genres, bool> genres;
+  OrderBy orderBy;
   bool isAnimationExcluded;
   int yearFrom;
   int yearTo;
@@ -10,6 +12,7 @@ class Filters {
   Filters(
       {required this.platforms,
       required this.genres,
+      required this.orderBy,
       required this.isAnimationExcluded,
       required this.yearFrom,
       required this.yearTo});
@@ -21,6 +24,7 @@ class Filters {
     genres.forEach((key, value) {
       genres[key] = false;
     });
-    isAnimationExcluded = false;
+    orderBy = OrderBy.shuffle;
+    isAnimationExcluded = true;
   }
 }

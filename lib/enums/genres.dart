@@ -19,10 +19,7 @@ enum Genres {
   String search(String name) => _value[name]!;
 
   static getGenre(String name, String language) {
-    for (var genre in Genres.values) {
-      if (genre.value[language] == name) {
-        return genre;
-      }
-    }
+    return Genres.values
+        .firstWhere((element) => element.search(language) == name);
   }
 }

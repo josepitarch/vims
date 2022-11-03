@@ -11,6 +11,7 @@ class CardMovie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO: Limit width of title and director
+    //TODO: all card has to be clickeable
     double height = 170.0;
     return GestureDetector(
       onTap: () {

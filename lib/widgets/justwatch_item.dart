@@ -16,7 +16,7 @@ class JustwatchItem extends StatelessWidget {
         asset = key;
       }
     });
-
+    //TODO: redirect to platform
     return asset.isNotEmpty
         ? Container(
             height: 60,

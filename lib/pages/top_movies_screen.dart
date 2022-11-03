@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/enums/genres.dart';
 import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
+import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
-import 'package:scrapper_filmaffinity/widgets/genre_list_title.dart';
 import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/card_genre.dart';
+import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
+import 'package:scrapper_filmaffinity/widgets/platform_item.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
-
-import '../widgets/card_movie.dart';
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -22,8 +22,12 @@ class TopMoviesScreen extends StatefulWidget {
 }
 
 class _TopMoviesScreenState extends State<TopMoviesScreen> {
+  List<Movie> movies = [];
+  late TopMoviesProvider topMoviesProvider;
   final scrollController = ScrollController();
   bool showFloatingActionButton = false;
+  late int totalMovies;
+  int pagination = 30;
 
   @override
   void initState() {
@@ -37,8 +41,27 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
           showFloatingActionButton = false;
         });
       }
+
+      if (scrollController.position.pixels + 200 >=
+              scrollController.position.maxScrollExtent &&
+          pagination <= totalMovies &&
+          movies.isNotEmpty) {
+        setState(() {
+          print('length: ${movies.length}');
+          print('pagination: $pagination');
+          movies.addAll(
+              topMoviesProvider.movies.sublist(movies.length, pagination));
+          pagination += 20;
+        });
+      }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,8 +69,14 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
     final localization = AppLocalizations.of(context)!;
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
+      topMoviesProvider = provider;
       if (provider.existsError) {
         return TimeoutError(onPressed: () => provider.onFresh());
+      }
+
+      if (movies.isEmpty && !provider.isLoading) {
+        totalMovies = provider.movies.length;
+        movies = provider.movies.sublist(0, 30);
       }
 
       return Scaffold(
@@ -59,17 +88,21 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                      onPressed: () => showDialogFilters(context, provider),
+                      onPressed: () {
+                        pagination = 30;
+                        movies.clear();
+                        showDialogFilters(context, provider, scrollController);
+                      },
                       icon: const Icon(Icons.filter_list_rounded)),
                 ),
                 Expanded(
                     child: ListView(
                   controller: scrollController,
                   children: [
-                    if (provider.movies.isEmpty)
+                    if (movies.isEmpty)
                       ...List.generate(20, (index) => const CardMovieShimmer())
                     else
-                      ...provider.movies.map((movie) => CardMovie(movie: movie))
+                      ...movies.map((movie) => CardMovie(movie: movie))
                   ],
                 ))
               ])),
@@ -84,8 +117,8 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
     });
   }
 
-  Future<dynamic> showDialogFilters(
-      BuildContext context, TopMoviesProvider provider) {
+  Future<dynamic> showDialogFilters(BuildContext context,
+      TopMoviesProvider provider, ScrollController scrollController) {
     return showCupertinoDialog(
         barrierDismissible: false,
         context: context,
@@ -95,7 +128,8 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: SafeArea(child: _FiltersSection(provider: provider)),
+            child: _FiltersSection(
+                provider: provider, scrollController: scrollController),
           );
         });
   }
@@ -103,21 +137,25 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
 class _FiltersSection extends StatelessWidget {
   final TopMoviesProvider provider;
+  final ScrollController scrollController;
 
-  const _FiltersSection({Key? key, required this.provider}) : super(key: key);
+  const _FiltersSection(
+      {Key? key, required this.provider, required this.scrollController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final Filters filters = Filters(
         platforms: Map.from(provider.filters.platforms),
         genres: Map.from(provider.filters.genres),
+        orderBy: provider.filters.orderBy,
         isAnimationExcluded: provider.filters.isAnimationExcluded,
         yearFrom: provider.filters.yearFrom,
         yearTo: provider.filters.yearTo);
 
     return Container(
       padding: const EdgeInsets.all(8.0),
-      height: double.infinity,
+      height: 600,
       width: double.infinity,
       child: Column(
         children: [
@@ -130,11 +168,45 @@ class _FiltersSection extends StatelessWidget {
           ),
           _PlatformsFilter(filters: filters),
           _YearsFilter(filters: filters),
+          _OrderFilter(filters: filters),
           _ExcludeAnimationFilter(filters: filters),
           _GenresFilter(filters: filters),
-          _ButtonsFilter(provider: provider, filters: filters),
+          _ButtonsFilter(
+              provider: provider,
+              filters: filters,
+              scrollController: scrollController),
         ],
       ),
+    );
+  }
+}
+
+class _PlatformsFilter extends StatelessWidget {
+  final Filters filters;
+
+  const _PlatformsFilter({Key? key, required this.filters}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('¿Qué plataformas tienes?',
+            style: Theme.of(context).textTheme.headline6),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 60,
+          child: ListView(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: false,
+              children: filters.platforms.entries.map((entry) {
+                return PlatformItem(
+                    assetName: entry.key,
+                    isSelected: entry.value,
+                    filters: filters);
+              }).toList()),
+        ),
+      ],
     );
   }
 }
@@ -200,7 +272,7 @@ class _YearsFilterState extends State<_YearsFilter> {
   }
 }
 
-class _GenresFilter extends StatefulWidget {
+class _GenresFilter extends StatelessWidget {
   final Filters filters;
   const _GenresFilter({
     Key? key,
@@ -208,117 +280,25 @@ class _GenresFilter extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<_GenresFilter> createState() => _GenresFilterState();
-}
-
-class _GenresFilterState extends State<_GenresFilter> {
-  late String language;
-  @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
-    language = localization.localeName;
     return Expanded(
-        child: ListView(
-            children: widget.filters.genres.keys
-                .map((key) => GenreListTitle(
-                    genre: key.value[localization.localeName]!,
-                    isSelected: widget.filters.genres[key]!,
-                    onTap: onTap))
-                .toList()));
-  }
-
-  void onTap(String name) {
-    setState(() {
-      Genres genre = Genres.getGenre(name, language);
-      widget.filters.genres[genre] = !widget.filters.genres[genre]!;
-    });
-  }
-}
-
-class _PlatformsFilter extends StatefulWidget {
-  final Filters filters;
-
-  const _PlatformsFilter({Key? key, required this.filters}) : super(key: key);
-
-  @override
-  State<_PlatformsFilter> createState() => _PlatformsFilterState();
-}
-
-class _PlatformsFilterState extends State<_PlatformsFilter> {
-  //TODO: all platforms are rendering when one is selected
-  @override
-  Widget build(BuildContext context) {
-    final List<String> names = widget.filters.platforms.keys.toList();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('¿Qué plataformas tienes?',
-            style: Theme.of(context).textTheme.headline6),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 70,
-          child: ListView.builder(
-              itemCount: widget.filters.platforms.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (_, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        bool value = widget.filters.platforms[names[index]]!;
-                        widget.filters.platforms[names[index]] = !value;
-                      });
-                    },
-                    child: _PlatformItem(
-                        assetName: names[index],
-                        isSelected: widget.filters.platforms[names[index]]!),
-                  ),
-                );
-              }),
-        ),
-      ],
+      child: Wrap(
+          spacing: 5,
+          runSpacing: 5,
+          children: filters.genres.entries.map((entry) {
+            return CardGenre(
+              genre: entry.key,
+              isSelected: entry.value,
+              filters: filters,
+            );
+          }).toList()),
     );
   }
 }
 
-class _PlatformItem extends StatelessWidget {
-  const _PlatformItem({
-    Key? key,
-    required this.assetName,
-    required this.isSelected,
-  }) : super(key: key);
-
-  final String assetName;
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(children: [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.asset(
-          'assets/justwatch/$assetName.jpg',
-          fit: BoxFit.cover,
-          height: 50,
-          errorBuilder: (_, __, ___) => Container(),
-        ),
-      ),
-      if (isSelected)
-        const Positioned(
-            right: 0,
-            bottom: 15,
-            width: 20,
-            height: 20,
-            child: CircleAvatar(
-                child: Icon(size: 10, Icons.check, color: Colors.white)))
-    ]);
-  }
-}
-
 class _OrderFilter extends StatefulWidget {
-  final TopMoviesProvider provider;
-  const _OrderFilter({Key? key, required this.provider}) : super(key: key);
+  final Filters filters;
+  const _OrderFilter({Key? key, required this.filters}) : super(key: key);
 
   @override
   State<_OrderFilter> createState() => _OrderFilterState();
@@ -327,8 +307,8 @@ class _OrderFilter extends StatefulWidget {
 class _OrderFilterState extends State<_OrderFilter> {
   @override
   Widget build(BuildContext context) {
-    OrderItem selectedValue = widget.provider.orderBy;
-    return DropdownButton<OrderItem>(
+    OrderBy selectedValue = widget.filters.orderBy;
+    return DropdownButton<OrderBy>(
       value: selectedValue,
       icon: const Icon(Icons.arrow_downward),
       elevation: 16,
@@ -336,14 +316,14 @@ class _OrderFilterState extends State<_OrderFilter> {
         height: 2,
         color: Colors.orange,
       ),
-      onChanged: (OrderItem? newValue) {
+      onChanged: (OrderBy? newValue) {
         setState(() {
           selectedValue = newValue!;
-          widget.provider.orderBy = newValue;
+          widget.filters.orderBy = newValue;
         });
       },
-      items: OrderItem.values.map((OrderItem value) {
-        return DropdownMenuItem<OrderItem>(
+      items: OrderBy.values.map((OrderBy value) {
+        return DropdownMenuItem<OrderBy>(
           value: value,
           child: Text(value.value['en']!),
         );
@@ -355,8 +335,13 @@ class _OrderFilterState extends State<_OrderFilter> {
 class _ButtonsFilter extends StatelessWidget {
   final TopMoviesProvider provider;
   final Filters filters;
+  final ScrollController scrollController;
+
   const _ButtonsFilter(
-      {Key? key, required this.provider, required this.filters})
+      {Key? key,
+      required this.provider,
+      required this.filters,
+      required this.scrollController})
       : super(key: key);
 
   @override
@@ -384,6 +369,7 @@ class _ButtonsFilter extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () {
                 Navigator.pop(context);
+                scrollController.jumpTo(0);
                 provider.applyFilters(filters);
               },
               child: Text(localization.apply_filters)),

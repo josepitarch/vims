@@ -194,6 +194,10 @@ class _Country extends StatelessWidget {
       }
     });
 
+    Text text = Text(
+      country,
+      style: Theme.of(context).textTheme.headline5,
+    );
     return flag.isNotEmpty
         ? Row(
             children: [
@@ -209,13 +213,10 @@ class _Country extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                country,
-                style: Theme.of(context).textTheme.headline5,
-              ),
+              text,
             ],
           )
-        : const SizedBox();
+        : text;
   }
 }
 

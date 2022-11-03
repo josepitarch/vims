@@ -18,7 +18,6 @@ class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
   int to = 210;
 
-  OrderItem orderBy = OrderItem.average;
   List<Movie> movies = [];
   bool isLoading = false;
   bool existsError = false;
@@ -26,19 +25,16 @@ class TopMoviesProvider extends ChangeNotifier {
   Map<String, Movie> openedMovies = {};
 
   Filters filters = Filters(
-      platforms: {},
-      genres: {},
-      isAnimationExcluded: false,
+      platforms: {for (var platform in Platforms.values) platform.value: false},
+      genres: {for (var e in Genres.values) e: false},
+      orderBy: OrderBy.shuffle,
+      isAnimationExcluded: true,
       yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
       yearTo: getCurrentYear());
 
   var logger = Logger();
 
-  TopMoviesProvider(String language) {
-    Genres.values.forEach((element) => filters.genres[element] = false);
-    Platforms.values
-        .forEach((element) => filters.platforms[element.value] = false);
-
+  TopMoviesProvider() {
     getTopMovies();
   }
 
@@ -63,6 +59,8 @@ class TopMoviesProvider extends ChangeNotifier {
           filters.yearFrom,
           filters.yearTo);
 
+      movies = filters.orderBy.value['func'](movies);
+
       existsError = false;
     } on SocketException catch (e) {
       existsError = true;
@@ -81,18 +79,9 @@ class TopMoviesProvider extends ChangeNotifier {
     filters.platforms[platform] = !value;
   }
 
-  final Map<String, Function> sorts = {
-    'average': (List<Movie> movies) => movies.sort((a, b) =>
-        double.parse(b.average.replaceFirst(',', '.'))
-            .compareTo(double.parse(a.average.replaceFirst(',', '.')))),
-    'year': (List<Movie> movies) =>
-        movies.sort((a, b) => int.parse(a.year).compareTo(int.parse(b.year))),
-    'random': (List<Movie> movies) => movies.shuffle(),
-  };
-
   applyFilters(Filters filters) {
     hasFilters = true;
-    movies = [];
+    movies.clear();
     notifyListeners();
     this.filters.platforms = {
       ...this.filters.platforms,
@@ -103,6 +92,7 @@ class TopMoviesProvider extends ChangeNotifier {
       ...filters.genres,
     };
 
+    this.filters.orderBy = filters.orderBy;
     this.filters.yearFrom = filters.yearFrom;
     this.filters.yearTo = filters.yearTo;
     this.filters.isAnimationExcluded = filters.isAnimationExcluded;

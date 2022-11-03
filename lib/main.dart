@@ -28,11 +28,10 @@ class AppState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = WidgetsBinding.instance.window.locale;
+    //Locale locale = WidgetsBinding.instance.window.locale;
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => HomepageProvider(), lazy: false),
-      ChangeNotifierProvider(
-          create: (_) => TopMoviesProvider(locale.languageCode), lazy: false),
+      ChangeNotifierProvider(create: (_) => TopMoviesProvider(), lazy: false),
       ChangeNotifierProvider(
           create: (_) => BookmarkMoviesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false)
