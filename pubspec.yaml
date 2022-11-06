@@ -75,6 +75,7 @@ flutter:
   assets:
     - .env
     - assets/loading.gif
+    - assets/no-image.jpg
     - assets/justwatch/
     - assets/flags/
 

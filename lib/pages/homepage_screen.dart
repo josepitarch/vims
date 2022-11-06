@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
@@ -81,21 +80,12 @@ class _SectionMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomepageProvider homepageProvider =
-        Provider.of<HomepageProvider>(context);
-
     const double width = 120;
     const double height = 190;
 
     return GestureDetector(
       onTap: () {
-        Map<String, Movie> openedMovies = homepageProvider.openedMovies;
-
-        Map<String, dynamic> arguments = {
-          'hasAllAttributes': openedMovies.containsKey(film.id),
-          'movie': openedMovies[film.id],
-          'id': film.id
-        };
+        Map<String, dynamic> arguments = {'id': film.id};
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
       child: Container(

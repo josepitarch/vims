@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -10,13 +8,12 @@ import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
-import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
+import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
+import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
-import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
@@ -24,49 +21,47 @@ class DetailsMovieScreen extends StatelessWidget {
   const DetailsMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<DetailsMovieProvider>(context, listen: true);
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
     final String id = arguments['id'];
+    final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
-    return FutureBuilder(
-        future: !hasAllAttributes
-            ? MetadataMovieService().getMetadataMovie(id)
-            : Future<Movie>.value(arguments['movie'] as Movie),
-        builder: (_, AsyncSnapshot<Movie> snapshot) {
-          if (!snapshot.hasData) return const DetailsMovieShimmer();
-          Movie movie = snapshot.data!;
+    if (provider.openedMovies.containsKey(id)) {
+      return screen(provider.openedMovies[id]!);
+    } else if (hasAllAttributes) {
+      Movie movie = arguments['movie'];
+      provider.openedMovies[id] = movie;
+      return screen(movie);
+    } else {
+      provider.getDetailsMovie(id);
+      return const DetailsMovieShimmer();
+    }
+  }
 
-          if (!hasAllAttributes) {
-            final HomepageProvider homepageProvider =
-                Provider.of<HomepageProvider>(context);
-            homepageProvider.openedMovies.addAll({movie.id: movie});
-          }
-
-          return Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                  child: Column(
-                    children: [
-                      _Header(movie: movie),
-                      _Genres(movie.genres),
-                      _Cast(cast: movie.cast),
-                      _Synopsis(overview: movie.synopsis),
-                      _Justwatch(justwatch: movie.justwatch),
-                      movie.reviews.isNotEmpty
-                          ? _Reviews(movie.reviews)
-                          : const SizedBox()
-                    ],
-                  ),
-                ),
-              ),
+  Scaffold screen(Movie movie) {
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            child: Column(
+              children: [
+                _Header(movie: movie),
+                _Genres(movie.genres),
+                _Cast(cast: movie.cast),
+                _Synopsis(overview: movie.synopsis),
+                _Justwatch(justwatch: movie.justwatch),
+                movie.reviews.isNotEmpty
+                    ? _Reviews(movie.reviews)
+                    : const SizedBox()
+              ],
             ),
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 }
 

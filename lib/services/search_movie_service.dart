@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 class SearchMovieService {
   final url = dotenv.env['URL']!;
   final timeout = dotenv.env['TIMEOUT']!;
+  final String versionApi = dotenv.env['VERSION_API']!;
+
   final logger = Logger();
 
   Future<List<dynamic>> getSuggestions(String query) async {
@@ -18,8 +20,8 @@ class SearchMovieService {
         return suggestions;
       }
 
-      final request =
-          Uri.http(url, '/api/search/film', {'film': query, 'lang': 'es'});
+      final request = Uri.http(
+          url, '/api/$versionApi/search/film', {'film': query, 'lang': 'es'});
 
       final response = await http
           .get(request)

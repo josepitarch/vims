@@ -47,8 +47,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
           pagination <= totalMovies &&
           movies.isNotEmpty) {
         setState(() {
-          print('length: ${movies.length}');
-          print('pagination: $pagination');
           movies.addAll(
               topMoviesProvider.movies.sublist(movies.length, pagination));
           pagination += 20;
@@ -74,7 +72,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
         return TimeoutError(onPressed: () => provider.onFresh());
       }
 
-      if (movies.isEmpty && !provider.isLoading) {
+      if (movies.isEmpty && !provider.isLoading && !provider.existsError) {
         totalMovies = provider.movies.length;
         movies = provider.movies.sublist(0, 30);
       }

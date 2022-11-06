@@ -6,6 +6,7 @@ import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/l10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 
 import 'package:scrapper_filmaffinity/widgets/navigation_bottom_bar.dart';
 import 'package:scrapper_filmaffinity/pages/details_movie_screen.dart';
@@ -33,8 +34,10 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => HomepageProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => TopMoviesProvider(), lazy: false),
       ChangeNotifierProvider(
-          create: (_) => BookmarkMoviesProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false)
+          create: (_) => DetailsMovieProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
+      ChangeNotifierProvider(
+          create: (_) => BookmarkMoviesProvider(), lazy: false)
     ], child: const MyApp());
   }
 }
