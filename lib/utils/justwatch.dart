@@ -11,5 +11,9 @@ class JustwatchAssets {
     'movistar': ['movistar plus'],
     'netflix': ['netflix'],
     'rakuten': ['rakuten tv'],
+    'flixole': ['flixolé'],
+    'fubo': ['fubotv'],
+    'netflix-ads': ['netflix basic with ads'],
+    'chili': ['chili'],
   };
 }

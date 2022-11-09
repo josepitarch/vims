@@ -6,7 +6,8 @@ enum Platforms {
   movistar('movistar'),
   filmin('filmin'),
   rakuten('rakuten'),
-  acontra('acontra');
+  acontra('acontra'),
+  flixole('flixole');
 
   const Platforms(this._value);
   final String _value;

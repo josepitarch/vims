@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/dialogs/TopMoviesDialog.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
@@ -20,7 +19,6 @@ class TopMoviesScreen extends StatefulWidget {
 }
 
 class _TopMoviesScreenState extends State<TopMoviesScreen> {
-  List<Movie> movies = [];
   late TopMoviesProvider topMoviesProvider;
   final scrollController = ScrollController();
   bool showFloatingActionButton = false;
@@ -37,17 +35,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
       } else {
         setState(() {
           showFloatingActionButton = false;
-        });
-      }
-
-      if (scrollController.position.pixels + 200 >=
-              scrollController.position.maxScrollExtent &&
-          pagination <= totalMovies &&
-          movies.isNotEmpty) {
-        setState(() {
-          movies.addAll(
-              topMoviesProvider.movies.sublist(movies.length, pagination));
-          pagination += 20;
         });
       }
     });
@@ -70,13 +57,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
         return TimeoutError(onPressed: () => provider.onFresh());
       }
 
-      if (movies.isEmpty && !provider.isLoading && !provider.existsError) {
-        if (provider.movies.isNotEmpty) {
-          totalMovies = provider.movies.length;
-          movies = provider.movies.sublist(0, 30);
-        }
-      }
-
       return Scaffold(
           body: SafeArea(
               child: Column(
@@ -88,7 +68,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   child: IconButton(
                       onPressed: () {
                         pagination = 30;
-                        movies.clear();
+                        provider.movies.clear();
                         showDialogFilters(context, provider, scrollController);
                       },
                       icon: const Icon(Icons.filter_list_rounded)),
@@ -99,12 +79,12 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   children: [
                     if (provider.isLoading)
                       ...List.generate(20, (index) => const CardMovieShimmer())
-                    else if (movies.isEmpty)
+                    else if (provider.movies.isEmpty)
                       const Center(
                           child: Text('No hay películas que mostrar',
                               style: TextStyle(fontSize: 20)))
                     else
-                      ...movies.map((movie) => CardMovie(movie: movie))
+                      ...provider.movies.map((movie) => CardMovie(movie: movie))
                   ],
                 ))
               ])),
