@@ -20,34 +20,34 @@ class PlatformItem extends StatefulWidget {
 class _PlatformItemState extends State<PlatformItem> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      SizedBox(
-        height: 60,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(90),
-          child: IconButton(
-            icon: Image.asset('assets/justwatch/${widget.assetName}.jpg',
-                fit: BoxFit.cover,
-                height: 60,
-                width: 60,
-                errorBuilder: (_, __, ___) => const SizedBox()),
-            onPressed: () {
-              setState(() {
-                widget.isSelected = !widget.isSelected;
-                widget.filters.platforms[widget.assetName] = widget.isSelected;
-              });
-            },
+    return GestureDetector(
+      child: Stack(children: [
+        Container(
+          margin: const EdgeInsets.only(right: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              'assets/justwatch/${widget.assetName}.jpg',
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const SizedBox(),
+            ),
           ),
         ),
-      ),
-      if (widget.isSelected)
-        const Positioned(
-            right: 0,
-            bottom: 15,
-            width: 20,
-            height: 20,
-            child: CircleAvatar(
-                child: Icon(size: 10, Icons.check, color: Colors.white)))
-    ]);
+        if (widget.isSelected)
+          const Positioned(
+              right: 7,
+              bottom: 0,
+              width: 20,
+              height: 20,
+              child: CircleAvatar(
+                  child: Icon(size: 10, Icons.check, color: Colors.white)))
+      ]),
+      onTap: () {
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+          widget.filters.platforms[widget.assetName] = widget.isSelected;
+        });
+      },
+    );
   }
 }

@@ -19,7 +19,7 @@ class HomepageScreen extends StatelessWidget {
       if (provider.existsError) {
         return TimeoutError(onPressed: () => provider.onRefresh());
       }
-
+      //TODO: Generate new id for hero animation
       return !provider.isLoading
           ? SafeArea(
               child: RefreshIndicator(
@@ -93,34 +93,34 @@ class _SectionMovie extends StatelessWidget {
           width: width,
           height: height,
           child: Column(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Hero(
-                    tag: film.id,
-                    child: FadeInImage(
+            Hero(
+              tag: film.id,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    FadeInImage(
                         placeholder: const AssetImage('assets/loading.gif'),
                         image: NetworkImage(film.image),
                         width: width,
                         height: height - 30,
                         fit: BoxFit.cover),
-                  ),
-                  Container(
-                    height: 40,
-                    width: double.infinity,
-                    color: Colors.orange.withOpacity(0.8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        film.premiereDay,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline5,
+                    Container(
+                      height: 40,
+                      width: double.infinity,
+                      color: Colors.orange.withOpacity(0.8),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          film.premiereDay,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 7),

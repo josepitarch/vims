@@ -5,10 +5,10 @@ enum Platforms {
   disney('disney'),
   movistar('movistar'),
   filmin('filmin'),
-  rakuten('rakuten');
+  rakuten('rakuten'),
+  acontra('acontra');
 
   const Platforms(this._value);
   final String _value;
   String get value => _value;
-
 }

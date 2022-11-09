@@ -17,10 +17,13 @@ import 'package:scrapper_filmaffinity/widgets/review_item.dart';
 import 'package:scrapper_filmaffinity/widgets/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
+late AppLocalizations i18n;
+
 class DetailsMovieScreen extends StatelessWidget {
   const DetailsMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<DetailsMovieProvider>(context, listen: true);
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -269,14 +272,13 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   Widget build(BuildContext context) {
     final BookmarkMoviesProvider provider =
         Provider.of<BookmarkMoviesProvider>(context);
-    final i18n = AppLocalizations.of(context)!;
     try {
       return Align(
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: IconButton(
-                onPressed: () => onPressed(provider, i18n),
+                onPressed: () => onPressed(provider),
                 icon: Icon(
                   isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
                   size: 25,
@@ -287,7 +289,7 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
     }
   }
 
-  onPressed(BookmarkMoviesProvider provider, AppLocalizations i18n) async {
+  onPressed(BookmarkMoviesProvider provider) async {
     Vibrate.canVibrate.then((value) {
       if (value) {
         Vibrate.feedback(FeedbackType.medium);
@@ -351,12 +353,11 @@ class _Cast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TitleSection(title: i18n!.cast),
+        TitleSection(title: i18n.cast),
         Text(cast,
             textAlign: TextAlign.start,
             maxLines: _maxLines,
@@ -392,7 +393,6 @@ class _SynopsisState extends State<_Synopsis> {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context)!;
     Map<int, String> textButton = {
       0: i18n.see_more,
       1: i18n.see_less,
@@ -464,7 +464,6 @@ class _JustwatchState extends State<_Justwatch> {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context)!;
     Map<String, String> textButton = {
       'flatrate': i18n.flatrate,
       'rent': i18n.rent,
@@ -532,14 +531,13 @@ class _Reviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 70.0),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleSection(title: i18n!.reviews),
+          TitleSection(title: i18n.reviews),
           for (final review in reviews)
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
