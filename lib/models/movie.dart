@@ -20,6 +20,7 @@ class Movie {
   Justwatch justwatch;
   List<Review> reviews;
   List<String>? platforms;
+  String? heroTag;
 
   Movie(
       {required this.id,

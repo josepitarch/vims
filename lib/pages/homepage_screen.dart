@@ -64,7 +64,8 @@ class _Section extends StatelessWidget {
             children: [
               const SizedBox(width: 12),
               ...section.movies
-                  .map((movie) => _SectionMovie(film: movie))
+                  .map((movie) =>
+                      _SectionMovie(film: movie, sectionTitle: section.title))
                   .toList(),
             ],
           ),
@@ -76,16 +77,20 @@ class _Section extends StatelessWidget {
 
 class _SectionMovie extends StatelessWidget {
   final MovieSection film;
-  const _SectionMovie({Key? key, required this.film}) : super(key: key);
+  final String sectionTitle;
+  const _SectionMovie(
+      {Key? key, required this.film, required this.sectionTitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const double width = 120;
     const double height = 190;
+    final String heroTag = film.id + sectionTitle;
 
     return GestureDetector(
       onTap: () {
-        Map<String, dynamic> arguments = {'id': film.id};
+        Map<String, dynamic> arguments = {'id': film.id, 'heroTag': heroTag};
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
       child: Container(
@@ -94,7 +99,7 @@ class _SectionMovie extends StatelessWidget {
           height: height,
           child: Column(children: [
             Hero(
-              tag: film.id,
+              tag: heroTag,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Stack(

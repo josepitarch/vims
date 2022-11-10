@@ -29,13 +29,17 @@ class DetailsMovieScreen extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     final String id = arguments['id'];
+    final String heroTag = arguments['heroTag'] ?? id;
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
     if (provider.openedMovies.containsKey(id)) {
+      final Movie movie = provider.openedMovies[id]!;
+      movie.heroTag = heroTag;
       return screen(provider.openedMovies[id]!);
     } else if (hasAllAttributes) {
       Movie movie = arguments['movie'];
       provider.openedMovies[id] = movie;
+      movie.heroTag = heroTag;
       return screen(movie);
     } else {
       provider.getDetailsMovie(id);
@@ -232,7 +236,7 @@ class _Poster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: movie.id,
+      tag: movie.heroTag!,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: FadeInImage(
