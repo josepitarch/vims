@@ -13,15 +13,20 @@ class SearchMovieService {
 
   final logger = Logger();
 
-  Future<List<dynamic>> getSuggestions(String query) async {
+  Future<List<dynamic>> getSuggestions(
+      String query, String type, int numberFetchMovies) async {
     List<dynamic> suggestions = [];
     try {
       if (query.isEmpty) {
         return suggestions;
       }
 
-      final request = Uri.http(
-          url, '/api/$versionApi/search/film', {'film': query, 'lang': 'es'});
+      final request = Uri.http(url, '/api/$versionApi/search/film', {
+        'film': query,
+        'lang': 'es',
+        'type': type,
+        'numberFetchMovies': numberFetchMovies.toString()
+      });
 
       final response = await http
           .get(request)

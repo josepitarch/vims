@@ -6,12 +6,13 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
+import 'package:scrapper_filmaffinity/widgets/no_results.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
-final ScrollController scrollController = ScrollController();
+late ScrollController scrollController;
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
   @override
   void initState() {
+    scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.pixels >= 200) {
         setState(() {
@@ -107,23 +109,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                 provider: provider, scrollController: scrollController),
           );
         });
-  }
-}
-
-class NoResults extends StatelessWidget {
-  const NoResults({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      flex: 8,
-      child: Center(
-        child:
-            Text(i18n.no_results, style: Theme.of(context).textTheme.headline6),
-      ),
-    );
   }
 }
 
