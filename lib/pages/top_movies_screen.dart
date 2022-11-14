@@ -22,7 +22,7 @@ class TopMoviesScreen extends StatefulWidget {
 }
 
 class _TopMoviesScreenState extends State<TopMoviesScreen> {
-  late TopMoviesProvider topMoviesProvider;
+  late TopMoviesProvider provider;
   bool showFloatingActionButton = false;
   late int totalMovies;
   int pagination = 30;
@@ -55,7 +55,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
     i18n = AppLocalizations.of(context)!;
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
-      topMoviesProvider = provider;
+      this.provider = provider;
       if (provider.existsError) {
         return TimeoutError(onPressed: () => provider.onFresh());
       }
@@ -70,8 +70,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                       onPressed: () {
-                        pagination = 30;
-                        provider.movies.clear();
                         showDialogFilters(context, provider);
                       },
                       icon: const Icon(Icons.filter_list_rounded)),

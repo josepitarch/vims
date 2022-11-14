@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/utils/current_year.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -15,6 +16,8 @@ class YearPickerCupertino extends StatefulWidget {
 }
 
 class _YearPickerCupertinoState extends State<YearPickerCupertino> {
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
     int currentYear = getCurrentYear();
@@ -27,18 +30,23 @@ class _YearPickerCupertinoState extends State<YearPickerCupertino> {
       years = years.reversed.toList();
     }
 
-    return CupertinoActionSheet(actions: [
-      SizedBox(
-          height: 350,
-          child: CupertinoPicker(
-              itemExtent: 50,
-              onSelectedItemChanged: (index) =>
-                  widget.onItemSelectedChanged(years[index]),
-              children: years
-                  .map((year) => Text(
-                        year.toString(),
-                      ))
-                  .toList()))
-    ]);
+    return CupertinoActionSheet(
+        title: Text('Selecciona una fecha',
+            style: Theme.of(context).textTheme.headline6),
+        actions: [
+          SizedBox(
+              height: 250,
+              child: CupertinoPicker(
+                itemExtent: 64,
+                onSelectedItemChanged: (int index) =>
+                    widget.onItemSelectedChanged(years[index]),
+                selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                  background: Colors.orange.withOpacity(0.6),
+                ),
+                children: years
+                    .map((value) => Center(child: Text(value.toString())))
+                    .toList(),
+              ))
+        ]);
   }
 }

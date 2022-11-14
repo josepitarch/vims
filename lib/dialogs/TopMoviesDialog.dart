@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/card_genre.dart';
 import 'package:scrapper_filmaffinity/widgets/platform_item.dart';
-import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
+import 'package:scrapper_filmaffinity/widgets/year_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
@@ -44,9 +43,6 @@ class TopMoviesDialog extends StatelessWidget {
             ),
           ),
           const _PlatformsFilter(),
-          const SizedBox(
-            height: 10,
-          ),
           const _YearsFilter(),
           const SizedBox(
             height: 10,
@@ -103,6 +99,7 @@ class _YearsFilter extends StatefulWidget {
 }
 
 class _YearsFilterState extends State<_YearsFilter> {
+  bool hasError = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -115,50 +112,48 @@ class _YearsFilterState extends State<_YearsFilter> {
               style: Theme.of(context).textTheme.headline6),
         ),
         Wrap(
-          spacing: 10,
+          spacing: 15,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            MaterialButton(
-                onPressed: () {
-                  showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return YearPickerCupertino(
-                            isReverse: false,
-                            onItemSelectedChanged: setYearFrom);
-                      });
-                },
-                shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Colors.red, width: 2),
-                    borderRadius: BorderRadius.circular(30)),
-                child: Text(filters.yearFrom.toString())),
-            MaterialButton(
-                onPressed: () {
-                  showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return YearPickerCupertino(
-                            isReverse: true, onItemSelectedChanged: setYearTo);
-                      });
-                },
-                shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Colors.red, width: 2),
-                    borderRadius: BorderRadius.circular(30)),
-                child: Text(filters.yearTo.toString())),
+            YearContainer(
+                year: filters.yearFrom,
+                isReverse: false,
+                onPressed: setYearFrom),
+            const Text('-', style: TextStyle(fontSize: 20)),
+            YearContainer(
+                year: filters.yearTo, isReverse: true, onPressed: setYearTo),
           ],
         ),
+        if (hasError)
+          SizedBox(
+            height: 20,
+            child: Text('* La útlima fecha ha de ser igual o mayor *',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(color: Colors.red, fontStyle: FontStyle.italic)),
+          )
+        else
+          const SizedBox(
+            height: 20,
+          ),
       ],
     );
   }
 
-  void setYearFrom(int year) {
+  setYearFrom(int year) {
     setState(() {
       filters.yearFrom = year;
     });
   }
 
-  void setYearTo(int year) {
+  setYearTo(int year) {
     setState(() {
       filters.yearTo = year;
+      if (filters.yearFrom > filters.yearTo)
+        hasError = true;
+      else
+        hasError = false;
     });
   }
 }
