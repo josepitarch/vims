@@ -21,6 +21,8 @@
   "title_top_movies_page": "Si no sabes qué ver",
   "title_platforms_dialog": "¿Qué plataformas tienes?",
   "title_years_dialog": "¿Qué años te interesan?",
+  "from_year": "Desde",
+  "to_year": "Hasta",
   "title_exclude_animation_dialog": "Excluir animación",
   "title_order_by_dialog": "Ordenar por",
   "order_by_average": "Nota",

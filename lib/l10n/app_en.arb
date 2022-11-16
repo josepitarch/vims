@@ -21,6 +21,8 @@
     "title_top_movies_page": "If you don't know to see",
     "title_platforms_dialog": "What platforms do you have?",
     "title_years_dialog": "What years do you want to see?",
+    "from_year": "From",
+    "to_year": "To",
     "title_exclude_animation_dialog": "Exclude animation",
     "title_order_by_dialog": "Order by",
     "order_by_average": "Average",

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/dialogs/year_picker_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class YearContainer extends StatelessWidget {
   final int year;
@@ -15,6 +17,7 @@ class YearContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     return MaterialButton(
         onPressed: () => openYearPicker(context),
         shape: RoundedRectangleBorder(
@@ -24,7 +27,7 @@ class YearContainer extends StatelessWidget {
           spacing: 15,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text(!isReverse ? 'Desde' : 'Hasta',
+            Text(!isReverse ? i18n.from_year : i18n.to_year,
                 style: Theme.of(context).textTheme.bodyText1),
             Text(year.toString()),
           ],
