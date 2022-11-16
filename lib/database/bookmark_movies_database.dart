@@ -18,13 +18,13 @@ class BookmarkMoviesDatabase {
     }, version: 8);
   }
 
-  static Future<bool> insertBookmarkMovie(BookmarkMovie favoriteMovie) async {
+  static Future<bool> insertBookmarkMovie(BookmarkMovie bookmarkMovie) async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 
     int response = await db.insert(
       _tableName,
-      favoriteMovie.toMap(),
+      bookmarkMovie.toMap(),
       conflictAlgorithm: ConflictAlgorithm.abort,
     );
 
@@ -55,7 +55,8 @@ class BookmarkMoviesDatabase {
           id: maps[i]['id'],
           poster: maps[i]['poster'],
           title: maps[i]['title'],
-          director: maps[i]['director']);
+          director: maps[i]['director'],
+          average: maps[i]['average']);
     });
   }
 }

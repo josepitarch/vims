@@ -56,6 +56,11 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: L10n.l10n,
+        localeResolutionCallback: (locale, supportedLocales) =>
+            supportedLocales.firstWhere(
+                (supportedLocale) =>
+                    supportedLocale.languageCode == locale?.languageCode,
+                orElse: () => supportedLocales.first),
         debugShowCheckedModeBanner: false,
         initialRoute: 'home',
         routes: {
@@ -66,7 +71,6 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           primaryColor: Colors.orange,
           primaryColorDark: Colors.orange,
-          splashColor: Colors.orange,
           textTheme: const TextTheme(
             headline2: TextThemeCustom.headline2,
             headline3: TextThemeCustom.headline3,

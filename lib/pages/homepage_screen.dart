@@ -19,7 +19,7 @@ class HomepageScreen extends StatelessWidget {
       if (provider.existsError) {
         return TimeoutError(onPressed: () => provider.onRefresh());
       }
-      //TODO: Generate new id for hero animation
+      
       return !provider.isLoading
           ? SafeArea(
               child: RefreshIndicator(

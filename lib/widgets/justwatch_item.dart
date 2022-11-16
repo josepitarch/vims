@@ -17,9 +17,9 @@ class JustwatchItem extends StatelessWidget {
         asset = key;
       }
     });
-    //TODO: Refactor in button
+
     return asset.isNotEmpty
-        ? GestureDetector(
+        ? InkWell(
             onTap: (() {
               launchUrlString(platform.url,
                   mode: LaunchMode.externalApplication);

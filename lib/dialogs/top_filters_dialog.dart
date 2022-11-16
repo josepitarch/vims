@@ -111,9 +111,8 @@ class _YearsFilterState extends State<_YearsFilter> {
           child: Text(i18n.title_years_dialog,
               style: Theme.of(context).textTheme.headline6),
         ),
-        Wrap(
-          spacing: 15,
-          crossAxisAlignment: WrapCrossAlignment.center,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             YearContainer(
                 year: filters.yearFrom,
@@ -191,6 +190,12 @@ class _OrderFilter extends StatefulWidget {
 }
 
 class _OrderFilterState extends State<_OrderFilter> {
+  final Map<String, String> options = {
+    'average': i18n.order_by_average,
+    'year': i18n.order_by_year,
+    'shuffle': i18n.order_by_shuffle,
+  };
+
   @override
   Widget build(BuildContext context) {
     OrderBy selectedValue = filters.orderBy;
@@ -202,26 +207,32 @@ class _OrderFilterState extends State<_OrderFilter> {
             child: Text(i18n.title_order_by_dialog,
                 style: Theme.of(context).textTheme.headline6),
           ),
-          DropdownButton<OrderBy>(
-            value: selectedValue,
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            underline: Container(
-              height: 2,
-              color: Colors.orange,
+          Container(
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.orange, width: 2),
+                borderRadius: BorderRadius.circular(5)),
+            child: DropdownButton<OrderBy>(
+              value: selectedValue,
+              elevation: 16,
+              underline: Container(
+                height: 0,
+                color: Colors.transparent,
+              ),
+              onChanged: (OrderBy? newValue) {
+                setState(() {
+                  selectedValue = newValue!;
+                  filters.orderBy = newValue;
+                });
+              },
+              items: OrderBy.values.map((OrderBy value) {
+                return DropdownMenuItem<OrderBy>(
+                  value: value,
+                  child: Text(options[value.value]!),
+                );
+              }).toList(),
             ),
-            onChanged: (OrderBy? newValue) {
-              setState(() {
-                selectedValue = newValue!;
-                filters.orderBy = newValue;
-              });
-            },
-            items: OrderBy.values.map((OrderBy value) {
-              return DropdownMenuItem<OrderBy>(
-                value: value,
-                child: Text(value.value['en']!),
-              );
-            }).toList(),
           ),
         ],
       ),

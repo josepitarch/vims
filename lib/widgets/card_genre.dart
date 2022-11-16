@@ -22,8 +22,22 @@ class CardGenre extends StatefulWidget {
 class _CardGenreState extends State<CardGenre> {
   @override
   Widget build(BuildContext context) {
-    //TODO: handle supported languages
     final i18n = AppLocalizations.of(context)!;
+    final Map<String, String> genres = {
+      Genres.action.value: i18n.action,
+      Genres.adventure.value: i18n.adventure,
+      Genres.comedy.value: i18n.comedy,
+      Genres.drama.value: i18n.drama,
+      Genres.terror.value: i18n.terror,
+      Genres.musical.value: i18n.musical,
+      Genres.romance.value: i18n.romance,
+      Genres.war.value: i18n.war,
+      Genres.thriller.value: i18n.thriller,
+      Genres.mystery.value: i18n.mystery,
+      Genres.western.value: i18n.western,
+      Genres.kids.value: i18n.kids,
+    };
+
     return TextButton(
       onPressed: () {
         setState(() {
@@ -38,7 +52,7 @@ class _CardGenreState extends State<CardGenre> {
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
       ),
-      child: Text(widget.genre.value[i18n.localeName]!),
+      child: Text(genres[widget.genre.value]!),
     );
   }
 }

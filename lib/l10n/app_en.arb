@@ -23,11 +23,27 @@
     "title_years_dialog": "What years do you want to see?",
     "title_exclude_animation_dialog": "Exclude animation",
     "title_order_by_dialog": "Order by",
+    "order_by_average": "Average",
+    "order_by_year": "Year",
+    "order_by_shuffle": "Shuffle",
     "title_genres_dialog": "What genres does it have to include?",
     "delete_filters_dialog": "Delete filters",
     "apply_filters_dialog": "Apply filters",
     "add_bookmark": "Movie added successfully",
     "delete_bookmark": "Movie removed successfully",
     "timeout_error": "Ups! Something went wrong with the server.",
-    "retry": "Retry"
+    "retry": "Retry",
+    
+    "action": "Action",
+    "adventure": "Adventure",
+    "comedy": "Comedy",
+    "drama": "Drama",
+    "terror": "Terror",
+    "musical": "Musical",
+    "romance": "Romance",
+    "war": "War",
+    "thriller": "Thriller",
+    "mystery": "Mystery",
+    "western": "Western",
+    "kids": "Kids"
 }

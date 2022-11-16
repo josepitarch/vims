@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
+import 'package:scrapper_filmaffinity/dialogs/year_picker_dialog.dart';
 
 class YearContainer extends StatelessWidget {
   final int year;
@@ -19,7 +19,7 @@ class YearContainer extends StatelessWidget {
         onPressed: () => openYearPicker(context),
         shape: RoundedRectangleBorder(
             side: const BorderSide(color: Colors.orange, width: 2),
-            borderRadius: BorderRadius.circular(20)),
+            borderRadius: BorderRadius.circular(5)),
         child: Wrap(
           spacing: 15,
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -36,7 +36,9 @@ class YearContainer extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return YearPickerCupertino(
-              isReverse: isReverse, onItemSelectedChanged: onPressed);
+              isReverse: isReverse,
+              onItemSelectedChanged: onPressed,
+              selectedYear: year);
         });
   }
 }

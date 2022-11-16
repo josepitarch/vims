@@ -1,15 +1,15 @@
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
 enum OrderBy {
-  average(
-      {'en': 'Average', 'es': 'Puntación', 'func': OrderByFunctions.average}),
-  year({'en': 'Year', 'es': 'Año', 'func': OrderByFunctions.year}),
-  shuffle(
-      {'en': 'Shuffle', 'es': 'Aleatorio', 'func': OrderByFunctions.shuffle});
+  average('average', OrderByFunctions.average),
+  year('year', OrderByFunctions.year),
+  shuffle('shuffle', OrderByFunctions.shuffle);
 
-  const OrderBy(this._value);
-  final Map<String, dynamic> _value;
-  Map<String, dynamic> get value => _value;
+  const OrderBy(this._value, this._func);
+  final String _value;
+  final Function _func;
+  String get value => _value;
+  Function get func => _func;
 }
 
 class OrderByFunctions {

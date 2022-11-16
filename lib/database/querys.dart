@@ -3,7 +3,8 @@ String createBookmarkMovieTable(tableName) => """
       id TEXT PRIMARY KEY,
       poster TEXT NOT NULL,
       title TEXT NOT NULL,
-      director TEXT NOT NULL
+      director TEXT NOT NULL,
+      average TEXT NOT NULL
     );
   """;
 

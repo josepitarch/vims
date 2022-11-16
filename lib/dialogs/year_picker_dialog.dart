@@ -3,20 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/utils/current_year.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class YearPickerCupertino extends StatefulWidget {
+class YearPickerCupertino extends StatelessWidget {
   final bool isReverse;
   final Function onItemSelectedChanged;
+  final int selectedYear;
 
   const YearPickerCupertino(
-      {Key? key, required this.isReverse, required this.onItemSelectedChanged})
+      {Key? key,
+      required this.isReverse,
+      required this.onItemSelectedChanged,
+      required this.selectedYear})
       : super(key: key);
-
-  @override
-  State<YearPickerCupertino> createState() => _YearPickerCupertinoState();
-}
-
-class _YearPickerCupertinoState extends State<YearPickerCupertino> {
-  int index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,7 @@ class _YearPickerCupertinoState extends State<YearPickerCupertino> {
     List<int> years =
         List.generate(numberOfYears, (index) => (1990 + index)).toList();
 
-    if (widget.isReverse) {
+    if (isReverse) {
       years = years.reversed.toList();
     }
 
@@ -37,9 +34,11 @@ class _YearPickerCupertinoState extends State<YearPickerCupertino> {
           SizedBox(
               height: 250,
               child: CupertinoPicker(
+                scrollController: FixedExtentScrollController(
+                    initialItem: years.indexOf(selectedYear)),
                 itemExtent: 64,
                 onSelectedItemChanged: (int index) =>
-                    widget.onItemSelectedChanged(years[index]),
+                    onItemSelectedChanged(years[index]),
                 selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
                   background: Colors.orange.withOpacity(0.6),
                 ),

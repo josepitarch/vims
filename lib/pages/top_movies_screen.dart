@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/dialogs/TopMoviesDialog.dart';
+import 'package:scrapper_filmaffinity/dialogs/top_filters_dialog.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';

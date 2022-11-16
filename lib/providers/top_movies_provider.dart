@@ -59,7 +59,7 @@ class TopMoviesProvider extends ChangeNotifier {
           filters.yearFrom,
           filters.yearTo);
 
-      movies = filters.orderBy.value['func'](movies);
+      movies = filters.orderBy.func(movies);
 
       existsError = false;
     } on SocketException catch (e) {
