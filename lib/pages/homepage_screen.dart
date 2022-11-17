@@ -1,8 +1,12 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/pull_refresh_android.dart';
+import 'package:scrapper_filmaffinity/widgets/pull_refresh_ios.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
@@ -19,26 +23,22 @@ class HomepageScreen extends StatelessWidget {
       if (provider.existsError) {
         return TimeoutError(onPressed: () => provider.onRefresh());
       }
-      
-      return !provider.isLoading
-          ? SafeArea(
-              child: RefreshIndicator(
-                backgroundColor: Colors.white,
-                color: Colors.orange.shade300,
-                onRefresh: () => provider.onRefresh(),
-                child: SingleChildScrollView(
-                    child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(children: [
-                    ...sections
-                        .map((section) => _Section(section: section))
-                        .toList(),
-                    const SizedBox(height: 30),
-                  ]),
-                )),
-              ),
-            )
-          : const SectionsShimmer();
+
+      Widget body = SingleChildScrollView(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(children: [
+          ...sections.map((section) => _Section(section: section)).toList(),
+          const SizedBox(height: 30),
+        ]),
+      ));
+
+      if (provider.isLoading) return const SectionsShimmer();
+
+      return io.Platform.isAndroid
+          ? PullRefreshAndroid(
+              onRefresh: () => provider.onRefresh(), child: body)
+          : PullRefreshIOS(onRefresh: () => provider.onRefresh(), child: body);
     });
   }
 }

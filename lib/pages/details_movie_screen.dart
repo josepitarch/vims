@@ -32,15 +32,15 @@ class DetailsMovieScreen extends StatelessWidget {
     final String heroTag = arguments['heroTag'] ?? id;
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
-    if (provider.openedMovies.containsKey(id)) {
-      final Movie movie = provider.openedMovies[id]!;
-      movie.heroTag = heroTag;
-      return screen(provider.openedMovies[id]!);
-    } else if (hasAllAttributes) {
+    if (hasAllAttributes) {
       Movie movie = arguments['movie'];
       provider.openedMovies[id] = movie;
       movie.heroTag = heroTag;
       return screen(movie);
+    } else if (provider.openedMovies.containsKey(id)) {
+      final Movie movie = provider.openedMovies[id]!;
+      movie.heroTag = heroTag;
+      return screen(provider.openedMovies[id]!);
     } else {
       provider.getDetailsMovie(id);
       return const DetailsMovieShimmer();
