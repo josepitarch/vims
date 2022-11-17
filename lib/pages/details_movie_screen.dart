@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -10,63 +8,67 @@ import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
-import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/services/metadata_movie_service.dart';
+import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
+import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
-import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
+
+late AppLocalizations i18n;
 
 class DetailsMovieScreen extends StatelessWidget {
   const DetailsMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    i18n = AppLocalizations.of(context)!;
+    final provider = Provider.of<DetailsMovieProvider>(context, listen: true);
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
     final String id = arguments['id'];
+    final String heroTag = arguments['heroTag'] ?? id;
+    final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
-    return FutureBuilder(
-        future: !hasAllAttributes
-            ? MetadataMovieService().getMetadataMovie(id)
-            : Future<Movie>.value(arguments['movie'] as Movie),
-        builder: (_, AsyncSnapshot<Movie> snapshot) {
-          if (!snapshot.hasData) return const DetailsMovieShimmer();
-          Movie movie = snapshot.data!;
+    if (hasAllAttributes) {
+      Movie movie = arguments['movie'];
+      provider.openedMovies[id] = movie;
+      movie.heroTag = heroTag;
+      return screen(movie);
+    } else if (provider.openedMovies.containsKey(id)) {
+      final Movie movie = provider.openedMovies[id]!;
+      movie.heroTag = heroTag;
+      return screen(provider.openedMovies[id]!);
+    } else {
+      provider.getDetailsMovie(id);
+      return const DetailsMovieShimmer();
+    }
+  }
 
-          if (!hasAllAttributes) {
-            final HomepageProvider homepageProvider =
-                Provider.of<HomepageProvider>(context);
-            homepageProvider.openedMovies.addAll({movie.id: movie});
-          }
-
-          return Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                  child: Column(
-                    children: [
-                      _Header(movie: movie),
-                      _Genres(movie.genres),
-                      _Cast(cast: movie.cast),
-                      _Synopsis(overview: movie.synopsis),
-                      _Justwatch(justwatch: movie.justwatch),
-                      movie.reviews.isNotEmpty
-                          ? _Reviews(movie.reviews)
-                          : const SizedBox()
-                    ],
-                  ),
-                ),
-              ),
+  Scaffold screen(Movie movie) {
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            child: Column(
+              children: [
+                _Header(movie: movie),
+                _Genres(movie.genres),
+                _Cast(cast: movie.cast),
+                _Synopsis(overview: movie.synopsis),
+                _Justwatch(justwatch: movie.justwatch),
+                movie.reviews.isNotEmpty
+                    ? _Reviews(movie.reviews)
+                    : const SizedBox()
+              ],
             ),
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -194,6 +196,10 @@ class _Country extends StatelessWidget {
       }
     });
 
+    Text text = Text(
+      country,
+      style: Theme.of(context).textTheme.headline5,
+    );
     return flag.isNotEmpty
         ? Row(
             children: [
@@ -209,13 +215,10 @@ class _Country extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                country,
-                style: Theme.of(context).textTheme.headline5,
-              ),
+              text,
             ],
           )
-        : const SizedBox();
+        : text;
   }
 }
 
@@ -233,7 +236,7 @@ class _Poster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: movie.id,
+      tag: movie.heroTag!,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: FadeInImage(
@@ -273,14 +276,13 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   Widget build(BuildContext context) {
     final BookmarkMoviesProvider provider =
         Provider.of<BookmarkMoviesProvider>(context);
-    final i18n = AppLocalizations.of(context)!;
     try {
       return Align(
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: IconButton(
-                onPressed: () => onPressed(provider, i18n),
+                onPressed: () => onPressed(provider),
                 icon: Icon(
                   isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
                   size: 25,
@@ -291,7 +293,7 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
     }
   }
 
-  onPressed(BookmarkMoviesProvider provider, AppLocalizations i18n) async {
+  onPressed(BookmarkMoviesProvider provider) async {
     Vibrate.canVibrate.then((value) {
       if (value) {
         Vibrate.feedback(FeedbackType.medium);
@@ -355,12 +357,11 @@ class _Cast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TitleSection(title: i18n!.cast),
+        TitleSection(title: i18n.cast),
         Text(cast,
             textAlign: TextAlign.start,
             maxLines: _maxLines,
@@ -396,7 +397,6 @@ class _SynopsisState extends State<_Synopsis> {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context)!;
     Map<int, String> textButton = {
       0: i18n.see_more,
       1: i18n.see_less,
@@ -468,7 +468,6 @@ class _JustwatchState extends State<_Justwatch> {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context)!;
     Map<String, String> textButton = {
       'flatrate': i18n.flatrate,
       'rent': i18n.rent,
@@ -536,14 +535,13 @@ class _Reviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 70.0),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleSection(title: i18n!.reviews),
+          TitleSection(title: i18n.reviews),
           for (final review in reviews)
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),

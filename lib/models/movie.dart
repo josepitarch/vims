@@ -1,6 +1,27 @@
 import 'dart:convert' as json;
 
 class Movie {
+  String id;
+  String title;
+  String year;
+  String? duration;
+  String country;
+  String? director;
+  String? screenwriter;
+  String? music;
+  String? cinematography;
+  String cast;
+  String? producer;
+  List<String> genres;
+  List<String>? groups;
+  String synopsis;
+  String poster;
+  String average;
+  Justwatch justwatch;
+  List<Review> reviews;
+  List<String>? platforms;
+  String? heroTag;
+
   Movie(
       {required this.id,
       required this.title,
@@ -21,26 +42,6 @@ class Movie {
       this.producer,
       this.groups,
       this.platforms});
-
-  String id;
-  String title;
-  String year;
-  String? duration;
-  String country;
-  String? director;
-  String? screenwriter;
-  String? music;
-  String? cinematography;
-  String cast;
-  String? producer;
-  List<String> genres;
-  List<String>? groups;
-  String synopsis;
-  String poster;
-  String average;
-  Justwatch justwatch;
-  List<Review> reviews;
-  List<String>? platforms;
 
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 
@@ -109,15 +110,15 @@ class Movie {
 }
 
 class Justwatch {
+  List<Platform> flatrate = [];
+  List<Platform> rent = [];
+  List<Platform> buy = [];
+
   Justwatch({
     required this.flatrate,
     required this.rent,
     required this.buy,
   });
-
-  List<Platform> flatrate = [];
-  List<Platform> rent = [];
-  List<Platform> buy = [];
 
   factory Justwatch.fromMap(Map<String, dynamic> json) {
     return Justwatch(
@@ -136,13 +137,13 @@ class Justwatch {
 }
 
 class Platform {
+  String name;
+  String url;
+
   Platform({
     required this.name,
     required this.url,
   });
-
-  String name;
-  String url;
 
   factory Platform.fromMap(Map<String, dynamic> json) => Platform(
         name: json['name'],
@@ -156,17 +157,17 @@ class Platform {
 }
 
 class Review {
+  String body;
+  String author;
+  String inclination;
+  String? reference;
+
   Review({
     required this.body,
     required this.author,
     required this.inclination,
     this.reference,
   });
-
-  String body;
-  String author;
-  String inclination;
-  String? reference;
 
   factory Review.fromMap(Map<String, dynamic> json) => Review(
         body: json['body'],

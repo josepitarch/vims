@@ -4,14 +4,18 @@ import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/input_decoration.dart';
-import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
+import 'package:scrapper_filmaffinity/widgets/no_results.dart';
+
+late AppLocalizations i18n;
 
 class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    i18n = AppLocalizations.of(context)!;
     return Consumer<SearchMovieProvider>(builder: (context, provider, child) {
       if (provider.isLoading) {
         return SafeArea(
@@ -28,7 +32,9 @@ class SearchMovieScreen extends StatelessWidget {
         child: Column(children: [
           const _SearchMovieForm(),
           provider.search.isNotEmpty
-              ? _Suggestions(movies: provider.movies)
+              ? _Suggestions(
+                  movies: provider.movies,
+                  numberFetchMovies: provider.numberFetchMovies)
               : _SearchHistory(
                   historySearchers: provider.searchs, provider: provider)
         ]),
@@ -81,18 +87,20 @@ class _SearchMovieForm extends StatelessWidget {
 
 class _Suggestions extends StatelessWidget {
   final List movies;
-  const _Suggestions({Key? key, required this.movies}) : super(key: key);
+  final int numberFetchMovies;
+  const _Suggestions(
+      {Key? key, required this.movies, required this.numberFetchMovies})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
     return movies.isNotEmpty
         ? Expanded(
             child: ListView.builder(
               itemCount: movies.length,
               itemBuilder: (context, index) {
-                bool hasAllAttributes = index <= 2;
-                Movie movie = index <= 2
+                bool hasAllAttributes = index < numberFetchMovies;
+                Movie movie = index < numberFetchMovies
                     ? Movie.fromMap(movies[index])
                     : Movie.fromIncompleteMovie(movies[index]);
                 return CardMovie(
@@ -102,14 +110,7 @@ class _Suggestions extends StatelessWidget {
               },
             ),
           )
-        : Expanded(
-            child: Center(
-              child: Text(
-                localization.no_results,
-                style: const TextStyle(fontSize: 20),
-              ),
-            ),
-          );
+        : const NoResults();
   }
 }
 
@@ -122,7 +123,7 @@ class _SearchHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
+    if (historySearchers.isEmpty) return const SizedBox();
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -136,17 +137,30 @@ class _SearchHistory extends StatelessWidget {
               onTap: () => provider.onTap(historySearchers[index]),
             ),
           ),
-          if (historySearchers.isNotEmpty)
-            MaterialButton(
-                onPressed: () => provider.deleteAllSearchers(),
-                child: Text(localization.delete_all_searchers,
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                    ))),
+          DeleteSearchersButton(provider: provider),
         ],
       ),
     );
+  }
+}
+
+class DeleteSearchersButton extends StatelessWidget {
+  const DeleteSearchersButton({
+    Key? key,
+    required this.provider,
+  }) : super(key: key);
+
+  final SearchMovieProvider provider;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+        onPressed: () => provider.deleteAllSearchers(),
+        child: Text(i18n.delete_all_searchers,
+            style: const TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+            )));
   }
 }

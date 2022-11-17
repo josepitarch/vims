@@ -1,9 +1,12 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
+import 'package:scrapper_filmaffinity/widgets/pull_refresh_android.dart';
+import 'package:scrapper_filmaffinity/widgets/pull_refresh_ios.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
@@ -21,25 +24,21 @@ class HomepageScreen extends StatelessWidget {
         return TimeoutError(onPressed: () => provider.onRefresh());
       }
 
-      return !provider.isLoading
-          ? SafeArea(
-              child: RefreshIndicator(
-                backgroundColor: Colors.white,
-                color: Colors.orange.shade300,
-                onRefresh: () => provider.onRefresh(),
-                child: SingleChildScrollView(
-                    child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(children: [
-                    ...sections
-                        .map((section) => _Section(section: section))
-                        .toList(),
-                    const SizedBox(height: 30),
-                  ]),
-                )),
-              ),
-            )
-          : const SectionsShimmer();
+      Widget body = SingleChildScrollView(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(children: [
+          ...sections.map((section) => _Section(section: section)).toList(),
+          const SizedBox(height: 30),
+        ]),
+      ));
+
+      if (provider.isLoading) return const SectionsShimmer();
+
+      return io.Platform.isAndroid
+          ? PullRefreshAndroid(
+              onRefresh: () => provider.onRefresh(), child: body)
+          : PullRefreshIOS(onRefresh: () => provider.onRefresh(), child: body);
     });
   }
 }
@@ -65,7 +64,8 @@ class _Section extends StatelessWidget {
             children: [
               const SizedBox(width: 12),
               ...section.movies
-                  .map((movie) => _SectionMovie(film: movie))
+                  .map((movie) =>
+                      _SectionMovie(film: movie, sectionTitle: section.title))
                   .toList(),
             ],
           ),
@@ -77,25 +77,20 @@ class _Section extends StatelessWidget {
 
 class _SectionMovie extends StatelessWidget {
   final MovieSection film;
-  const _SectionMovie({Key? key, required this.film}) : super(key: key);
+  final String sectionTitle;
+  const _SectionMovie(
+      {Key? key, required this.film, required this.sectionTitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final HomepageProvider homepageProvider =
-        Provider.of<HomepageProvider>(context);
-
     const double width = 120;
     const double height = 190;
+    final String heroTag = film.id + sectionTitle;
 
     return GestureDetector(
       onTap: () {
-        Map<String, Movie> openedMovies = homepageProvider.openedMovies;
-
-        Map<String, dynamic> arguments = {
-          'hasAllAttributes': openedMovies.containsKey(film.id),
-          'movie': openedMovies[film.id],
-          'id': film.id
-        };
+        Map<String, dynamic> arguments = {'id': film.id, 'heroTag': heroTag};
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
       child: Container(
@@ -103,34 +98,34 @@ class _SectionMovie extends StatelessWidget {
           width: width,
           height: height,
           child: Column(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Hero(
-                    tag: film.id,
-                    child: FadeInImage(
+            Hero(
+              tag: heroTag,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    FadeInImage(
                         placeholder: const AssetImage('assets/loading.gif'),
                         image: NetworkImage(film.image),
                         width: width,
                         height: height - 30,
                         fit: BoxFit.cover),
-                  ),
-                  Container(
-                    height: 40,
-                    width: double.infinity,
-                    color: Colors.orange.withOpacity(0.8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        film.premiereDay,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline5,
+                    Container(
+                      height: 40,
+                      width: double.infinity,
+                      color: Colors.orange.withOpacity(0.8),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          film.premiereDay,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 7),
