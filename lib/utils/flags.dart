@@ -1,13 +1,25 @@
 class FlagsAssets {
   static final Map<String, List<String>> flags = {
     'spain': ['spain', 'espana'],
+    'portugal': ['portugal'],
     'eeuu': ['estados unidos', 'united states'],
     'france': ['francia', 'france'],
+    'switzerland': ['suiza', 'switzerland'],
+    'sween': ['suecia', 'sweden'],
     'uk': ['reino unido', 'united kingdom'],
+    'ireland': ['irlanda', 'ireland'],
+    'denmark': ['dinamarca', 'denmark'],
+    'new-zealand': ['nueva zelanda', 'new zealand'],
     'italy': ['italia', 'italy'],
     'germany': ['alemania', 'germany'],
-    'mexico': ['méxico'],
-    'argentina': ['argentina'],
+    'hungary': ['hungria', 'hungary'],
+    'turkey': ['turquia', 'turkey'],
+    'argentina': ['argentina', 'argentina'],
+    'mexico': ['mexico'],
+    'brazil': ['brasil', 'brazil'],
+    'russia': ['rusia', 'russia'],
+    'china': ['china'],
+    'japan': ['japon', 'japan'],
     'south-korea': ['corea del sur', 'south korea'],
   };
 }

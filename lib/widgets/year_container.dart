@@ -1,40 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/widgets/year_picker.dart';
+import 'package:scrapper_filmaffinity/dialogs/year_picker_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class YearContainer extends StatelessWidget {
   final int year;
-  const YearContainer({Key? key, required this.year}) : super(key: key);
+  final bool isReverse;
+  final Function onPressed;
+  const YearContainer(
+      {Key? key,
+      required this.year,
+      required this.onPressed,
+      required this.isReverse})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 40,
-        width: 90,
-        margin: const EdgeInsets.only(right: 10),
-        decoration: BoxDecoration(
-            //color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey[300]!)),
-        child: InkWell(
-          onTap: () => onTap(context, false),
-          child: Center(
-            child: Text(
-              year.toString(),
-            ),
-          ),
+    final i18n = AppLocalizations.of(context)!;
+    return MaterialButton(
+        onPressed: () => openYearPicker(context),
+        shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.orange, width: 2),
+            borderRadius: BorderRadius.circular(5)),
+        child: Wrap(
+          spacing: 15,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(!isReverse ? i18n.from_year : i18n.to_year,
+                style: Theme.of(context).textTheme.bodyText1),
+            Text(year.toString()),
+          ],
         ));
   }
 
-  void onTap(BuildContext context, bool isReverse) {
-    showCupertinoDialog(
+  void openYearPicker(BuildContext context) {
+    showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
           return YearPickerCupertino(
               isReverse: isReverse,
-              onItemSelectedChanged: (year) {
-               
-              });
+              onItemSelectedChanged: onPressed,
+              selectedYear: year);
         });
   }
 }

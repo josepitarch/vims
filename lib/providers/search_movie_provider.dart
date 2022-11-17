@@ -7,6 +7,8 @@ class SearchMovieProvider extends ChangeNotifier {
   List<dynamic> movies = [];
   List<String> searchs = [];
   bool isLoading = false;
+  final int numberFetchMovies = 3;
+  final String type = 'title';
 
   SearchMovieProvider() {
     getHistorySearchers();
@@ -32,7 +34,7 @@ class SearchMovieProvider extends ChangeNotifier {
   searchMovie(String search) async {
     isLoading = true;
     SearchMovieService()
-        .getSuggestions(search)
+        .getSuggestions(search, type, numberFetchMovies)
         .then((value) => movies = value)
         .whenComplete(() {
       isLoading = false;

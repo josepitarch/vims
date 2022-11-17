@@ -7,13 +7,14 @@ import 'dart:convert' as json;
 import 'package:scrapper_filmaffinity/models/section.dart';
 
 class HomepageService {
-  final url = dotenv.env['URL']!;
-  final timeout = dotenv.env['TIMEOUT']!;
+  final String url = dotenv.env['URL']!;
+  final String timeout = dotenv.env['TIMEOUT']!;
+  final String versionApi = dotenv.env['VERSION_API']!;
 
   Future<List<Section>> getHomepageMovies() async {
     List<Section> homepageMovies = [];
 
-    final request = Uri.http(url, '/api/homepage', {});
+    final request = Uri.http(url, '/api/$versionApi/homepage', {});
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));

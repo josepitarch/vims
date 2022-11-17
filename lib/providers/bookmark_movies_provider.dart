@@ -21,7 +21,8 @@ class BookmarkMoviesProvider extends ChangeNotifier {
         id: movie.id,
         poster: movie.poster,
         title: movie.title,
-        director: movie.director ?? '');
+        director: movie.director ?? '',
+        average: movie.average);
 
     bool response =
         await BookmarkMoviesDatabase.insertBookmarkMovie(favoriteMovie);
