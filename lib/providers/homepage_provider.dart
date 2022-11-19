@@ -13,6 +13,7 @@ class HomepageProvider extends ChangeNotifier {
   bool existsError = false;
   bool isLoading = true;
   final logger = Logger();
+  DateTime lastUpdate = DateTime.now();
 
   HomepageProvider() {
     getHomepageMovies();
@@ -30,6 +31,7 @@ class HomepageProvider extends ChangeNotifier {
       logger.e(e.toString());
     } finally {
       isLoading = false;
+      lastUpdate = DateTime.now();
       notifyListeners();
     }
   }

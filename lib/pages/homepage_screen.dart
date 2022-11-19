@@ -1,6 +1,7 @@
 import 'dart:io' as io show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
@@ -10,15 +11,32 @@ import 'package:scrapper_filmaffinity/widgets/pull_refresh_ios.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
-class HomepageScreen extends StatelessWidget {
+class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
 
   @override
+  State<HomepageScreen> createState() => _HomepageScreenState();
+}
+
+class _HomepageScreenState extends State<HomepageScreen>
+    with WidgetsBindingObserver {
+  @override
+  initState() {
+    checkIfNeedRefresh(context);
+    WidgetsBinding.instance.addObserver(this);
+
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      checkIfNeedRefresh(context);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final HomepageProvider provider = Provider.of<HomepageProvider>(context);
-
-    final List<Section> sections = provider.sections;
-
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
       if (provider.existsError) {
         return TimeoutError(onPressed: () => provider.onRefresh());
@@ -28,7 +46,9 @@ class HomepageScreen extends StatelessWidget {
           child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(children: [
-          ...sections.map((section) => _Section(section: section)).toList(),
+          ...provider.sections
+              .map((section) => _Section(section: section))
+              .toList(),
           const SizedBox(height: 30),
         ]),
       ));
@@ -41,6 +61,23 @@ class HomepageScreen extends StatelessWidget {
           : PullRefreshIOS(onRefresh: () => provider.onRefresh(), child: body);
     });
   }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+}
+
+void checkIfNeedRefresh(BuildContext context) {
+  final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
+
+  final provider = Provider.of<HomepageProvider>(context, listen: false);
+  final Duration difference = DateTime.now().difference(provider.lastUpdate);
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (difference.inHours >= int.parse(timeToRefresh)) provider.onRefresh();
+  });
 }
 
 class _Section extends StatelessWidget {
