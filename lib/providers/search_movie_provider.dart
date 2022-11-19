@@ -45,10 +45,9 @@ class SearchMovieProvider extends ChangeNotifier {
   insertAndSearchMovie(String search) {
     isLoading = true;
     notifyListeners();
-    HistorySearchDatabase.insertSearch(search);
+    HistorySearchDatabase.insertSearch(search)
+        .then((value) => value ? searchs.insert(0, search) : null);
     this.search = search;
-    searchs.insert(0, search);
-    searchs = searchs.length >= 5 ? searchs.sublist(0, 5) : searchs;
     searchMovie(search);
   }
 

@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           primaryColor: Colors.orange,
           primaryColorDark: Colors.orange,
+          primaryColorBrightness: Brightness.dark,
           textTheme: const TextTheme(
             headline2: TextThemeCustom.headline2,
             headline3: TextThemeCustom.headline3,

@@ -52,35 +52,39 @@ class _SearchMovieForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<SearchMovieProvider>(context);
     final TextEditingController controller = TextEditingController();
-    final FocusNode focusNode = FocusNode();
-    final localization = AppLocalizations.of(context)!;
+    final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: TextFormField(
-            focusNode: focusNode,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-            controller: controller..text = provider.search,
-            keyboardType: TextInputType.text,
-            enableSuggestions: false,
-            decoration: InputDecorations.searchMovieDecoration(
-                localization, controller, provider),
-            onChanged: (value) {
-              value.isEmpty ? provider.setSearch('') : null;
-            },
-            onFieldSubmitted: (String value) {
+    FocusScope.of(context).requestFocus(FocusNode());
+
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Form(
+        key: myFormKey,
+        child: TextFormField(
+          controller: controller..text = provider.search,
+          keyboardType: TextInputType.text,
+          enableSuggestions: false,
+          keyboardAppearance: Brightness.dark,
+          decoration: InputDecorations.searchMovieDecoration(
+              i18n, controller, provider),
+          onChanged: (value) {
+            value.isEmpty ? provider.setSearch('') : null;
+          },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'El campo no puede estar vacío';
+            }
+            return null;
+          },
+          onFieldSubmitted: (String value) {
+            if (!myFormKey.currentState!.validate())
+              return;
+            else
               provider.insertAndSearchMovie(value);
-            },
-          ),
+          },
         ),
-      ],
+      ),
     );
   }
 }
@@ -133,7 +137,8 @@ class _SearchHistory extends StatelessWidget {
             itemBuilder: (context, index) => ListTile(
               leading: const Icon(Icons.history),
               trailing: const Icon(Icons.arrow_forward_ios),
-              title: Text(historySearchers[index]),
+              title: Text(historySearchers[index],
+                  style: Theme.of(context).textTheme.bodyText1),
               onTap: () => provider.onTap(historySearchers[index]),
             ),
           ),
@@ -157,10 +162,9 @@ class DeleteSearchersButton extends StatelessWidget {
     return MaterialButton(
         onPressed: () => provider.deleteAllSearchers(),
         child: Text(i18n.delete_all_searchers,
-            style: const TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            )));
+            style: Theme.of(context)
+                .textTheme
+                .headline6!
+                .copyWith(color: Colors.red)));
   }
 }
