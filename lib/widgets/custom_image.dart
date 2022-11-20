@@ -24,6 +24,8 @@ class CustomImage extends StatelessWidget {
     return saveToCache
         ? CachedNetworkImage(
             cacheKey: cacheKey ?? url,
+            errorWidget: (context, url, error) =>
+                ErrorImage(height: height, width: width),
             placeholder: (context, url) => const AspectRatio(
               aspectRatio: 1.6,
               child: BlurHash(hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj'),
@@ -31,7 +33,7 @@ class CustomImage extends StatelessWidget {
             imageUrl: url,
             width: width,
             height: height,
-            cacheManager: CustomCacheManager.cacheImages,
+            cacheManager: CustomCacheManager.cacheTinyImages,
             fit: BoxFit.cover,
           )
         : FadeInImage(
@@ -40,10 +42,28 @@ class CustomImage extends StatelessWidget {
             width: width,
             height: height,
             fit: BoxFit.cover,
-            imageErrorBuilder: (_, __, ___) => Image.asset(
-                'assets/no-image.jpg',
-                height: height + 30,
-                fit: BoxFit.cover,
-                width: width));
+            imageErrorBuilder: (_, __, ___) =>
+                ErrorImage(height: height, width: width));
+  }
+}
+
+class ErrorImage extends StatelessWidget {
+  const ErrorImage({
+    Key? key,
+    required this.height,
+    required this.width,
+  }) : super(key: key);
+
+  final double height;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/no-image.jpg',
+      height: height,
+      width: width,
+      fit: BoxFit.cover,
+    );
   }
 }

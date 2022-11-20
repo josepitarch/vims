@@ -79,7 +79,7 @@ class Movie {
       cast: '',
       genres: [],
       synopsis: '',
-      poster: json['poster'],
+      poster: json['poster'] ?? '',
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
       average: json['average'] ?? '',

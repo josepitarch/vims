@@ -31,8 +31,10 @@
   "title_genres_dialog": "¿Qué géneros tiene que incluir?",
   "delete_filters_dialog": "Eliminar filtros",
   "apply_filters_dialog": "Aplicar filtros",
-  "add_bookmark": "Película añadida correctamente",
-  "delete_bookmark": "Película eliminada correctamente",
+  "add_movie_bookmark": "Película añadida correctamente",
+  "delete_movie_bookmark": "Película eliminada correctamente",
+  "add_serie_bookmark": "Serie añadida correctamente",
+  "delete_serie_bookmark": "Serie eliminada correctamente",
   "timeout_error": "¡Ups! Parece que ha habido un problema con el servidor.",
   "retry": "Reintentar",
   

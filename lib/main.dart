@@ -132,6 +132,13 @@ class MyApp extends StatelessWidget {
             hintStyle: const TextStyle(color: Colors.grey),
             errorStyle: const TextStyle(color: Colors.red),
           ),
+          snackBarTheme: const SnackBarThemeData(
+            backgroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            contentTextStyle: TextStyle(color: Colors.white),
+          ),
         ));
   }
 }

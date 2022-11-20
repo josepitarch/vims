@@ -31,8 +31,10 @@
     "title_genres_dialog": "What genres does it have to include?",
     "delete_filters_dialog": "Delete filters",
     "apply_filters_dialog": "Apply filters",
-    "add_bookmark": "Movie added successfully",
-    "delete_bookmark": "Movie removed successfully",
+    "add_movie_bookmark": "Movie added successfully",
+    "delete_movie_bookmark": "Movie removed successfully",
+    "add_serie_bookmark": "Serie added successfully",
+    "delete_serie_bookmark": "Serie removed successfully",
     "timeout_error": "Ups! Something went wrong with the server.",
     "retry": "Retry",
     

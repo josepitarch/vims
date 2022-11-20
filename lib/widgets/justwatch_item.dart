@@ -39,6 +39,6 @@ class JustwatchItem extends StatelessWidget {
               ),
             ),
           )
-        : Text(platform.name);
+        : const SizedBox();
   }
 }

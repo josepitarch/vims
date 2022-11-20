@@ -12,12 +12,13 @@ import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
+import 'package:scrapper_filmaffinity/utils/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
-import 'package:scrapper_filmaffinity/widgets/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 late AppLocalizations i18n;
+final ScrollController scrollController = ScrollController();
 
 class DetailsMovieScreen extends StatelessWidget {
   const DetailsMovieScreen({Key? key}) : super(key: key);
@@ -49,114 +50,181 @@ class DetailsMovieScreen extends StatelessWidget {
 
   Scaffold screen(Movie movie) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            child: Column(
-              children: [
-                _Header(movie: movie),
-                _Genres(movie.genres),
-                _Cast(cast: movie.cast),
-                _Synopsis(overview: movie.synopsis),
-                _Justwatch(justwatch: movie.justwatch),
-                movie.reviews.isNotEmpty
-                    ? _Reviews(movie.reviews)
-                    : const SizedBox()
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({Key? key, required this.movie}) : super(key: key);
-
-  final Movie movie;
-  final double _height = 220;
-
-  @override
-  Widget build(BuildContext context) {
-    final String director = movie.director ?? '';
-    double sizeDirector = director.length > 20 ? 14 : 16;
-
-    return SizedBox(
-      height: _height,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Flexible(
-          flex: 60,
-          child: _Poster(movie: movie, height: _height),
-        ),
-        Flexible(flex: 5, child: Container()),
-        Flexible(
-          flex: 70,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(movie.title,
-                    style: Theme.of(context).textTheme.headline2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                    maxLines: 2),
-              ),
-              if (director.isNotEmpty)
-                Text(director,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.headline5),
-              if (director.isNotEmpty)
-                const SizedBox(
-                  height: 10,
-                ),
-              _Country(country: movie.country),
-              const SizedBox(
-                height: 10,
-              ),
-              Text('${movie.year}  ·  ${transformDuration(movie.duration)}',
-                  style: Theme.of(context).textTheme.headline5),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _Average(movie: movie),
-                      _BookmarkMovie(movie: movie)
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
+      /*appBar: AppBar(
+          title: Text(movie.title),
+          elevation: 0,
+          backgroundColor: Colors.black,
+          actions: [
+            IconButton(icon: const Icon(Icons.share), onPressed: () {})
+          ]),*/
+      body: CustomScrollView(controller: scrollController, slivers: [
+        _CustomAppBar(movie.title, movie.poster, movie.heroTag ?? movie.id),
+        SliverList(
+            delegate: SliverChildListDelegate([
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(children: [
+              _Title(movie.title),
+              const SizedBox(height: 7),
+              _Director(movie.director),
+              _Box(movie),
+              _YearAndDuration(movie.year, movie.duration),
+              _Cast(cast: movie.cast),
+              _Genres2(movie.genres),
+              _Synopsis(overview: movie.synopsis),
+              _Justwatch(justwatch: movie.justwatch),
+              movie.reviews.isNotEmpty
+                  ? _Reviews(movie.reviews)
+                  : const SizedBox()
+            ]),
+          )
+        ]))
       ]),
     );
   }
 }
 
-transformDuration(String? duration) {
-  if (duration == null) return '';
-  int total = int.parse(duration.replaceAll(' min.', ''));
-  int hours = total ~/ 60;
-  int minutes = total % 60;
-  String hoursString = hours > 0 ? '$hours H ' : '';
-  String minutesString = minutes > 0 ? '$minutes MIN' : '';
-  return '$hoursString$minutesString';
+class _CustomAppBar extends StatefulWidget {
+  final String title;
+  final String url;
+  final String heroTag;
+  String auxTitle = '';
+
+  _CustomAppBar(this.title, this.url, this.heroTag);
+
+  @override
+  State<_CustomAppBar> createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<_CustomAppBar> {
+  @override
+  void initState() {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels > 270)
+        widget.auxTitle = widget.title;
+      else
+        widget.auxTitle = '';
+      if (mounted) setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      automaticallyImplyLeading: true,
+      expandedHeight: 600,
+      floating: false,
+      pinned: true,
+      title: Text(widget.auxTitle),
+      flexibleSpace: FlexibleSpaceBar(
+        background: Hero(
+          tag: widget.heroTag,
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/loading.gif'),
+            image: NetworkImage(widget.url),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(() {});
+    super.dispose();
+  }
+}
+
+class _Title extends StatelessWidget {
+  final String title;
+  const _Title(this.title, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Text(title,
+          style: Theme.of(context).textTheme.headline2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          maxLines: 2),
+    );
+  }
+}
+
+class _Director extends StatelessWidget {
+  final String? director;
+  const _Director(this.director, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Text(director ?? '',
+          maxLines: 2,
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.headline5),
+    );
+  }
+}
+
+class _Box extends StatelessWidget {
+  final Movie movie;
+  const _Box(this.movie, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 13),
+      decoration: BoxDecoration(
+        color: Colors.grey[700],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        _Country(movie.country),
+        _Average(movie.average),
+        _BookmarkMovie(movie)
+      ]),
+    );
+  }
+}
+
+class _YearAndDuration extends StatelessWidget {
+  final String year;
+  final String? duration;
+  const _YearAndDuration(this.year, this.duration);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      width: double.infinity,
+      child: Text('$year  ·  ${transformDuration(duration)}',
+          style: Theme.of(context).textTheme.headline5),
+    );
+  }
+
+  transformDuration(String? duration) {
+    if (duration == null) return '';
+    int total = int.parse(duration.replaceAll(' min.', ''));
+    int hours = total ~/ 60;
+    int minutes = total % 60;
+    String hoursString = hours > 0 ? '$hours H ' : '';
+    String minutesString = minutes > 0 ? '$minutes MIN' : '';
+    return '$hoursString$minutesString';
+  }
 }
 
 class _Average extends StatelessWidget {
-  const _Average({
-    Key? key,
-    required this.movie,
-  }) : super(key: key);
+  final String average;
 
-  final Movie movie;
+  const _Average(
+    this.average, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +238,7 @@ class _Average extends StatelessWidget {
         width: 7,
       ),
       Text(
-        movie.average.isNotEmpty ? movie.average : '---',
+        average.isNotEmpty ? average : '---',
         style: Theme.of(context).textTheme.headline3,
       ),
     ]);
@@ -180,9 +248,9 @@ class _Average extends StatelessWidget {
 class _Country extends StatelessWidget {
   final String country;
 
-  const _Country({
+  const _Country(
+    this.country, {
     Key? key,
-    required this.country,
   }) : super(key: key);
 
   @override
@@ -222,39 +290,13 @@ class _Country extends StatelessWidget {
   }
 }
 
-class _Poster extends StatelessWidget {
-  const _Poster({
-    Key? key,
-    required this.movie,
-    required double height,
-  })  : _height = height,
-        super(key: key);
-
-  final Movie movie;
-  final double _height;
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-      tag: movie.heroTag!,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
-        child: FadeInImage(
-            placeholder: const AssetImage('assets/no-image.jpg'),
-            image: NetworkImage(movie.poster),
-            height: _height),
-      ),
-    );
-  }
-}
-
 class _BookmarkMovie extends StatefulWidget {
-  const _BookmarkMovie({
-    Key? key,
-    required this.movie,
-  }) : super(key: key);
-
   final Movie movie;
+
+  const _BookmarkMovie(
+    this.movie, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<_BookmarkMovie> createState() => _BookmarkMovieState();
@@ -277,16 +319,11 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
     final BookmarkMoviesProvider provider =
         Provider.of<BookmarkMoviesProvider>(context);
     try {
-      return Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: IconButton(
-                onPressed: () => onPressed(provider),
-                icon: Icon(
-                  isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
-                  size: 25,
-                )),
+      return IconButton(
+          onPressed: () => onPressed(provider),
+          icon: Icon(
+            isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
+            size: 25,
           ));
     } catch (e) {
       return const SizedBox();
@@ -304,10 +341,18 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
         : await provider.insertBookmarkMovie(widget.movie);
 
     if (response) {
-      final String text = isFavorite ? i18n.delete_bookmark : i18n.add_bookmark;
-      SnackbarApp snackBar = SnackbarApp(text);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Map<String, List<String>> snackbarI18n = {
+        'movie': [i18n.add_movie_bookmark, i18n.delete_movie_bookmark],
+        'serie': [i18n.add_serie_bookmark, i18n.delete_serie_bookmark]
+      };
+      String text = '';
+      if (widget.movie.title.toLowerCase().contains('serie')) {
+        text = snackbarI18n['serie']![isFavorite ? 1 : 0];
+      } else {
+        text = snackbarI18n['movie']![isFavorite ? 1 : 0];
+      }
+
+      if (mounted) SnackBarUtils.show(context, text);
 
       setState(() {
         isFavorite = !isFavorite;
@@ -328,14 +373,13 @@ class _Genres extends StatelessWidget {
       height: 50,
       width: double.infinity,
       child: ListView(
-          shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           children: genres.map((genre) {
             return Container(
                 margin: const EdgeInsets.only(right: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.orange.shade400,
                     borderRadius: BorderRadius.circular(20)),
                 child: Center(
                     child: Text(genre,
@@ -346,6 +390,29 @@ class _Genres extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.bold))));
           }).toList()),
     );
+  }
+}
+
+class _Genres2 extends StatelessWidget {
+  final List<String> genres;
+  const _Genres2(this.genres);
+
+  @override
+  Widget build(BuildContext context) {
+    String genresString = genres.join(', ');
+    genresString = genresString[0] + genresString.substring(1).toLowerCase();
+
+    return Column(children: [
+      const TitleSection(
+        title: 'Géneros',
+      ),
+      SizedBox(
+        width: double.infinity,
+        child: Text(genresString,
+            style: Theme.of(context).textTheme.bodyText1,
+            textAlign: TextAlign.start),
+      ),
+    ]);
   }
 }
 
