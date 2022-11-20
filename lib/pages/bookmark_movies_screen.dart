@@ -26,7 +26,8 @@ class BookmarkMoviesScreen extends StatelessWidget {
               child: ListView(
                   children: provider.bookmarkMovies
                       .map(
-                        (movie) => CardMovie(movie: movie.toMovie()),
+                        (movie) => CardMovie(
+                            movie: movie.toMovie(), saveToCache: true),
                       )
                       .toList()))
         ])),

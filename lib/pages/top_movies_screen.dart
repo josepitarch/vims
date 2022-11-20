@@ -126,8 +126,8 @@ class CardMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        controller: scrollController,
-        children: [...movies.map((movie) => CardMovie(movie: movie))]);
+    return ListView(controller: scrollController, children: [
+      ...movies.map((movie) => CardMovie(movie: movie, saveToCache: false))
+    ]);
   }
 }
