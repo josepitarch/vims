@@ -111,8 +111,9 @@ class TopMoviesProvider extends ChangeNotifier {
     getTopMovies();
   }
 
-  onFresh() {
+  onRefresh() {
     movies.clear();
+    existsError = false;
     isLoading = true;
     notifyListeners();
     getTopMovies();

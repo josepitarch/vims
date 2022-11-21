@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class CustomImage extends StatelessWidget {
   final String url;
   final double width;
   final double height;
   final bool saveToCache;
+  final CacheManager cacheManager;
   final String? cacheKey;
 
   const CustomImage(
@@ -16,6 +17,7 @@ class CustomImage extends StatelessWidget {
       required this.width,
       required this.height,
       required this.saveToCache,
+      required this.cacheManager,
       this.cacheKey})
       : super(key: key);
 
@@ -33,7 +35,7 @@ class CustomImage extends StatelessWidget {
             imageUrl: url,
             width: width,
             height: height,
-            cacheManager: CustomCacheManager.cacheTinyImages,
+            cacheManager: cacheManager,
             fit: BoxFit.cover,
           )
         : FadeInImage(

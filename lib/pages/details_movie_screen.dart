@@ -11,20 +11,23 @@ import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
+import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
 import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/snackbar.dart';
+import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 late AppLocalizations i18n;
-final ScrollController scrollController = ScrollController();
+late ScrollController scrollController;
 
 class DetailsMovieScreen extends StatelessWidget {
   const DetailsMovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
+    scrollController = ScrollController();
     final provider = Provider.of<DetailsMovieProvider>(context, listen: true);
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -75,7 +78,8 @@ class DetailsMovieScreen extends StatelessWidget {
               _Justwatch(justwatch: movie.justwatch),
               movie.reviews.isNotEmpty
                   ? _Reviews(movie.reviews)
-                  : const SizedBox()
+                  : const SizedBox(),
+              const SizedBox(height: 70)
             ]),
           )
         ]))
@@ -113,26 +117,27 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: true,
-      expandedHeight: 600,
+      expandedHeight: MediaQuery.of(context).size.height * 0.40,
       floating: false,
       pinned: true,
+      backgroundColor: Colors.black,
       title: Text(widget.auxTitle),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
-          tag: widget.heroTag,
-          child: FadeInImage(
-            placeholder: const AssetImage('assets/loading.gif'),
-            image: NetworkImage(widget.url),
-            fit: BoxFit.cover,
-          ),
-        ),
+            tag: widget.heroTag,
+            child: CustomImage(
+                url: widget.url,
+                width: double.infinity,
+                height: double.infinity,
+                saveToCache: true,
+                cacheManager: CustomCacheManager.cacheLargeImages)),
       ),
     );
   }
 
   @override
   void dispose() {
-    scrollController.removeListener(() {});
+    scrollController.dispose();
     super.dispose();
   }
 }
@@ -403,16 +408,32 @@ class _Genres2 extends StatelessWidget {
     genresString = genresString[0] + genresString.substring(1).toLowerCase();
 
     return Column(children: [
-      const TitleSection(
-        title: 'Géneros',
+      TitleSection(
+        title: i18n.genres,
       ),
       SizedBox(
         width: double.infinity,
-        child: Text(genresString,
+        child: Text(transformGenres(genres),
             style: Theme.of(context).textTheme.bodyText1,
             textAlign: TextAlign.start),
       ),
     ]);
+  }
+
+  String transformGenres(List<String> genres) {
+    List<String> genresTransformed = [];
+    genres.forEach((element) {
+      if (element.startsWith('I') && element.toLowerCase().contains('guerra'))
+        genresTransformed.add(element);
+      else
+        genresTransformed.add(element[0].toLowerCase() + element.substring(1));
+    });
+
+    if (genresTransformed.isNotEmpty) {
+      genresTransformed[0] = genresTransformed[0][0].toUpperCase() +
+          genresTransformed[0].substring(1);
+    }
+    return genresTransformed.join(', ');
   }
 }
 
@@ -440,25 +461,26 @@ class _Cast extends StatelessWidget {
 }
 
 class _Synopsis extends StatefulWidget {
-  const _Synopsis({Key? key, required this.overview}) : super(key: key);
-
   final String overview;
-  final int minLines = 5;
+
+  const _Synopsis({Key? key, required this.overview}) : super(key: key);
 
   @override
   State<_Synopsis> createState() => _SynopsisState();
 }
 
 class _SynopsisState extends State<_Synopsis> {
+  final int minLines = 5;
   int showMore = 0;
   int maxLines = 5;
   final int delimiterLines = 420;
+  late String text;
 
   @override
   void initState() {
-    widget.overview.length > delimiterLines
-        ? maxLines = widget.minLines
-        : maxLines = widget.overview.length;
+    text = widget.overview.isNotEmpty ? widget.overview : i18n.no_synopsis;
+    text.length > delimiterLines ? maxLines = minLines : maxLines = text.length;
+
     super.initState();
   }
 
@@ -473,11 +495,15 @@ class _SynopsisState extends State<_Synopsis> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSection(title: i18n.synopsis),
-        Text(widget.overview,
-            textAlign: TextAlign.start,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText1,
-            maxLines: maxLines),
+        SizedBox(
+          width: double.infinity,
+          child: Text(text,
+              textAlign:
+                  widget.overview.isEmpty ? TextAlign.center : TextAlign.start,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyText1,
+              maxLines: maxLines),
+        ),
         if (widget.overview.length > delimiterLines)
           Padding(
             padding: const EdgeInsets.only(top: 10),
@@ -493,11 +519,11 @@ class _SynopsisState extends State<_Synopsis> {
   }
 
   updateState() {
-    if (maxLines == widget.minLines) {
+    if (maxLines == minLines) {
       maxLines = widget.overview.length;
       showMore = 1;
     } else {
-      maxLines = widget.minLines;
+      maxLines = minLines;
       showMore = 0;
     }
     setState(() {});
@@ -602,18 +628,13 @@ class _Reviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 70.0),
+    return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TitleSection(title: i18n.reviews),
-          for (final review in reviews)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: ReviewItem(review: review),
-            )
+          ...reviews.map((review) => ReviewItem(review: review)).toList(),
         ],
       ),
     );

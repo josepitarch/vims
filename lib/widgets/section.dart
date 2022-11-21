@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
+import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
 import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
@@ -71,7 +72,8 @@ class _SectionMovie extends StatelessWidget {
                         width: width,
                         height: height - 30,
                         saveToCache: true,
-                        cacheKey: film.id),
+                        cacheKey: film.id,
+                        cacheManager: CustomCacheManager.cacheTinyImages),
                     Container(
                       height: 40,
                       width: double.infinity,

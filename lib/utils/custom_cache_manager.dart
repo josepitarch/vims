@@ -1,24 +1,24 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class CustomCacheManager {
-  static const keyTinyImages = 'cacheTinyImages';
+  static const _keyTinyImages = 'cacheTinyImages';
   static CacheManager cacheTinyImages = CacheManager(
     Config(
-      keyTinyImages,
+      _keyTinyImages,
       stalePeriod: const Duration(days: 5),
       maxNrOfCacheObjects: 20,
-      repo: CacheObjectProvider(databaseName: keyTinyImages),
+      repo: CacheObjectProvider(databaseName: _keyTinyImages),
     ),
   );
 
-  static const keyLargeImages = 'cacheLargeImages';
+  static const _keyLargeImages = 'cacheLargeImages';
 
   static CacheManager cacheLargeImages = CacheManager(
     Config(
-      keyLargeImages,
+      _keyLargeImages,
       stalePeriod: const Duration(days: 2),
       maxNrOfCacheObjects: 20,
-      repo: CacheObjectProvider(databaseName: keyLargeImages),
+      repo: CacheObjectProvider(databaseName: _keyLargeImages),
     ),
   );
 }

@@ -110,7 +110,7 @@ class _Suggestions extends StatelessWidget {
                 return CardMovie(
                   movie: movie,
                   hasAllAttributes: hasAllAttributes,
-                  saveToCache: true,
+                  saveToCache: false,
                 );
               },
             ),

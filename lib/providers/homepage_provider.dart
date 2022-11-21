@@ -38,6 +38,7 @@ class HomepageProvider extends ChangeNotifier {
 
   onRefresh() async {
     sections.clear();
+    existsError = false;
     isLoading = true;
     notifyListeners();
     getHomepageMovies();

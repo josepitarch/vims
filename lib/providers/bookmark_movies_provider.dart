@@ -41,4 +41,12 @@ class BookmarkMoviesProvider extends ChangeNotifier {
 
     return response;
   }
+
+  deleteAllBookmarkMovies() async {
+    bool response = await BookmarkMoviesDatabase.deleteAllBookmarkMovies();
+    if (response) bookmarkMovies.clear();
+    notifyListeners();
+
+    return response;
+  }
 }

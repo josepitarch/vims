@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TextThemeCustom {
+  static const TextStyle headline1 = TextStyle(
+      fontSize: 27,
+      height: 1.2,
+      fontFamily: 'Lato',
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w700);
+
   static const TextStyle headline2 = TextStyle(
       fontSize: 21,
       height: 1.2,

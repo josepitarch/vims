@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
+import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/material_design_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimeoutError extends StatelessWidget {
-  final VoidCallback onPressed;
-  const TimeoutError({Key? key, required this.onPressed}) : super(key: key);
+  const TimeoutError({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final HomepageProvider homepageProvider =
+        Provider.of<HomepageProvider>(context, listen: false);
+    final TopMoviesProvider topMoviesProvider =
+        Provider.of<TopMoviesProvider>(context, listen: false);
+
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -20,7 +27,11 @@ class TimeoutError extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headline6),
         TextButton(
-            onPressed: () => onPressed(), child: Text(localization.retry))
+            onPressed: () {
+              homepageProvider.onRefresh();
+              topMoviesProvider.onRefresh();
+            },
+            child: Text(localization.retry))
       ],
     ));
   }

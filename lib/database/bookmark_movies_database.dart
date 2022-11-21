@@ -44,6 +44,17 @@ class BookmarkMoviesDatabase {
     return true;
   }
 
+  static Future<bool> deleteAllBookmarkMovies() async {
+    final db =
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
+
+    await db.delete(
+      _tableName,
+    );
+
+    return true;
+  }
+
   static Future<List<BookmarkMovie>> getBookmarkMovies() async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));

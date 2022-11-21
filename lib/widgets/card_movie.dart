@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
 import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 
 class CardMovie extends StatelessWidget {
@@ -82,7 +83,8 @@ class _Poster extends StatelessWidget {
             url: movie.poster,
             width: width,
             height: height + 20,
-            saveToCache: saveToCache),
+            saveToCache: saveToCache,
+            cacheManager: CustomCacheManager.cacheTinyImages),
       ),
     );
   }
