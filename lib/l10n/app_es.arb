@@ -10,6 +10,7 @@
   "rent": "Alquiler",
   "buy": "Compra",
   "cast": "Reparto",
+  "no_cast": "Reparto no disponible",
   "genres": "Géneros",
   "synopsis": "Sinopsis",
   "watch_now": "Ver ahora",

@@ -72,7 +72,6 @@ class _SectionMovie extends StatelessWidget {
                         width: width,
                         height: height - 30,
                         saveToCache: true,
-                        cacheKey: film.id,
                         cacheManager: CustomCacheManager.cacheTinyImages),
                     Container(
                       height: 40,

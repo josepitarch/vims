@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/dialogs/delete_all_bookmarks_dialog.dart';
 import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
 import 'package:scrapper_filmaffinity/widgets/title_page.dart';
+import 'dart:io' as io show Platform;
 
 class BookmarkMoviesScreen extends StatelessWidget {
   const BookmarkMoviesScreen({Key? key}) : super(key: key);
@@ -20,38 +23,9 @@ class BookmarkMoviesScreen extends StatelessWidget {
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
-                onPressed: () => showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Basic dialog title'),
-                        content: const Text(
-                            'A dialog is a type of modal window that\n'
-                            'appears in front of app content to\n'
-                            'provide critical information, or prompt\n'
-                            'for a decision to be made.'),
-                        actions: <Widget>[
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme.of(context).textTheme.labelLarge,
-                            ),
-                            child: const Text('Disable'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme.of(context).textTheme.labelLarge,
-                            ),
-                            child: const Text('Enable'),
-                            onPressed: () {
-                              provider.deleteAllBookmarkMovies();
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
+                onPressed: () => _openDialog(context).then((value) {
+                      if (value != null && value)
+                        provider.deleteAllBookmarkMovies();
                     }),
                 icon: const Icon(Icons.delete)),
           ),
@@ -68,6 +42,19 @@ class BookmarkMoviesScreen extends StatelessWidget {
         ])),
       );
     });
+  }
+
+  Future<dynamic> _openDialog(BuildContext context) {
+    final bool isAndroid = io.Platform.isAndroid;
+    return isAndroid
+        ? showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                DeleteAllBookmarksDialog(isAndroid: isAndroid))
+        : showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                DeleteAllBookmarksDialog(isAndroid: isAndroid));
   }
 }
 

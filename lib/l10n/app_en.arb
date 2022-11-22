@@ -10,6 +10,7 @@
     "rent": "Rent",
     "buy": "Buy",
     "cast": "Cast",
+    "no_cast": "No cast information available",
     "genres": "Genres",
     "synopsis": "Synopsis",
     "watch_now": "Watch now",

@@ -10,7 +10,7 @@ class Movie {
   String? screenwriter;
   String? music;
   String? cinematography;
-  String cast;
+  String? cast;
   String? producer;
   List<String> genres;
   List<String>? groups;

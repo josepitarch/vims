@@ -72,10 +72,10 @@ class DetailsMovieScreen extends StatelessWidget {
               _Director(movie.director),
               _Box(movie),
               _YearAndDuration(movie.year, movie.duration),
-              _Cast(cast: movie.cast),
+              _Cast(movie.cast),
               _Genres2(movie.genres),
-              _Synopsis(overview: movie.synopsis),
-              _Justwatch(justwatch: movie.justwatch),
+              _Synopsis(movie.synopsis),
+              _Justwatch(movie.justwatch),
               movie.reviews.isNotEmpty
                   ? _Reviews(movie.reviews)
                   : const SizedBox(),
@@ -183,7 +183,8 @@ class _Box extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 13),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
         color: Colors.grey[700],
         borderRadius: BorderRadius.circular(10),
@@ -413,7 +414,7 @@ class _Genres2 extends StatelessWidget {
       ),
       SizedBox(
         width: double.infinity,
-        child: Text(transformGenres(genres),
+        child: Text(genres.join(', '),
             style: Theme.of(context).textTheme.bodyText1,
             textAlign: TextAlign.start),
       ),
@@ -438,9 +439,10 @@ class _Genres2 extends StatelessWidget {
 }
 
 class _Cast extends StatelessWidget {
-  const _Cast({Key? key, required this.cast}) : super(key: key);
+  final String? cast;
 
-  final String cast;
+  const _Cast(this.cast, {Key? key}) : super(key: key);
+
   final int _maxLines = 3;
 
   @override
@@ -450,20 +452,23 @@ class _Cast extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         TitleSection(title: i18n.cast),
-        Text(cast,
-            textAlign: TextAlign.start,
-            maxLines: _maxLines,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyText1),
+        SizedBox(
+          width: double.infinity,
+          child: Text(cast != null ? cast! : i18n.no_cast,
+              textAlign: cast != null ? TextAlign.start : TextAlign.center,
+              maxLines: _maxLines,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyText1),
+        ),
       ],
     );
   }
 }
 
 class _Synopsis extends StatefulWidget {
-  final String overview;
+  final String synopsis;
 
-  const _Synopsis({Key? key, required this.overview}) : super(key: key);
+  const _Synopsis(this.synopsis, {Key? key}) : super(key: key);
 
   @override
   State<_Synopsis> createState() => _SynopsisState();
@@ -478,7 +483,7 @@ class _SynopsisState extends State<_Synopsis> {
 
   @override
   void initState() {
-    text = widget.overview.isNotEmpty ? widget.overview : i18n.no_synopsis;
+    text = widget.synopsis.isNotEmpty ? widget.synopsis : i18n.no_synopsis;
     text.length > delimiterLines ? maxLines = minLines : maxLines = text.length;
 
     super.initState();
@@ -499,12 +504,12 @@ class _SynopsisState extends State<_Synopsis> {
           width: double.infinity,
           child: Text(text,
               textAlign:
-                  widget.overview.isEmpty ? TextAlign.center : TextAlign.start,
+                  widget.synopsis.isEmpty ? TextAlign.center : TextAlign.start,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodyText1,
               maxLines: maxLines),
         ),
-        if (widget.overview.length > delimiterLines)
+        if (widget.synopsis.length > delimiterLines)
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Align(
@@ -520,7 +525,7 @@ class _SynopsisState extends State<_Synopsis> {
 
   updateState() {
     if (maxLines == minLines) {
-      maxLines = widget.overview.length;
+      maxLines = widget.synopsis.length;
       showMore = 1;
     } else {
       maxLines = minLines;
@@ -531,9 +536,9 @@ class _SynopsisState extends State<_Synopsis> {
 }
 
 class _Justwatch extends StatefulWidget {
-  const _Justwatch({Key? key, required this.justwatch}) : super(key: key);
-
   final Justwatch justwatch;
+
+  const _Justwatch(this.justwatch, {Key? key}) : super(key: key);
 
   @override
   State<_Justwatch> createState() => _JustwatchState();
@@ -634,7 +639,11 @@ class _Reviews extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TitleSection(title: i18n.reviews),
-          ...reviews.map((review) => ReviewItem(review: review)).toList(),
+          ...reviews
+              .map((review) => Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: ReviewItem(review: review)))
+              .toList(),
         ],
       ),
     );
