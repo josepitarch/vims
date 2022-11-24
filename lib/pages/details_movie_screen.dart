@@ -17,6 +17,7 @@ import 'package:scrapper_filmaffinity/utils/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
+import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 late AppLocalizations i18n;
@@ -35,6 +36,8 @@ class DetailsMovieScreen extends StatelessWidget {
     final String id = arguments['id'];
     final String heroTag = arguments['heroTag'] ?? id;
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
+
+    if (provider.error != null) return TimeoutError(provider.error!, provider);
 
     if (hasAllAttributes) {
       Movie movie = arguments['movie'];

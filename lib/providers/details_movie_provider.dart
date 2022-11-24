@@ -8,8 +8,9 @@ import 'package:scrapper_filmaffinity/services/details_movie_service.dart';
 import 'package:logger/logger.dart';
 
 class DetailsMovieProvider extends ChangeNotifier {
-  bool isLoading = false;
-  bool existsError = false;
+  late String id;
+  bool isLoading = true;
+  Exception? error;
   final Map<String, Movie> openedMovies = {};
   final logger = Logger();
 
@@ -20,14 +21,22 @@ class DetailsMovieProvider extends ChangeNotifier {
       Movie? movie = await DetailsMovieService().getDetailsMovie(id);
       openedMovies[id] = movie!;
     } on SocketException catch (e) {
-      existsError = true;
+      error = e;
       logger.e(e.toString());
     } on TimeoutException catch (e) {
-      existsError = true;
+      error = e;
       logger.e(e.toString());
     } finally {
+      this.id = id;
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  onRefresh() async {
+    isLoading = true;
+    error = null;
+    notifyListeners();
+    getDetailsMovie(id);
   }
 }

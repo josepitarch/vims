@@ -17,10 +17,9 @@ import 'package:scrapper_filmaffinity/utils/current_year.dart';
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
   int to = 210;
-
   List<Movie> movies = [];
   bool isLoading = false;
-  bool existsError = false;
+  Exception? error;
   bool hasFilters = false;
   Map<String, Movie> openedMovies = {};
 
@@ -61,12 +60,12 @@ class TopMoviesProvider extends ChangeNotifier {
 
       movies = filters.orderBy.func(movies);
 
-      existsError = false;
+      error = null;
     } on SocketException catch (e) {
-      existsError = true;
+      error = e;
       logger.e(e.toString());
     } on TimeoutException catch (e) {
-      existsError = true;
+      error = e;
       logger.e(e.toString());
     } finally {
       isLoading = false;
@@ -113,7 +112,7 @@ class TopMoviesProvider extends ChangeNotifier {
 
   onRefresh() {
     movies.clear();
-    existsError = false;
+    error = null;
     isLoading = true;
     notifyListeners();
     getTopMovies();

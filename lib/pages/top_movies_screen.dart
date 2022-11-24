@@ -56,8 +56,8 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
       this.provider = provider;
-      if (provider.existsError) {
-        return const TimeoutError();
+      if (provider.error != null) {
+        return TimeoutError(provider.error!, provider);
       }
 
       return Scaffold(

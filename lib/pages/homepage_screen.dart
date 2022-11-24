@@ -39,8 +39,8 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   Widget build(BuildContext context) {
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
-      if (provider.existsError) {
-        return const TimeoutError();
+      if (provider.error != null) {
+        return TimeoutError(provider.error!, provider);
       }
 
       Widget body = SingleChildScrollView(
