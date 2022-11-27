@@ -48,7 +48,7 @@ class MovieSection {
   factory MovieSection.fromMap(Map<String, dynamic> json) => MovieSection(
         id: json['id'],
         reference: json['reference'],
-        image: json['poster'],
+        image: json['poster'] ?? '',
         title: json['title'],
         premiereDay: json['premiere_day'],
       );

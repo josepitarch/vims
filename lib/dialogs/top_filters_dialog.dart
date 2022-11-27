@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/card_genre.dart';
@@ -24,38 +23,40 @@ class TopMoviesDialog extends StatelessWidget {
     filters = Filters(
         platforms: Map.from(provider.filters.platforms),
         genres: Map.from(provider.filters.genres),
-        orderBy: provider.filters.orderBy,
         isAnimationExcluded: provider.filters.isAnimationExcluded,
         yearFrom: provider.filters.yearFrom,
         yearTo: provider.filters.yearTo);
 
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      height: 600,
-      width: double.infinity,
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        height: 600,
+        width: double.infinity,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
-          ),
-          const _PlatformsFilter(),
-          const _YearsFilter(),
-          const SizedBox(
-            height: 10,
-          ),
-          const _GenresFilter(),
-          const SizedBox(
-            height: 10,
-          ),
-          const _OrderFilter(),
-          const _ExcludeAnimationFilter(),
-          _ButtonsFilter(
-              provider: provider, scrollController: scrollController),
-        ],
+            const _PlatformsFilter(),
+            const _YearsFilter(),
+            const SizedBox(
+              height: 10,
+            ),
+            const _GenresFilter(),
+            const SizedBox(
+              height: 10,
+            ),
+            const _ExcludeAnimationFilter(),
+            _ButtonsFilter(
+                provider: provider, scrollController: scrollController),
+          ],
+        ),
       ),
     );
   }
@@ -182,64 +183,6 @@ class _GenresFilter extends StatelessWidget {
   }
 }
 
-class _OrderFilter extends StatefulWidget {
-  const _OrderFilter({Key? key}) : super(key: key);
-
-  @override
-  State<_OrderFilter> createState() => _OrderFilterState();
-}
-
-class _OrderFilterState extends State<_OrderFilter> {
-  final Map<String, String> options = {
-    'average': i18n.order_by_average,
-    'year': i18n.order_by_year,
-    'shuffle': i18n.order_by_shuffle,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    OrderBy selectedValue = filters.orderBy;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(i18n.title_order_by_dialog,
-                style: Theme.of(context).textTheme.headline6),
-          ),
-          Container(
-            height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.orange, width: 2),
-                borderRadius: BorderRadius.circular(5)),
-            child: DropdownButton<OrderBy>(
-              value: selectedValue,
-              elevation: 16,
-              underline: Container(
-                height: 0,
-                color: Colors.transparent,
-              ),
-              onChanged: (OrderBy? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                  filters.orderBy = newValue;
-                });
-              },
-              items: OrderBy.values.map((OrderBy value) {
-                return DropdownMenuItem<OrderBy>(
-                  value: value,
-                  child: Text(options[value.value]!),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _ExcludeAnimationFilter extends StatefulWidget {
   const _ExcludeAnimationFilter({Key? key}) : super(key: key);
 
@@ -298,9 +241,9 @@ class _ButtonsFilter extends StatelessWidget {
                   side: const BorderSide(color: Colors.orange),
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () {
-                Navigator.pop(context);
-                scrollController.jumpTo(0);
+                if (scrollController.hasClients) scrollController.jumpTo(0);
                 provider.applyFilters(filters);
+                Navigator.pop(context);
               },
               child: Text(localization.apply_filters_dialog)),
         ],

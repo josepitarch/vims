@@ -1,11 +1,12 @@
 enum Platforms {
   netflix('netflix'),
-  amazon('amazon'),
+  prime('prime'),
   hbo('hbo'),
   disney('disney'),
   movistar('movistar'),
   filmin('filmin'),
   rakuten('rakuten'),
+  apple('apple'),
   flixole('flixole'),
   acontra('acontra');
 

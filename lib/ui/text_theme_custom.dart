@@ -37,8 +37,8 @@ class TextThemeCustom {
       fontWeight: FontWeight.normal);
 
   static const TextStyle bodyText1 = TextStyle(
-      fontSize: 15.5,
-      fontFamily: 'OpenSans',
+      fontSize: 16,
+      fontFamily: 'Lato',
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.normal);
 

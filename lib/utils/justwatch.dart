@@ -1,8 +1,8 @@
 class JustwatchAssets {
   static final Map<String, List<String>> justwatchAssets = {
     'acontra': ['acontra plus'],
-    'amazon': ['amazon video', 'amazon prime video'],
-    'apple': ['apple itunes'],
+    'prime': ['amazon video', 'amazon prime video'],
+    'apple': ['apple itunes', 'apple tv plus'],
     'disney': ['disney plus'],
     'filmin': ['filmin'],
     'google': ['google play movies'],

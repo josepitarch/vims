@@ -76,7 +76,7 @@ class DetailsMovieScreen extends StatelessWidget {
               _Box(movie),
               _YearAndDuration(movie.year, movie.duration),
               _Cast(movie.cast),
-              _Genres2(movie.genres),
+              _Genres(movie.genres),
               _Synopsis(movie.synopsis),
               _Justwatch(movie.justwatch),
               movie.reviews.isNotEmpty
@@ -326,13 +326,15 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   @override
   Widget build(BuildContext context) {
     final BookmarkMoviesProvider provider =
-        Provider.of<BookmarkMoviesProvider>(context);
+        Provider.of<BookmarkMoviesProvider>(context, listen: false);
     try {
       return IconButton(
+          iconSize: 27,
+          isSelected: isFavorite,
+          selectedIcon: const Icon(Icons.bookmark, color: Colors.white),
           onPressed: () => onPressed(provider),
-          icon: Icon(
-            isFavorite ? Icons.bookmark : Icons.bookmark_border_outlined,
-            size: 25,
+          icon: const Icon(
+            Icons.bookmark_border_outlined,
           ));
     } catch (e) {
       return const SizedBox();
@@ -372,39 +374,7 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
 
 class _Genres extends StatelessWidget {
   final List<String> genres;
-
-  const _Genres(this.genres, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      height: 50,
-      width: double.infinity,
-      child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: genres.map((genre) {
-            return Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.orange.shade400,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Center(
-                    child: Text(genre,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontWeight: FontWeight.bold))));
-          }).toList()),
-    );
-  }
-}
-
-class _Genres2 extends StatelessWidget {
-  final List<String> genres;
-  const _Genres2(this.genres);
+  const _Genres(this.genres);
 
   @override
   Widget build(BuildContext context) {

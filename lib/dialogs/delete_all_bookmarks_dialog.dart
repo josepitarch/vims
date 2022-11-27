@@ -29,14 +29,20 @@ class _DialogAndroid extends StatelessWidget {
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.subtitle2,
           ),
-          child: const Text('Cancelar'),
+          child: const Text(
+            'Cancelar',
+          ),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
-          child: const Text('Eliminar'),
+          child: Text('Eliminar',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(color: Colors.red)),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],

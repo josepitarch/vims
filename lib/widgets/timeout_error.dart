@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
+import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/material_design_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -74,7 +75,6 @@ class _ConnectivityError extends StatefulWidget {
 }
 
 class _ConnectivityErrorState extends State<_ConnectivityError> {
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
@@ -122,9 +122,10 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
           (change as TopMoviesProvider).onRefresh();
         } else if (change is DetailsMovieProvider) {
           (change as DetailsMovieProvider).onRefresh();
+        } else if (change is SearchMovieProvider) {
+          (change as SearchMovieProvider).onRefresh();
         }
       }
-      _connectionStatus = result;
     });
   }
 
@@ -137,8 +138,10 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Icon(Icons.wifi_off_rounded),
-              Text('Connection Status: ${_connectionStatus.toString()}')
+              const Icon(Icons.wifi_off_rounded, size: 80),
+              const SizedBox(height: 20),
+              Text(i18n.no_internet,
+                  style: Theme.of(context).textTheme.headline6),
             ]),
       ),
     );

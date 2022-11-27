@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.grey[900],
+        systemNavigationBarColor: Colors.black.withOpacity(0.9)));
     return MaterialApp(
         title: 'Películas',
         localizationsDelegates: const [
@@ -71,8 +75,6 @@ class MyApp extends StatelessWidget {
         },
         theme: ThemeData.dark().copyWith(
           useMaterial3: true,
-          primaryColor: Colors.orange,
-          primaryColorDark: Colors.orange,
           textTheme: const TextTheme(
             headline1: TextThemeCustom.headline1,
             headline2: TextThemeCustom.headline2,
@@ -82,6 +84,7 @@ class MyApp extends StatelessWidget {
             bodyText1: TextThemeCustom.bodyText1,
             bodyText2: TextThemeCustom.bodyText2,
           ),
+          scaffoldBackgroundColor: Colors.grey[900],
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             foregroundColor: Colors.grey.shade200,
             backgroundColor: Colors.orange.shade400,

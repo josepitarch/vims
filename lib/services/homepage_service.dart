@@ -19,11 +19,14 @@ class HomepageService {
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
 
+    if (response.statusCode == 500) throw TimeoutException(response.body);
+
     if (response.statusCode == 200) {
       List aux = json.jsonDecode(response.body);
       aux.forEach((element) => homepageMovies.add(Section.fromMap(element)));
+      return homepageMovies.sublist(0, homepageMovies.length - 1);
     }
 
-    return homepageMovies.sublist(0, homepageMovies.length - 1);
+    return homepageMovies;
   }
 }

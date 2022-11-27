@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
+import 'package:scrapper_filmaffinity/enums/type_search.dart';
 import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
 
 class SearchMovieProvider extends ChangeNotifier {
@@ -8,24 +9,25 @@ class SearchMovieProvider extends ChangeNotifier {
   List<String> searchs = [];
   bool isLoading = false;
   final int numberFetchMovies = 3;
-  final String type = 'title';
+  TypeSearch type = TypeSearch.title;
+  Exception? error;
 
   SearchMovieProvider() {
-    getHistorySearchers();
+    getHistorySearchs();
   }
 
-  setSearch(String value) {
-    search = value;
+  clearSearch() {
+    search = '';
     notifyListeners();
   }
 
-  getHistorySearchers() {
-    HistorySearchDatabase.retrieveSearchs()
+  getHistorySearchs() {
+    HistorySearchDatabase.getHistorySearchs()
         .then((value) => searchs = value)
         .whenComplete(() => notifyListeners());
   }
 
-  deleteAllSearchers() {
+  deleteAllSearchs() {
     HistorySearchDatabase.deleteAllSearchs()
         .then((value) => searchs.clear())
         .whenComplete(() => notifyListeners());
@@ -33,26 +35,35 @@ class SearchMovieProvider extends ChangeNotifier {
 
   searchMovie(String search) async {
     isLoading = true;
+    this.search = search;
+    notifyListeners();
     SearchMovieService()
-        .getSuggestions(search, type, numberFetchMovies)
-        .then((value) => movies = value)
-        .whenComplete(() {
+        .getSuggestions(search, type.name, numberFetchMovies)
+        .then((value) {
+      movies = value;
+      error = null;
+    }).catchError((error) {
+      this.error = error;
+      return null;
+    }).whenComplete(() {
       isLoading = false;
       notifyListeners();
     });
   }
 
-  insertAndSearchMovie(String search) {
-    isLoading = true;
-    notifyListeners();
+  insertHistorySearch(String search) {
     HistorySearchDatabase.insertSearch(search)
         .then((value) => value ? searchs.insert(0, search) : null);
+  }
+
+  onTapHistorySearch(String search) {
     this.search = search;
+    isLoading = true;
+    notifyListeners();
     searchMovie(search);
   }
 
-  onTap(String search) {
-    this.search = search;
+  onRefresh() {
     isLoading = true;
     notifyListeners();
     searchMovie(search);

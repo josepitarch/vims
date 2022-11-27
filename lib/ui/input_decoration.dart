@@ -22,7 +22,7 @@ class InputDecorations {
         onPressed: () {
           if (controller.text.isNotEmpty) {
             controller.clear;
-            provider.setSearch('');
+            provider.clearSearch();
           }
         },
         icon: const Icon(Icons.clear),

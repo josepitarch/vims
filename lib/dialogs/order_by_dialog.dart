@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
-enum SingingCharacter { lafayette, jefferson }
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/enums/orders.dart';
+import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 
 class OrderByDialog extends StatefulWidget {
   const OrderByDialog({super.key});
@@ -10,36 +12,46 @@ class OrderByDialog extends StatefulWidget {
 }
 
 class _OrderByDialogState extends State<OrderByDialog> {
+  late OrderBy orderBy;
+  @override
+  void initState() {
+    orderBy = context.read<TopMoviesProvider>().orderBy;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    SingingCharacter? character = SingingCharacter.lafayette;
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: const Text('Lafayette'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.lafayette,
-            groupValue: character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                character = value;
-              });
-            },
-          ),
+    final i18n = AppLocalizations.of(context)!;
+    final Map<String, String> options = {
+      'average': i18n.order_by_average,
+      'year': i18n.order_by_year,
+      'shuffle': i18n.order_by_shuffle,
+    };
+
+    return Dialog(
+      child: SizedBox(
+        height: 170,
+        width: 120,
+        child: Column(
+          children: OrderBy.values.map((e) {
+            return ListTile(
+              title: Text(options[e.value]!),
+              leading: Radio<OrderBy>(
+                activeColor: Colors.orange,
+                value: e,
+                groupValue: orderBy,
+                onChanged: (OrderBy? value) {
+                  setState(() {
+                    orderBy = value!;
+                    context.read<TopMoviesProvider>().setOrderBy(value);
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            );
+          }).toList(),
         ),
-        ListTile(
-          title: const Text('Thomas Jefferson'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.jefferson,
-            groupValue: character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                character = value;
-              });
-            },
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

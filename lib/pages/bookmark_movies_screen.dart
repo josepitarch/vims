@@ -66,23 +66,26 @@ class NoBookmarkMovies extends StatelessWidget {
     final i18n = AppLocalizations.of(context)!;
 
     return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/icons/bookmark.png',
-            width: 100,
-            height: 100,
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: Text(i18n.no_bookmarks,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline6),
-          ),
-        ],
+      child: Container(
+        transform: Matrix4.translationValues(0, -50, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/icons/bookmark.png',
+              width: 100,
+              height: 100,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: Text(i18n.no_bookmarks,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+          ],
+        ),
       ),
     );
   }

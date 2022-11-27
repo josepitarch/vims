@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
@@ -7,6 +8,8 @@ import 'package:scrapper_filmaffinity/ui/input_decoration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
 import 'package:scrapper_filmaffinity/widgets/no_results.dart';
+import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
+import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
 
@@ -16,7 +19,10 @@ class SearchMovieScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-    return Consumer<SearchMovieProvider>(builder: (context, provider, child) {
+
+    return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
+      if (provider.error != null)
+        return TimeoutError(provider.error!, provider);
       if (provider.isLoading) {
         return SafeArea(
           child: Column(children: [
@@ -35,8 +41,8 @@ class SearchMovieScreen extends StatelessWidget {
               ? _Suggestions(
                   movies: provider.movies,
                   numberFetchMovies: provider.numberFetchMovies)
-              : _SearchHistory(
-                  historySearchers: provider.searchs, provider: provider)
+              : _HistorySearch(
+                  historySearch: provider.searchs, provider: provider)
         ]),
       );
     });
@@ -67,21 +73,19 @@ class _SearchMovieForm extends StatelessWidget {
           keyboardAppearance: Brightness.dark,
           decoration: InputDecorations.searchMovieDecoration(
               i18n, controller, provider),
-          onChanged: (value) {
-            value.isEmpty ? provider.setSearch('') : null;
-          },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
-            if (value!.isEmpty) {
-              return 'El campo no puede estar vacío';
-            }
+            if (value!.isEmpty) return i18n.no_empty_search;
+
             return null;
           },
           onFieldSubmitted: (String value) {
-            if (!myFormKey.currentState!.validate())
+            if (myFormKey.currentState!.validate()) {
+              provider.searchMovie(value);
+              provider.insertHistorySearch(value);
+            } else {
               return;
-            else
-              provider.insertAndSearchMovie(value);
+            }
           },
         ),
       ),
@@ -119,32 +123,29 @@ class _Suggestions extends StatelessWidget {
   }
 }
 
-class _SearchHistory extends StatelessWidget {
-  final List<String> historySearchers;
+class _HistorySearch extends StatelessWidget {
+  final List<String> historySearch;
   final SearchMovieProvider provider;
-  const _SearchHistory(
-      {Key? key, required this.historySearchers, required this.provider})
+  const _HistorySearch(
+      {Key? key, required this.historySearch, required this.provider})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (historySearchers.isEmpty) return const SizedBox();
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: historySearchers.length,
-            itemBuilder: (context, index) => ListTile(
+    if (historySearch.isEmpty) return const SizedBox();
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(children: [
+          ...historySearch.map((e) {
+            return ListTile(
               leading: const Icon(Icons.history),
               trailing: const Icon(Icons.arrow_forward_ios),
-              title: Text(historySearchers[index],
-                  style: Theme.of(context).textTheme.bodyText1),
-              onTap: () => provider.onTap(historySearchers[index]),
-            ),
-          ),
+              title: Text(e, style: Theme.of(context).textTheme.bodyText1),
+              onTap: () => provider.onTapHistorySearch(e),
+            );
+          }).toList(),
           DeleteSearchersButton(provider: provider),
-        ],
+        ]),
       ),
     );
   }
@@ -160,12 +161,16 @@ class DeleteSearchersButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-        onPressed: () => provider.deleteAllSearchers(),
-        child: Text(i18n.delete_all_searchers,
-            style: Theme.of(context)
-                .textTheme
-                .headline6!
-                .copyWith(color: Colors.red)));
+    return io.Platform.isAndroid
+        ? MaterialButton(
+            onPressed: () => provider.deleteAllSearchs(),
+            child: Text(i18n.delete_all_searchers, style: _textStyle(context)))
+        : CupertinoButton(
+            child: Text(i18n.delete_all_searchers, style: _textStyle(context)),
+            onPressed: () => provider.deleteAllSearchs());
+  }
+
+  _textStyle(BuildContext context) {
+    return Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.red);
   }
 }

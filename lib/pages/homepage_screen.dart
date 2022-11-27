@@ -1,11 +1,12 @@
 import 'dart:io' as io show Platform;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
+import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
 import 'package:scrapper_filmaffinity/widgets/pull_refresh_android.dart';
 import 'package:scrapper_filmaffinity/widgets/pull_refresh_ios.dart';
 import 'package:scrapper_filmaffinity/widgets/section.dart';
@@ -43,24 +44,27 @@ class _HomepageScreenState extends State<HomepageScreen>
         return TimeoutError(provider.error!, provider);
       }
 
-      Widget body = SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(children: [
-          ...provider.sections
-              .map((section) => SectionWidget(section: section))
-              .toList(),
-          const SizedBox(height: 30),
-        ]),
-      ));
-
       if (provider.isLoading) return const SectionsShimmer();
 
       return io.Platform.isAndroid
           ? PullRefreshAndroid(
-              onRefresh: () => provider.onRefresh(), child: body)
-          : PullRefreshIOS(onRefresh: () => provider.onRefresh(), child: body);
+              onRefresh: () => provider.onRefresh(),
+              child: _buildBody(provider.sections))
+          : PullRefreshIOS(
+              onRefresh: () => provider.onRefresh(),
+              child: _buildBody(provider.sections));
     });
+  }
+
+  SingleChildScrollView _buildBody(List<Section> sections) {
+    return SingleChildScrollView(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(children: [
+        ...sections.map((section) => SectionWidget(section: section)).toList(),
+        const SizedBox(height: 30),
+      ]),
+    ));
   }
 
   @override
@@ -76,7 +80,7 @@ void refreshIfIsNecessary(BuildContext context, int timeToRefresh) {
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (difference.inHours >= timeToRefresh) {
-      DefaultCacheManager().emptyCache();
+      CustomCacheManager.cacheTinyImages.emptyCache();
       provider.onRefresh();
     }
   });
