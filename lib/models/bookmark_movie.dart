@@ -28,9 +28,10 @@ class BookmarkMovie {
     return Movie(
         id: id,
         title: title,
+        flag: '',
         year: '',
         country: '',
-        cast: '',
+        cast: [],
         genres: [],
         synopsis: '',
         poster: poster,

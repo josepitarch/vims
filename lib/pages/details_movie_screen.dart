@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:diacritic/diacritic.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
@@ -12,9 +11,9 @@ import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
 import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
 import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
-import 'package:scrapper_filmaffinity/utils/flags.dart';
 import 'package:scrapper_filmaffinity/utils/snackbar.dart';
 import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
+import 'package:scrapper_filmaffinity/widgets/flag.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
@@ -193,7 +192,7 @@ class _Box extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        _Country(movie.country),
+        _Country(movie.country, movie.flag),
         _Average(movie.average),
         _BookmarkMovie(movie)
       ]),
@@ -211,7 +210,7 @@ class _YearAndDuration extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
-      child: Text('$year  ·  ${transformDuration(duration)}',
+      child: Text(year + transformDuration(duration),
           style: Theme.of(context).textTheme.headline5),
     );
   }
@@ -223,7 +222,8 @@ class _YearAndDuration extends StatelessWidget {
     int minutes = total % 60;
     String hoursString = hours > 0 ? '$hours H ' : '';
     String minutesString = minutes > 0 ? '$minutes MIN' : '';
-    return '$hoursString$minutesString';
+
+    return '  ·  $hoursString$minutesString';
   }
 }
 
@@ -256,46 +256,28 @@ class _Average extends StatelessWidget {
 
 class _Country extends StatelessWidget {
   final String country;
+  final String flag;
 
   const _Country(
-    this.country, {
+    this.country,
+    this.flag, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String flag = '';
-    String countryNormalize = removeDiacritics(country.trim().toLowerCase());
-
-    FlagsAssets.flags.forEach((key, value) {
-      if (value.contains(countryNormalize)) {
-        flag = key;
-      }
-    });
-
-    Text text = Text(
-      country,
-      style: Theme.of(context).textTheme.headline5,
+    return Row(
+      children: [
+        Flag(flag: flag, country: country),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(
+          country,
+          style: Theme.of(context).textTheme.headline5,
+        )
+      ],
     );
-    return flag.isNotEmpty
-        ? Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/flags/$flag.png',
-                  width: 30,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const SizedBox(),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              text,
-            ],
-          )
-        : text;
   }
 }
 
@@ -412,7 +394,7 @@ class _Genres extends StatelessWidget {
 }
 
 class _Cast extends StatelessWidget {
-  final String? cast;
+  final List<Actor> cast;
 
   const _Cast(this.cast, {Key? key}) : super(key: key);
 
@@ -420,6 +402,7 @@ class _Cast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = cast.map((e) => e.name).join(', ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -427,8 +410,8 @@ class _Cast extends StatelessWidget {
         TitleSection(title: i18n.cast),
         SizedBox(
           width: double.infinity,
-          child: Text(cast != null ? cast! : i18n.no_cast,
-              textAlign: cast != null ? TextAlign.start : TextAlign.center,
+          child: Text(cast.isNotEmpty ? text : i18n.no_cast,
+              textAlign: cast.isNotEmpty ? TextAlign.start : TextAlign.center,
               maxLines: _maxLines,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodyText1),

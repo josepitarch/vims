@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/utils/justwatch.dart';
+import 'package:scrapper_filmaffinity/utils/asset_justwatch.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class JustwatchItem extends StatelessWidget {

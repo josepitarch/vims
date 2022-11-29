@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:scrapper_filmaffinity/database/querys.dart';
-import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
+import 'package:scrapper_filmaffinity/models/bookmark_movie.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BookmarkMoviesDatabase {

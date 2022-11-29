@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
-import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
+import 'package:scrapper_filmaffinity/models/bookmark_movie.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class BookmarkMoviesProvider extends ChangeNotifier {
