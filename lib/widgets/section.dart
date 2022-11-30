@@ -16,7 +16,7 @@ class SectionWidget extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: TitleSection(title: section.title),
+          child: TitleSection(section.title),
         ),
         SizedBox(
           height: 210,

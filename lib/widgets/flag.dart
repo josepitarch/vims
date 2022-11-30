@@ -12,15 +12,13 @@ class Flag extends StatelessWidget {
     String aux = '';
     String countryNormalize = removeDiacritics(country.trim().toLowerCase());
 
-    FlagsAssets.flags.forEach((key, value) {
+    FlagAssets.flags.forEach((key, value) {
       if (value.contains(countryNormalize)) {
         aux = key;
       }
     });
 
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: aux.isEmpty ? _NetworkFlag(flag) : _AssetFlag(aux));
+    return aux.isEmpty ? _NetworkFlag(flag) : _AssetFlag(aux);
   }
 }
 
@@ -30,11 +28,14 @@ class _AssetFlag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/flags/$flag.png',
-      width: 30,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => const SizedBox(),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Image.asset(
+        'assets/flags/$flag.png',
+        width: 30,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const SizedBox(),
+      ),
     );
   }
 }

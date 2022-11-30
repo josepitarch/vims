@@ -24,7 +24,7 @@ class HomepageService {
     if (response.statusCode == 200) {
       List aux = json.jsonDecode(response.body);
       aux.forEach((element) => homepageMovies.add(Section.fromMap(element)));
-      return homepageMovies.sublist(0, homepageMovies.length - 1);
+      return homepageMovies;
     }
 
     return homepageMovies;

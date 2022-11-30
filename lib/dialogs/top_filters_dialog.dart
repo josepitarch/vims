@@ -44,7 +44,6 @@ class TopMoviesDialog extends StatelessWidget {
               ),
             ),
             const _PlatformsFilter(),
-            const _YearsFilter(),
             const SizedBox(
               height: 10,
             ),
@@ -52,6 +51,7 @@ class TopMoviesDialog extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
+            const _YearsFilter(),
             const _ExcludeAnimationFilter(),
             _ButtonsFilter(
                 provider: provider, scrollController: scrollController),
@@ -107,11 +107,6 @@ class _YearsFilterState extends State<_YearsFilter> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: Text(i18n.title_years_dialog,
-              style: Theme.of(context).textTheme.headline6),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

@@ -55,13 +55,6 @@ class DetailsMovieScreen extends StatelessWidget {
 
   Scaffold screen(Movie movie) {
     return Scaffold(
-      /*appBar: AppBar(
-          title: Text(movie.title),
-          elevation: 0,
-          backgroundColor: Colors.black,
-          actions: [
-            IconButton(icon: const Icon(Icons.share), onPressed: () {})
-          ]),*/
       body: CustomScrollView(controller: scrollController, slivers: [
         _CustomAppBar(movie.title, movie.poster, movie.heroTag ?? movie.id),
         SliverList(
@@ -81,7 +74,7 @@ class DetailsMovieScreen extends StatelessWidget {
               movie.reviews.isNotEmpty
                   ? _Reviews(movie.reviews)
                   : const SizedBox(),
-              const SizedBox(height: 70)
+              const SizedBox(height: 50)
             ]),
           )
         ]))
@@ -364,9 +357,7 @@ class _Genres extends StatelessWidget {
     genresString = genresString[0] + genresString.substring(1).toLowerCase();
 
     return Column(children: [
-      TitleSection(
-        title: i18n.genres,
-      ),
+      TitleSection(i18n.genres),
       SizedBox(
         width: double.infinity,
         child: Text(genres.join(', '),
@@ -407,7 +398,7 @@ class _Cast extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TitleSection(title: i18n.cast),
+        TitleSection(i18n.cast),
         SizedBox(
           width: double.infinity,
           child: Text(cast.isNotEmpty ? text : i18n.no_cast,
@@ -455,7 +446,7 @@ class _SynopsisState extends State<_Synopsis> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(title: i18n.synopsis),
+        TitleSection(i18n.synopsis),
         SizedBox(
           width: double.infinity,
           child: Text(text,
@@ -531,7 +522,7 @@ class _JustwatchState extends State<_Justwatch> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(title: i18n.watch_now),
+        TitleSection(i18n.watch_now),
         if (platforms.isEmpty)
           SizedBox(
             width: double.infinity,
@@ -566,7 +557,7 @@ class _JustwatchState extends State<_Justwatch> {
                 padding: const EdgeInsets.only(top: 10),
                 shrinkWrap: false,
                 children: platforms
-                    .map((platform) => JustwatchItem(platform: platform))
+                    .map((platform) => JustwatchItem(platform))
                     .toList()),
           ),
       ],
@@ -594,7 +585,7 @@ class _Reviews extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleSection(title: i18n.reviews),
+          TitleSection(i18n.reviews),
           ...reviews
               .map((review) => Container(
                   margin: const EdgeInsets.only(bottom: 10),

@@ -1,4 +1,4 @@
-class JustwatchAssets {
+class PlatformAssets {
   static final Map<String, List<String>> justwatchAssets = {
     'acontra': ['acontra plus'],
     'prime': ['amazon video', 'amazon prime video'],
@@ -6,7 +6,7 @@ class JustwatchAssets {
     'disney': ['disney plus'],
     'filmin': ['filmin'],
     'google': ['google play movies'],
-    'hbo': ['hbo max'],
+    'hbo_max': ['hbo max'],
     'microsoft': ['microsoft store'],
     'movistar': ['movistar plus'],
     'netflix': ['netflix'],

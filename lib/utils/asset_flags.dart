@@ -1,4 +1,4 @@
-class FlagsAssets {
+class FlagAssets {
   static final Map<String, List<String>> flags = {
     'spain': ['spain', 'espana'],
     'portugal': ['portugal'],

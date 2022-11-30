@@ -159,20 +159,24 @@ class Justwatch {
 class Platform {
   String name;
   String url;
+  String icon;
 
   Platform({
     required this.name,
     required this.url,
+    required this.icon,
   });
 
   factory Platform.fromMap(Map<String, dynamic> json) => Platform(
         name: json['name'],
         url: json['url'],
+        icon: json['icon'],
       );
 
   Map<String, dynamic> toMap() => {
         'name': name,
         'url': url,
+        'icon': icon,
       };
 }
 
