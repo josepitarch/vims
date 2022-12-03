@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scrapper_filmaffinity/enums/platforms.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/utils/asset_platforms.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class JustwatchItem extends StatelessWidget {
@@ -12,11 +12,10 @@ class JustwatchItem extends StatelessWidget {
   Widget build(BuildContext context) {
     String asset = '';
 
-    PlatformAssets.justwatchAssets.forEach((key, value) {
-      if (value.contains(platform.name.toLowerCase())) {
-        asset = key;
-      }
-    });
+    Platforms.values.forEach((element) =>
+        element.value.contains(platform.name.toLowerCase())
+            ? asset = element.name
+            : '');
 
     return GestureDetector(
         onTap: () =>
@@ -28,19 +27,17 @@ class JustwatchItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: asset.isEmpty
                   ? _NetworkJustwatch(platform.icon)
-                  : _AssetJustwatch(platform: platform, asset: asset)),
+                  : _AssetJustwatch(asset)),
         ));
   }
 }
 
 class _AssetJustwatch extends StatelessWidget {
-  final Platform platform;
   final String asset;
 
-  const _AssetJustwatch({
+  const _AssetJustwatch(
+    this.asset, {
     Key? key,
-    required this.platform,
-    required this.asset,
   }) : super(key: key);
 
   @override

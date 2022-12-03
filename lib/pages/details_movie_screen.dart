@@ -112,11 +112,14 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: true,
-      expandedHeight: MediaQuery.of(context).size.height * 0.40,
+      expandedHeight: MediaQuery.of(context).size.height * 0.35,
       floating: false,
       pinned: true,
       backgroundColor: Colors.black,
-      title: Text(widget.auxTitle),
+      title: Text(
+        widget.auxTitle,
+        textAlign: TextAlign.start,
+      ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
             tag: widget.heroTag,

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/l10n/l10n.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
-
-import 'package:scrapper_filmaffinity/widgets/navigation_bottom_bar.dart';
 import 'package:scrapper_filmaffinity/pages/details_movie_screen.dart';
 import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
+import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
-import 'package:scrapper_filmaffinity/ui/text_theme_custom.dart';
+import 'package:scrapper_filmaffinity/ui/material_theme.dart';
+import 'package:scrapper_filmaffinity/widgets/navigation_bottom_bar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,96 +50,18 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.grey[900],
         systemNavigationBarColor: Colors.black.withOpacity(0.9)));
+
     return MaterialApp(
-        title: 'Películas',
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: L10n.l10n,
-        localeResolutionCallback: (locale, supportedLocales) =>
-            supportedLocales.firstWhere(
-                (supportedLocale) =>
-                    supportedLocale.languageCode == locale?.languageCode,
-                orElse: () => supportedLocales.first),
+        title: 'Womie',
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
+        localeResolutionCallback: L10n.localeResolutionCallback,
         debugShowCheckedModeBanner: false,
         initialRoute: 'home',
         routes: {
           'home': (_) => const NavigatorBottomBarApp(),
           'details': (_) => const DetailsMovieScreen(),
         },
-        theme: ThemeData.dark().copyWith(
-          useMaterial3: true,
-          textTheme: const TextTheme(
-            headline1: TextThemeCustom.headline1,
-            headline2: TextThemeCustom.headline2,
-            headline3: TextThemeCustom.headline3,
-            headline4: TextThemeCustom.headline4,
-            headline5: TextThemeCustom.headline5,
-            bodyText1: TextThemeCustom.bodyText1,
-            bodyText2: TextThemeCustom.bodyText2,
-          ),
-          scaffoldBackgroundColor: Colors.grey[900],
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            foregroundColor: Colors.grey.shade200,
-            backgroundColor: Colors.orange.shade400,
-            elevation: 0,
-          ),
-          buttonTheme: const ButtonThemeData(
-            buttonColor: Colors.red,
-            textTheme: ButtonTextTheme.normal,
-          ),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            backgroundColor: Colors.black.withOpacity(0.2),
-            selectedItemColor: Colors.orange,
-            unselectedItemColor: Colors.grey,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            selectedLabelStyle: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-            unselectedLabelStyle: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            prefixIconColor: Colors.grey,
-            suffixIconColor: Colors.grey,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(color: Colors.orange),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            labelStyle: const TextStyle(color: Colors.grey),
-            hintStyle: const TextStyle(color: Colors.grey),
-            errorStyle: const TextStyle(color: Colors.red),
-          ),
-          snackBarTheme: const SnackBarThemeData(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            contentTextStyle: TextStyle(color: Colors.white),
-          ),
-        ));
+        theme: MaterialTheme.materialTheme);
   }
 }

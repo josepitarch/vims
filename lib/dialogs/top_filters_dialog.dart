@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
@@ -5,6 +6,7 @@ import 'package:scrapper_filmaffinity/widgets/card_genre.dart';
 import 'package:scrapper_filmaffinity/widgets/platform_item.dart';
 import 'package:scrapper_filmaffinity/widgets/year_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
 late Filters filters;
@@ -67,27 +69,24 @@ class _PlatformsFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      transform: Matrix4.translationValues(0, -20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(i18n.title_platforms_dialog,
-              style: Theme.of(context).textTheme.headline6),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 50,
-            child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: filters.platforms.entries.map((entry) {
-                  return PlatformItem(
-                      assetName: entry.key,
-                      isSelected: entry.value,
-                      filters: filters);
-                }).toList()),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(i18n.title_platforms_dialog,
+            style: Theme.of(context).textTheme.headline6),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 50,
+          child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: filters.platforms.entries.map((entry) {
+                return PlatformItem(
+                    assetName: entry.key,
+                    isSelected: entry.value,
+                    filters: filters);
+              }).toList()),
+        ),
+      ],
     );
   }
 }
@@ -189,18 +188,17 @@ class _ExcludeAnimationFilter extends StatefulWidget {
 class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
   @override
   Widget build(BuildContext context) {
+    final activeColor = io.Platform.isAndroid ? Colors.orange : Colors.green;
+
     return SwitchListTile.adaptive(
         title: Text(i18n.title_exclude_animation_dialog,
             style: Theme.of(context).textTheme.headline6),
         value: filters.isAnimationExcluded,
-        activeColor: Colors.orange,
-        activeTrackColor: Colors.orange.withOpacity(0.3),
-        onChanged: (bool? value) {
-          filters.isAnimationExcluded = value!;
-          setState(() {
-            filters.isAnimationExcluded = value;
-          });
-        });
+        activeColor: activeColor,
+        activeTrackColor: activeColor.withOpacity(0.3),
+        onChanged: (bool? value) => setState(() {
+              filters.isAnimationExcluded = value!;
+            }));
   }
 }
 
@@ -222,6 +220,7 @@ class _ButtonsFilter extends StatelessWidget {
           if (provider.hasFilters)
             MaterialButton(
                 onPressed: () {
+                  if (scrollController.hasClients) scrollController.jumpTo(0);
                   Navigator.pop(context);
                   provider.removeFilters();
                 },
@@ -241,6 +240,8 @@ class _ButtonsFilter extends StatelessWidget {
                 Navigator.pop(context);
               },
               child: Text(localization.apply_filters_dialog)),
+          CupertinoButton.filled(
+              child: Text(localization.apply_filters_dialog), onPressed: () {}),
         ],
       ),
     );

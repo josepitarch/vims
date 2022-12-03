@@ -19,7 +19,6 @@ class CardMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = 150.0;
     return InkWell(
-      splashColor: Colors.orange.shade400,
       onTap: () {
         Map<String, dynamic> arguments = {
           'id': movie.id,
@@ -53,7 +52,8 @@ class CardMovie extends StatelessWidget {
           ),
           SizedBox(
               height: height,
-              child: const Icon(Icons.arrow_forward_ios_outlined))
+              child: const Icon(Icons.arrow_forward_ios_outlined,
+                  size: 22, color: Colors.grey))
         ]),
       ),
     );

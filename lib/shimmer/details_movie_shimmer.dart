@@ -41,7 +41,7 @@ class _HeaderShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[200],
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.38,
       width: double.infinity,
     );
   }

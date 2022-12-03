@@ -24,8 +24,13 @@ class TopMoviesProvider extends ChangeNotifier {
   ModeViews modeView = ModeViews.list;
 
   Filters filters = Filters(
-      platforms: {for (var platform in Platforms.values) platform.value: false},
-      genres: {for (var e in Genres.values) e: false},
+      platforms: {
+        for (var platform in Platforms.values)
+          if (platform.showInTopFilters) platform.name: false
+      },
+      genres: {
+        for (var e in Genres.values) e: false
+      },
       isAnimationExcluded: true,
       yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
       yearTo: getCurrentYear());

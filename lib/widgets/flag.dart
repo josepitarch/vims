@@ -1,6 +1,6 @@
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/utils/asset_flags.dart';
+import 'package:scrapper_filmaffinity/enums/flags.dart';
 
 class Flag extends StatelessWidget {
   final String country;
@@ -12,11 +12,8 @@ class Flag extends StatelessWidget {
     String aux = '';
     String countryNormalize = removeDiacritics(country.trim().toLowerCase());
 
-    FlagAssets.flags.forEach((key, value) {
-      if (value.contains(countryNormalize)) {
-        aux = key;
-      }
-    });
+    Flags.values.forEach((element) =>
+        element.value.contains(countryNormalize) ? aux = element.name : '');
 
     return aux.isEmpty ? _NetworkFlag(flag) : _AssetFlag(aux);
   }
