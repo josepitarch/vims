@@ -45,7 +45,7 @@ class _PlatformItemState extends State<PlatformItem> {
       ]),
       onTap: () => setState(() {
         widget.isSelected = !widget.isSelected;
-        widget.filters.platforms[widget.assetName] = !widget.isSelected;
+        widget.filters.platforms[widget.assetName] = widget.isSelected;
       }),
     );
   }
