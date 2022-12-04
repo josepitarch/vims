@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
+import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 
 class CardMovie extends StatelessWidget {
   final Movie movie;
+  final bool saveToCache;
   final bool? hasAllAttributes;
 
-  const CardMovie({Key? key, required this.movie, this.hasAllAttributes})
+  const CardMovie(
+      {Key? key,
+      required this.movie,
+      required this.saveToCache,
+      this.hasAllAttributes})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double height = 150.0;
     return InkWell(
-      splashColor: Colors.orange.shade400,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       onTap: () {
         Map<String, dynamic> arguments = {
           'id': movie.id,
@@ -25,7 +33,7 @@ class CardMovie extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         margin: const EdgeInsets.only(bottom: 20.0),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _Poster(height: height, movie: movie),
+          _Poster(height: height, movie: movie, saveToCache: saveToCache),
           Expanded(
             child: Container(
                 height: height,
@@ -46,7 +54,8 @@ class CardMovie extends StatelessWidget {
           ),
           SizedBox(
               height: height,
-              child: const Icon(Icons.arrow_forward_ios_outlined))
+              child: const Icon(Icons.arrow_forward_ios_outlined,
+                  size: 22, color: Colors.grey))
         ]),
       ),
     );
@@ -54,14 +63,16 @@ class CardMovie extends StatelessWidget {
 }
 
 class _Poster extends StatelessWidget {
+  final double height;
+  final Movie movie;
+  final bool saveToCache;
+
   const _Poster({
     Key? key,
     required this.height,
     required this.movie,
+    required this.saveToCache,
   }) : super(key: key);
-
-  final double height;
-  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -70,17 +81,12 @@ class _Poster extends StatelessWidget {
       tag: movie.id,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
-        child: FadeInImage(
-            height: height + 20,
+        child: CustomImage(
+            url: movie.poster,
             width: width,
-            fit: BoxFit.cover,
-            image: NetworkImage(movie.poster),
-            placeholder: const AssetImage('assets/loading.gif'),
-            imageErrorBuilder: (_, __, ___) => Image.asset(
-                'assets/no-image.jpg',
-                height: height + 30,
-                fit: BoxFit.cover,
-                width: width)),
+            height: height + 20,
+            saveToCache: saveToCache,
+            cacheManager: CustomCacheManager.cacheTinyImages),
       ),
     );
   }

@@ -47,7 +47,7 @@ class HistorySearchDatabase {
     return true;
   }
 
-  static Future<List<String>> retrieveSearchs() async {
+  static Future<List<String>> getHistorySearchs() async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 

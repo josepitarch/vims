@@ -1,18 +1,18 @@
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class BookmarkMovie {
+  String id;
+  String poster;
+  String title;
+  String director;
+  String average;
+
   BookmarkMovie(
       {required this.id,
       required this.poster,
       required this.title,
       required this.director,
       required this.average});
-
-  String id;
-  String poster;
-  String title;
-  String director;
-  String average;
 
   Map<String, String> toMap() {
     return {
@@ -28,9 +28,10 @@ class BookmarkMovie {
     return Movie(
         id: id,
         title: title,
+        flag: '',
         year: '',
         country: '',
-        cast: '',
+        cast: [],
         genres: [],
         synopsis: '',
         poster: poster,

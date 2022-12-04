@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 
 import 'package:scrapper_filmaffinity/models/movie.dart';
@@ -8,8 +5,9 @@ import 'package:scrapper_filmaffinity/services/details_movie_service.dart';
 import 'package:logger/logger.dart';
 
 class DetailsMovieProvider extends ChangeNotifier {
-  bool isLoading = false;
-  bool existsError = false;
+  String? id;
+  bool isLoading = true;
+  Exception? error;
   final Map<String, Movie> openedMovies = {};
   final logger = Logger();
 
@@ -19,15 +17,22 @@ class DetailsMovieProvider extends ChangeNotifier {
     try {
       Movie? movie = await DetailsMovieService().getDetailsMovie(id);
       openedMovies[id] = movie!;
-    } on SocketException catch (e) {
-      existsError = true;
-      logger.e(e.toString());
-    } on TimeoutException catch (e) {
-      existsError = true;
+    } on Exception catch (e) {
+      error = e;
       logger.e(e.toString());
     } finally {
+      this.id = id;
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  onRefresh() async {
+    if (id != null) {
+      isLoading = true;
+      error = null;
+      notifyListeners();
+      getDetailsMovie(id!);
     }
   }
 }

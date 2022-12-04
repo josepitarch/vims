@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
 import 'package:scrapper_filmaffinity/widgets/card_genre.dart';
 import 'package:scrapper_filmaffinity/widgets/platform_item.dart';
 import 'package:scrapper_filmaffinity/widgets/year_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
 late Filters filters;
@@ -24,38 +24,43 @@ class TopMoviesDialog extends StatelessWidget {
     filters = Filters(
         platforms: Map.from(provider.filters.platforms),
         genres: Map.from(provider.filters.genres),
-        orderBy: provider.filters.orderBy,
         isAnimationExcluded: provider.filters.isAnimationExcluded,
         yearFrom: provider.filters.yearFrom,
         yearTo: provider.filters.yearTo);
 
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      height: 600,
-      width: double.infinity,
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        height: 600,
+        width: double.infinity,
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+              const _PlatformsFilter(),
+              const SizedBox(
+                height: 10,
+              ),
+              const _GenresFilter(),
+              const SizedBox(
+                height: 10,
+              ),
+              const _YearsFilter(),
+              const _ExcludeAnimationFilter(),
+              _ButtonsFilter(
+                  provider: provider, scrollController: scrollController),
+            ],
           ),
-          const _PlatformsFilter(),
-          const _YearsFilter(),
-          const SizedBox(
-            height: 10,
-          ),
-          const _GenresFilter(),
-          const SizedBox(
-            height: 10,
-          ),
-          const _OrderFilter(),
-          const _ExcludeAnimationFilter(),
-          _ButtonsFilter(
-              provider: provider, scrollController: scrollController),
-        ],
+        ),
       ),
     );
   }
@@ -66,27 +71,24 @@ class _PlatformsFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      transform: Matrix4.translationValues(0, -20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(i18n.title_platforms_dialog,
-              style: Theme.of(context).textTheme.headline6),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 50,
-            child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: filters.platforms.entries.map((entry) {
-                  return PlatformItem(
-                      assetName: entry.key,
-                      isSelected: entry.value,
-                      filters: filters);
-                }).toList()),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(i18n.title_platforms_dialog,
+            style: Theme.of(context).textTheme.headline6),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 50,
+          child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: filters.platforms.entries.map((entry) {
+                return PlatformItem(
+                    assetName: entry.key,
+                    isSelected: entry.value,
+                    filters: filters);
+              }).toList()),
+        ),
+      ],
     );
   }
 }
@@ -106,11 +108,6 @@ class _YearsFilterState extends State<_YearsFilter> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: Text(i18n.title_years_dialog,
-              style: Theme.of(context).textTheme.headline6),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -165,8 +162,12 @@ class _GenresFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(i18n.title_genres_dialog,
-          style: Theme.of(context).textTheme.headline6),
+      SizedBox(
+        width: double.infinity,
+        child: Text(i18n.title_genres_dialog,
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.headline6),
+      ),
       const SizedBox(height: 10),
       Wrap(
           spacing: 5,
@@ -182,64 +183,6 @@ class _GenresFilter extends StatelessWidget {
   }
 }
 
-class _OrderFilter extends StatefulWidget {
-  const _OrderFilter({Key? key}) : super(key: key);
-
-  @override
-  State<_OrderFilter> createState() => _OrderFilterState();
-}
-
-class _OrderFilterState extends State<_OrderFilter> {
-  final Map<String, String> options = {
-    'average': i18n.order_by_average,
-    'year': i18n.order_by_year,
-    'shuffle': i18n.order_by_shuffle,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    OrderBy selectedValue = filters.orderBy;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(i18n.title_order_by_dialog,
-                style: Theme.of(context).textTheme.headline6),
-          ),
-          Container(
-            height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.orange, width: 2),
-                borderRadius: BorderRadius.circular(5)),
-            child: DropdownButton<OrderBy>(
-              value: selectedValue,
-              elevation: 16,
-              underline: Container(
-                height: 0,
-                color: Colors.transparent,
-              ),
-              onChanged: (OrderBy? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                  filters.orderBy = newValue;
-                });
-              },
-              items: OrderBy.values.map((OrderBy value) {
-                return DropdownMenuItem<OrderBy>(
-                  value: value,
-                  child: Text(options[value.value]!),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _ExcludeAnimationFilter extends StatefulWidget {
   const _ExcludeAnimationFilter({Key? key}) : super(key: key);
 
@@ -251,18 +194,17 @@ class _ExcludeAnimationFilter extends StatefulWidget {
 class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
   @override
   Widget build(BuildContext context) {
+    final activeColor = io.Platform.isAndroid ? Colors.orange : Colors.green;
+
     return SwitchListTile.adaptive(
         title: Text(i18n.title_exclude_animation_dialog,
             style: Theme.of(context).textTheme.headline6),
         value: filters.isAnimationExcluded,
-        activeColor: Colors.orange,
-        activeTrackColor: Colors.orange.withOpacity(0.3),
-        onChanged: (bool? value) {
-          filters.isAnimationExcluded = value!;
-          setState(() {
-            filters.isAnimationExcluded = value;
-          });
-        });
+        activeColor: activeColor,
+        activeTrackColor: activeColor.withOpacity(0.3),
+        onChanged: (bool? value) => setState(() {
+              filters.isAnimationExcluded = value!;
+            }));
   }
 }
 
@@ -280,27 +222,31 @@ class _ButtonsFilter extends StatelessWidget {
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (provider.hasFilters)
             MaterialButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  provider.removeFilters();
-                },
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(color: Colors.red, width: 2),
                     borderRadius: BorderRadius.circular(30)),
+                onPressed: () {
+                  if (scrollController.hasClients) scrollController.jumpTo(0);
+                  Navigator.pop(context);
+                  provider.removeFilters();
+                },
                 child: Text(localization.delete_filters_dialog)),
           const SizedBox(width: 10),
           MaterialButton(
+              elevation: 0,
               color: Colors.orange,
               shape: RoundedRectangleBorder(
                   side: const BorderSide(color: Colors.orange),
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () {
-                Navigator.pop(context);
-                scrollController.jumpTo(0);
+                if (scrollController.hasClients) scrollController.jumpTo(0);
                 provider.applyFilters(filters);
+                Navigator.pop(context);
               },
               child: Text(localization.apply_filters_dialog)),
         ],

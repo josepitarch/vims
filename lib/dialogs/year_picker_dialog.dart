@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/utils/current_year.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:io' as io show Platform;
 
 class YearPickerCupertino extends StatelessWidget {
   final bool isReverse;
@@ -17,9 +19,10 @@ class YearPickerCupertino extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int currentYear = getCurrentYear();
-    int yearFrom = int.parse(dotenv.env['YEAR_FROM']!);
-    int numberOfYears = currentYear - yearFrom + 1;
+    final AppLocalizations i18n = AppLocalizations.of(context)!;
+    final int currentYear = getCurrentYear();
+    final int yearFrom = int.parse(dotenv.env['YEAR_FROM']!);
+    final int numberOfYears = currentYear - yearFrom + 1;
     List<int> years =
         List.generate(numberOfYears, (index) => (1990 + index)).toList();
 
@@ -28,8 +31,10 @@ class YearPickerCupertino extends StatelessWidget {
     }
 
     return CupertinoActionSheet(
-        title: Text('Selecciona una fecha',
-            style: Theme.of(context).textTheme.headline6),
+        title: io.Platform.isIOS
+            ? Text(i18n.select_year,
+                style: Theme.of(context).textTheme.headline6)
+            : null,
         actions: [
           SizedBox(
               height: 250,

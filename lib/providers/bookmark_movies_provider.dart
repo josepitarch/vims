@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
-import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
+import 'package:scrapper_filmaffinity/models/bookmark_movie.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 
 class BookmarkMoviesProvider extends ChangeNotifier {
@@ -37,6 +37,14 @@ class BookmarkMoviesProvider extends ChangeNotifier {
     if (response) {
       bookmarkMovies.removeWhere((element) => element.id == movie.id);
     }
+    notifyListeners();
+
+    return response;
+  }
+
+  deleteAllBookmarkMovies() async {
+    bool response = await BookmarkMoviesDatabase.deleteAllBookmarkMovies();
+    if (response) bookmarkMovies.clear();
     notifyListeners();
 
     return response;
