@@ -19,6 +19,8 @@ class CardMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = 150.0;
     return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       onTap: () {
         Map<String, dynamic> arguments = {
           'id': movie.id,

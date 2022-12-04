@@ -33,12 +33,12 @@ class _OrderByDialogState extends State<OrderByDialog> {
         height: 170,
         width: 120,
         child: Column(
-          children: OrderBy.values.map((e) {
+          children: OrderBy.values.map((order) {
             return ListTile(
-              title: Text(options[e.value]!),
+              title: Text(options[order.value]!),
               leading: Radio<OrderBy>(
                 activeColor: Colors.orange,
-                value: e,
+                value: order,
                 groupValue: orderBy,
                 onChanged: (OrderBy? value) {
                   setState(() {

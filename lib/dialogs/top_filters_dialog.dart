@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
@@ -36,28 +35,31 @@ class TopMoviesDialog extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         height: 600,
         width: double.infinity,
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
-            ),
-            const _PlatformsFilter(),
-            const SizedBox(
-              height: 10,
-            ),
-            const _GenresFilter(),
-            const SizedBox(
-              height: 10,
-            ),
-            const _YearsFilter(),
-            const _ExcludeAnimationFilter(),
-            _ButtonsFilter(
-                provider: provider, scrollController: scrollController),
-          ],
+              const _PlatformsFilter(),
+              const SizedBox(
+                height: 10,
+              ),
+              const _GenresFilter(),
+              const SizedBox(
+                height: 10,
+              ),
+              const _YearsFilter(),
+              const _ExcludeAnimationFilter(),
+              _ButtonsFilter(
+                  provider: provider, scrollController: scrollController),
+            ],
+          ),
         ),
       ),
     );
@@ -160,8 +162,12 @@ class _GenresFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(i18n.title_genres_dialog,
-          style: Theme.of(context).textTheme.headline6),
+      SizedBox(
+        width: double.infinity,
+        child: Text(i18n.title_genres_dialog,
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.headline6),
+      ),
       const SizedBox(height: 10),
       Wrap(
           spacing: 5,
@@ -216,20 +222,23 @@ class _ButtonsFilter extends StatelessWidget {
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (provider.hasFilters)
             MaterialButton(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.red, width: 2),
+                    borderRadius: BorderRadius.circular(30)),
                 onPressed: () {
                   if (scrollController.hasClients) scrollController.jumpTo(0);
                   Navigator.pop(context);
                   provider.removeFilters();
                 },
-                shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Colors.red, width: 2),
-                    borderRadius: BorderRadius.circular(30)),
                 child: Text(localization.delete_filters_dialog)),
           const SizedBox(width: 10),
           MaterialButton(
+              elevation: 0,
               color: Colors.orange,
               shape: RoundedRectangleBorder(
                   side: const BorderSide(color: Colors.orange),
@@ -240,8 +249,6 @@ class _ButtonsFilter extends StatelessWidget {
                 Navigator.pop(context);
               },
               child: Text(localization.apply_filters_dialog)),
-          CupertinoButton.filled(
-              child: Text(localization.apply_filters_dialog), onPressed: () {}),
         ],
       ),
     );

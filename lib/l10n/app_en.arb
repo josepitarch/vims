@@ -40,9 +40,13 @@
     "delete_movie_bookmark": "Movie removed successfully",
     "add_serie_bookmark": "Serie added successfully",
     "delete_serie_bookmark": "Serie removed successfully",
+    "title_bookmark_dialog": "Confirmation required",
+    "delete_all_bookmarks": "Are you sure you want to delete all bookmarks?",
     "timeout_error": "Ups! Something went wrong with the server",
     "no_internet": "Check your internet connection",
     "retry": "Retry",
+    "cancel": "Cancel",
+    "delete": "Delete",
     
     "action": "Action",
     "adventure": "Adventure",

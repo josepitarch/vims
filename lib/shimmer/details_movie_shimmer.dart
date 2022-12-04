@@ -10,24 +10,30 @@ class DetailsMovieShimmer extends StatelessWidget {
       body: Shimmer.fromColors(
         baseColor: Colors.black,
         highlightColor: Colors.grey.shade100,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _HeaderShimmer(),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    _TitleShimmer(),
-                    SizedBox(height: 7),
-                    _DirectorShimmer(),
-                    _Box(),
-                    _CastShimmer(),
-                    _CastShimmer(),
-                  ]),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const _HeaderShimmer(),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      _TitleShimmer(),
+                      SizedBox(height: 7),
+                      _DirectorShimmer(),
+                      _BoxShimmer(),
+                      _YearAndDurationSHimmer(),
+                      SizedBox(height: 7),
+                      _CastShimmer(),
+                      _CastShimmer(),
+                      _SynopsisShimmer(),
+                      _JustwatchShimmer()
+                    ]),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -41,7 +47,7 @@ class _HeaderShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[200],
-      height: MediaQuery.of(context).size.height * 0.38,
+      height: MediaQuery.of(context).size.height * 0.39,
       width: double.infinity,
     );
   }
@@ -57,7 +63,7 @@ class _TitleShimmer extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       ),
-      height: 25,
+      height: 20,
       width: 180,
     );
   }
@@ -73,25 +79,40 @@ class _DirectorShimmer extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       ),
-      height: 25,
+      height: 20,
       width: 130,
     );
   }
 }
 
-class _Box extends StatelessWidget {
-  const _Box({Key? key}) : super(key: key);
+class _BoxShimmer extends StatelessWidget {
+  const _BoxShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 13),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 17),
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       ),
       height: 50,
-      width: MediaQuery.of(context).size.width * 0.9,
+    );
+  }
+}
+
+class _YearAndDurationSHimmer extends StatelessWidget {
+  const _YearAndDurationSHimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      ),
+      height: 20,
+      width: 100,
     );
   }
 }
@@ -112,7 +133,7 @@ class _CastShimmer extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             ),
-            height: 30,
+            height: 20,
             width: 100,
           ),
         ),
@@ -145,7 +166,7 @@ class _SynopsisShimmer extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             ),
-            height: 30,
+            height: 20,
             width: 100,
           ),
         ),
@@ -180,7 +201,7 @@ class _JustwatchShimmer extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                 ),
                 width: 70,
-                height: 30,
+                height: 20,
               )
           ]),
         ),
@@ -194,10 +215,10 @@ class _JustwatchShimmer extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 ),
-                width: 70,
-                height: 75,
+                width: 50,
+                height: 50,
               )
           ]),
         ),

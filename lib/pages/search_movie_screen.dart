@@ -12,6 +12,7 @@ import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
+final ScrollController scrollController = ScrollController();
 
 class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class SearchMovieScreen extends StatelessWidget {
                   movies: provider.movies,
                   numberFetchMovies: provider.numberFetchMovies)
               : _HistorySearch(
-                  historySearch: provider.searchs, provider: provider)
+                  historySearch: provider.searchs, provider: provider),
         ]),
       );
     });
@@ -96,6 +97,7 @@ class _SearchMovieForm extends StatelessWidget {
 class _Suggestions extends StatelessWidget {
   final List movies;
   final int numberFetchMovies;
+
   const _Suggestions(
       {Key? key, required this.movies, required this.numberFetchMovies})
       : super(key: key);
@@ -105,6 +107,7 @@ class _Suggestions extends StatelessWidget {
     return movies.isNotEmpty
         ? Expanded(
             child: ListView.builder(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               itemCount: movies.length,
               itemBuilder: (context, index) {
                 bool hasAllAttributes = index < numberFetchMovies;
@@ -134,18 +137,31 @@ class _HistorySearch extends StatelessWidget {
   Widget build(BuildContext context) {
     if (historySearch.isEmpty) return const SizedBox();
     return Expanded(
-      child: SingleChildScrollView(
-        child: Column(children: [
-          ...historySearch.map((e) {
-            return ListTile(
-              leading: const Icon(Icons.history),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              title: Text(e, style: Theme.of(context).textTheme.bodyText1),
-              onTap: () => provider.onTapHistorySearch(e),
-            );
-          }).toList(),
-          DeleteSearchersButton(provider: provider),
-        ]),
+      child: Column(
+        children: [
+          ListView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              shrinkWrap: true,
+              children: [
+                ...historySearch.map((history) {
+                  return ListTile(
+                    leading: const Icon(Icons.history),
+                    trailing: const Icon(Icons.arrow_forward_ios,
+                        size: 22, color: Colors.grey),
+                    title: Text(history,
+                        style: Theme.of(context).textTheme.bodyText1),
+                    onTap: () => provider.onTapHistorySearch(history),
+                  );
+                }).toList(),
+                DeleteSearchersButton(provider: provider),
+              ]),
+          Flexible(
+              flex: 1,
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                child: Container(color: Colors.transparent),
+              ))
+        ],
       ),
     );
   }

@@ -25,7 +25,6 @@ class HomepageProvider extends ChangeNotifier {
       error = null;
     } on SocketException catch (e) {
       error = e;
-      logger.e(e.toString());
     } on TimeoutException catch (e) {
       error = e;
       logger.e(e.toString());

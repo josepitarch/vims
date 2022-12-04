@@ -21,16 +21,15 @@ class _DialogAndroid extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Mensaje de confirmación'),
-      content: const Text(
-          '¿Estás seguro de que quieres borrar todos los marcadores?'),
+      title: Text(i18n.title_bookmark_dialog),
+      content: Text(i18n.delete_all_bookmarks),
       actions: <TextButton>[
         TextButton(
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.subtitle2,
           ),
-          child: const Text(
-            'Cancelar',
+          child: Text(
+            i18n.cancel,
           ),
           onPressed: () => Navigator.pop(context, false),
         ),
@@ -38,7 +37,7 @@ class _DialogAndroid extends StatelessWidget {
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
-          child: Text('Eliminar',
+          child: Text(i18n.delete,
               style: Theme.of(context)
                   .textTheme
                   .bodyText1!
@@ -57,19 +56,18 @@ class _DialogIOS extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return CupertinoAlertDialog(
-      title: const Text('Mensaje de confirmación'),
-      content: const Text(
-          '¿Estás seguro de que quieres borrar todos los marcadores?'),
+      title: Text(i18n.title_bookmark_dialog),
+      content: Text(i18n.title_bookmark_dialog),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
           isDefaultAction: true,
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Cancelar'),
+          child: Text(i18n.cancel),
         ),
         CupertinoDialogAction(
           isDestructiveAction: true,
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('Eliminar'),
+          child: Text(i18n.delete),
         ),
       ],
     );

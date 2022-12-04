@@ -99,7 +99,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   @override
   void initState() {
     scrollController.addListener(() {
-      if (scrollController.position.pixels > 270)
+      if (scrollController.position.pixels > 250)
         widget.auxTitle = widget.title;
       else
         widget.auxTitle = '';
@@ -115,7 +115,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       expandedHeight: MediaQuery.of(context).size.height * 0.35,
       floating: false,
       pinned: true,
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 14, 7, 0),
       title: Text(
         widget.auxTitle,
         textAlign: TextAlign.start,

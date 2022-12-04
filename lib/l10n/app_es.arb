@@ -40,9 +40,13 @@
   "delete_movie_bookmark": "Película eliminada correctamente",
   "add_serie_bookmark": "Serie añadida correctamente",
   "delete_serie_bookmark": "Serie eliminada correctamente",
+  "title_bookmark_dialog": "Ventana de confirmación",
+  "delete_all_bookmarks": "¿Estás seguro de que quieres eliminar todos los marcadores?",
   "timeout_error": "¡Ups! Parece que ha habido un problema con el servidor",
   "no_internet": "Compruebe su conexión a internet",
   "retry": "Reintentar",
+  "cancel": "Cancelar",
+  "delete": "Eliminar",
   
   "action": "Acción",
   "adventure": "Aventura",

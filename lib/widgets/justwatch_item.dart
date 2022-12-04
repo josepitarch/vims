@@ -17,7 +17,9 @@ class JustwatchItem extends StatelessWidget {
             ? asset = element.name
             : '');
 
-    return GestureDetector(
+    return InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
         onTap: () =>
             launchUrlString(platform.url, mode: LaunchMode.externalApplication),
         child: Container(

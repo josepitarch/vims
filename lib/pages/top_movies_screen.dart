@@ -91,7 +91,7 @@ class _Options extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CupertinoButton(
-            child: const Text('Ordernar por'),
+            child: Text(i18n.title_order_by_dialog, textAlign: TextAlign.start),
             onPressed: () => showDialogOrderBy(context)),
         IconButton(
             onPressed: () {
@@ -106,8 +106,7 @@ class _Options extends StatelessWidget {
     );
   }
 
-  Future<dynamic> showDialogFilters(
-      BuildContext context, TopMoviesProvider provider) {
+  showDialogFilters(BuildContext context, TopMoviesProvider provider) {
     return showCupertinoDialog(
         barrierDismissible: false,
         context: context,
@@ -115,7 +114,7 @@ class _Options extends StatelessWidget {
             provider: provider, scrollController: scrollController));
   }
 
-  Future<dynamic> showDialogOrderBy(BuildContext context) {
+  showDialogOrderBy(BuildContext context) {
     return showCupertinoDialog(
         barrierDismissible: true,
         context: context,

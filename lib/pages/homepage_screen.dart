@@ -37,12 +37,15 @@ class _HomepageScreenState extends State<HomepageScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('build homepage');
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
       if (provider.error != null) {
         return TimeoutError(provider.error!, provider);
       }
 
-      if (provider.isLoading) return const SectionsShimmer();
+      if (provider.isLoading) {
+        return const SectionsShimmer();
+      }
 
       return PullRefresh(
           isAndroid: io.Platform.isAndroid,
