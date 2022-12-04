@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
-import 'dart:async';
-import 'dart:io';
-
 import 'package:logger/logger.dart';
 import 'package:scrapper_filmaffinity/enums/genres.dart';
+import 'package:scrapper_filmaffinity/enums/mode_views.dart';
 import 'package:scrapper_filmaffinity/enums/orders.dart';
 import 'package:scrapper_filmaffinity/enums/platforms.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
@@ -17,17 +15,22 @@ import 'package:scrapper_filmaffinity/utils/current_year.dart';
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
   int to = 210;
-
   List<Movie> movies = [];
   bool isLoading = false;
-  bool existsError = false;
+  Exception? error;
   bool hasFilters = false;
+  OrderBy orderBy = OrderBy.shuffle;
   Map<String, Movie> openedMovies = {};
+  ModeViews modeView = ModeViews.list;
 
   Filters filters = Filters(
-      platforms: {for (var platform in Platforms.values) platform.value: false},
-      genres: {for (var e in Genres.values) e: false},
-      orderBy: OrderBy.shuffle,
+      platforms: {
+        for (var platform in Platforms.values)
+          if (platform.showInTopFilters) platform.name: false
+      },
+      genres: {
+        for (var e in Genres.values) e: false
+      },
       isAnimationExcluded: true,
       yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
       yearTo: getCurrentYear());
@@ -59,14 +62,11 @@ class TopMoviesProvider extends ChangeNotifier {
           filters.yearFrom,
           filters.yearTo);
 
-      movies = filters.orderBy.func(movies);
+      movies = orderBy.func(movies);
 
-      existsError = false;
-    } on SocketException catch (e) {
-      existsError = true;
-      logger.e(e.toString());
-    } on TimeoutException catch (e) {
-      existsError = true;
+      error = null;
+    } on Exception catch (e) {
+      error = e;
       logger.e(e.toString());
     } finally {
       isLoading = false;
@@ -92,7 +92,6 @@ class TopMoviesProvider extends ChangeNotifier {
       ...filters.genres,
     };
 
-    this.filters.orderBy = filters.orderBy;
     this.filters.yearFrom = filters.yearFrom;
     this.filters.yearTo = filters.yearTo;
     this.filters.isAnimationExcluded = filters.isAnimationExcluded;
@@ -111,10 +110,22 @@ class TopMoviesProvider extends ChangeNotifier {
     getTopMovies();
   }
 
-  onFresh() {
+  onRefresh() {
     movies.clear();
+    error = null;
     isLoading = true;
     notifyListeners();
     getTopMovies();
+  }
+
+  setOrderBy(OrderBy orderBy) {
+    this.orderBy = orderBy;
+    movies = orderBy.func(movies);
+    notifyListeners();
+  }
+
+  setModeView(ModeViews modeView) {
+    this.modeView = modeView;
+    notifyListeners();
   }
 }

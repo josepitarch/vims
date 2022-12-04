@@ -40,14 +40,13 @@ class _PlatformItemState extends State<PlatformItem> {
               width: 20,
               height: 20,
               child: CircleAvatar(
-                  child: Icon(size: 10, Icons.check, color: Colors.white)))
+                  backgroundColor: Colors.white,
+                  child: Icon(size: 13, Icons.check, color: Colors.black)))
       ]),
-      onTap: () {
-        setState(() {
-          widget.isSelected = !widget.isSelected;
-          widget.filters.platforms[widget.assetName] = widget.isSelected;
-        });
-      },
+      onTap: () => setState(() {
+        widget.isSelected = !widget.isSelected;
+        widget.filters.platforms[widget.assetName] = widget.isSelected;
+      }),
     );
   }
 }

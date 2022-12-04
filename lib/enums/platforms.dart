@@ -1,15 +1,22 @@
 enum Platforms {
-  netflix('netflix'),
-  amazon('amazon'),
-  hbo('hbo'),
-  disney('disney'),
-  movistar('movistar'),
-  filmin('filmin'),
-  rakuten('rakuten'),
-  flixole('flixole'),
-  acontra('acontra');
+  netflix(['netflix'], true),
+  prime(['amazon video', 'amazon prime video'], true),
+  hbo_max(['hbo max'], true),
+  disney(['disney plus'], true),
+  movistar(['movistar plus'], true),
+  filmin(['filmin'], true),
+  rakuten(['rakuten tv'], true),
+  apple(['apple itunes', 'apple tv plus'], true),
+  flixole(['flixolé'], true),
+  acontra(['acontra plus'], true),
+  google(['google play movies'], false),
+  microsoft(['microsoft store'], false),
+  fubo(['fubotv'], false),
+  netflix_ads(['netflix basic with ads'], false),
+  chili(['chili'], false);
 
-  const Platforms(this._value);
-  final String _value;
-  String get value => _value;
+  const Platforms(this._value, this.showInTopFilters);
+  final List<String> _value;
+  final bool showInTopFilters;
+  List<String> get value => _value;
 }

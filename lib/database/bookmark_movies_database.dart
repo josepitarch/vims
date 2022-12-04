@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:scrapper_filmaffinity/database/querys.dart';
-import 'package:scrapper_filmaffinity/models/favorite_movie.dart';
+import 'package:scrapper_filmaffinity/models/bookmark_movie.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BookmarkMoviesDatabase {
@@ -39,6 +39,17 @@ class BookmarkMoviesDatabase {
       _tableName,
       where: 'id = ?',
       whereArgs: [id],
+    );
+
+    return true;
+  }
+
+  static Future<bool> deleteAllBookmarkMovies() async {
+    final db =
+        await openDatabase(join(await getDatabasesPath(), _databaseName));
+
+    await db.delete(
+      _tableName,
     );
 
     return true;

@@ -1,30 +1,32 @@
 import 'dart:convert' as json;
 
 class Movie {
-  String id;
-  String title;
-  String year;
-  String? duration;
-  String country;
-  String? director;
-  String? screenwriter;
-  String? music;
-  String? cinematography;
-  String cast;
-  String? producer;
-  List<String> genres;
-  List<String>? groups;
-  String synopsis;
-  String poster;
-  String average;
-  Justwatch justwatch;
-  List<Review> reviews;
-  List<String>? platforms;
+  final String id;
+  final String title;
+  final String flag;
+  final String year;
+  final String? duration;
+  final String country;
+  final String? director;
+  final String? screenwriter;
+  final String? music;
+  final String? cinematography;
+  final List<Actor> cast;
+  final String? producer;
+  final List<String> genres;
+  final List<String>? groups;
+  final String synopsis;
+  final String poster;
+  final String average;
+  final Justwatch justwatch;
+  final List<Review> reviews;
+  final List<String>? platforms;
   String? heroTag;
 
   Movie(
       {required this.id,
       required this.title,
+      required this.flag,
       required this.year,
       required this.country,
       required this.cast,
@@ -48,6 +50,7 @@ class Movie {
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
         id: json['id'],
         title: json['title'],
+        flag: json['flag'],
         year: json['year'],
         duration: json['duration'],
         country: json['country'],
@@ -55,7 +58,9 @@ class Movie {
         screenwriter: json['screenwriter'],
         music: json['music'],
         cinematography: json['cinematography'],
-        cast: json['cast'],
+        cast: json['cast'] == null
+            ? []
+            : List<Actor>.from(json['cast'].map((x) => Actor.fromMap(x))),
         producer: json['producer'],
         genres: json['genres'] == null
             ? []
@@ -74,12 +79,13 @@ class Movie {
   factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
       id: json['id'],
       title: json['title'],
+      flag: '',
       year: json['year'] ?? '',
       country: json['country'] ?? '',
-      cast: '',
+      cast: [],
       genres: [],
       synopsis: '',
-      poster: json['poster'],
+      poster: json['poster'] ?? '',
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
       average: json['average'] ?? '',
@@ -109,10 +115,24 @@ class Movie {
       };
 }
 
+class Actor {
+  final String name;
+  final String image;
+  final String reference;
+
+  Actor({required this.name, required this.image, required this.reference});
+
+  factory Actor.fromMap(Map<String, dynamic> json) => Actor(
+        name: json['name'],
+        image: json['image'],
+        reference: json['reference'],
+      );
+}
+
 class Justwatch {
-  List<Platform> flatrate = [];
-  List<Platform> rent = [];
-  List<Platform> buy = [];
+  final List<Platform> flatrate;
+  final List<Platform> rent;
+  final List<Platform> buy;
 
   Justwatch({
     required this.flatrate,
@@ -139,20 +159,24 @@ class Justwatch {
 class Platform {
   String name;
   String url;
+  String icon;
 
   Platform({
     required this.name,
     required this.url,
+    required this.icon,
   });
 
   factory Platform.fromMap(Map<String, dynamic> json) => Platform(
         name: json['name'],
         url: json['url'],
+        icon: json['icon'],
       );
 
   Map<String, dynamic> toMap() => {
         'name': name,
         'url': url,
+        'icon': icon,
       };
 }
 

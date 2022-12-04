@@ -10,9 +10,10 @@ import 'package:scrapper_filmaffinity/services/homepage_service.dart';
 
 class HomepageProvider extends ChangeNotifier {
   List<Section> sections = [];
-  bool existsError = false;
+  Exception? error;
   bool isLoading = true;
   final logger = Logger();
+  DateTime lastUpdate = DateTime.now();
 
   HomepageProvider() {
     getHomepageMovies();
@@ -21,21 +22,22 @@ class HomepageProvider extends ChangeNotifier {
   getHomepageMovies() async {
     try {
       sections = await HomepageService().getHomepageMovies();
-      existsError = false;
+      error = null;
     } on SocketException catch (e) {
-      existsError = true;
-      logger.e(e.toString());
+      error = e;
     } on TimeoutException catch (e) {
-      existsError = true;
+      error = e;
       logger.e(e.toString());
     } finally {
       isLoading = false;
+      lastUpdate = DateTime.now();
       notifyListeners();
     }
   }
 
   onRefresh() async {
     sections.clear();
+    error = null;
     isLoading = true;
     notifyListeners();
     getHomepageMovies();
