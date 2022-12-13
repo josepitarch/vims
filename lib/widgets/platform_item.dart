@@ -41,7 +41,7 @@ class _PlatformItemState extends State<PlatformItem> {
               height: 20,
               child: CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: Icon(size: 13, Icons.check, color: Colors.black)))
+                  child: Icon(size: 13, Icons.check, color: Colors.orange)))
       ]),
       onTap: () => setState(() {
         widget.isSelected = !widget.isSelected;
