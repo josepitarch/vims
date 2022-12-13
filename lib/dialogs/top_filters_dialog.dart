@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
@@ -9,31 +10,35 @@ import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
 late Filters filters;
+late TopMoviesProvider provider;
+late ScrollController scrollController;
 
 class TopMoviesDialog extends StatelessWidget {
-  final TopMoviesProvider provider;
-  final ScrollController scrollController;
+  final TopMoviesProvider topMoviesProvider;
+  final ScrollController controller;
 
   const TopMoviesDialog(
-      {Key? key, required this.provider, required this.scrollController})
+      {Key? key, required this.topMoviesProvider, required this.controller})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
+    provider = topMoviesProvider;
+    scrollController = controller;
     filters = Filters(
-        platforms: Map.from(provider.filters.platforms),
-        genres: Map.from(provider.filters.genres),
-        isAnimationExcluded: provider.filters.isAnimationExcluded,
-        yearFrom: provider.filters.yearFrom,
-        yearTo: provider.filters.yearTo);
+        platforms: Map.from(topMoviesProvider.filters.platforms),
+        genres: Map.from(topMoviesProvider.filters.genres),
+        isAnimationExcluded: topMoviesProvider.filters.isAnimationExcluded,
+        yearFrom: topMoviesProvider.filters.yearFrom,
+        yearTo: topMoviesProvider.filters.yearTo);
 
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        height: 600,
+        height: 650,
         width: double.infinity,
         child: SizedBox(
           width: double.infinity,
@@ -56,8 +61,17 @@ class TopMoviesDialog extends StatelessWidget {
               ),
               const _YearsFilter(),
               const _ExcludeAnimationFilter(),
-              _ButtonsFilter(
-                  provider: provider, scrollController: scrollController),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    if (provider.hasFilters) const _DeleteButton(),
+                    const SizedBox(width: 10),
+                    const _ApplyButton(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -93,67 +107,6 @@ class _PlatformsFilter extends StatelessWidget {
   }
 }
 
-class _YearsFilter extends StatefulWidget {
-  const _YearsFilter({Key? key}) : super(key: key);
-
-  @override
-  State<_YearsFilter> createState() => _YearsFilterState();
-}
-
-class _YearsFilterState extends State<_YearsFilter> {
-  bool hasError = false;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            YearContainer(
-                year: filters.yearFrom,
-                isReverse: false,
-                onPressed: setYearFrom),
-            const Text('-', style: TextStyle(fontSize: 20)),
-            YearContainer(
-                year: filters.yearTo, isReverse: true, onPressed: setYearTo),
-          ],
-        ),
-        if (hasError)
-          SizedBox(
-            height: 20,
-            child: Text('* La útlima fecha ha de ser igual o mayor *',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: Colors.red, fontStyle: FontStyle.italic)),
-          )
-        else
-          const SizedBox(
-            height: 20,
-          ),
-      ],
-    );
-  }
-
-  setYearFrom(int year) {
-    setState(() {
-      filters.yearFrom = year;
-    });
-  }
-
-  setYearTo(int year) {
-    setState(() {
-      filters.yearTo = year;
-      if (filters.yearFrom > filters.yearTo)
-        hasError = true;
-      else
-        hasError = false;
-    });
-  }
-}
-
 class _GenresFilter extends StatelessWidget {
   const _GenresFilter({
     Key? key,
@@ -183,6 +136,51 @@ class _GenresFilter extends StatelessWidget {
   }
 }
 
+class _YearsFilter extends StatefulWidget {
+  const _YearsFilter({Key? key}) : super(key: key);
+
+  @override
+  State<_YearsFilter> createState() => _YearsFilterState();
+}
+
+class _YearsFilterState extends State<_YearsFilter> {
+  bool hasError = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            YearContainer(
+                year: filters.yearFrom,
+                isReverse: false,
+                onPressed: setYearFrom),
+            const SizedBox(width: 30),
+            YearContainer(
+                year: filters.yearTo,
+                isReverse: true,
+                onPressed: setYearTo,
+                hasError: hasError),
+          ],
+        ),
+      ],
+    );
+  }
+
+  setYearFrom(int year) => setState(() => filters.yearFrom = year);
+
+  setYearTo(int year) => setState(() {
+        filters.yearTo = year;
+        if (filters.yearFrom > filters.yearTo)
+          hasError = true;
+        else
+          hasError = false;
+      });
+}
+
 class _ExcludeAnimationFilter extends StatefulWidget {
   const _ExcludeAnimationFilter({Key? key}) : super(key: key);
 
@@ -197,6 +195,8 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
     final activeColor = io.Platform.isAndroid ? Colors.orange : Colors.green;
 
     return SwitchListTile.adaptive(
+        contentPadding: const EdgeInsets.all(0),
+        dense: true,
         title: Text(i18n.title_exclude_animation_dialog,
             style: Theme.of(context).textTheme.headline6),
         value: filters.isAnimationExcluded,
@@ -208,49 +208,63 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
   }
 }
 
-class _ButtonsFilter extends StatelessWidget {
-  final TopMoviesProvider provider;
-  final ScrollController scrollController;
-
-  const _ButtonsFilter(
-      {Key? key, required this.provider, required this.scrollController})
-      : super(key: key);
+class _ApplyButton extends StatelessWidget {
+  const _ApplyButton();
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations localization = AppLocalizations.of(context)!;
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (provider.hasFilters)
-            MaterialButton(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Colors.red, width: 2),
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: () {
-                  if (scrollController.hasClients) scrollController.jumpTo(0);
-                  Navigator.pop(context);
-                  provider.removeFilters();
-                },
-                child: Text(localization.delete_filters_dialog)),
-          const SizedBox(width: 10),
-          MaterialButton(
-              elevation: 0,
-              color: Colors.orange,
-              shape: RoundedRectangleBorder(
-                  side: const BorderSide(color: Colors.orange),
-                  borderRadius: BorderRadius.circular(30)),
-              onPressed: () {
-                if (scrollController.hasClients) scrollController.jumpTo(0);
-                provider.applyFilters(filters);
-                Navigator.pop(context);
-              },
-              child: Text(localization.apply_filters_dialog)),
-        ],
-      ),
-    );
+    return io.Platform.isAndroid
+        ? MaterialButton(
+            elevation: 0,
+            color: Colors.orange,
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.orange),
+                borderRadius: BorderRadius.circular(30)),
+            onPressed: () {
+              if (scrollController.hasClients) scrollController.jumpTo(0);
+              provider.applyFilters(filters);
+              Navigator.pop(context);
+            },
+            child: Text(i18n.apply_filters_dialog))
+        : CupertinoButton(
+            borderRadius: BorderRadius.circular(30),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+            color: Colors.orange,
+            onPressed: () {
+              if (scrollController.hasClients) scrollController.jumpTo(0);
+              provider.applyFilters(filters);
+              Navigator.pop(context);
+            },
+            child: Text(i18n.apply_filters_dialog));
+  }
+}
+
+class _DeleteButton extends StatelessWidget {
+  const _DeleteButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return io.Platform.isAndroid
+        ? MaterialButton(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(30)),
+            onPressed: () {
+              if (scrollController.hasClients) scrollController.jumpTo(0);
+              Navigator.pop(context);
+              provider.removeFilters();
+            },
+            child: Text(i18n.delete_filters_dialog))
+        : CupertinoButton(
+            borderRadius: BorderRadius.circular(30),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            color: Colors.red,
+            onPressed: () {
+              if (scrollController.hasClients) scrollController.jumpTo(0);
+              Navigator.pop(context);
+              provider.removeFilters();
+            },
+            child: Text(i18n.delete_filters_dialog));
   }
 }

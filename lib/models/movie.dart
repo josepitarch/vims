@@ -118,14 +118,14 @@ class Movie {
 class Actor {
   final String name;
   final String image;
-  final String reference;
+  final String link;
 
-  Actor({required this.name, required this.image, required this.reference});
+  Actor({required this.name, required this.image, required this.link});
 
   factory Actor.fromMap(Map<String, dynamic> json) => Actor(
         name: json['name'],
         image: json['image'],
-        reference: json['reference'],
+        link: json['link'],
       );
 }
 

@@ -7,7 +7,7 @@ import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
 import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
 import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
 import 'package:scrapper_filmaffinity/widgets/pull_refresh.dart';
-import 'package:scrapper_filmaffinity/widgets/section.dart';
+import 'package:scrapper_filmaffinity/widgets/section_widget.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 
 class HomepageScreen extends StatefulWidget {

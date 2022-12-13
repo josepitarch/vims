@@ -10,7 +10,6 @@ import 'package:scrapper_filmaffinity/models/filters.dart';
 import 'package:scrapper_filmaffinity/models/movie.dart';
 import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:scrapper_filmaffinity/utils/current_year.dart';
 
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
@@ -21,7 +20,7 @@ class TopMoviesProvider extends ChangeNotifier {
   bool hasFilters = false;
   OrderBy orderBy = OrderBy.shuffle;
   Map<String, Movie> openedMovies = {};
-  ModeViews modeView = ModeViews.list;
+  ModeView modeView = ModeView.list;
 
   Filters filters = Filters(
       platforms: {
@@ -33,7 +32,7 @@ class TopMoviesProvider extends ChangeNotifier {
       },
       isAnimationExcluded: true,
       yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
-      yearTo: getCurrentYear());
+      yearTo: DateTime.now().year);
 
   var logger = Logger();
 
@@ -124,7 +123,7 @@ class TopMoviesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setModeView(ModeViews modeView) {
+  setModeView(ModeView modeView) {
     this.modeView = modeView;
     notifyListeners();
   }

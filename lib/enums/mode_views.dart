@@ -1,4 +1,4 @@
-enum ModeViews {
+enum ModeView {
   list,
   grid,
 }

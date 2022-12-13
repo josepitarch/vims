@@ -33,15 +33,17 @@ class _PlatformItemState extends State<PlatformItem> {
             ),
           ),
         ),
-        if (widget.isSelected)
-          const Positioned(
-              right: 7,
-              bottom: 0,
-              width: 20,
-              height: 20,
-              child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(size: 13, Icons.check, color: Colors.orange)))
+        if (!widget.isSelected)
+          SizedBox(
+            height: 50,
+            width: 50,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Colors.black.withOpacity(0.65),
+              ),
+            ),
+          ),
       ]),
       onTap: () => setState(() {
         widget.isSelected = !widget.isSelected;

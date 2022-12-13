@@ -6,13 +6,13 @@ import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 class CardMovie extends StatelessWidget {
   final Movie movie;
   final bool saveToCache;
-  final bool? hasAllAttributes;
+  final bool hasAllAttributes;
 
   const CardMovie(
       {Key? key,
       required this.movie,
       required this.saveToCache,
-      this.hasAllAttributes})
+      this.hasAllAttributes = false})
       : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class CardMovie extends StatelessWidget {
         Map<String, dynamic> arguments = {
           'id': movie.id,
           'movie': movie,
-          'hasAllAttributes': hasAllAttributes ?? false,
+          'hasAllAttributes': hasAllAttributes
         };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },

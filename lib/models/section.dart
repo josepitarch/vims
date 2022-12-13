@@ -11,31 +11,24 @@ class Section {
 
   factory Section.fromJson(String str) => Section.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
-
   factory Section.fromMap(Map<String, dynamic> json) => Section(
         title: json['title_section'],
         movies: List<MovieSection>.from(
             json['films'].map((x) => MovieSection.fromMap(x))),
       );
-
-  Map<String, dynamic> toMap() => {
-        'title_section': title,
-        'movies': List<dynamic>.from(movies.map((x) => x.toMap())),
-      };
 }
 
 class MovieSection {
   MovieSection({
     required this.id,
-    required this.reference,
+    required this.link,
     required this.image,
     required this.title,
     required this.premiereDay,
   });
 
   String id;
-  String reference;
+  String link;
   String image;
   String title;
   String premiereDay;
@@ -43,21 +36,11 @@ class MovieSection {
   factory MovieSection.fromJson(String str) =>
       MovieSection.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
-
   factory MovieSection.fromMap(Map<String, dynamic> json) => MovieSection(
         id: json['id'],
-        reference: json['reference'],
+        link: json['link'],
         image: json['poster'] ?? '',
         title: json['title'],
         premiereDay: json['premiere_day'],
       );
-
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'reference': reference,
-        'image': image,
-        'title': title,
-        'premiere_day': premiereDay,
-      };
 }

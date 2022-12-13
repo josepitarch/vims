@@ -26,12 +26,9 @@ class SearchMovieScreen extends StatelessWidget {
         return TimeoutError(provider.error!, provider);
       if (provider.isLoading) {
         return SafeArea(
-          child: Column(children: [
-            const _SearchMovieForm(),
-            Expanded(
-                child: ListView(
-                    children:
-                        List.generate(20, (index) => const CardMovieShimmer())))
+          child: Column(children: const [
+            _SearchMovieForm(),
+            Expanded(child: CardMovieShimmer())
           ]),
         );
       }
