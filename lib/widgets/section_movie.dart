@@ -48,7 +48,7 @@ class SectionMovie extends StatelessWidget {
                         saveToCache: saveToCache,
                         cacheManager: CustomCacheManager.cacheTinyImages),
                     Container(
-                      height: 40,
+                      height: 37,
                       width: double.infinity,
                       color: Theme.of(context).primaryColor.withOpacity(0.8),
                       child: Align(

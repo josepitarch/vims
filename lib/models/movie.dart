@@ -17,7 +17,7 @@ class Movie {
   final List<String>? groups;
   final String synopsis;
   final String poster;
-  final String average;
+  final String? rating;
   final Justwatch justwatch;
   final List<Review> reviews;
   final List<String>? platforms;
@@ -33,7 +33,7 @@ class Movie {
       required this.genres,
       required this.synopsis,
       required this.poster,
-      required this.average,
+      this.rating,
       required this.justwatch,
       required this.reviews,
       this.duration,
@@ -70,7 +70,7 @@ class Movie {
             : List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
         poster: json['poster'],
-        average: json['average'],
+        rating: json['rating'],
         justwatch: Justwatch.fromMap(json['justwatch']),
         reviews:
             List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
@@ -88,7 +88,7 @@ class Movie {
       poster: json['poster'] ?? '',
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
-      average: json['average'] ?? '',
+      rating: json['rating'],
       reviews: [],
       platforms: json['platforms'] == null
           ? []
@@ -109,7 +109,7 @@ class Movie {
         'genres': genres,
         'synopsis': synopsis,
         'poster': poster,
-        'average': average,
+        'average': rating,
         'justwatch': justwatch,
         'reviews': List<Review>.from(reviews.map((x) => x.toMap())),
       };

@@ -12,6 +12,7 @@ late AppLocalizations i18n;
 late Filters filters;
 late TopMoviesProvider provider;
 late ScrollController scrollController;
+bool hasError = false;
 
 class TopMoviesDialog extends StatelessWidget {
   final TopMoviesProvider topMoviesProvider;
@@ -144,7 +145,6 @@ class _YearsFilter extends StatefulWidget {
 }
 
 class _YearsFilterState extends State<_YearsFilter> {
-  bool hasError = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -170,7 +170,13 @@ class _YearsFilterState extends State<_YearsFilter> {
     );
   }
 
-  setYearFrom(int year) => setState(() => filters.yearFrom = year);
+  setYearFrom(int year) => setState(() {
+        filters.yearFrom = year;
+        if (filters.yearFrom > filters.yearTo)
+          hasError = true;
+        else
+          hasError = false;
+      });
 
   setYearTo(int year) => setState(() {
         filters.yearTo = year;
@@ -221,6 +227,7 @@ class _ApplyButton extends StatelessWidget {
                 side: const BorderSide(color: Colors.orange),
                 borderRadius: BorderRadius.circular(30)),
             onPressed: () {
+              if (hasError) return;
               if (scrollController.hasClients) scrollController.jumpTo(0);
               provider.applyFilters(filters);
               Navigator.pop(context);

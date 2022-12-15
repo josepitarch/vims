@@ -4,7 +4,7 @@ String createBookmarkMovieTable(tableName) => """
       poster TEXT NOT NULL,
       title TEXT NOT NULL,
       director TEXT NOT NULL,
-      average TEXT NOT NULL
+      rating TEXT
     );
   """;
 

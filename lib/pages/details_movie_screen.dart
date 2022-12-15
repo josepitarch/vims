@@ -70,7 +70,7 @@ class DetailsMovieScreen extends StatelessWidget {
               _Cast(movie.cast),
               _Genres(movie.genres),
               _Synopsis(movie.synopsis),
-              _Justwatch(movie.justwatch),
+              _Platforms(movie.justwatch),
               movie.reviews.isNotEmpty
                   ? _Reviews(movie.reviews)
                   : const SizedBox(),
@@ -189,7 +189,7 @@ class _Box extends StatelessWidget {
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         _Country(movie.country, movie.flag),
-        _Average(movie.average),
+        _Rating(movie.rating),
         _BookmarkMovie(movie)
       ]),
     );
@@ -223,11 +223,11 @@ class _YearAndDuration extends StatelessWidget {
   }
 }
 
-class _Average extends StatelessWidget {
-  final String average;
+class _Rating extends StatelessWidget {
+  final String? rating;
 
-  const _Average(
-    this.average, {
+  const _Rating(
+    this.rating, {
     Key? key,
   }) : super(key: key);
 
@@ -243,7 +243,7 @@ class _Average extends StatelessWidget {
         width: 7,
       ),
       Text(
-        average.isNotEmpty ? average : '---',
+        rating ?? '---',
         style: Theme.of(context).textTheme.headline3,
       ),
     ]);
@@ -466,7 +466,13 @@ class _SynopsisState extends State<_Synopsis> {
               alignment: Alignment.center,
               child: ElevatedButton(
                   onPressed: () => updateState(),
-                  child: Text(textButton[showMore]!)),
+                  child: Text(
+                    textButton[showMore]!,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                  )),
             ),
           )
       ],
@@ -485,16 +491,16 @@ class _SynopsisState extends State<_Synopsis> {
   }
 }
 
-class _Justwatch extends StatefulWidget {
+class _Platforms extends StatefulWidget {
   final Justwatch justwatch;
 
-  const _Justwatch(this.justwatch, {Key? key}) : super(key: key);
+  const _Platforms(this.justwatch, {Key? key}) : super(key: key);
 
   @override
-  State<_Justwatch> createState() => _JustwatchState();
+  State<_Platforms> createState() => _PlatformsState();
 }
 
-class _JustwatchState extends State<_Justwatch> {
+class _PlatformsState extends State<_Platforms> {
   late List<Platform> platforms = [];
   late Map<String, List<Platform>> justwatch;
   late String justwatchMode;
@@ -547,10 +553,8 @@ class _JustwatchState extends State<_Justwatch> {
                 child: TextButton(
                     onPressed: () => setPlatforms(key),
                     child: Text(textButton[key]!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(color: Colors.blue))));
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: Colors.blue, fontWeight: FontWeight.bold))));
           }).toList()),
         if (platforms.isNotEmpty)
           SizedBox(
