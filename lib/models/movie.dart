@@ -2,8 +2,9 @@ import 'dart:convert' as json;
 
 class Movie {
   final String id;
-  final String title;
   final String flag;
+  final String title;
+  final String originalTitle;
   final String year;
   final String? duration;
   final String country;
@@ -25,8 +26,9 @@ class Movie {
 
   Movie(
       {required this.id,
-      required this.title,
       required this.flag,
+      required this.title,
+      required this.originalTitle,
       required this.year,
       required this.country,
       required this.cast,
@@ -49,8 +51,9 @@ class Movie {
 
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
         id: json['id'],
-        title: json['title'],
         flag: json['flag'],
+        title: json['title'],
+        originalTitle: json['original_title'],
         year: json['year'],
         duration: json['duration'],
         country: json['country'],
@@ -79,6 +82,7 @@ class Movie {
   factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
       id: json['id'],
       title: json['title'],
+      originalTitle: json['originalTitle'] ?? json['title'],
       flag: '',
       year: json['year'] ?? '',
       country: json['country'] ?? '',
@@ -96,8 +100,9 @@ class Movie {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'title': title,
         'year': year,
+        'title': title,
+        'original_title': originalTitle,
         'duration': duration,
         'country': country,
         'director': director,

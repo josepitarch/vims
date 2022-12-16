@@ -11,7 +11,7 @@ String createBookmarkMovieTable(tableName) => """
 String createHistorySearchTable(tableName) => """
     CREATE TABLE $tableName (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      search TEXT NOT NULL UNIQUE
+      search TEXT NOT NULL
     );
     """;
 

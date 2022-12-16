@@ -27,8 +27,9 @@ class BookmarkMovie {
   Movie toMovie() {
     return Movie(
         id: id,
-        title: title,
         flag: '',
+        title: title,
+        originalTitle: '',
         year: '',
         country: '',
         cast: [],

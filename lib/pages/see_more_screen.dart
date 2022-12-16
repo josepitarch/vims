@@ -6,6 +6,7 @@ import 'package:scrapper_filmaffinity/shimmer/see_more_shimmer.dart';
 import 'package:scrapper_filmaffinity/widgets/section_movie.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
 import 'package:collection/collection.dart';
+import 'package:scrapper_filmaffinity/widgets/title_page.dart';
 
 class SeeMore extends StatelessWidget {
   const SeeMore({super.key});
@@ -27,7 +28,7 @@ class SeeMore extends StatelessWidget {
 
     if (provider.seeMore[titleEnum] == null) {
       provider.getSeeMore(titleEnum, isRelease);
-      return const SeeMoreShimmer(height: 160, width: 120);
+      return SeeMoreShimmer(title: title, height: 160, width: 120);
     }
 
     return Scaffold(
@@ -37,7 +38,7 @@ class SeeMore extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.headline6),
+              TitlePage(title),
               const SizedBox(height: 10),
               Expanded(
                 child: GridView.count(
