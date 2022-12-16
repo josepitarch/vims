@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-import 'dart:async';
-import 'dart:io';
-
 import 'package:logger/logger.dart';
 
 import 'package:scrapper_filmaffinity/models/section.dart';
@@ -10,6 +7,7 @@ import 'package:scrapper_filmaffinity/services/homepage_service.dart';
 
 class HomepageProvider extends ChangeNotifier {
   List<Section> sections = [];
+  Map<String, List<MovieSection>> seeMore = {};
   Exception? error;
   bool isLoading = true;
   final logger = Logger();
@@ -23,9 +21,7 @@ class HomepageProvider extends ChangeNotifier {
     try {
       sections = await HomepageService().getHomepageMovies();
       error = null;
-    } on SocketException catch (e) {
-      error = e;
-    } on TimeoutException catch (e) {
+    } on Exception catch (e) {
       error = e;
       logger.e(e.toString());
     } finally {
@@ -35,8 +31,24 @@ class HomepageProvider extends ChangeNotifier {
     }
   }
 
+  getSeeMore(String title, bool isRelease) async {
+    try {
+      List<MovieSection> movieSections =
+          await HomepageService().getSeeMore(title, isRelease);
+      seeMore[title] = movieSections;
+      error = null;
+    } on Exception catch (e) {
+      error = e;
+      logger.e(e.toString());
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   onRefresh() async {
     sections.clear();
+    seeMore.clear();
     error = null;
     isLoading = true;
     notifyListeners();

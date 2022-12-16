@@ -6,7 +6,6 @@ import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
 class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<dynamic> movies = [];
-  List<String> searchs = [];
   bool isLoading = false;
   final int numberFetchMovies = 3;
   TypeSearch type = TypeSearch.title;
@@ -21,16 +20,13 @@ class SearchMovieProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getHistorySearchs() {
-    HistorySearchDatabase.getHistorySearchs()
-        .then((value) => searchs = value)
-        .whenComplete(() => notifyListeners());
+  Future getHistorySearchs() {
+    return HistorySearchDatabase.getHistorySearchs().then((value) => value);
   }
 
   deleteAllSearchs() {
-    HistorySearchDatabase.deleteAllSearchs()
-        .then((value) => searchs.clear())
-        .whenComplete(() => notifyListeners());
+    HistorySearchDatabase.deleteAllSearchs();
+    notifyListeners();
   }
 
   searchMovie(String search) async {
@@ -52,8 +48,7 @@ class SearchMovieProvider extends ChangeNotifier {
   }
 
   insertHistorySearch(String search) {
-    HistorySearchDatabase.insertSearch(search)
-        .then((value) => value ? searchs.insert(0, search) : null);
+    HistorySearchDatabase.insertSearch(search);
   }
 
   onTapHistorySearch(String search) {

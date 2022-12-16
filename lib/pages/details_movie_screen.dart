@@ -17,7 +17,6 @@ import 'package:scrapper_filmaffinity/widgets/flag.dart';
 import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
 import 'package:scrapper_filmaffinity/widgets/review_item.dart';
 import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
-import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
@@ -62,7 +61,7 @@ class DetailsMovieScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(children: [
-              _Title(movie.title),
+              _Title(movie.title, movie.originalTitle),
               const SizedBox(height: 7),
               _Director(movie.director),
               _Box(movie),
@@ -70,7 +69,7 @@ class DetailsMovieScreen extends StatelessWidget {
               _Cast(movie.cast),
               _Genres(movie.genres),
               _Synopsis(movie.synopsis),
-              _Justwatch(movie.justwatch),
+              _Platforms(movie.justwatch),
               movie.reviews.isNotEmpty
                   ? _Reviews(movie.reviews)
                   : const SizedBox(),
@@ -112,7 +111,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: true,
-      expandedHeight: MediaQuery.of(context).size.height * 0.35,
+      expandedHeight: MediaQuery.of(context).size.height * 0.37,
       floating: false,
       pinned: true,
       backgroundColor: const Color.fromARGB(255, 14, 7, 0),
@@ -142,17 +141,32 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 
 class _Title extends StatelessWidget {
   final String title;
-  const _Title(this.title, {Key? key}) : super(key: key);
+  final String originalTitle;
+  const _Title(this.title, this.originalTitle, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Text(title,
-          style: Theme.of(context).textTheme.headline2,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.start,
-          maxLines: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: Theme.of(context).textTheme.headline2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              maxLines: 2),
+          const SizedBox(height: 3),
+          Text(originalTitle,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(color: Colors.grey),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              maxLines: 1)
+        ],
+      ),
     );
   }
 }
@@ -189,7 +203,7 @@ class _Box extends StatelessWidget {
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         _Country(movie.country, movie.flag),
-        _Average(movie.average),
+        _Rating(movie.rating),
         _BookmarkMovie(movie)
       ]),
     );
@@ -223,11 +237,11 @@ class _YearAndDuration extends StatelessWidget {
   }
 }
 
-class _Average extends StatelessWidget {
-  final String average;
+class _Rating extends StatelessWidget {
+  final String? rating;
 
-  const _Average(
-    this.average, {
+  const _Rating(
+    this.rating, {
     Key? key,
   }) : super(key: key);
 
@@ -243,7 +257,7 @@ class _Average extends StatelessWidget {
         width: 7,
       ),
       Text(
-        average.isNotEmpty ? average : '---',
+        rating ?? '---',
         style: Theme.of(context).textTheme.headline3,
       ),
     ]);
@@ -360,7 +374,7 @@ class _Genres extends StatelessWidget {
     genresString = genresString[0] + genresString.substring(1).toLowerCase();
 
     return Column(children: [
-      TitleSection(i18n.genres),
+      _TitleHeader(i18n.genres),
       SizedBox(
         width: double.infinity,
         child: Text(genres.join(', '),
@@ -401,7 +415,7 @@ class _Cast extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TitleSection(i18n.cast),
+        _TitleHeader(i18n.cast),
         SizedBox(
           width: double.infinity,
           child: Text(cast.isNotEmpty ? text : i18n.no_cast,
@@ -449,7 +463,7 @@ class _SynopsisState extends State<_Synopsis> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(i18n.synopsis),
+        _TitleHeader(i18n.synopsis),
         SizedBox(
           width: double.infinity,
           child: Text(text,
@@ -466,7 +480,13 @@ class _SynopsisState extends State<_Synopsis> {
               alignment: Alignment.center,
               child: ElevatedButton(
                   onPressed: () => updateState(),
-                  child: Text(textButton[showMore]!)),
+                  child: Text(
+                    textButton[showMore]!,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                  )),
             ),
           )
       ],
@@ -485,16 +505,16 @@ class _SynopsisState extends State<_Synopsis> {
   }
 }
 
-class _Justwatch extends StatefulWidget {
+class _Platforms extends StatefulWidget {
   final Justwatch justwatch;
 
-  const _Justwatch(this.justwatch, {Key? key}) : super(key: key);
+  const _Platforms(this.justwatch, {Key? key}) : super(key: key);
 
   @override
-  State<_Justwatch> createState() => _JustwatchState();
+  State<_Platforms> createState() => _PlatformsState();
 }
 
-class _JustwatchState extends State<_Justwatch> {
+class _PlatformsState extends State<_Platforms> {
   late List<Platform> platforms = [];
   late Map<String, List<Platform>> justwatch;
   late String justwatchMode;
@@ -525,7 +545,7 @@ class _JustwatchState extends State<_Justwatch> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSection(i18n.watch_now),
+        _TitleHeader(i18n.watch_now),
         if (platforms.isEmpty)
           SizedBox(
             width: double.infinity,
@@ -547,10 +567,8 @@ class _JustwatchState extends State<_Justwatch> {
                 child: TextButton(
                     onPressed: () => setPlatforms(key),
                     child: Text(textButton[key]!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(color: Colors.blue))));
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: Colors.blue, fontWeight: FontWeight.bold))));
           }).toList()),
         if (platforms.isNotEmpty)
           SizedBox(
@@ -588,13 +606,31 @@ class _Reviews extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleSection(i18n.reviews),
+          _TitleHeader(i18n.reviews),
           ...reviews
               .map((review) => Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   child: ReviewItem(review: review)))
               .toList(),
         ],
+      ),
+    );
+  }
+}
+
+class _TitleHeader extends StatelessWidget {
+  final String title;
+  const _TitleHeader(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 15.0, bottom: 7.0),
+      child: Text(
+        title,
+        textAlign: TextAlign.start,
+        style: Theme.of(context).textTheme.headline2,
       ),
     );
   }

@@ -86,12 +86,15 @@ class _Options extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ModeViews modeView = provider.modeView;
+    final ModeView modeView = provider.modeView;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CupertinoButton(
-            child: Text(i18n.title_order_by_dialog, textAlign: TextAlign.start),
+            child: Text(i18n.title_order_by_dialog,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+                textAlign: TextAlign.start),
             onPressed: () => showDialogOrderBy(context)),
         IconButton(
             onPressed: () {
@@ -100,7 +103,7 @@ class _Options extends StatelessWidget {
             icon: const Icon(Icons.filter_list_rounded)),
         // IconButton(
         //     icon: Icon(
-        //         modeView == ModeViews.list ? Icons.apps_rounded : Icons.list),
+        //         modeView == ModeView.list ? Icons.apps_rounded : Icons.list),
         //     onPressed: () => setModeView(context, modeView)),
       ],
     );
@@ -111,7 +114,7 @@ class _Options extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => TopMoviesDialog(
-            provider: provider, scrollController: scrollController));
+            topMoviesProvider: provider, controller: scrollController));
   }
 
   showDialogOrderBy(BuildContext context) {
@@ -121,9 +124,9 @@ class _Options extends StatelessWidget {
         builder: (BuildContext context) => const OrderByDialog());
   }
 
-  setModeView(BuildContext context, ModeViews modeView) {
-    ModeViews newModeView =
-        modeView == ModeViews.list ? ModeViews.grid : ModeViews.list;
+  setModeView(BuildContext context, ModeView modeView) {
+    ModeView newModeView =
+        modeView == ModeView.list ? ModeView.grid : ModeView.list;
 
     context.read<TopMoviesProvider>().setModeView(newModeView);
   }
@@ -154,8 +157,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? ListView.builder(
-            itemCount: 20, itemBuilder: (_, __) => const CardMovieShimmer())
+        ? const CardMovieShimmer()
         : ListView(
             controller: scrollController,
             children: movies

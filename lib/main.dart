@@ -8,6 +8,7 @@ import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
 import 'package:scrapper_filmaffinity/database/history_search_database.dart';
 import 'package:scrapper_filmaffinity/l10n/l10n.dart';
 import 'package:scrapper_filmaffinity/pages/details_movie_screen.dart';
+import 'package:scrapper_filmaffinity/pages/see_more_screen.dart';
 import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
 import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
 import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (_) => const NavigatorBottomBarApp(),
           'details': (_) => const DetailsMovieScreen(),
+          'see_more': (_) => const SeeMore(),
         },
         theme: MaterialTheme.materialTheme);
   }

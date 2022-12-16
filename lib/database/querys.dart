@@ -4,14 +4,14 @@ String createBookmarkMovieTable(tableName) => """
       poster TEXT NOT NULL,
       title TEXT NOT NULL,
       director TEXT NOT NULL,
-      average TEXT NOT NULL
+      rating TEXT
     );
   """;
 
 String createHistorySearchTable(tableName) => """
     CREATE TABLE $tableName (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      search TEXT NOT NULL UNIQUE
+      search TEXT NOT NULL
     );
     """;
 

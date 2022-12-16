@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/utils/current_year.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io' as io show Platform;
@@ -20,7 +19,7 @@ class YearPickerCupertino extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations i18n = AppLocalizations.of(context)!;
-    final int currentYear = getCurrentYear();
+    final int currentYear = DateTime.now().year;
     final int yearFrom = int.parse(dotenv.env['YEAR_FROM']!);
     final int numberOfYears = currentYear - yearFrom + 1;
     List<int> years =
@@ -45,7 +44,9 @@ class YearPickerCupertino extends StatelessWidget {
                 onSelectedItemChanged: (int index) =>
                     onItemSelectedChanged(years[index]),
                 selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-                  background: Colors.orange.withOpacity(0.6),
+                  background: io.Platform.isAndroid
+                      ? Colors.orange.withOpacity(0.6)
+                      : Colors.transparent,
                 ),
                 children: years
                     .map((value) => Center(child: Text(value.toString())))

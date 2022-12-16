@@ -2,63 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:scrapper_filmaffinity/models/section.dart';
 import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
 import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
-import 'package:scrapper_filmaffinity/widgets/title_section.dart';
 
-class SectionWidget extends StatelessWidget {
-  final Section section;
+class SectionMovie extends StatelessWidget {
+  final MovieSection movieSection;
+  final String heroTag;
+  final bool saveToCache;
+  final double height;
+  final double width;
 
-  const SectionWidget({Key? key, required this.section}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: TitleSection(section.title),
-        ),
-        SizedBox(
-          height: 210,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              const SizedBox(width: 12),
-              ...section.movies
-                  .map((movie) =>
-                      _SectionMovie(film: movie, sectionTitle: section.title))
-                  .toList(),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class _SectionMovie extends StatelessWidget {
-  final MovieSection film;
-  final String sectionTitle;
-
-  const _SectionMovie(
-      {Key? key, required this.film, required this.sectionTitle})
+  const SectionMovie(
+      {Key? key,
+      required this.movieSection,
+      required this.heroTag,
+      this.saveToCache = false,
+      required this.height,
+      required this.width})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const double width = 120;
-    const double height = 190;
-    final String heroTag = film.id + sectionTitle;
-
     return GestureDetector(
       onTap: () {
-        Map<String, dynamic> arguments = {'id': film.id, 'heroTag': heroTag};
+        Map<String, dynamic> arguments = {
+          'id': movieSection.id,
+          'heroTag': heroTag
+        };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
       child: Container(
-          margin: const EdgeInsets.only(right: 15),
-          width: width,
           height: height,
+          width: width,
+          margin: const EdgeInsets.only(right: 15),
           child: Column(children: [
             Hero(
               tag: heroTag,
@@ -68,19 +42,19 @@ class _SectionMovie extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   children: [
                     CustomImage(
-                        url: film.image,
+                        url: movieSection.image,
                         width: width,
                         height: height - 30,
-                        saveToCache: true,
+                        saveToCache: saveToCache,
                         cacheManager: CustomCacheManager.cacheTinyImages),
                     Container(
-                      height: 40,
+                      height: 37,
                       width: double.infinity,
-                      color: Colors.orange.withOpacity(0.8),
+                      color: Theme.of(context).primaryColor.withOpacity(0.8),
                       child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          film.premiereDay,
+                          movieSection.premiereDay,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.headline5,
                         ),
@@ -92,7 +66,7 @@ class _SectionMovie extends StatelessWidget {
             ),
             const SizedBox(height: 7),
             Text(
-              film.title,
+              movieSection.title,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               textAlign: TextAlign.center,

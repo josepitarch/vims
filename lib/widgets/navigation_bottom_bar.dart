@@ -25,12 +25,18 @@ class _NavigatorBottomBarAppState extends State<NavigatorBottomBarApp> {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+    final options = {
+      'home': {i18n.home, Icons.home},
+      'top': {i18n.top, Icons.list_alt_sharp},
+      'bookmarks': {i18n.bookmarks, Icons.bookmark},
+      'search': {i18n.search, Icons.search_outlined}
+    };
+
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        //backgroundColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.white.withOpacity(.60),
         selectedFontSize: 16,
         unselectedFontSize: 14,
@@ -43,22 +49,11 @@ class _NavigatorBottomBarAppState extends State<NavigatorBottomBarApp> {
             _selectedIndex = index;
           });
         },
-        items: [
-          BottomNavigationBarItem(
-            label: i18n.home,
-            icon: const Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            label: i18n.top,
-            icon: const Icon(Icons.list_alt_sharp),
-          ),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.bookmark), label: i18n.bookmarks),
-          BottomNavigationBarItem(
-            label: i18n.search,
-            icon: const Icon(Icons.search_outlined),
-          )
-        ],
+        items: options.entries
+            .map((e) => BottomNavigationBarItem(
+                label: e.value.elementAt(0) as String,
+                icon: Icon(e.value.elementAt(1) as IconData)))
+            .toList(),
       ),
     );
   }

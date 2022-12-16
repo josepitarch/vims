@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SectionsShimmer extends StatelessWidget {
-  const SectionsShimmer({Key? key}) : super(key: key);
+  final int total;
+  const SectionsShimmer({this.total = 5, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
       child: Column(
-        children: const [
-          SectionShimmer(),
-          SectionShimmer(),
-          SectionShimmer(),
-          SectionShimmer(),
-          SectionShimmer()
-        ],
+        children: List.generate(total, (index) => const SectionShimmer()),
       ),
     ));
   }
@@ -52,8 +47,7 @@ class SectionShimmer extends StatelessWidget {
             height: height - 30,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemBuilder: (_, __) {
-                return Container(
+              itemBuilder: (_, __) => Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
@@ -63,8 +57,7 @@ class SectionShimmer extends StatelessWidget {
                       color: Colors.grey[300],
                     ),
                   ),
-                );
-              },
+                ),
             ),
           ),
         ],

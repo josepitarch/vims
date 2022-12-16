@@ -6,13 +6,13 @@ import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
 class CardMovie extends StatelessWidget {
   final Movie movie;
   final bool saveToCache;
-  final bool? hasAllAttributes;
+  final bool hasAllAttributes;
 
   const CardMovie(
       {Key? key,
       required this.movie,
       required this.saveToCache,
-      this.hasAllAttributes})
+      this.hasAllAttributes = false})
       : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class CardMovie extends StatelessWidget {
         Map<String, dynamic> arguments = {
           'id': movie.id,
           'movie': movie,
-          'hasAllAttributes': hasAllAttributes ?? false,
+          'hasAllAttributes': hasAllAttributes
         };
         Navigator.pushNamed(context, 'details', arguments: arguments);
       },
@@ -48,7 +48,7 @@ class CardMovie extends StatelessWidget {
                       const SizedBox(height: 10.0),
                       _Director(movie.director),
                     ]),
-                    _Average(movie.average, height: height)
+                    _Rating(movie.rating, height: height)
                   ],
                 )),
           ),
@@ -137,10 +137,10 @@ class _Director extends StatelessWidget {
   }
 }
 
-class _Average extends StatelessWidget {
-  final String average;
+class _Rating extends StatelessWidget {
+  final String? average;
   final double height;
-  const _Average(
+  const _Rating(
     this.average, {
     Key? key,
     required this.height,
@@ -148,12 +148,11 @@ class _Average extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String averageText = average.isNotEmpty ? average : '---';
     return Row(
       children: [
         const Icon(Icons.star, color: Colors.yellow),
         const SizedBox(width: 5),
-        Text(averageText, style: Theme.of(context).textTheme.headline4),
+        Text(average ?? '---', style: Theme.of(context).textTheme.headline4),
       ],
     );
   }

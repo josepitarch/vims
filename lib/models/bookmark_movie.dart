@@ -5,14 +5,14 @@ class BookmarkMovie {
   String poster;
   String title;
   String director;
-  String average;
+  String? rating;
 
   BookmarkMovie(
       {required this.id,
       required this.poster,
       required this.title,
       required this.director,
-      required this.average});
+      this.rating});
 
   Map<String, String> toMap() {
     return {
@@ -20,15 +20,16 @@ class BookmarkMovie {
       'poster': poster,
       'title': title,
       'director': director,
-      'average': average,
+      if (rating != null) 'rating': rating!
     };
   }
 
   Movie toMovie() {
     return Movie(
         id: id,
-        title: title,
         flag: '',
+        title: title,
+        originalTitle: '',
         year: '',
         country: '',
         cast: [],
@@ -37,7 +38,7 @@ class BookmarkMovie {
         poster: poster,
         justwatch: Justwatch(buy: [], rent: [], flatrate: []),
         director: director,
-        average: average,
+        rating: rating,
         reviews: []);
   }
 }

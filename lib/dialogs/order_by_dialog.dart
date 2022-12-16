@@ -37,7 +37,7 @@ class _OrderByDialogState extends State<OrderByDialog> {
             return ListTile(
               title: Text(options[order.value]!),
               leading: Radio<OrderBy>(
-                activeColor: Colors.orange,
+                activeColor: Theme.of(context).colorScheme.secondary,
                 value: order,
                 groupValue: orderBy,
                 onChanged: (OrderBy? value) {

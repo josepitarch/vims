@@ -21,27 +21,26 @@ class _DialogAndroid extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(i18n.title_bookmark_dialog),
-      content: Text(i18n.delete_all_bookmarks),
-      actions: <TextButton>[
+      title: Text(i18n.title_bookmark_dialog,
+          style: Theme.of(context)
+              .textTheme
+              .headline6!
+              .copyWith(color: Colors.white.withOpacity(0.6))),
+      content: Text(i18n.delete_all_bookmarks,
+          style: Theme.of(context).textTheme.bodyText1),
+      actions: [
         TextButton(
-          style: TextButton.styleFrom(
-            textStyle: Theme.of(context).textTheme.subtitle2,
-          ),
           child: Text(
             i18n.cancel,
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
           onPressed: () => Navigator.pop(context, false),
         ),
         TextButton(
-          style: TextButton.styleFrom(
-            textStyle: Theme.of(context).textTheme.labelLarge,
+          child: Text(
+            i18n.delete,
+            style: const TextStyle(color: Colors.red),
           ),
-          child: Text(i18n.delete,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(color: Colors.red)),
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
@@ -57,7 +56,7 @@ class _DialogIOS extends StatelessWidget {
     final i18n = AppLocalizations.of(context)!;
     return CupertinoAlertDialog(
       title: Text(i18n.title_bookmark_dialog),
-      content: Text(i18n.title_bookmark_dialog),
+      content: Text(i18n.delete_all_bookmarks),
       actions: <CupertinoDialogAction>[
         CupertinoDialogAction(
           isDefaultAction: true,

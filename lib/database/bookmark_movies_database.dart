@@ -67,7 +67,7 @@ class BookmarkMoviesDatabase {
           poster: maps[i]['poster'],
           title: maps[i]['title'],
           director: maps[i]['director'],
-          average: maps[i]['average']);
+          rating: maps[i]['average']);
     });
   }
 }

@@ -12,7 +12,7 @@ import 'package:scrapper_filmaffinity/widgets/material_design_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
-late ChangeNotifier change;
+late ChangeNotifier changeNotifier;
 
 class TimeoutError extends StatelessWidget {
   final Exception error;
@@ -22,7 +22,7 @@ class TimeoutError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-    change = provider;
+    changeNotifier = provider;
 
     return error is TimeoutException
         ? const _ServerError()
@@ -112,14 +112,14 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       if (result != ConnectionState.none) {
-        if (change is HomepageProvider) {
-          (change as HomepageProvider).onRefresh();
-        } else if (change is TopMoviesProvider) {
-          (change as TopMoviesProvider).onRefresh();
-        } else if (change is DetailsMovieProvider) {
-          (change as DetailsMovieProvider).onRefresh();
-        } else if (change is SearchMovieProvider) {
-          (change as SearchMovieProvider).onRefresh();
+        if (changeNotifier is HomepageProvider) {
+          (changeNotifier as HomepageProvider).onRefresh();
+        } else if (changeNotifier is TopMoviesProvider) {
+          (changeNotifier as TopMoviesProvider).onRefresh();
+        } else if (changeNotifier is DetailsMovieProvider) {
+          (changeNotifier as DetailsMovieProvider).onRefresh();
+        } else if (changeNotifier is SearchMovieProvider) {
+          (changeNotifier as SearchMovieProvider).onRefresh();
         }
       }
     });

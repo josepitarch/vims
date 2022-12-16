@@ -26,12 +26,9 @@ class SearchMovieScreen extends StatelessWidget {
         return TimeoutError(provider.error!, provider);
       if (provider.isLoading) {
         return SafeArea(
-          child: Column(children: [
-            const _SearchMovieForm(),
-            Expanded(
-                child: ListView(
-                    children:
-                        List.generate(20, (index) => const CardMovieShimmer())))
+          child: Column(children: const [
+            _SearchMovieForm(),
+            Expanded(child: CardMovieShimmer())
           ]),
         );
       }
@@ -42,8 +39,7 @@ class SearchMovieScreen extends StatelessWidget {
               ? _Suggestions(
                   movies: provider.movies,
                   numberFetchMovies: provider.numberFetchMovies)
-              : _HistorySearch(
-                  historySearch: provider.searchs, provider: provider),
+              : const _HistorySearch(),
         ]),
       );
     });
@@ -127,43 +123,58 @@ class _Suggestions extends StatelessWidget {
 }
 
 class _HistorySearch extends StatelessWidget {
-  final List<String> historySearch;
-  final SearchMovieProvider provider;
-  const _HistorySearch(
-      {Key? key, required this.historySearch, required this.provider})
-      : super(key: key);
+  const _HistorySearch({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (historySearch.isEmpty) return const SizedBox();
-    return Expanded(
-      child: Column(
-        children: [
-          ListView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              shrinkWrap: true,
+    final provider = context.watch<SearchMovieProvider>();
+    return FutureBuilder(
+        future: provider.getHistorySearchs(),
+        builder: (_, snapshot) {
+          if (!snapshot.hasData) return const SizedBox();
+
+          List<String> historySearch = snapshot.data as List<String>;
+
+          if (historySearch.isEmpty) {
+            return Flexible(
+                flex: 1,
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+                  child: Container(color: Colors.transparent),
+                ));
+          }
+
+          return Expanded(
+            child: Column(
               children: [
-                ...historySearch.map((history) {
-                  return ListTile(
-                    leading: const Icon(Icons.history),
-                    trailing: const Icon(Icons.arrow_forward_ios,
-                        size: 22, color: Colors.grey),
-                    title: Text(history,
-                        style: Theme.of(context).textTheme.bodyText1),
-                    onTap: () => provider.onTapHistorySearch(history),
-                  );
-                }).toList(),
-                DeleteSearchersButton(provider: provider),
-              ]),
-          Flexible(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                child: Container(color: Colors.transparent),
-              ))
-        ],
-      ),
-    );
+                ListView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    shrinkWrap: true,
+                    children: [
+                      ...historySearch.map((history) {
+                        return ListTile(
+                          leading: const Icon(Icons.history),
+                          trailing: const Icon(Icons.arrow_forward_ios,
+                              size: 22, color: Colors.grey),
+                          title: Text(history,
+                              style: Theme.of(context).textTheme.bodyText1),
+                          onTap: () => provider.onTapHistorySearch(history),
+                        );
+                      }).toList(),
+                      DeleteSearchersButton(provider: provider),
+                    ]),
+                Flexible(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: () =>
+                          FocusScope.of(context).requestFocus(FocusNode()),
+                      child: Container(color: Colors.transparent),
+                    ))
+              ],
+            ),
+          );
+        });
   }
 }
 

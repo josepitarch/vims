@@ -5,6 +5,12 @@ import 'package:scrapper_filmaffinity/ui/text_theme_custom.dart';
 class MaterialTheme {
   static ThemeData materialTheme = ThemeData.dark().copyWith(
     useMaterial3: true,
+    primaryColor: Colors.orange,
+    colorScheme: const ColorScheme.dark().copyWith(
+      primary: Colors.orange,
+      secondary: Colors.blue,
+      onSecondary: Colors.grey.shade200,
+    ),
     textTheme: const TextTheme(
       headline1: TextThemeCustom.headline1,
       headline2: TextThemeCustom.headline2,

@@ -2,8 +2,9 @@ import 'dart:convert' as json;
 
 class Movie {
   final String id;
-  final String title;
   final String flag;
+  final String title;
+  final String originalTitle;
   final String year;
   final String? duration;
   final String country;
@@ -17,7 +18,7 @@ class Movie {
   final List<String>? groups;
   final String synopsis;
   final String poster;
-  final String average;
+  final String? rating;
   final Justwatch justwatch;
   final List<Review> reviews;
   final List<String>? platforms;
@@ -25,15 +26,16 @@ class Movie {
 
   Movie(
       {required this.id,
-      required this.title,
       required this.flag,
+      required this.title,
+      required this.originalTitle,
       required this.year,
       required this.country,
       required this.cast,
       required this.genres,
       required this.synopsis,
       required this.poster,
-      required this.average,
+      this.rating,
       required this.justwatch,
       required this.reviews,
       this.duration,
@@ -49,8 +51,9 @@ class Movie {
 
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
         id: json['id'],
-        title: json['title'],
         flag: json['flag'],
+        title: json['title'],
+        originalTitle: json['original_title'],
         year: json['year'],
         duration: json['duration'],
         country: json['country'],
@@ -70,7 +73,7 @@ class Movie {
             : List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
         poster: json['poster'],
-        average: json['average'],
+        rating: json['rating'],
         justwatch: Justwatch.fromMap(json['justwatch']),
         reviews:
             List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
@@ -79,6 +82,7 @@ class Movie {
   factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
       id: json['id'],
       title: json['title'],
+      originalTitle: json['originalTitle'] ?? json['title'],
       flag: '',
       year: json['year'] ?? '',
       country: json['country'] ?? '',
@@ -88,7 +92,7 @@ class Movie {
       poster: json['poster'] ?? '',
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
-      average: json['average'] ?? '',
+      rating: json['rating'],
       reviews: [],
       platforms: json['platforms'] == null
           ? []
@@ -96,8 +100,9 @@ class Movie {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'title': title,
         'year': year,
+        'title': title,
+        'original_title': originalTitle,
         'duration': duration,
         'country': country,
         'director': director,
@@ -109,7 +114,7 @@ class Movie {
         'genres': genres,
         'synopsis': synopsis,
         'poster': poster,
-        'average': average,
+        'average': rating,
         'justwatch': justwatch,
         'reviews': List<Review>.from(reviews.map((x) => x.toMap())),
       };
@@ -118,14 +123,14 @@ class Movie {
 class Actor {
   final String name;
   final String image;
-  final String reference;
+  final String link;
 
-  Actor({required this.name, required this.image, required this.reference});
+  Actor({required this.name, required this.image, required this.link});
 
   factory Actor.fromMap(Map<String, dynamic> json) => Actor(
         name: json['name'],
         image: json['image'],
-        reference: json['reference'],
+        link: json['link'],
       );
 }
 
