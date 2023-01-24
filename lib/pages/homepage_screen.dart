@@ -1,14 +1,12 @@
-import 'dart:io' as io show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
-import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
-import 'package:scrapper_filmaffinity/widgets/pull_refresh.dart';
-import 'package:scrapper_filmaffinity/widgets/section_widget.dart';
-import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
+import 'package:vims/providers/homepage_provider.dart';
+import 'package:vims/shimmer/sections_shimmer.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
+import 'package:vims/widgets/pull_refresh.dart';
+import 'package:vims/widgets/section_widget.dart';
+import 'package:vims/widgets/handle_error.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
@@ -39,7 +37,7 @@ class _HomepageScreenState extends State<HomepageScreen>
   Widget build(BuildContext context) {
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
       if (provider.error != null) {
-        return TimeoutError(provider.error!, provider);
+        return HandleError(provider.error!, provider.onRefresh);
       }
 
       if (provider.isLoading) {
@@ -47,7 +45,6 @@ class _HomepageScreenState extends State<HomepageScreen>
       }
 
       return PullRefresh(
-          isAndroid: io.Platform.isAndroid,
           child: SingleChildScrollView(
               child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),

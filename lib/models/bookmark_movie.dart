@@ -1,4 +1,4 @@
-import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:vims/models/movie.dart';
 
 class BookmarkMovie {
   String id;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/dialogs/year_picker_dialog.dart';
+import 'package:vims/dialogs/year_picker_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class YearContainer extends StatelessWidget {

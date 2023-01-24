@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:logger/logger.dart';
 
-import 'package:scrapper_filmaffinity/models/section.dart';
-import 'package:scrapper_filmaffinity/services/homepage_service.dart';
+import 'package:vims/models/section.dart';
+import 'package:vims/services/homepage_service.dart';
 
 class HomepageProvider extends ChangeNotifier {
   List<Section> sections = [];

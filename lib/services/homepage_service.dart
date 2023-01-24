@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as json;
 
-import 'package:scrapper_filmaffinity/models/section.dart';
+import 'package:vims/models/section.dart';
 
 class HomepageService {
   final String url = dotenv.env['URL']!;

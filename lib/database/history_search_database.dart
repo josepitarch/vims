@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:scrapper_filmaffinity/database/querys.dart';
+import 'package:vims/database/querys.dart';
 import 'package:logger/logger.dart';
 
 class HistorySearchDatabase {

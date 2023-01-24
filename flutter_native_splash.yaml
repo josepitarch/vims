@@ -1,0 +1,11 @@
+flutter_native_splash:
+  image: assets/vims_splash_screen.png
+  branding_android: assets/vims_splash_screen.png
+  color_android: "#42a5f5"
+  android: true
+  android12: true
+  ios: false
+  web: false
+
+  android_12:
+    image: assets/vims_splash_screen.png

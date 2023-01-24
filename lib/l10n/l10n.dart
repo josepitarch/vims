@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class L10n {
-  static const supportedLocales = [Locale('es'), Locale('en')];
+  static const supportedLocales = [Locale('es')];
 
   static const localizationsDelegates = [
     AppLocalizations.delegate,

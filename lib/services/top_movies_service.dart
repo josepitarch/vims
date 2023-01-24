@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as json;
 
-import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:vims/models/movie.dart';
 
 class TopMoviesService {
   final String url = dotenv.env['URL']!;

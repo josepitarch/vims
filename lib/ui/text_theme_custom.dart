@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 
 class TextThemeCustom {
   static const TextStyle headline1 = TextStyle(
-      fontSize: 27,
+      fontSize: 24,
       height: 1.2,
-      fontFamily: 'Lato',
+      fontFamily: 'OpenSans',
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.w700);
 
   static const TextStyle headline2 = TextStyle(
       fontSize: 21,
-      height: 1.2,
-      fontFamily: 'Lato',
+      fontFamily: 'OpenSans',
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.w700);
 
@@ -36,6 +35,12 @@ class TextThemeCustom {
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.normal);
 
+  static const TextStyle headline6 = TextStyle(
+      fontSize: 17,
+      fontFamily: 'Lato',
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w500);
+
   static const TextStyle bodyText1 = TextStyle(
       fontSize: 16,
       fontFamily: 'Lato',
@@ -43,5 +48,5 @@ class TextThemeCustom {
       fontWeight: FontWeight.normal);
 
   static const TextStyle bodyText2 = TextStyle(
-      fontSize: 13, fontFamily: 'Lato', fontWeight: FontWeight.normal);
+      fontSize: 14, fontFamily: 'Lato', fontWeight: FontWeight.normal);
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/dialogs/delete_all_bookmarks_dialog.dart';
-import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
+import 'package:vims/dialogs/delete_all_bookmarks_dialog.dart';
+import 'package:vims/providers/bookmark_movies_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
-import 'package:scrapper_filmaffinity/widgets/title_page.dart';
+import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/title_page.dart';
 import 'dart:io' as io show Platform;
 
 class BookmarkMoviesScreen extends StatelessWidget {

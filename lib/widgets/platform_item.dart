@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/models/filters.dart';
+import 'package:vims/models/filters.dart';
 
 class PlatformItem extends StatefulWidget {
   final String assetName;

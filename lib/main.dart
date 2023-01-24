@@ -4,18 +4,19 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
-import 'package:scrapper_filmaffinity/database/history_search_database.dart';
-import 'package:scrapper_filmaffinity/l10n/l10n.dart';
-import 'package:scrapper_filmaffinity/pages/details_movie_screen.dart';
-import 'package:scrapper_filmaffinity/pages/see_more_screen.dart';
-import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
-import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
-import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
-import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
-import 'package:scrapper_filmaffinity/ui/material_theme.dart';
-import 'package:scrapper_filmaffinity/widgets/navigation_bottom_bar.dart';
+import 'package:vims/database/bookmark_movies_database.dart';
+import 'package:vims/database/history_search_database.dart';
+import 'package:vims/l10n/l10n.dart';
+import 'package:vims/pages/details_movie_screen.dart';
+import 'package:vims/pages/see_more_screen.dart';
+import 'package:vims/providers/bookmark_movies_provider.dart';
+import 'package:vims/providers/details_movie_provider.dart';
+import 'package:vims/providers/homepage_provider.dart';
+import 'package:vims/providers/search_movie_provider.dart';
+import 'package:vims/providers/top_movies_provider.dart';
+import 'package:vims/ui/material_theme.dart';
+import 'package:vims/widgets/navigation_bottom_bar.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ Future<void> main() async {
   BookmarkMoviesDatabase.initDatabase();
   HistorySearchDatabase.initDatabase();
   runApp(const AppState());
+  FlutterNativeSplash.remove();
 }
 
 class AppState extends StatelessWidget {
@@ -53,7 +55,7 @@ class MyApp extends StatelessWidget {
         systemNavigationBarColor: Colors.black.withOpacity(0.9)));
 
     return MaterialApp(
-        title: 'Womie',
+        title: 'Vims',
         localizationsDelegates: L10n.localizationsDelegates,
         supportedLocales: L10n.supportedLocales,
         localeResolutionCallback: L10n.localeResolutionCallback,

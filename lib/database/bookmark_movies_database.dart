@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
-import 'package:scrapper_filmaffinity/database/querys.dart';
-import 'package:scrapper_filmaffinity/models/bookmark_movie.dart';
+import 'package:vims/database/querys.dart';
+import 'package:vims/models/bookmark_movie.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BookmarkMoviesDatabase {
@@ -21,10 +21,11 @@ class BookmarkMoviesDatabase {
   static Future<bool> insertBookmarkMovie(BookmarkMovie bookmarkMovie) async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
+    Map<String, String> map = bookmarkMovie.toMap();
 
     int response = await db.insert(
       _tableName,
-      bookmarkMovie.toMap(),
+      map,
       conflictAlgorithm: ConflictAlgorithm.abort,
     );
 
@@ -67,7 +68,7 @@ class BookmarkMoviesDatabase {
           poster: maps[i]['poster'],
           title: maps[i]['title'],
           director: maps[i]['director'],
-          rating: maps[i]['average']);
+          rating: maps[i]['rating']);
     });
   }
 }

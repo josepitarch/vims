@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/ui/cupertino_theme.dart';
-import 'package:scrapper_filmaffinity/ui/text_theme_custom.dart';
+import 'package:vims/ui/cupertino_theme.dart';
+import 'package:vims/ui/text_theme_custom.dart';
 
 class MaterialTheme {
   static ThemeData materialTheme = ThemeData.dark().copyWith(
@@ -17,6 +17,7 @@ class MaterialTheme {
       headline3: TextThemeCustom.headline3,
       headline4: TextThemeCustom.headline4,
       headline5: TextThemeCustom.headline5,
+      headline6: TextThemeCustom.headline6,
       bodyText1: TextThemeCustom.bodyText1,
       bodyText2: TextThemeCustom.bodyText2,
     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/services/details_movie_service.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/services/details_movie_service.dart';
 import 'package:logger/logger.dart';
 
 class DetailsMovieProvider extends ChangeNotifier {

@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
-import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
-import 'package:scrapper_filmaffinity/ui/input_decoration.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/providers/search_movie_provider.dart';
+import 'package:vims/shimmer/card_movie_shimmer.dart';
+import 'package:vims/ui/input_decoration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
-import 'package:scrapper_filmaffinity/widgets/no_results.dart';
-import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
+import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/handle_error.dart';
 import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
@@ -23,7 +23,7 @@ class SearchMovieScreen extends StatelessWidget {
 
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
       if (provider.error != null)
-        return TimeoutError(provider.error!, provider);
+        return HandleError(provider.error!, provider.onRefresh);
       if (provider.isLoading) {
         return SafeArea(
           child: Column(children: const [

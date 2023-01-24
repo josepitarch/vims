@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/models/filters.dart';
-import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
-import 'package:scrapper_filmaffinity/widgets/card_genre.dart';
-import 'package:scrapper_filmaffinity/widgets/platform_item.dart';
-import 'package:scrapper_filmaffinity/widgets/year_container.dart';
+import 'package:vims/models/filters.dart';
+import 'package:vims/providers/top_movies_provider.dart';
+import 'package:vims/widgets/card_genre.dart';
+import 'package:vims/widgets/platform_item.dart';
+import 'package:vims/widgets/year_container.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io' as io show Platform;
 
@@ -12,7 +12,7 @@ late AppLocalizations i18n;
 late Filters filters;
 late TopMoviesProvider provider;
 late ScrollController scrollController;
-bool hasError = false;
+late bool hasError;
 
 class TopMoviesDialog extends StatelessWidget {
   final TopMoviesProvider topMoviesProvider;
@@ -27,6 +27,7 @@ class TopMoviesDialog extends StatelessWidget {
     i18n = AppLocalizations.of(context)!;
     provider = topMoviesProvider;
     scrollController = controller;
+    hasError = false;
     filters = Filters(
         platforms: Map.from(topMoviesProvider.filters.platforms),
         genres: Map.from(topMoviesProvider.filters.genres),
@@ -89,8 +90,7 @@ class _PlatformsFilter extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(i18n.title_platforms_dialog,
-            style: Theme.of(context).textTheme.headline6),
+        _TitleFilter(i18n.title_platforms_dialog),
         const SizedBox(height: 20),
         SizedBox(
           height: 50,
@@ -118,21 +118,21 @@ class _GenresFilter extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(
         width: double.infinity,
-        child: Text(i18n.title_genres_dialog,
-            textAlign: TextAlign.left,
-            style: Theme.of(context).textTheme.headline6),
+        child: _TitleFilter(i18n.title_genres_dialog),
       ),
       const SizedBox(height: 10),
-      Wrap(
-          spacing: 5,
-          runSpacing: 5,
-          children: filters.genres.entries.map((entry) {
-            return CardGenre(
-              genre: entry.key,
-              isSelected: entry.value,
-              filters: filters,
-            );
-          }).toList()),
+      Center(
+        child: Wrap(
+            spacing: 5,
+            runSpacing: 5,
+            children: filters.genres.entries.map((entry) {
+              return CardGenre(
+                genre: entry.key,
+                isSelected: entry.value,
+                filters: filters,
+              );
+            }).toList()),
+      ),
     ]);
   }
 }
@@ -151,20 +151,24 @@ class _YearsFilterState extends State<_YearsFilter> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            YearContainer(
-                year: filters.yearFrom,
-                isReverse: false,
-                onPressed: setYearFrom),
-            const SizedBox(width: 30),
-            YearContainer(
-                year: filters.yearTo,
-                isReverse: true,
-                onPressed: setYearTo,
-                hasError: hasError),
-          ],
+        _TitleFilter(i18n.title_years_dialog),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              YearContainer(
+                  year: filters.yearFrom,
+                  isReverse: false,
+                  onPressed: setYearFrom),
+              const SizedBox(width: 30),
+              YearContainer(
+                  year: filters.yearTo,
+                  isReverse: true,
+                  onPressed: setYearTo,
+                  hasError: hasError),
+            ],
+          ),
         ),
       ],
     );
@@ -200,17 +204,22 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
   Widget build(BuildContext context) {
     final activeColor = io.Platform.isAndroid ? Colors.orange : Colors.green;
 
-    return SwitchListTile.adaptive(
-        contentPadding: const EdgeInsets.all(0),
-        dense: true,
-        title: Text(i18n.title_exclude_animation_dialog,
-            style: Theme.of(context).textTheme.headline6),
-        value: filters.isAnimationExcluded,
-        activeColor: activeColor,
-        activeTrackColor: activeColor.withOpacity(0.3),
-        onChanged: (bool? value) => setState(() {
-              filters.isAnimationExcluded = value!;
-            }));
+    return Column(
+      children: [
+        _TitleFilter(i18n.title_exclude_dialog),
+        SwitchListTile.adaptive(
+            contentPadding: const EdgeInsets.all(0),
+            dense: true,
+            title: Text(i18n.exclude_animation,
+                style: Theme.of(context).textTheme.headline6),
+            value: filters.isAnimationExcluded,
+            activeColor: activeColor,
+            activeTrackColor: activeColor.withOpacity(0.3),
+            onChanged: (bool? value) => setState(() {
+                  filters.isAnimationExcluded = value!;
+                })),
+      ],
+    );
   }
 }
 
@@ -273,5 +282,31 @@ class _DeleteButton extends StatelessWidget {
               provider.removeFilters();
             },
             child: Text(i18n.delete_filters_dialog));
+  }
+}
+
+class _TitleFilter extends StatelessWidget {
+  final String title;
+  const _TitleFilter(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      const Flexible(
+        child: Divider(
+          color: Colors.grey,
+          thickness: 1,
+        ),
+      ),
+      const SizedBox(width: 10),
+      Text(title, style: Theme.of(context).textTheme.headline6),
+      const SizedBox(width: 10),
+      const Flexible(
+        child: Divider(
+          color: Colors.grey,
+          thickness: 1,
+        ),
+      ),
+    ]);
   }
 }

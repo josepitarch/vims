@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
+import 'package:vims/providers/search_movie_provider.dart';
 
 class InputDecorations {
   static InputDecoration searchMovieDecoration(AppLocalizations i18n,

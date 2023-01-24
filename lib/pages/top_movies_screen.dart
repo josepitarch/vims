@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/dialogs/order_by_dialog.dart';
-import 'package:scrapper_filmaffinity/dialogs/top_filters_dialog.dart';
-import 'package:scrapper_filmaffinity/enums/mode_views.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
-import 'package:scrapper_filmaffinity/shimmer/card_movie_shimmer.dart';
-import 'package:scrapper_filmaffinity/widgets/card_movie.dart';
-import 'package:scrapper_filmaffinity/widgets/no_results.dart';
-import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
-import 'package:scrapper_filmaffinity/widgets/title_page.dart';
+import 'package:vims/dialogs/order_by_dialog.dart';
+import 'package:vims/dialogs/top_filters_dialog.dart';
+import 'package:vims/enums/mode_views.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/providers/top_movies_provider.dart';
+import 'package:vims/shimmer/card_movie_shimmer.dart';
+import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/handle_error.dart';
+import 'package:vims/widgets/title_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
@@ -57,7 +57,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
       if (provider.error != null) {
-        return TimeoutError(provider.error!, provider);
+        return HandleError(provider.error!, provider.onRefresh);
       }
 
       return Scaffold(

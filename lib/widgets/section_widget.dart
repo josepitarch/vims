@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/models/section.dart';
-import 'package:scrapper_filmaffinity/utils/title_section_mapper.dart';
-import 'package:scrapper_filmaffinity/widgets/section_movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vims/models/section.dart';
+import 'package:vims/widgets/section_movie.dart';
 
 class SectionWidget extends StatelessWidget {
   final Section section;
@@ -13,9 +12,7 @@ class SectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
-    final String title = TitleSectionMapper
-            .titleSectionsMapper[i18n.localeName]![section.title] ??
-        section.title;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,18 +21,19 @@ class SectionWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.headline2,
-              ),
+              Text(section.title,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.headline2!
+                  //.copyWith(fontFamily: 'Lato'),
+                  ),
               CupertinoButton(
                   child: Text(i18n.see_more,
                       style: Theme.of(context).textTheme.bodyText2!.copyWith(
                           fontStyle: FontStyle.italic,
+                          fontFamily: 'OpenSans',
                           color: Theme.of(context).colorScheme.secondary)),
                   onPressed: () => Navigator.pushNamed(context, 'see_more',
-                      arguments: title))
+                      arguments: section.title))
             ],
           ),
         ),
