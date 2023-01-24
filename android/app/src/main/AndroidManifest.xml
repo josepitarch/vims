@@ -7,12 +7,13 @@
     <application
         android:label="Vims"
         android:name="${applicationName}"
-        android:icon="@mipmap/vims_black"
+        android:icon="@mipmap/logo"
         android:usesCleartextTraffic="true">
         <activity
             android:name="com.example.vims.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
