@@ -15,36 +15,30 @@ class SeeMoreShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: GridView.count(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-              mainAxisSpacing: 10,
-              children: List.generate(
-                  total,
-                  (index) => Shimmer.fromColors(
-                        baseColor: Colors.black,
-                        highlightColor: Colors.grey.shade100,
+    return SizedBox(
+      width: double.infinity,
+      child: GridView.count(
+          padding: const EdgeInsets.only(top: 15, left: 10),
+          crossAxisCount: 3,
+          childAspectRatio: 1,
+          mainAxisSpacing: 10,
+          children: List.generate(
+              total,
+              (index) => Shimmer.fromColors(
+                    baseColor: Colors.black,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
                         child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              width: width,
-                              height: height,
-                              color: Colors.grey[300],
-                            ),
-                          ),
+                          width: width,
+                          height: height,
+                          color: Colors.grey[300],
                         ),
-                      ))),
-        ),
-      ),
+                      ),
+                    ),
+                  ))),
     );
   }
 }

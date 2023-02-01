@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'dart:async';
 import 'dart:convert' as json;
 import 'package:http/http.dart' as http;
+import 'package:vims/exceptions/maintenance_exception.dart';
 
 class SearchMovieService {
   final url = dotenv.env['URL']!;
@@ -27,6 +28,11 @@ class SearchMovieService {
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
+
+    if (response.statusCode == 503) {
+      final body = json.jsonDecode(response.body);
+      throw MaintenanceException(body['image'], body['message']);
+    }
 
     if (response.statusCode == 200) {
       suggestions = json.jsonDecode(response.body);

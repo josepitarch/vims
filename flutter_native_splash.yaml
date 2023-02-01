@@ -1,7 +1,11 @@
 flutter_native_splash:
   image: assets/vims_splash_screen.png
-  color: "#42a5f5"
-  android: true
-  android12: false
-  ios: false
+  color: "#000000"
+  color_dark: "#000000"
+  ios: true
   web: false
+  android_12:
+    image: assets/landscape.png
+    image_dark: assets/landscape.png
+    icon_background_color: "#000000"
+    icon_background_color_dark: "#000000"

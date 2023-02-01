@@ -16,7 +16,6 @@ import 'package:vims/providers/search_movie_provider.dart';
 import 'package:vims/providers/top_movies_provider.dart';
 import 'package:vims/ui/material_theme.dart';
 import 'package:vims/widgets/navigation_bottom_bar.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +23,6 @@ Future<void> main() async {
   BookmarkMoviesDatabase.initDatabase();
   HistorySearchDatabase.initDatabase();
   runApp(const AppState());
-  FlutterNativeSplash.remove();
 }
 
 class AppState extends StatelessWidget {

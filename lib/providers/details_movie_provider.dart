@@ -35,4 +35,10 @@ class DetailsMovieProvider extends ChangeNotifier {
       getDetailsMovie(id!);
     }
   }
+
+  clear() {
+    id = null;
+    error = null;
+    openedMovies.clear();
+  }
 }

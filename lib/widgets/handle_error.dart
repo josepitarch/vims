@@ -4,6 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:vims/pages/maintenance_screen.dart';
 import 'package:vims/providers/details_movie_provider.dart';
 import 'package:vims/providers/homepage_provider.dart';
 import 'package:vims/providers/top_movies_provider.dart';
@@ -21,9 +23,15 @@ class HandleError extends StatelessWidget {
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
 
-    return error is TimeoutException
-        ? const _ServerError()
-        : _ConnectivityError(onRefresh: onRefresh);
+    if (error is TimeoutException) {
+      return const _ServerError();
+    }
+
+    if (error is MaintenanceException) {
+      return MaintenanceScreen(error as MaintenanceException);
+    }
+
+    return _ConnectivityError(onRefresh: onRefresh);
   }
 }
 

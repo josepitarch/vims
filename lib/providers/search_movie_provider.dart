@@ -7,7 +7,7 @@ class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<dynamic> movies = [];
   bool isLoading = false;
-  final int numberFetchMovies = 3;
+  final int numberFetchMovies = 0;
   TypeSearch type = TypeSearch.title;
   Exception? error;
 

@@ -385,22 +385,6 @@ class _Genres extends StatelessWidget {
       ),
     ]);
   }
-
-  String transformGenres(List<String> genres) {
-    List<String> genresTransformed = [];
-    genres.forEach((element) {
-      if (element.startsWith('I') && element.toLowerCase().contains('guerra'))
-        genresTransformed.add(element);
-      else
-        genresTransformed.add(element[0].toLowerCase() + element.substring(1));
-    });
-
-    if (genresTransformed.isNotEmpty) {
-      genresTransformed[0] = genresTransformed[0][0].toUpperCase() +
-          genresTransformed[0].substring(1);
-    }
-    return genresTransformed.join(', ');
-  }
 }
 
 class _Cast extends StatelessWidget {
