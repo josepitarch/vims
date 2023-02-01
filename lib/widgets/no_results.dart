@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/widgets/material_design_icons.dart';
+import 'package:vims/widgets/material_design_icons.dart';
 
 class NoResults extends StatelessWidget {
   const NoResults({

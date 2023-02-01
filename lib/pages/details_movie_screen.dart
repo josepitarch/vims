@@ -3,20 +3,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/database/bookmark_movies_database.dart';
+import 'package:vims/database/bookmark_movies_database.dart';
 
-import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/providers/bookmark_movies_provider.dart';
-import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
-import 'package:scrapper_filmaffinity/shimmer/details_movie_shimmer.dart';
-import 'package:scrapper_filmaffinity/ui/box_decoration.dart';
-import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
-import 'package:scrapper_filmaffinity/utils/snackbar.dart';
-import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
-import 'package:scrapper_filmaffinity/widgets/flag.dart';
-import 'package:scrapper_filmaffinity/widgets/justwatch_item.dart';
-import 'package:scrapper_filmaffinity/widgets/review_item.dart';
-import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/providers/bookmark_movies_provider.dart';
+import 'package:vims/providers/details_movie_provider.dart';
+import 'package:vims/shimmer/details_movie_shimmer.dart';
+import 'package:vims/ui/box_decoration.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
+import 'package:vims/utils/snackbar.dart';
+import 'package:vims/widgets/custom_image.dart';
+import 'package:vims/widgets/flag.dart';
+import 'package:vims/widgets/justwatch_item.dart';
+import 'package:vims/widgets/review_item.dart';
+import 'package:vims/widgets/handle_error.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
@@ -35,7 +35,8 @@ class DetailsMovieScreen extends StatelessWidget {
     final String heroTag = arguments['heroTag'] ?? id;
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
-    if (provider.error != null) return TimeoutError(provider.error!, provider);
+    if (provider.error != null)
+      return HandleError(provider.error!, provider.onRefresh);
 
     if (hasAllAttributes) {
       Movie movie = arguments['movie'];
@@ -118,6 +119,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       title: Text(
         widget.auxTitle,
         textAlign: TextAlign.start,
+        style: Theme.of(context).textTheme.headline2,
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
@@ -383,22 +385,6 @@ class _Genres extends StatelessWidget {
       ),
     ]);
   }
-
-  String transformGenres(List<String> genres) {
-    List<String> genresTransformed = [];
-    genres.forEach((element) {
-      if (element.startsWith('I') && element.toLowerCase().contains('guerra'))
-        genresTransformed.add(element);
-      else
-        genresTransformed.add(element[0].toLowerCase() + element.substring(1));
-    });
-
-    if (genresTransformed.isNotEmpty) {
-      genresTransformed[0] = genresTransformed[0][0].toUpperCase() +
-          genresTransformed[0].substring(1);
-    }
-    return genresTransformed.join(', ');
-  }
 }
 
 class _Cast extends StatelessWidget {
@@ -483,8 +469,9 @@ class _SynopsisState extends State<_Synopsis> {
                   child: Text(
                     textButton[showMore]!,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          fontFamily: 'OpenSans',
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                   )),
             ),
@@ -517,7 +504,7 @@ class _Platforms extends StatefulWidget {
 class _PlatformsState extends State<_Platforms> {
   late List<Platform> platforms = [];
   late Map<String, List<Platform>> justwatch;
-  late String justwatchMode;
+  late String platformMode;
 
   @override
   void initState() {
@@ -526,7 +513,7 @@ class _PlatformsState extends State<_Platforms> {
 
     if (justwatch.isNotEmpty) {
       platforms = justwatch.values.first;
-      justwatchMode = justwatch.keys.first;
+      platformMode = justwatch.keys.first;
     } else {
       platforms = [];
     }
@@ -552,7 +539,10 @@ class _PlatformsState extends State<_Platforms> {
             child: Text(
               i18n.no_platforms,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(fontStyle: FontStyle.italic),
             ),
           ),
         if (platforms.isNotEmpty)
@@ -561,14 +551,19 @@ class _PlatformsState extends State<_Platforms> {
             return Container(
                 margin: const EdgeInsets.only(right: 10),
                 height: 40,
-                decoration: key == justwatchMode
+                decoration: key == platformMode
                     ? BoxDecorators.decoratorSelectedButton()
                     : BoxDecorators.decoratorUnselectedButton(),
                 child: TextButton(
                     onPressed: () => setPlatforms(key),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(horizontal: 12))),
                     child: Text(textButton[key]!,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color: Colors.blue, fontWeight: FontWeight.bold))));
+                            color: Colors.blue,
+                            fontFamily: 'OpenSans',
+                            fontWeight: FontWeight.w500))));
           }).toList()),
         if (platforms.isNotEmpty)
           SizedBox(
@@ -586,8 +581,8 @@ class _PlatformsState extends State<_Platforms> {
   }
 
   setPlatforms(String platform) {
-    if (justwatchMode != platform) {
-      justwatchMode = platform;
+    if (platformMode != platform) {
+      platformMode = platform;
       platforms = justwatch[platform]!;
       setState(() {});
     }
@@ -630,7 +625,11 @@ class _TitleHeader extends StatelessWidget {
       child: Text(
         title,
         textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.headline2,
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              fontFamily: 'OpenSans',
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
       ),
     );
   }

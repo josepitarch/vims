@@ -1,14 +1,13 @@
-import 'dart:io' as io show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/shimmer/sections_shimmer.dart';
-import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
-import 'package:scrapper_filmaffinity/widgets/pull_refresh.dart';
-import 'package:scrapper_filmaffinity/widgets/section_widget.dart';
-import 'package:scrapper_filmaffinity/widgets/timeout_error.dart';
+import 'package:vims/providers/details_movie_provider.dart';
+import 'package:vims/providers/homepage_provider.dart';
+import 'package:vims/shimmer/sections_shimmer.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
+import 'package:vims/widgets/pull_refresh.dart';
+import 'package:vims/widgets/section_widget.dart';
+import 'package:vims/widgets/handle_error.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
@@ -19,11 +18,9 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen>
     with WidgetsBindingObserver {
-  final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
-
   @override
   initState() {
-    refreshIfIsNecessary(context, int.parse(timeToRefresh));
+    refreshIfIsNecessary(context);
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -31,23 +28,18 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      refreshIfIsNecessary(context, int.parse(timeToRefresh));
+      refreshIfIsNecessary(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
-      if (provider.error != null) {
-        return TimeoutError(provider.error!, provider);
-      }
-
-      if (provider.isLoading) {
-        return const SectionsShimmer();
-      }
+      if (provider.error != null)
+        return HandleError(provider.error!, provider.onRefresh);
+      if (provider.isLoading) return const SectionsShimmer();
 
       return PullRefresh(
-          isAndroid: io.Platform.isAndroid,
           child: SingleChildScrollView(
               child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -69,14 +61,20 @@ class _HomepageScreenState extends State<HomepageScreen>
   }
 }
 
-void refreshIfIsNecessary(BuildContext context, int timeToRefresh) {
-  final provider = Provider.of<HomepageProvider>(context, listen: false);
-  final Duration difference = DateTime.now().difference(provider.lastUpdate);
+void refreshIfIsNecessary(BuildContext context) {
+  final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
+  final homepageProvider =
+      Provider.of<HomepageProvider>(context, listen: false);
+  final detailsMovieProvider =
+      Provider.of<DetailsMovieProvider>(context, listen: false);
+  final Duration difference =
+      DateTime.now().difference(homepageProvider.lastUpdate);
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (difference.inHours >= timeToRefresh) {
+    if (difference.inSeconds >= int.parse(timeToRefresh)) {
       CustomCacheManager.cacheTinyImages.emptyCache();
-      provider.onRefresh();
+      homepageProvider.onRefresh();
+      detailsMovieProvider.clear();
     }
   });
 }

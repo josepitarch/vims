@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:scrapper_filmaffinity/database/history_search_database.dart';
-import 'package:scrapper_filmaffinity/enums/type_search.dart';
-import 'package:scrapper_filmaffinity/services/search_movie_service.dart';
+import 'package:vims/database/history_search_database.dart';
+import 'package:vims/enums/type_search.dart';
+import 'package:vims/services/search_movie_service.dart';
 
 class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<dynamic> movies = [];
   bool isLoading = false;
-  final int numberFetchMovies = 3;
+  final int numberFetchMovies = 0;
   TypeSearch type = TypeSearch.title;
   Exception? error;
 

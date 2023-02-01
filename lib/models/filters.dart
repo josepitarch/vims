@@ -1,4 +1,4 @@
-import 'package:scrapper_filmaffinity/enums/genres.dart';
+import 'package:vims/enums/genres.dart';
 
 class Filters {
   Map<String, bool> platforms;

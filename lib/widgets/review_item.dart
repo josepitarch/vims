@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
+import 'package:vims/models/movie.dart';
 
 class ReviewItem extends StatelessWidget {
   final Review review;

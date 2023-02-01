@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/enums/orders.dart';
-import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
+import 'package:vims/enums/orders.dart';
+import 'package:vims/providers/top_movies_provider.dart';
 
 class OrderByDialog extends StatefulWidget {
   const OrderByDialog({super.key});
@@ -37,7 +37,7 @@ class _OrderByDialogState extends State<OrderByDialog> {
             return ListTile(
               title: Text(options[order.value]!),
               leading: Radio<OrderBy>(
-                activeColor: Theme.of(context).colorScheme.secondary,
+                activeColor: Theme.of(context).colorScheme.primary,
                 value: order,
                 groupValue: orderBy,
                 onChanged: (OrderBy? value) {

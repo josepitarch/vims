@@ -4,29 +4,34 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper_filmaffinity/providers/details_movie_provider.dart';
-import 'package:scrapper_filmaffinity/providers/homepage_provider.dart';
-import 'package:scrapper_filmaffinity/providers/search_movie_provider.dart';
-import 'package:scrapper_filmaffinity/providers/top_movies_provider.dart';
-import 'package:scrapper_filmaffinity/widgets/material_design_icons.dart';
+import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:vims/pages/maintenance_screen.dart';
+import 'package:vims/providers/details_movie_provider.dart';
+import 'package:vims/providers/homepage_provider.dart';
+import 'package:vims/providers/top_movies_provider.dart';
+import 'package:vims/widgets/material_design_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
-late ChangeNotifier changeNotifier;
 
-class TimeoutError extends StatelessWidget {
+class HandleError extends StatelessWidget {
   final Exception error;
-  final ChangeNotifier provider;
-  const TimeoutError(this.error, this.provider, {Key? key}) : super(key: key);
+  final VoidCallback onRefresh;
+  const HandleError(this.error, this.onRefresh, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-    changeNotifier = provider;
 
-    return error is TimeoutException
-        ? const _ServerError()
-        : const _ConnectivityError();
+    if (error is TimeoutException) {
+      return const _ServerError();
+    }
+
+    if (error is MaintenanceException) {
+      return MaintenanceScreen(error as MaintenanceException);
+    }
+
+    return _ConnectivityError(onRefresh: onRefresh);
   }
 }
 
@@ -54,13 +59,19 @@ class _ServerError extends StatelessWidget {
           Text(i18n.timeout_error,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6),
-          TextButton(
-              onPressed: () {
-                homepageProvider.onRefresh();
-                topMoviesProvider.onRefresh();
-                detailsMovieProvider.onRefresh();
-              },
-              child: Text(i18n.retry))
+          ElevatedButton(
+              onPressed: () => {
+                    homepageProvider.onRefresh(),
+                    topMoviesProvider.onRefresh(),
+                    detailsMovieProvider.onRefresh(),
+                  },
+              child: Text(
+                i18n.retry,
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+              ))
         ],
       ),
     );
@@ -68,7 +79,9 @@ class _ServerError extends StatelessWidget {
 }
 
 class _ConnectivityError extends StatefulWidget {
-  const _ConnectivityError({Key? key}) : super(key: key);
+  final VoidCallback onRefresh;
+  const _ConnectivityError({required this.onRefresh, Key? key})
+      : super(key: key);
 
   @override
   State<_ConnectivityError> createState() => _ConnectivityErrorState();
@@ -112,15 +125,7 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       if (result != ConnectionState.none) {
-        if (changeNotifier is HomepageProvider) {
-          (changeNotifier as HomepageProvider).onRefresh();
-        } else if (changeNotifier is TopMoviesProvider) {
-          (changeNotifier as TopMoviesProvider).onRefresh();
-        } else if (changeNotifier is DetailsMovieProvider) {
-          (changeNotifier as DetailsMovieProvider).onRefresh();
-        } else if (changeNotifier is SearchMovieProvider) {
-          (changeNotifier as SearchMovieProvider).onRefresh();
-        }
+        widget.onRefresh();
       }
     });
   }

@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:logger/logger.dart';
-import 'package:scrapper_filmaffinity/enums/genres.dart';
-import 'package:scrapper_filmaffinity/enums/mode_views.dart';
-import 'package:scrapper_filmaffinity/enums/orders.dart';
-import 'package:scrapper_filmaffinity/enums/platforms.dart';
-import 'package:scrapper_filmaffinity/models/filters.dart';
+import 'package:vims/enums/genres.dart';
+import 'package:vims/enums/mode_views.dart';
+import 'package:vims/enums/orders.dart';
+import 'package:vims/enums/platforms.dart';
+import 'package:vims/models/filters.dart';
 
-import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/services/top_movies_service.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/services/top_movies_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TopMoviesProvider extends ChangeNotifier {

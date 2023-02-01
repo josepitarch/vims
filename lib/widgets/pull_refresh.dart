@@ -1,20 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'dart:io' as io show Platform;
+
 class PullRefresh extends StatelessWidget {
-  final bool isAndroid;
   final Widget child;
   final Future<void> Function() onRefresh;
 
-  const PullRefresh(
-      {required this.isAndroid,
-      required this.child,
-      required this.onRefresh,
-      super.key});
+  const PullRefresh({required this.child, required this.onRefresh, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return isAndroid
+    return io.Platform.isAndroid
         ? _PullRefreshAndroid(onRefresh: onRefresh, child: child)
         : _PullRefreshIOS(onRefresh: onRefresh, child: child);
   }

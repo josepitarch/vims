@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/models/movie.dart';
-import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
-import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
+import 'package:vims/widgets/custom_image.dart';
 
 class CardMovie extends StatelessWidget {
   final Movie movie;

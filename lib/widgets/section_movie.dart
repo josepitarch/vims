@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper_filmaffinity/models/section.dart';
-import 'package:scrapper_filmaffinity/utils/custom_cache_manager.dart';
-import 'package:scrapper_filmaffinity/widgets/custom_image.dart';
+import 'package:vims/models/section.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
+import 'package:vims/widgets/custom_image.dart';
 
 class SectionMovie extends StatelessWidget {
   final MovieSection movieSection;
@@ -56,7 +56,7 @@ class SectionMovie extends StatelessWidget {
                         child: Text(
                           movieSection.premiereDay,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                     )
@@ -70,7 +70,7 @@ class SectionMovie extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.bodyText1,
             )
           ])),
     );

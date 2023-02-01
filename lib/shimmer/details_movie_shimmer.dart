@@ -24,7 +24,7 @@ class DetailsMovieShimmer extends StatelessWidget {
                       SizedBox(height: 7),
                       _DirectorShimmer(),
                       _BoxShimmer(),
-                      _YearAndDurationSHimmer(),
+                      _YearAndDurationShimmer(),
                       SizedBox(height: 7),
                       _CastShimmer(),
                       _CastShimmer(),
@@ -47,7 +47,7 @@ class _HeaderShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[200],
-      height: MediaQuery.of(context).size.height * 0.39,
+      height: MediaQuery.of(context).size.height * 0.4,
       width: double.infinity,
     );
   }
@@ -63,7 +63,7 @@ class _TitleShimmer extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       ),
-      height: 20,
+      height: 35,
       width: 180,
     );
   }
@@ -90,19 +90,22 @@ class _BoxShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 17),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        width: MediaQuery.of(context).size.width * 0.9,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        ),
+        height: 50,
       ),
-      height: 50,
     );
   }
 }
 
-class _YearAndDurationSHimmer extends StatelessWidget {
-  const _YearAndDurationSHimmer();
+class _YearAndDurationShimmer extends StatelessWidget {
+  const _YearAndDurationShimmer();
 
   @override
   Widget build(BuildContext context) {

@@ -72,7 +72,7 @@ class Movie {
             ? []
             : List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
-        poster: json['poster'],
+        poster: json['poster'] ?? '',
         rating: json['rating'],
         justwatch: Justwatch.fromMap(json['justwatch']),
         reviews:

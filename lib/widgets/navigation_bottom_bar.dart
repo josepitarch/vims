@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:scrapper_filmaffinity/pages/bookmark_movies_screen.dart';
-import 'package:scrapper_filmaffinity/pages/search_movie_screen.dart';
-import 'package:scrapper_filmaffinity/pages/top_movies_screen.dart';
+import 'package:vims/pages/bookmark_movies_screen.dart';
+import 'package:vims/pages/search_movie_screen.dart';
+import 'package:vims/pages/top_movies_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scrapper_filmaffinity/pages/homepage_screen.dart';
+import 'package:vims/pages/homepage_screen.dart';
 
 class NavigatorBottomBarApp extends StatefulWidget {
   const NavigatorBottomBarApp({Key? key}) : super(key: key);
