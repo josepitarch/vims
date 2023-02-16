@@ -3,12 +3,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:vims/exceptions/maintenance_exception.dart';
 import 'package:vims/pages/maintenance_screen.dart';
-import 'package:vims/providers/details_movie_provider.dart';
-import 'package:vims/providers/homepage_provider.dart';
-import 'package:vims/providers/top_movies_provider.dart';
 import 'package:vims/widgets/material_design_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,7 +22,7 @@ class HandleError extends StatelessWidget {
     i18n = AppLocalizations.of(context)!;
 
     if (error is TimeoutException) {
-      return _ServerError(page);
+      return _ServerError(onRefresh);
     }
 
     if (error is MaintenanceException) {
@@ -38,57 +34,38 @@ class HandleError extends StatelessWidget {
 }
 
 class _ServerError extends StatelessWidget {
-  final String page;
+  final VoidCallback onRefresh;
   const _ServerError(
-    this.page, {
+    this.onRefresh, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final HomepageProvider homepageProvider =
-        Provider.of<HomepageProvider>(context, listen: false);
-    final TopMoviesProvider topMoviesProvider =
-        Provider.of<TopMoviesProvider>(context, listen: false);
-    final DetailsMovieProvider detailsMovieProvider =
-        Provider.of<DetailsMovieProvider>(context, listen: false);
-
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(MaterialDesignIcons.emoticonConfusedOutline,
-              size: 100, color: Colors.white),
-          const SizedBox(height: 20),
-          Text(i18n.timeout_error,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6),
-          ElevatedButton(
-              onPressed: () {
-                {
-                  switch (page) {
-                    case 'homepage':
-                      homepageProvider.onRefresh();
-                      break;
-                    case 'top':
-                      topMoviesProvider.onRefresh();
-                      break;
-                    case 'details':
-                      detailsMovieProvider.onRefresh();
-                      break;
-                    default:
-                      homepageProvider.getSeeMore(page);
-                  }
-                }
-              },
-              child: Text(
-                i18n.retry,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-              ))
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(MaterialDesignIcons.emoticonConfusedOutline,
+                size: 100, color: Colors.white),
+            const SizedBox(height: 20),
+            Text(i18n.timeout_error,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline6),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: onRefresh,
+                child: Text(
+                  i18n.retry,
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                ))
+          ],
+        ),
       ),
     );
   }
