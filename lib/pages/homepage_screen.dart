@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/providers/details_movie_provider.dart';
 import 'package:vims/providers/homepage_provider.dart';
+import 'package:vims/providers/see_more_provider.dart';
 import 'package:vims/shimmer/sections_shimmer.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/pull_refresh.dart';
@@ -35,8 +35,8 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   Widget build(BuildContext context) {
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
-      if (provider.errors['th'] != null)
-        return HandleError(provider.errors['th'], provider.onRefresh, 'th');
+      if (provider.error != null)
+        return HandleError(provider.error!, provider.onRefresh, 'homepage');
       if (provider.isLoading) return const SectionsShimmer();
 
       return PullRefresh(
@@ -50,7 +50,10 @@ class _HomepageScreenState extends State<HomepageScreen>
               const SizedBox(height: 30),
             ]),
           )),
-          onRefresh: () => provider.onRefresh());
+          onRefresh: () {
+            context.read<SeeMoreProvider>().onRefresh();
+            return provider.onRefresh();
+          });
     });
   }
 
@@ -63,10 +66,8 @@ class _HomepageScreenState extends State<HomepageScreen>
 
 void refreshIfIsNecessary(BuildContext context) {
   final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
-  final homepageProvider =
-      Provider.of<HomepageProvider>(context, listen: false);
-  final detailsMovieProvider =
-      Provider.of<DetailsMovieProvider>(context, listen: false);
+  final HomepageProvider homepageProvider = context.read<HomepageProvider>();
+
   final Duration difference =
       DateTime.now().difference(homepageProvider.lastUpdate);
 
@@ -74,7 +75,7 @@ void refreshIfIsNecessary(BuildContext context) {
     if (difference.inSeconds >= int.parse(timeToRefresh)) {
       CustomCacheManager.cacheTinyImages.emptyCache();
       homepageProvider.onRefresh();
-      detailsMovieProvider.clear();
+      context.read<SeeMoreProvider>().onRefresh();
     }
   });
 }
