@@ -15,6 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
+const double limitShowFab = 300;
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -33,13 +34,19 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
     final provider = context.read<TopMoviesProvider>();
     scrollController =
         ScrollController(initialScrollOffset: provider.scrollPosition);
+
+    setState(() {
+      showFloatingActionButton = provider.scrollPosition >= limitShowFab;
+    });
     scrollController.addListener(() {
       provider.scrollPosition = scrollController.position.pixels;
-      if (provider.scrollPosition >= 200 && !showFloatingActionButton) {
+      if (provider.scrollPosition >= limitShowFab &&
+          !showFloatingActionButton) {
         setState(() {
           showFloatingActionButton = true;
         });
-      } else if (provider.scrollPosition < 200 && showFloatingActionButton) {
+      } else if (provider.scrollPosition < limitShowFab &&
+          showFloatingActionButton) {
         setState(() {
           showFloatingActionButton = false;
         });
