@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/enums/title_sections.dart';
 import 'package:vims/models/section.dart';
-import 'package:vims/providers/homepage_provider.dart';
+import 'package:vims/providers/see_more_provider.dart';
 import 'package:vims/shimmer/see_more_shimmer.dart';
 import 'package:vims/widgets/section_movie.dart';
 import 'package:vims/widgets/handle_error.dart';
@@ -12,30 +12,32 @@ class SeeMore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<HomepageProvider>(context);
-    final title = ModalRoute.of(context)!.settings.arguments as String;
-    final String titleEnum = TitleSectionEnum.getName(title);
+    return Consumer<SeeMoreProvider>(builder: (_, provider, __) {
+      final title = ModalRoute.of(context)!.settings.arguments as String;
+      final String titleEnum = TitleSectionEnum.getName(title);
 
-    if (provider.errors[titleEnum] != null)
-      return HandleError(
-          provider.errors[titleEnum], provider.onRefresh, titleEnum);
+      onRefreshError() => provider.onRefreshError(titleEnum);
 
-    Widget body;
-    if (provider.seeMore[titleEnum] == null) {
-      provider.getSeeMore(titleEnum);
-      body = SeeMoreShimmer(title: title, height: 160, width: 120);
-    } else {
-      body = _Body(moviesSection: provider.seeMore[titleEnum]!);
-    }
+      if (provider.errors[titleEnum] != null)
+        return HandleError(
+            provider.errors[titleEnum], onRefreshError, titleEnum);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title, style: Theme.of(context).textTheme.headline2),
-      ),
-      body: SafeArea(
-        child: body,
-      ),
-    );
+      Widget body;
+      if (provider.seeMore[titleEnum] == null) {
+        provider.getSeeMore(titleEnum);
+        body = SeeMoreShimmer(title: title, height: 160, width: 120);
+      } else {
+        body = _Body(moviesSection: provider.seeMore[titleEnum]!);
+      }
+
+      return Scaffold(
+          appBar: AppBar(
+            title: Text(title, style: Theme.of(context).textTheme.headline2),
+          ),
+          body: SafeArea(
+            child: body,
+          ));
+    });
   }
 }
 

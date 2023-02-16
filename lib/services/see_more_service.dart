@@ -18,8 +18,7 @@ class SeeMoreService {
   Future<List<MovieSection>> getSeeMore(String section) async {
     List<MovieSection> seeMoreMovies = [];
 
-    final bool isRelease =
-        !TitleSectionEnum.coming_theaters.value.contains(section);
+    final bool isRelease = TitleSectionEnum.coming_theaters.name != section;
 
     final request = isRelease
         ? Uri.http(url, '/api/$versionApi/release/section/$section')
