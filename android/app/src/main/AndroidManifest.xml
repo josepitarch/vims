@@ -11,6 +11,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name="com.example.vims.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

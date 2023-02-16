@@ -13,6 +13,7 @@ import 'package:vims/providers/bookmark_movies_provider.dart';
 import 'package:vims/providers/details_movie_provider.dart';
 import 'package:vims/providers/homepage_provider.dart';
 import 'package:vims/providers/search_movie_provider.dart';
+import 'package:vims/providers/see_more_provider.dart';
 import 'package:vims/providers/top_movies_provider.dart';
 import 'package:vims/ui/material_theme.dart';
 import 'package:vims/widgets/navigation_bottom_bar.dart';
@@ -27,7 +28,6 @@ Future<void> main() async {
 
 class AppState extends StatelessWidget {
   const AppState({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     //Locale locale = WidgetsBinding.instance.window.locale;
@@ -38,7 +38,8 @@ class AppState extends StatelessWidget {
           create: (_) => DetailsMovieProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
       ChangeNotifierProvider(
-          create: (_) => BookmarkMoviesProvider(), lazy: false)
+          create: (_) => BookmarkMoviesProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => SeeMoreProvider(), lazy: true)
     ], child: const MyApp());
   }
 }

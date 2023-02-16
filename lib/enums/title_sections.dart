@@ -17,9 +17,8 @@ enum TitleSectionEnum {
 
   static String getName(String title) {
     return TitleSectionEnum.values
-        .firstWhereOrNull((element) => element.value.contains(title))
-        .toString()
-        .split('.')
-        .last;
+            .firstWhereOrNull((element) => element.value.contains(title))
+            ?.name ??
+        '';
   }
 }
