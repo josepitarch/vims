@@ -6,33 +6,15 @@ import 'package:vims/enums/title_sections.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/services/homepage_service.dart';
 
-class HomepageProvider extends ChangeNotifier {
-  List<Section> sections = [];
+class SeeMoreProvider extends ChangeNotifier {
   Map<String, List<MovieSection>> seeMore = {};
   bool isLoading = true;
   final logger = Logger();
-  DateTime lastUpdate = DateTime.now();
   Map errors = TitleSectionEnum.values
       .asMap()
       .map((key, value) => MapEntry(value.toString().split('.').last, null));
 
-  HomepageProvider() {
-    getHomepageMovies();
-  }
-
-  getHomepageMovies() async {
-    try {
-      sections = await HomepageService().getHomepageMovies();
-      errors['th'] = null;
-    } on Exception catch (e) {
-      errors['th'] = e;
-      logger.e(e.toString());
-    } finally {
-      isLoading = false;
-      lastUpdate = DateTime.now();
-      notifyListeners();
-    }
-  }
+  SeeMoreProvider();
 
   getSeeMore(String title) async {
     try {
@@ -50,11 +32,9 @@ class HomepageProvider extends ChangeNotifier {
   }
 
   onRefresh() {
-    sections.clear();
     seeMore.clear();
     errors.clear();
     isLoading = true;
     notifyListeners();
-    getHomepageMovies();
   }
 }

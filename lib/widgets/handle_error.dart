@@ -17,14 +17,16 @@ late AppLocalizations i18n;
 class HandleError extends StatelessWidget {
   final Exception error;
   final VoidCallback onRefresh;
-  const HandleError(this.error, this.onRefresh, {Key? key}) : super(key: key);
+  final String page;
+  const HandleError(this.error, this.onRefresh, this.page, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
 
     if (error is TimeoutException) {
-      return const _ServerError();
+      return _ServerError(page);
     }
 
     if (error is MaintenanceException) {
@@ -36,7 +38,9 @@ class HandleError extends StatelessWidget {
 }
 
 class _ServerError extends StatelessWidget {
-  const _ServerError({
+  final String page;
+  const _ServerError(
+    this.page, {
     Key? key,
   }) : super(key: key);
 
@@ -60,11 +64,23 @@ class _ServerError extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6),
           ElevatedButton(
-              onPressed: () => {
-                    homepageProvider.onRefresh(),
-                    topMoviesProvider.onRefresh(),
-                    detailsMovieProvider.onRefresh(),
-                  },
+              onPressed: () {
+                {
+                  switch (page) {
+                    case 'homepage':
+                      homepageProvider.onRefresh();
+                      break;
+                    case 'top':
+                      topMoviesProvider.onRefresh();
+                      break;
+                    case 'details':
+                      detailsMovieProvider.onRefresh();
+                      break;
+                    default:
+                      homepageProvider.getSeeMore(page);
+                  }
+                }
+              },
               child: Text(
                 i18n.retry,
                 style: Theme.of(context).textTheme.bodyText1!.copyWith(

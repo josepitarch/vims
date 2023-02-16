@@ -23,7 +23,7 @@ class SearchMovieScreen extends StatelessWidget {
 
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
       if (provider.error != null)
-        return HandleError(provider.error!, provider.onRefresh);
+        return HandleError(provider.error!, provider.onRefresh, 'search');
       if (provider.isLoading) {
         return SafeArea(
           child: Column(children: const [
@@ -38,7 +38,7 @@ class SearchMovieScreen extends StatelessWidget {
           provider.search.isNotEmpty
               ? _Suggestions(
                   movies: provider.movies,
-                  numberFetchMovies: provider.numberFetchMovies)
+                  numberFetchMovies: provider.countFetch)
               : const _HistorySearch(),
         ]),
       );

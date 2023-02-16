@@ -35,8 +35,8 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   Widget build(BuildContext context) {
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
-      if (provider.error != null)
-        return HandleError(provider.error!, provider.onRefresh);
+      if (provider.errors['th'] != null)
+        return HandleError(provider.errors['th'], provider.onRefresh, 'th');
       if (provider.isLoading) return const SectionsShimmer();
 
       return PullRefresh(
