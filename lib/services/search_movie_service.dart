@@ -30,6 +30,8 @@ class SearchMovieService {
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
 
+    if (response.statusCode == 500) throw TimeoutException(response.body);
+
     if (response.statusCode == 503) {
       final body = json.jsonDecode(response.body);
       throw MaintenanceException(body['image'], body['message']);
