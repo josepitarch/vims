@@ -8,10 +8,10 @@ import 'package:vims/services/homepage_service.dart';
 class HomepageProvider extends ChangeNotifier {
   List<Section> sections = [];
   Map<String, List<MovieSection>> seeMore = {};
-  Exception? error;
   bool isLoading = true;
   final logger = Logger();
   DateTime lastUpdate = DateTime.now();
+  Exception? error;
 
   HomepageProvider() {
     getHomepageMovies();
@@ -27,21 +27,6 @@ class HomepageProvider extends ChangeNotifier {
     } finally {
       isLoading = false;
       lastUpdate = DateTime.now();
-      notifyListeners();
-    }
-  }
-
-  getSeeMore(String title, bool isRelease) async {
-    try {
-      List<MovieSection> movieSections =
-          await HomepageService().getSeeMore(title, isRelease);
-      seeMore[title] = movieSections;
-      error = null;
-    } on Exception catch (e) {
-      error = e;
-      logger.e(e.toString());
-    } finally {
-      isLoading = false;
       notifyListeners();
     }
   }

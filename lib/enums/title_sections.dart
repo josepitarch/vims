@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum TitleSectionEnum {
   th(['Cartelera', 'Now in theaters']),
   coming_theaters(['Próximamente en cines', 'Coming soon to theaters']),
@@ -12,4 +14,11 @@ enum TitleSectionEnum {
   const TitleSectionEnum(this._value);
   final List<String> _value;
   List<String> get value => _value;
+
+  static String getName(String title) {
+    return TitleSectionEnum.values
+            .firstWhereOrNull((element) => element.value.contains(title))
+            ?.name ??
+        '';
+  }
 }

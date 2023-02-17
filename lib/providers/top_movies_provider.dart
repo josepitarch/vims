@@ -21,6 +21,7 @@ class TopMoviesProvider extends ChangeNotifier {
   OrderBy orderBy = OrderBy.shuffle;
   Map<String, Movie> openedMovies = {};
   ModeView modeView = ModeView.list;
+  double scrollPosition = 0;
 
   Filters filters = Filters(
       platforms: {

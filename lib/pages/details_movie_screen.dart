@@ -36,7 +36,7 @@ class DetailsMovieScreen extends StatelessWidget {
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
     if (provider.error != null)
-      return HandleError(provider.error!, provider.onRefresh);
+      return HandleError(provider.error!, provider.onRefresh, 'details');
 
     if (hasAllAttributes) {
       Movie movie = arguments['movie'];
