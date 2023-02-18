@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:vims/enums/genres.dart';
 
 class Filters {
@@ -14,7 +15,7 @@ class Filters {
       required this.yearFrom,
       required this.yearTo});
 
-  removeFiltes() {
+  removeFilters() {
     platforms.forEach((key, value) {
       platforms[key] = false;
     });
@@ -22,5 +23,13 @@ class Filters {
       genres[key] = false;
     });
     isAnimationExcluded = true;
+  }
+
+  bool equals(Filters filters) {
+    return mapEquals(platforms, filters.platforms) &&
+        mapEquals(genres, filters.genres) &&
+        isAnimationExcluded == filters.isAnimationExcluded &&
+        yearFrom == filters.yearFrom &&
+        yearTo == filters.yearTo;
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/dialogs/order_by_dialog.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
 import 'package:vims/enums/mode_views.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/top_movies_provider.dart';
 import 'package:vims/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/loading.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/title_page.dart';
@@ -31,7 +31,8 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
   @override
   void initState() {
-    final provider = context.read<TopMoviesProvider>();
+    final TopMoviesProvider provider =
+        Provider.of<TopMoviesProvider>(context, listen: false);
     scrollController =
         ScrollController(initialScrollOffset: provider.scrollPosition);
 
@@ -50,6 +51,10 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
         setState(() {
           showFloatingActionButton = false;
         });
+      }
+      if (scrollController.position.pixels + 300 >=
+          scrollController.position.maxScrollExtent) {
+        if (!provider.isLoading) provider.getTopMovies();
       }
     });
     super.initState();
@@ -100,21 +105,15 @@ class _Options extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        CupertinoButton(
-            child: Text(i18n.title_order_by_dialog,
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.secondary),
-                textAlign: TextAlign.start),
-            onPressed: () => showDialogOrderBy(context)),
+        // IconButton(
+        //     icon: Icon(
+        //         modeView == ModeView.list ? Icons.list : Icons.apps_rounded),
+        //     onPressed: () => provider.setModeView()),
         IconButton(
             onPressed: () {
               showDialogFilters(context, provider);
             },
             icon: const Icon(Icons.filter_list_rounded)),
-        // IconButton(
-        //     icon: Icon(
-        //         modeView == ModeView.list ? Icons.apps_rounded : Icons.list),
-        //     onPressed: () => setModeView(context, modeView)),
       ],
     );
   }
@@ -125,20 +124,6 @@ class _Options extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => TopMoviesDialog(
             topMoviesProvider: provider, controller: scrollController));
-  }
-
-  showDialogOrderBy(BuildContext context) {
-    return showCupertinoDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) => const OrderByDialog());
-  }
-
-  setModeView(BuildContext context, ModeView modeView) {
-    ModeView newModeView =
-        modeView == ModeView.list ? ModeView.grid : ModeView.list;
-
-    context.read<TopMoviesProvider>().setModeView(newModeView);
   }
 }
 
@@ -166,36 +151,19 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? const CardMovieShimmer()
-        : ListView(
-            controller: scrollController,
-            children: movies
-                .map((movie) => CardMovie(movie: movie, saveToCache: false))
-                .toList());
-  }
-}
-
-class CardMoviesLoading extends StatelessWidget {
-  const CardMoviesLoading({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: 20, itemBuilder: (_, __) => const CardMovieShimmer());
-  }
-}
-
-class CardMovies extends StatelessWidget {
-  final List<Movie> movies;
-  const CardMovies({super.key, required this.movies});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-        controller: scrollController,
-        children: movies
-            .map((movie) => CardMovie(movie: movie, saveToCache: false))
-            .toList());
+    final TopMoviesProvider provider = Provider.of<TopMoviesProvider>(context);
+    if (isLoading && movies.isEmpty) return const CardMovieShimmer();
+    final double left = MediaQuery.of(context).size.width * 0.5 - 30;
+    return Stack(children: [
+      ListView(
+          controller: scrollController,
+          children: movies
+              .map((movie) => CardMovie(movie: movie, saveToCache: false))
+              .toList()),
+      Positioned(
+          bottom: 10,
+          left: left,
+          child: provider.isLoading ? const Loading() : const SizedBox())
+    ]);
   }
 }

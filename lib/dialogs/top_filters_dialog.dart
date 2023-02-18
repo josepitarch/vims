@@ -29,11 +29,12 @@ class TopMoviesDialog extends StatelessWidget {
     scrollController = controller;
     hasError = false;
     filters = Filters(
-        platforms: Map.from(topMoviesProvider.filters.platforms),
-        genres: Map.from(topMoviesProvider.filters.genres),
-        isAnimationExcluded: topMoviesProvider.filters.isAnimationExcluded,
-        yearFrom: topMoviesProvider.filters.yearFrom,
-        yearTo: topMoviesProvider.filters.yearTo);
+        platforms: Map.from(topMoviesProvider.currentFilters.platforms),
+        genres: Map.from(topMoviesProvider.currentFilters.genres),
+        isAnimationExcluded:
+            topMoviesProvider.currentFilters.isAnimationExcluded,
+        yearFrom: topMoviesProvider.currentFilters.yearFrom,
+        yearTo: topMoviesProvider.currentFilters.yearTo);
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -238,8 +239,8 @@ class _ApplyButton extends StatelessWidget {
             onPressed: () {
               if (hasError) return;
               if (scrollController.hasClients) scrollController.jumpTo(0);
-              provider.applyFilters(filters);
               Navigator.pop(context);
+              provider.applyFilters(filters);
             },
             child: Text(i18n.apply_filters_dialog))
         : CupertinoButton(
@@ -248,8 +249,8 @@ class _ApplyButton extends StatelessWidget {
             color: Colors.orange,
             onPressed: () {
               if (scrollController.hasClients) scrollController.jumpTo(0);
-              provider.applyFilters(filters);
               Navigator.pop(context);
+              provider.applyFilters(filters);
             },
             child: Text(i18n.apply_filters_dialog));
   }
