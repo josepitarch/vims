@@ -1,7 +1,7 @@
 import 'dart:convert' as json;
 
 class Movie {
-  final String id;
+  final int id;
   final String flag;
   final String title;
   final String originalTitle;
@@ -18,7 +18,7 @@ class Movie {
   final List<String>? groups;
   final String synopsis;
   final String poster;
-  final String? rating;
+  final dynamic rating;
   final Justwatch justwatch;
   final List<Review> reviews;
   final List<String>? platforms;

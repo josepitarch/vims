@@ -72,7 +72,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
       if (provider.error != null) {
-        return HandleError(provider.error!, provider.onRefresh, 'top');
+        return HandleError(provider.error!, provider.onRefresh);
       }
 
       return Scaffold(

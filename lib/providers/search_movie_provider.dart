@@ -39,7 +39,6 @@ class SearchMovieProvider extends ChangeNotifier {
       error = null;
     }).catchError((error) {
       this.error = error;
-      return null;
     }).whenComplete(() {
       isLoading = false;
       notifyListeners();

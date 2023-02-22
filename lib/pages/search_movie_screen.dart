@@ -23,7 +23,7 @@ class SearchMovieScreen extends StatelessWidget {
 
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
       if (provider.error != null)
-        return HandleError(provider.error!, provider.onRefresh, 'search');
+        return HandleError(provider.error!, provider.onRefresh);
       if (provider.isLoading) {
         return SafeArea(
           child: Column(children: const [

@@ -15,6 +15,7 @@ import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/flag.dart';
 import 'package:vims/widgets/justwatch_item.dart';
+import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
 import 'package:vims/widgets/handle_error.dart';
 
@@ -31,12 +32,12 @@ class DetailsMovieScreen extends StatelessWidget {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    final String id = arguments['id'];
-    final String heroTag = arguments['heroTag'] ?? id;
+    final int id = arguments['id'];
+    final String heroTag = arguments['heroTag'] ?? id.toString();
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
     if (provider.error != null)
-      return HandleError(provider.error!, provider.onRefresh, 'details');
+      return HandleError(provider.error!, provider.onRefresh);
 
     if (hasAllAttributes) {
       Movie movie = arguments['movie'];
@@ -54,9 +55,10 @@ class DetailsMovieScreen extends StatelessWidget {
   }
 
   Scaffold screen(Movie movie) {
+    final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(movie.title, movie.poster, movie.heroTag ?? movie.id),
+        _CustomAppBar(movie.title, movie.poster, heroTag),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -205,7 +207,7 @@ class _Box extends StatelessWidget {
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         _Country(movie.country, movie.flag),
-        _Rating(movie.rating),
+        Rating(movie.rating),
         _BookmarkMovie(movie)
       ]),
     );
@@ -236,33 +238,6 @@ class _YearAndDuration extends StatelessWidget {
     String minutesString = minutes > 0 ? '$minutes MIN' : '';
 
     return '  ·  $hoursString$minutesString';
-  }
-}
-
-class _Rating extends StatelessWidget {
-  final String? rating;
-
-  const _Rating(
-    this.rating, {
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      const Icon(
-        Icons.star,
-        color: Colors.yellow,
-        size: 30,
-      ),
-      const SizedBox(
-        width: 7,
-      ),
-      Text(
-        rating ?? '---',
-        style: Theme.of(context).textTheme.headline3,
-      ),
-    ]);
   }
 }
 

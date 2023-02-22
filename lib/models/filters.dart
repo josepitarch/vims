@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:vims/enums/genres.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:vims/enums/platforms.dart';
 
 class Filters {
   Map<String, bool> platforms;
@@ -7,6 +9,16 @@ class Filters {
   bool isAnimationExcluded;
   int yearFrom;
   int yearTo;
+
+  Filters.origin()
+      : platforms = {
+          for (var platform in Platforms.values)
+            if (platform.showInTopFilters) platform.name: false
+        },
+        genres = {for (var e in Genres.values) e: false},
+        isAnimationExcluded = true,
+        yearFrom = int.parse(dotenv.env['YEAR_FROM']!),
+        yearTo = DateTime.now().year;
 
   Filters(
       {required this.platforms,

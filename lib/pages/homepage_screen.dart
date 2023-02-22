@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:vims/providers/details_movie_provider.dart';
 import 'package:vims/providers/homepage_provider.dart';
 import 'package:vims/providers/see_more_provider.dart';
 import 'package:vims/shimmer/sections_shimmer.dart';
@@ -36,7 +37,7 @@ class _HomepageScreenState extends State<HomepageScreen>
   Widget build(BuildContext context) {
     return Consumer<HomepageProvider>(builder: (_, provider, __) {
       if (provider.error != null)
-        return HandleError(provider.error!, provider.onRefresh, 'homepage');
+        return HandleError(provider.error!, provider.onRefresh);
       if (provider.isLoading) return const SectionsShimmer();
 
       return PullRefresh(
@@ -76,6 +77,7 @@ void refreshIfIsNecessary(BuildContext context) {
       CustomCacheManager.cacheTinyImages.emptyCache();
       homepageProvider.onRefresh();
       context.read<SeeMoreProvider>().onRefresh();
+      context.read<DetailsMovieProvider>().clear();
     }
   });
 }

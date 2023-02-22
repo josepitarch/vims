@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
+import 'package:vims/widgets/rating.dart';
 
 class CardMovie extends StatelessWidget {
   final Movie movie;
@@ -48,7 +49,7 @@ class CardMovie extends StatelessWidget {
                       const SizedBox(height: 10.0),
                       _Director(movie.director),
                     ]),
-                    _Rating(movie.rating, height: height)
+                    Rating(movie.rating)
                   ],
                 )),
           ),
@@ -133,27 +134,6 @@ class _Director extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
       ),
-    );
-  }
-}
-
-class _Rating extends StatelessWidget {
-  final String? average;
-  final double height;
-  const _Rating(
-    this.average, {
-    Key? key,
-    required this.height,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Icon(Icons.star, color: Colors.yellow),
-        const SizedBox(width: 5),
-        Text(average ?? '---', style: Theme.of(context).textTheme.headline4),
-      ],
     );
   }
 }

@@ -1,28 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:logger/logger.dart';
-import 'package:vims/enums/genres.dart';
 import 'package:vims/enums/mode_views.dart';
-import 'package:vims/enums/platforms.dart';
 import 'package:vims/models/filters.dart';
 
 import 'package:vims/models/movie.dart';
 import 'package:vims/services/top_movies_service.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 List<int> randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
-
-final Filters initialFilters = Filters(
-    platforms: {
-      for (var platform in Platforms.values)
-        if (platform.showInTopFilters) platform.name: false
-    },
-    genres: {
-      for (var e in Genres.values) e: false
-    },
-    isAnimationExcluded: true,
-    yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
-    yearTo: DateTime.now().year);
 
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
@@ -33,12 +18,7 @@ class TopMoviesProvider extends ChangeNotifier {
   ModeView modeView = ModeView.list;
   double scrollPosition = 0;
 
-  Filters currentFilters = Filters(
-      platforms: initialFilters.platforms,
-      genres: initialFilters.genres,
-      isAnimationExcluded: initialFilters.isAnimationExcluded,
-      yearFrom: initialFilters.yearFrom,
-      yearTo: initialFilters.yearTo);
+  Filters currentFilters = Filters.origin();
 
   var logger = Logger();
 
@@ -74,10 +54,8 @@ class TopMoviesProvider extends ChangeNotifier {
           yearFrom: currentFilters.yearFrom,
           yearTo: currentFilters.yearTo);
 
+      if (!hasFilters) response.shuffle();
       movies.addAll(response);
-      // movies = hasFilters ? movies : movies
-      //   ..shuffle();
-
       error = null;
     } on Exception catch (e) {
       error = e;
@@ -93,7 +71,8 @@ class TopMoviesProvider extends ChangeNotifier {
 
     hasFilters = true;
     movies.clear();
-    notifyListeners();
+    from = 0;
+    scrollPosition = 0;
 
     currentFilters.platforms = {
       ...currentFilters.platforms,
@@ -113,9 +92,11 @@ class TopMoviesProvider extends ChangeNotifier {
 
   removeFilters() {
     movies.clear();
-    currentFilters.removeFilters();
+    currentFilters = Filters.origin();
     hasFilters = false;
     from = 0;
+    scrollPosition = 0;
+
     randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
 
     getTopMovies();

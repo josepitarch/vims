@@ -20,7 +20,7 @@ class SeeMore extends StatelessWidget {
 
       if (provider.errors[titleEnum] != null)
         return HandleError(
-            provider.errors[titleEnum], onRefreshError, titleEnum);
+            provider.errors[titleEnum], onRefreshError);
 
       Widget body;
       if (provider.seeMore[titleEnum] == null) {
@@ -59,7 +59,7 @@ class _Body extends StatelessWidget {
       children: moviesSection
           .map((movieSection) => SectionMovie(
               movieSection: movieSection,
-              heroTag: movieSection.id,
+              heroTag: movieSection.id.toString(),
               saveToCache: false,
               height: 160,
               width: 120))

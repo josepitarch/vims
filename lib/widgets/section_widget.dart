@@ -46,7 +46,7 @@ class SectionWidget extends StatelessWidget {
               ...section.movies
                   .map((movie) => SectionMovie(
                       movieSection: movie,
-                      heroTag: movie.id + section.title,
+                      heroTag: "${movie.id}${section.title}",
                       saveToCache: true,
                       height: 190,
                       width: 120))
