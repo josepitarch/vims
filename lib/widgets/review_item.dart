@@ -20,7 +20,7 @@ class ReviewItem extends StatelessWidget {
           children: [
             Text(
               review.author,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
             ),
