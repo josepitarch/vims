@@ -15,6 +15,7 @@ import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/flag.dart';
 import 'package:vims/widgets/justwatch_item.dart';
+import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
 import 'package:vims/widgets/handle_error.dart';
 
@@ -31,8 +32,8 @@ class DetailsMovieScreen extends StatelessWidget {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    final String id = arguments['id'];
-    final String heroTag = arguments['heroTag'] ?? id;
+    final int id = arguments['id'];
+    final String heroTag = arguments['heroTag'] ?? id.toString();
     final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
     if (provider.error != null)
@@ -54,9 +55,10 @@ class DetailsMovieScreen extends StatelessWidget {
   }
 
   Scaffold screen(Movie movie) {
+    final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(movie.title, movie.poster, movie.heroTag ?? movie.id),
+        _CustomAppBar(movie.title, movie.poster, heroTag),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -119,7 +121,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       title: Text(
         widget.auxTitle,
         textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.headline2,
+        style: Theme.of(context).textTheme.displayMedium,
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
@@ -154,7 +156,7 @@ class _Title extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: Theme.of(context).textTheme.headline2,
+              style: Theme.of(context).textTheme.displayMedium,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
               maxLines: 2),
@@ -162,7 +164,7 @@ class _Title extends StatelessWidget {
           Text(originalTitle,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(color: Colors.grey),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
@@ -185,7 +187,7 @@ class _Director extends StatelessWidget {
           maxLines: 2,
           textAlign: TextAlign.start,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.headline5),
+          style: Theme.of(context).textTheme.headlineSmall),
     );
   }
 }
@@ -205,7 +207,7 @@ class _Box extends StatelessWidget {
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         _Country(movie.country, movie.flag),
-        _Rating(movie.rating),
+        Rating(movie.rating),
         _BookmarkMovie(movie)
       ]),
     );
@@ -223,7 +225,7 @@ class _YearAndDuration extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
       child: Text(year + transformDuration(duration),
-          style: Theme.of(context).textTheme.headline5),
+          style: Theme.of(context).textTheme.headlineSmall),
     );
   }
 
@@ -236,33 +238,6 @@ class _YearAndDuration extends StatelessWidget {
     String minutesString = minutes > 0 ? '$minutes MIN' : '';
 
     return '  ·  $hoursString$minutesString';
-  }
-}
-
-class _Rating extends StatelessWidget {
-  final String? rating;
-
-  const _Rating(
-    this.rating, {
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      const Icon(
-        Icons.star,
-        color: Colors.yellow,
-        size: 30,
-      ),
-      const SizedBox(
-        width: 7,
-      ),
-      Text(
-        rating ?? '---',
-        style: Theme.of(context).textTheme.headline3,
-      ),
-    ]);
   }
 }
 
@@ -286,7 +261,7 @@ class _Country extends StatelessWidget {
         ),
         Text(
           country,
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headlineSmall,
         )
       ],
     );
@@ -380,7 +355,7 @@ class _Genres extends StatelessWidget {
       SizedBox(
         width: double.infinity,
         child: Text(genres.join(', '),
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.start),
       ),
     ]);
@@ -408,7 +383,7 @@ class _Cast extends StatelessWidget {
               textAlign: cast.isNotEmpty ? TextAlign.start : TextAlign.center,
               maxLines: _maxLines,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyText1),
+              style: Theme.of(context).textTheme.bodyLarge),
         ),
       ],
     );
@@ -456,7 +431,7 @@ class _SynopsisState extends State<_Synopsis> {
               textAlign:
                   widget.synopsis.isEmpty ? TextAlign.center : TextAlign.start,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
               maxLines: maxLines),
         ),
         if (widget.synopsis.length > delimiterLines)
@@ -468,7 +443,7 @@ class _SynopsisState extends State<_Synopsis> {
                   onPressed: () => updateState(),
                   child: Text(
                     textButton[showMore]!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontFamily: 'OpenSans',
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.secondary,
@@ -541,7 +516,7 @@ class _PlatformsState extends State<_Platforms> {
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(fontStyle: FontStyle.italic),
             ),
           ),
@@ -560,7 +535,7 @@ class _PlatformsState extends State<_Platforms> {
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.symmetric(horizontal: 12))),
                     child: Text(textButton[key]!,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             color: Colors.blue,
                             fontFamily: 'OpenSans',
                             fontWeight: FontWeight.w500))));

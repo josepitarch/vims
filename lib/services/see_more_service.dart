@@ -1,21 +1,29 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:vims/enums/title_sections.dart';
 import 'package:vims/exceptions/maintenance_exception.dart';
 import 'dart:convert' as json;
 
 import 'package:vims/models/section.dart';
 
-class HomepageService {
+class SeeMoreService {
   final String url = dotenv.env['URL']!;
   final String timeout = dotenv.env['TIMEOUT']!;
   final String versionApi = dotenv.env['VERSION_API']!;
 
-  Future<List<Section>> getHomepageMovies() async {
-    List<Section> homepageMovies = [];
+  final logger = Logger();
 
-    final request = Uri.http(url, '/api/$versionApi/homepage', {});
+  Future<List<MovieSection>> getSeeMore(String section) async {
+    List<MovieSection> seeMoreMovies = [];
+
+    final bool isRelease = TitleSectionEnum.coming_theaters.name != section;
+
+    final request = isRelease
+        ? Uri.http(url, '/api/$versionApi/release/section/$section')
+        : Uri.http(url, '/api/$versionApi/coming/section');
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
@@ -29,10 +37,11 @@ class HomepageService {
 
     if (response.statusCode == 200) {
       List aux = json.jsonDecode(response.body);
-      aux.forEach((element) => homepageMovies.add(Section.fromMap(element)));
-      return homepageMovies;
+      aux.forEach(
+          (element) => seeMoreMovies.add(MovieSection.fromMap(element)));
+      return seeMoreMovies;
     }
 
-    return homepageMovies;
+    return seeMoreMovies;
   }
 }

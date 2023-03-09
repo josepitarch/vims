@@ -5,6 +5,7 @@ enum Platforms {
   disney(['disney plus'], true),
   movistar(['movistar plus'], true),
   filmin(['filmin'], true),
+  sky_show_time(['skyshowtime'], true),
   rakuten(['rakuten tv'], true),
   apple(['apple itunes', 'apple tv plus'], true),
   flixole(['flixolé'], true),

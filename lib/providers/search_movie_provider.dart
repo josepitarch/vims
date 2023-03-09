@@ -7,7 +7,7 @@ class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<dynamic> movies = [];
   bool isLoading = false;
-  final int numberFetchMovies = 0;
+  late int countFetch;
   TypeSearch type = TypeSearch.title;
   Exception? error;
 
@@ -33,14 +33,12 @@ class SearchMovieProvider extends ChangeNotifier {
     isLoading = true;
     this.search = search;
     notifyListeners();
-    SearchMovieService()
-        .getSuggestions(search, type.name, numberFetchMovies)
-        .then((value) {
-      movies = value;
+    SearchMovieService().getSuggestions(search, type.name).then((value) {
+      countFetch = value['countFetch'];
+      movies = value['suggestions'];
       error = null;
     }).catchError((error) {
       this.error = error;
-      return null;
     }).whenComplete(() {
       isLoading = false;
       notifyListeners();

@@ -1,38 +1,24 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:logger/logger.dart';
-import 'package:vims/enums/genres.dart';
 import 'package:vims/enums/mode_views.dart';
-import 'package:vims/enums/orders.dart';
-import 'package:vims/enums/platforms.dart';
 import 'package:vims/models/filters.dart';
 
 import 'package:vims/models/movie.dart';
 import 'package:vims/services/top_movies_service.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+List<int> randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
 
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
-  int to = 210;
   List<Movie> movies = [];
   bool isLoading = false;
   Exception? error;
   bool hasFilters = false;
-  OrderBy orderBy = OrderBy.shuffle;
-  Map<String, Movie> openedMovies = {};
   ModeView modeView = ModeView.list;
+  double scrollPosition = 0;
 
-  Filters filters = Filters(
-      platforms: {
-        for (var platform in Platforms.values)
-          if (platform.showInTopFilters) platform.name: false
-      },
-      genres: {
-        for (var e in Genres.values) e: false
-      },
-      isAnimationExcluded: true,
-      yearFrom: int.parse(dotenv.env['YEAR_FROM']!),
-      yearTo: DateTime.now().year);
+  Filters currentFilters = Filters.origin();
 
   var logger = Logger();
 
@@ -43,26 +29,33 @@ class TopMoviesProvider extends ChangeNotifier {
   getTopMovies() async {
     try {
       isLoading = true;
-      List<String> selectedPlatforms = filters.platforms.keys
-          .where((key) => filters.platforms[key] == true)
+      notifyListeners();
+      final List<String> selectedPlatforms = currentFilters.platforms.keys
+          .where((key) => currentFilters.platforms[key] == true)
           .toList();
 
-      List<String> selectedGenres = filters.genres.keys
-          .where((key) => filters.genres[key] == true)
+      final List<String> selectedGenres = currentFilters.genres.keys
+          .where((key) => currentFilters.genres[key] == true)
           .map((genre) => genre.name)
           .toList();
+      final int fromParam;
+      if (hasFilters) {
+        fromParam = from;
+        from += 30;
+      } else {
+        fromParam = randomNumbers.removeLast();
+      }
 
-      movies = await TopMoviesService().getMopMovies(
-          from,
-          to,
-          selectedPlatforms,
-          selectedGenres,
-          filters.isAnimationExcluded,
-          filters.yearFrom,
-          filters.yearTo);
+      final List<Movie> response = await TopMoviesService().getTopMovies(
+          from: fromParam,
+          platforms: selectedPlatforms,
+          genres: selectedGenres,
+          excludeAnimation: currentFilters.isAnimationExcluded,
+          yearFrom: currentFilters.yearFrom,
+          yearTo: currentFilters.yearTo);
 
-      movies = orderBy.func(movies);
-
+      if (!hasFilters) response.shuffle();
+      movies.addAll(response);
       error = null;
     } on Exception catch (e) {
       error = e;
@@ -73,38 +66,38 @@ class TopMoviesProvider extends ChangeNotifier {
     }
   }
 
-  setPlatform(String platform) {
-    bool value = filters.platforms[platform]!;
-    filters.platforms[platform] = !value;
-  }
-
   applyFilters(Filters filters) {
+    if (currentFilters.equals(filters)) return;
+
     hasFilters = true;
     movies.clear();
-    notifyListeners();
-    this.filters.platforms = {
-      ...this.filters.platforms,
+    from = 0;
+    scrollPosition = 0;
+
+    currentFilters.platforms = {
+      ...currentFilters.platforms,
       ...filters.platforms,
     };
-    this.filters.genres = {
-      ...this.filters.genres,
+    currentFilters.genres = {
+      ...currentFilters.genres,
       ...filters.genres,
     };
 
-    this.filters.yearFrom = filters.yearFrom;
-    this.filters.yearTo = filters.yearTo;
-    this.filters.isAnimationExcluded = filters.isAnimationExcluded;
+    currentFilters.yearFrom = filters.yearFrom;
+    currentFilters.yearTo = filters.yearTo;
+    currentFilters.isAnimationExcluded = filters.isAnimationExcluded;
 
     getTopMovies();
   }
 
   removeFilters() {
-    filters.removeFiltes();
+    movies.clear();
+    currentFilters = Filters.origin();
     hasFilters = false;
     from = 0;
-    to = 30;
-    movies = [];
-    notifyListeners();
+    scrollPosition = 0;
+
+    randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
 
     getTopMovies();
   }
@@ -113,18 +106,13 @@ class TopMoviesProvider extends ChangeNotifier {
     movies.clear();
     error = null;
     isLoading = true;
+    hasFilters = false;
     notifyListeners();
-    getTopMovies();
+    TopMoviesService().getTopMovies().then((value) => movies = value);
   }
 
-  setOrderBy(OrderBy orderBy) {
-    this.orderBy = orderBy;
-    movies = orderBy.func(movies);
-    notifyListeners();
-  }
-
-  setModeView(ModeView modeView) {
-    this.modeView = modeView;
+  setModeView() {
+    modeView = modeView == ModeView.list ? ModeView.grid : ModeView.list;
     notifyListeners();
   }
 }

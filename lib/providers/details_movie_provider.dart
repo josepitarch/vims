@@ -5,15 +5,15 @@ import 'package:vims/services/details_movie_service.dart';
 import 'package:logger/logger.dart';
 
 class DetailsMovieProvider extends ChangeNotifier {
-  String? id;
+  int? id;
   bool isLoading = true;
   Exception? error;
-  final Map<String, Movie> openedMovies = {};
+  final Map<int, Movie> openedMovies = {};
   final logger = Logger();
 
   DetailsMovieProvider();
 
-  getDetailsMovie(String id) async {
+  getDetailsMovie(int id) async {
     try {
       Movie? movie = await DetailsMovieService().getDetailsMovie(id);
       openedMovies[id] = movie!;

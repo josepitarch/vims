@@ -23,12 +23,12 @@ class SectionWidget extends StatelessWidget {
             children: [
               Text(section.title,
                   textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.headline2!
+                  style: Theme.of(context).textTheme.displayMedium!
                   //.copyWith(fontFamily: 'Lato'),
                   ),
               CupertinoButton(
                   child: Text(i18n.see_more,
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontStyle: FontStyle.italic,
                           fontFamily: 'OpenSans',
                           color: Theme.of(context).colorScheme.secondary)),
@@ -46,7 +46,7 @@ class SectionWidget extends StatelessWidget {
               ...section.movies
                   .map((movie) => SectionMovie(
                       movieSection: movie,
-                      heroTag: movie.id + section.title,
+                      heroTag: "${movie.id}${section.title}",
                       saveToCache: true,
                       height: 190,
                       width: 120))

@@ -38,7 +38,7 @@ class SearchMovieScreen extends StatelessWidget {
           provider.search.isNotEmpty
               ? _Suggestions(
                   movies: provider.movies,
-                  numberFetchMovies: provider.numberFetchMovies)
+                  numberFetchMovies: provider.countFetch)
               : const _HistorySearch(),
         ]),
       );
@@ -158,7 +158,7 @@ class _HistorySearch extends StatelessWidget {
                           trailing: const Icon(Icons.arrow_forward_ios,
                               size: 22, color: Colors.grey),
                           title: Text(history,
-                              style: Theme.of(context).textTheme.bodyText1),
+                              style: Theme.of(context).textTheme.bodyLarge),
                           onTap: () => provider.onTapHistorySearch(history),
                         );
                       }).toList(),
@@ -198,6 +198,6 @@ class DeleteSearchersButton extends StatelessWidget {
   }
 
   _textStyle(BuildContext context) {
-    return Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.red);
+    return Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.red);
   }
 }

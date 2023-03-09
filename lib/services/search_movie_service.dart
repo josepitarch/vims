@@ -10,12 +10,13 @@ class SearchMovieService {
   final url = dotenv.env['URL']!;
   final timeout = dotenv.env['TIMEOUT']!;
   final String versionApi = dotenv.env['VERSION_API']!;
+  final int numberFetchMovies = int.parse(dotenv.env['NUMBER_FETCH_MOVIES']!);
 
   final logger = Logger();
 
-  Future<List<dynamic>> getSuggestions(
-      String query, String type, int numberFetchMovies) async {
-    List<dynamic> suggestions = [];
+  Future getSuggestions(String query, String type) async {
+    List suggestions = [];
+    int countFetch = 0;
 
     if (query.isEmpty) return suggestions;
 
@@ -29,15 +30,19 @@ class SearchMovieService {
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
 
+    if (response.statusCode == 500) throw TimeoutException(response.body);
+
     if (response.statusCode == 503) {
       final body = json.jsonDecode(response.body);
       throw MaintenanceException(body['image'], body['message']);
     }
 
     if (response.statusCode == 200) {
-      suggestions = json.jsonDecode(response.body);
+      Map<String, dynamic> body = json.jsonDecode(response.body);
+      countFetch = body['countFetch'];
+      suggestions = body['movies'];
     }
 
-    return suggestions;
+    return {'countFetch': countFetch, 'suggestions': suggestions};
   }
 }

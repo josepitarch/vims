@@ -6,6 +6,7 @@ class DetailsMovieShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MediaQuery.of(context).removePadding(removeTop: true);
     return Scaffold(
       body: Shimmer.fromColors(
         baseColor: Colors.black,
