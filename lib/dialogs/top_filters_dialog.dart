@@ -40,6 +40,7 @@ class TopMoviesDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
+        color: Colors.black38,
         padding: const EdgeInsets.all(8.0),
         height: 650,
         width: double.infinity,
@@ -208,11 +209,11 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
     return Column(
       children: [
         _TitleFilter(i18n.title_exclude_dialog),
-        SwitchListTile.adaptive(
+        SwitchListTile(
             contentPadding: const EdgeInsets.all(0),
             dense: true,
             title: Text(i18n.exclude_animation,
-                style: Theme.of(context).textTheme.headline6),
+                style: Theme.of(context).textTheme.titleLarge),
             value: filters.isAnimationExcluded,
             activeColor: activeColor,
             activeTrackColor: activeColor.withOpacity(0.3),
@@ -300,7 +301,7 @@ class _TitleFilter extends StatelessWidget {
         ),
       ),
       const SizedBox(width: 10),
-      Text(title, style: Theme.of(context).textTheme.headline6),
+      Text(title, style: Theme.of(context).textTheme.titleLarge),
       const SizedBox(width: 10),
       const Flexible(
         child: Divider(

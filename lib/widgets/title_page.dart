@@ -8,7 +8,7 @@ class TitlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Text(title, style: Theme.of(context).textTheme.headline1!),
+      child: Text(title, style: Theme.of(context).textTheme.displayLarge!),
     );
   }
 }

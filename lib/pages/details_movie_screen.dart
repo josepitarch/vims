@@ -121,7 +121,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       title: Text(
         widget.auxTitle,
         textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.headline2,
+        style: Theme.of(context).textTheme.displayMedium,
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
@@ -156,7 +156,7 @@ class _Title extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: Theme.of(context).textTheme.headline2,
+              style: Theme.of(context).textTheme.displayMedium,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
               maxLines: 2),
@@ -164,7 +164,7 @@ class _Title extends StatelessWidget {
           Text(originalTitle,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(color: Colors.grey),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
@@ -187,7 +187,7 @@ class _Director extends StatelessWidget {
           maxLines: 2,
           textAlign: TextAlign.start,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.headline5),
+          style: Theme.of(context).textTheme.headlineSmall),
     );
   }
 }
@@ -225,7 +225,7 @@ class _YearAndDuration extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
       child: Text(year + transformDuration(duration),
-          style: Theme.of(context).textTheme.headline5),
+          style: Theme.of(context).textTheme.headlineSmall),
     );
   }
 
@@ -261,7 +261,7 @@ class _Country extends StatelessWidget {
         ),
         Text(
           country,
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headlineSmall,
         )
       ],
     );
@@ -355,7 +355,7 @@ class _Genres extends StatelessWidget {
       SizedBox(
         width: double.infinity,
         child: Text(genres.join(', '),
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.start),
       ),
     ]);
@@ -383,7 +383,7 @@ class _Cast extends StatelessWidget {
               textAlign: cast.isNotEmpty ? TextAlign.start : TextAlign.center,
               maxLines: _maxLines,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyText1),
+              style: Theme.of(context).textTheme.bodyLarge),
         ),
       ],
     );
@@ -431,7 +431,7 @@ class _SynopsisState extends State<_Synopsis> {
               textAlign:
                   widget.synopsis.isEmpty ? TextAlign.center : TextAlign.start,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
               maxLines: maxLines),
         ),
         if (widget.synopsis.length > delimiterLines)
@@ -443,7 +443,7 @@ class _SynopsisState extends State<_Synopsis> {
                   onPressed: () => updateState(),
                   child: Text(
                     textButton[showMore]!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontFamily: 'OpenSans',
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.secondary,
@@ -516,7 +516,7 @@ class _PlatformsState extends State<_Platforms> {
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(fontStyle: FontStyle.italic),
             ),
           ),
@@ -535,7 +535,7 @@ class _PlatformsState extends State<_Platforms> {
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.symmetric(horizontal: 12))),
                     child: Text(textButton[key]!,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             color: Colors.blue,
                             fontFamily: 'OpenSans',
                             fontWeight: FontWeight.w500))));

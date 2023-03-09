@@ -28,7 +28,7 @@ class YearContainer extends StatelessWidget {
                 color: hasError ? Colors.red : Colors.orange, width: 2),
             borderRadius: BorderRadius.circular(17)),
         child: Text('$token    $year',
-            style: Theme.of(context).textTheme.bodyText1));
+            style: Theme.of(context).textTheme.bodyLarge));
   }
 
   void openYearPicker(BuildContext context) {

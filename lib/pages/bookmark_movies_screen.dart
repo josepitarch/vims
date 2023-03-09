@@ -82,7 +82,7 @@ class NoBookmarkMovies extends StatelessWidget {
               width: double.infinity,
               child: Text(i18n.no_bookmarks,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline6),
+                  style: Theme.of(context).textTheme.titleLarge),
             ),
           ],
         ),

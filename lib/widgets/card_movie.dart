@@ -106,7 +106,7 @@ class _Title extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.5,
       child: Text(
         title,
-        style: Theme.of(context).textTheme.headline3,
+        style: Theme.of(context).textTheme.displaySmall,
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
       ),
@@ -127,7 +127,7 @@ class _Director extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.5,
       child: Text(
         director ?? '',
-        style: Theme.of(context).textTheme.bodyText2!.copyWith(
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontStyle: FontStyle.italic,
               //color: Theme.of(context).colorScheme.secondary
             ),

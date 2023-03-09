@@ -53,13 +53,13 @@ class _ServerError extends StatelessWidget {
             const SizedBox(height: 20),
             Text(i18n.timeout_error,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline6),
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: onRefresh,
                 child: Text(
                   i18n.retry,
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
@@ -135,7 +135,7 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
               const Icon(Icons.wifi_off_rounded, size: 80),
               const SizedBox(height: 20),
               Text(i18n.no_internet,
-                  style: Theme.of(context).textTheme.headline6),
+                  style: Theme.of(context).textTheme.titleLarge),
             ]),
       ),
     );

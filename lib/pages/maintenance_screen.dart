@@ -18,7 +18,7 @@ class MaintenanceScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text(error.message,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline6),
+                style: Theme.of(context).textTheme.titleLarge),
           ),
         ],
       ),
