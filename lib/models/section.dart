@@ -27,7 +27,7 @@ class MovieSection {
     required this.premiereDay,
   });
 
-  String id;
+  int id;
   String link;
   String image;
   String title;

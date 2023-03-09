@@ -71,7 +71,7 @@ class _CardGenreState extends State<CardGenre> {
                   : Colors.black.withOpacity(0.2)),
             ),
             child: Text(genres[widget.genre.value]!,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: widget.isSelected ? Colors.white : Colors.grey,
                     )),
           );

@@ -1,11 +1,11 @@
 import 'package:vims/models/movie.dart';
 
 class BookmarkMovie {
-  String id;
+  int id;
   String poster;
   String title;
   String director;
-  String? rating;
+  double? rating;
 
   BookmarkMovie(
       {required this.id,
@@ -14,7 +14,7 @@ class BookmarkMovie {
       required this.director,
       this.rating});
 
-  Map<String, String> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'poster': poster,

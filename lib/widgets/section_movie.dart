@@ -56,7 +56,7 @@ class SectionMovie extends StatelessWidget {
                         child: Text(
                           movieSection.premiereDay,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
                     )
@@ -70,7 +70,7 @@ class SectionMovie extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             )
           ])),
     );

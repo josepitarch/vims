@@ -6,7 +6,7 @@ class SnackBarUtils {
       duration: const Duration(seconds: 2),
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.all(8),
-      content: Text(message, style: Theme.of(context).textTheme.bodyText1),
+      content: Text(message, style: Theme.of(context).textTheme.bodyLarge),
     );
 
     ScaffoldMessenger.of(context)

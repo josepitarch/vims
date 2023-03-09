@@ -24,10 +24,10 @@ class _DialogAndroid extends StatelessWidget {
       title: Text(i18n.title_bookmark_dialog,
           style: Theme.of(context)
               .textTheme
-              .headline6!
+              .titleLarge!
               .copyWith(color: Colors.white.withOpacity(0.6))),
       content: Text(i18n.delete_all_bookmarks,
-          style: Theme.of(context).textTheme.bodyText1),
+          style: Theme.of(context).textTheme.bodyLarge),
       actions: [
         TextButton(
           child: Text(

@@ -4,6 +4,7 @@ enum TitleSectionEnum {
   th(['Cartelera', 'Now in theaters']),
   coming_theaters(['Próximamente en cines', 'Coming soon to theaters']),
   netflix(['Netflix']),
+  sky_show_time(['SkyShowTime']),
   disney(['Disney+']),
   movistar(['Movistar+']),
   prime(['Amazon Prime']),

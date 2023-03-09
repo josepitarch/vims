@@ -8,7 +8,7 @@ enum Flags {
   uk(['reino unido', 'united kingdom']),
   ireland(['irlanda', 'ireland']),
   denmark(['dinamarca', 'denmark']),
-  newZealand(['nueva zelanda', 'new zealand']),
+  new_zealand(['nueva zelanda', 'new zealand']),
   italy(['italia', 'italy']),
   germany(['alemania', 'germany']),
   hungary(['hungria', 'hungary']),
@@ -19,7 +19,7 @@ enum Flags {
   russia(['rusia', 'russia']),
   china(['china']),
   japan(['japon', 'japan']),
-  southKorea(['corea del sur', 'south korea']);
+  south_korea(['corea del sur', 'south korea']);
 
   const Flags(this._value);
   final List<String> _value;

@@ -29,16 +29,18 @@ class TopMoviesDialog extends StatelessWidget {
     scrollController = controller;
     hasError = false;
     filters = Filters(
-        platforms: Map.from(topMoviesProvider.filters.platforms),
-        genres: Map.from(topMoviesProvider.filters.genres),
-        isAnimationExcluded: topMoviesProvider.filters.isAnimationExcluded,
-        yearFrom: topMoviesProvider.filters.yearFrom,
-        yearTo: topMoviesProvider.filters.yearTo);
+        platforms: Map.from(topMoviesProvider.currentFilters.platforms),
+        genres: Map.from(topMoviesProvider.currentFilters.genres),
+        isAnimationExcluded:
+            topMoviesProvider.currentFilters.isAnimationExcluded,
+        yearFrom: topMoviesProvider.currentFilters.yearFrom,
+        yearTo: topMoviesProvider.currentFilters.yearTo);
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
+        color: Colors.black38,
         padding: const EdgeInsets.all(8.0),
         height: 650,
         width: double.infinity,
@@ -207,11 +209,11 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
     return Column(
       children: [
         _TitleFilter(i18n.title_exclude_dialog),
-        SwitchListTile.adaptive(
+        SwitchListTile(
             contentPadding: const EdgeInsets.all(0),
             dense: true,
             title: Text(i18n.exclude_animation,
-                style: Theme.of(context).textTheme.headline6),
+                style: Theme.of(context).textTheme.titleLarge),
             value: filters.isAnimationExcluded,
             activeColor: activeColor,
             activeTrackColor: activeColor.withOpacity(0.3),
@@ -238,8 +240,8 @@ class _ApplyButton extends StatelessWidget {
             onPressed: () {
               if (hasError) return;
               if (scrollController.hasClients) scrollController.jumpTo(0);
-              provider.applyFilters(filters);
               Navigator.pop(context);
+              provider.applyFilters(filters);
             },
             child: Text(i18n.apply_filters_dialog))
         : CupertinoButton(
@@ -248,8 +250,8 @@ class _ApplyButton extends StatelessWidget {
             color: Colors.orange,
             onPressed: () {
               if (scrollController.hasClients) scrollController.jumpTo(0);
-              provider.applyFilters(filters);
               Navigator.pop(context);
+              provider.applyFilters(filters);
             },
             child: Text(i18n.apply_filters_dialog));
   }
@@ -299,7 +301,7 @@ class _TitleFilter extends StatelessWidget {
         ),
       ),
       const SizedBox(width: 10),
-      Text(title, style: Theme.of(context).textTheme.headline6),
+      Text(title, style: Theme.of(context).textTheme.titleLarge),
       const SizedBox(width: 10),
       const Flexible(
         child: Divider(

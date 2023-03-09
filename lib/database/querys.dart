@@ -1,10 +1,10 @@
 String createBookmarkMovieTable(tableName) => """
     CREATE TABLE $tableName (
-      id TEXT PRIMARY KEY,
+      id INTEGER PRIMARY KEY,
       poster TEXT NOT NULL,
       title TEXT NOT NULL,
       director TEXT NOT NULL,
-      rating TEXT
+      rating REAL
     );
   """;
 

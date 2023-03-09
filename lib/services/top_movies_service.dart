@@ -15,19 +15,17 @@ class TopMoviesService {
 
   final logger = Logger();
 
-  Future<List<Movie>> getMopMovies(
-      int from,
-      int to,
-      List<String> platforms,
-      List<String> genres,
-      bool excludeAnimation,
-      int yearFrom,
-      int yearTo) async {
+  Future<List<Movie>> getTopMovies(
+      {int from = 0,
+      List<String> platforms = const [],
+      List<String> genres = const [],
+      bool excludeAnimation = true,
+      int yearFrom = 1990,
+      int yearTo = 2023}) async {
     List<Movie> topMovies = [];
 
     final request = Uri.http(url, '/api/$versionApi/top/films', {
       'from': from.toString(),
-      'to': to.toString(),
       'platforms': platforms.join(','),
       'genres': genres.join(','),
       'exclude_animation': excludeAnimation.toString(),

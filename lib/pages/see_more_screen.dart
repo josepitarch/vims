@@ -19,8 +19,7 @@ class SeeMore extends StatelessWidget {
       onRefreshError() => provider.onRefreshError(titleEnum);
 
       if (provider.errors[titleEnum] != null)
-        return HandleError(
-            provider.errors[titleEnum], onRefreshError, titleEnum);
+        return HandleError(provider.errors[titleEnum], onRefreshError);
 
       Widget body;
       if (provider.seeMore[titleEnum] == null) {
@@ -32,7 +31,8 @@ class SeeMore extends StatelessWidget {
 
       return Scaffold(
           appBar: AppBar(
-            title: Text(title, style: Theme.of(context).textTheme.headline2),
+            title:
+                Text(title, style: Theme.of(context).textTheme.displayMedium),
           ),
           body: SafeArea(
             child: body,
@@ -59,7 +59,7 @@ class _Body extends StatelessWidget {
       children: moviesSection
           .map((movieSection) => SectionMovie(
               movieSection: movieSection,
-              heroTag: movieSection.id,
+              heroTag: movieSection.id.toString(),
               saveToCache: false,
               height: 160,
               width: 120))

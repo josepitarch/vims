@@ -13,9 +13,8 @@ late AppLocalizations i18n;
 class HandleError extends StatelessWidget {
   final Exception error;
   final VoidCallback onRefresh;
-  final String page;
-  const HandleError(this.error, this.onRefresh, this.page, {Key? key})
-      : super(key: key);
+
+  const HandleError(this.error, this.onRefresh, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +42,8 @@ class _ServerError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      body: Container(
+        width: double.infinity,
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -53,13 +53,13 @@ class _ServerError extends StatelessWidget {
             const SizedBox(height: 20),
             Text(i18n.timeout_error,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline6),
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: onRefresh,
                 child: Text(
                   i18n.retry,
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
@@ -135,7 +135,7 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
               const Icon(Icons.wifi_off_rounded, size: 80),
               const SizedBox(height: 20),
               Text(i18n.no_internet,
-                  style: Theme.of(context).textTheme.headline6),
+                  style: Theme.of(context).textTheme.titleLarge),
             ]),
       ),
     );

@@ -21,7 +21,7 @@ class BookmarkMoviesDatabase {
   static Future<bool> insertBookmarkMovie(BookmarkMovie bookmarkMovie) async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
-    Map<String, String> map = bookmarkMovie.toMap();
+    Map<String, dynamic> map = bookmarkMovie.toMap();
 
     int response = await db.insert(
       _tableName,
@@ -32,7 +32,7 @@ class BookmarkMoviesDatabase {
     return response == 0 ? false : true;
   }
 
-  static Future<bool> deleteBookmarkMovie(String id) async {
+  static Future<bool> deleteBookmarkMovie(int id) async {
     final db =
         await openDatabase(join(await getDatabasesPath(), _databaseName));
 

@@ -11,7 +11,7 @@ class TitleSection extends StatelessWidget {
       child: Text(
         title,
         textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.headline2,
+        style: Theme.of(context).textTheme.displayMedium,
       ),
     );
   }

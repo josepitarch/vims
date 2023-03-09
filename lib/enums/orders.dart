@@ -19,8 +19,7 @@ class OrderByFunctions {
   }
 
   static List<Movie> average(List<Movie> movies) {
-    movies.sort((a, b) => double.parse(b.rating?.replaceFirst(',', '.') ?? '0')
-        .compareTo(double.parse(a.rating?.replaceFirst(',', '.') ?? '0')));
+    movies.sort((a, b) => b.rating!.compareTo(a.rating!));
     return movies;
   }
 

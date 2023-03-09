@@ -12,7 +12,7 @@ class ReviewItem extends StatelessWidget {
       children: [
         Text(
           review.body.replaceAll("\"", ''),
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 10),
         Row(
@@ -20,7 +20,7 @@ class ReviewItem extends StatelessWidget {
           children: [
             Text(
               review.author,
-              style: Theme.of(context).textTheme.bodyText2!.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
             ),
