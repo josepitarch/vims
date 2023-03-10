@@ -12,6 +12,11 @@ class SectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+    Map arguments = {
+      'title': section.title,
+      'code': section.code,
+      'isRelease': section.isRelease
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +38,7 @@ class SectionWidget extends StatelessWidget {
                           fontFamily: 'OpenSans',
                           color: Theme.of(context).colorScheme.secondary)),
                   onPressed: () => Navigator.pushNamed(context, 'see_more',
-                      arguments: section.title))
+                      arguments: arguments))
             ],
           ),
         ),

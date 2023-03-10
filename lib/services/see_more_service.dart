@@ -3,7 +3,6 @@ import 'package:logger/logger.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:vims/enums/title_sections.dart';
 import 'package:vims/exceptions/maintenance_exception.dart';
 import 'dart:convert' as json;
 
@@ -16,14 +15,14 @@ class SeeMoreService {
 
   final logger = Logger();
 
-  Future<List<MovieSection>> getSeeMore(String section) async {
+  Future<List<MovieSection>> getSeeMore(String section, bool isRelease) async {
     List<MovieSection> seeMoreMovies = [];
 
-    final bool isRelease = TitleSectionEnum.coming_theaters.name != section;
-
     final request = isRelease
-        ? Uri.http(url, '/api/$versionApi/release/section/$section')
-        : Uri.http(url, '/api/$versionApi/coming/section');
+        ? Uri.http(
+            url, '/api/$versionApi/release/section', {'section': section})
+        : Uri.http(
+            url, '/api/$versionApi/coming/section', {'section': section});
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
