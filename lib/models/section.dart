@@ -3,16 +3,22 @@ import 'dart:convert';
 class Section {
   Section({
     required this.title,
+    required this.code,
+    required this.isRelease,
     required this.movies,
   });
 
   String title;
+  String code;
+  bool isRelease;
   List<MovieSection> movies;
 
   factory Section.fromJson(String str) => Section.fromMap(json.decode(str));
 
   factory Section.fromMap(Map<String, dynamic> json) => Section(
         title: json['title_section'],
+        code: json['code'],
+        isRelease: json['is_release'],
         movies: List<MovieSection>.from(
             json['films'].map((x) => MovieSection.fromMap(x))),
       );

@@ -87,6 +87,8 @@ class TopMoviesProvider extends ChangeNotifier {
     currentFilters.yearTo = filters.yearTo;
     currentFilters.isAnimationExcluded = filters.isAnimationExcluded;
 
+    scrollPosition = 0;
+
     getTopMovies();
   }
 
