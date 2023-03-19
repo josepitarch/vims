@@ -1,48 +1,53 @@
+import 'dart:convert';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 
 import 'dart:async';
 import 'dart:convert' as json;
 import 'package:http/http.dart' as http;
-import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:vims/models/suggestion.dart';
 
 class SearchMovieService {
-  final url = dotenv.env['URL']!;
   final timeout = dotenv.env['TIMEOUT']!;
-  final String versionApi = dotenv.env['VERSION_API']!;
-  final int numberFetchMovies = int.parse(dotenv.env['NUMBER_FETCH_MOVIES']!);
 
   final logger = Logger();
 
-  Future getSuggestions(String query, String type) async {
-    List suggestions = [];
+  Future<List<Suggestion>> getSuggestions(String query, String type) async {
+    List<Suggestion> suggestions = [];
     int countFetch = 0;
 
     if (query.isEmpty) return suggestions;
 
-    final request = Uri.http(url, '/api/$versionApi/search/film', {
-      'film': query,
-      'lang': 'es',
-      'type': type,
-      'numberFetchMovies': numberFetchMovies.toString()
+    final request =
+        Uri.https('www.filmaffinity.com', '/es/search-ac.ajax.php', {
+      'action': 'searchTerm',
     });
 
-    final response =
-        await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
+    Map<String, String> formMap = {
+      'term': query,
+      'dataType': 'json',
+    };
 
-    if (response.statusCode == 500) throw TimeoutException(response.body);
+    final response = await http
+        .post(request,
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: formMap,
+            encoding: Encoding.getByName('utf-8'))
+        .timeout(Duration(seconds: int.parse(timeout)));
 
-    if (response.statusCode == 503) {
-      final body = json.jsonDecode(response.body);
-      throw MaintenanceException(body['image'], body['message']);
+    if (response.statusCode != 200) throw TimeoutException(response.body);
+
+    Map<String, dynamic> body = json.jsonDecode(response.body);
+    List results = body['results'];
+    final int index = results.indexWhere((e) => e['id'] == 'sep');
+    if (index != -1) {
+      results = results.sublist(0, index);
+    } else {
+      results = results.where((e) => e['id'] != 'se-a').toList();
     }
+    suggestions = results.map((e) => Suggestion.fromMap(e)).toList();
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> body = json.jsonDecode(response.body);
-      countFetch = body['countFetch'];
-      suggestions = body['movies'];
-    }
-
-    return {'countFetch': countFetch, 'suggestions': suggestions};
+    return suggestions;
   }
 }

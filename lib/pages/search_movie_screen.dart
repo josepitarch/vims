@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/models/movie.dart';
+import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/search_movie_provider.dart';
 import 'package:vims/shimmer/card_movie_shimmer.dart';
 import 'package:vims/ui/input_decoration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/card_suggestion.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'dart:io' as io show Platform;
@@ -35,11 +35,7 @@ class SearchMovieScreen extends StatelessWidget {
       return SafeArea(
         child: Column(children: [
           const _SearchMovieForm(),
-          provider.search.isNotEmpty
-              ? _Suggestions(
-                  movies: provider.movies,
-                  numberFetchMovies: provider.countFetch)
-              : const _HistorySearch(),
+          _Suggestions(provider.suggestions)
         ]),
       );
     });
@@ -76,9 +72,9 @@ class _SearchMovieForm extends StatelessWidget {
 
             return null;
           },
+          onChanged: (value) => provider.onChanged(value),
           onFieldSubmitted: (String value) {
             if (myFormKey.currentState!.validate()) {
-              provider.searchMovie(value);
               provider.insertHistorySearch(value);
             } else {
               return;
@@ -91,34 +87,32 @@ class _SearchMovieForm extends StatelessWidget {
 }
 
 class _Suggestions extends StatelessWidget {
-  final List movies;
-  final int numberFetchMovies;
+  final List<Suggestion> suggestions;
 
-  const _Suggestions(
-      {Key? key, required this.movies, required this.numberFetchMovies})
-      : super(key: key);
+  const _Suggestions(this.suggestions, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return movies.isNotEmpty
-        ? Expanded(
+    final provider = context.read<SearchMovieProvider>();
+
+    return StreamBuilder(
+        stream: provider.suggestionsStream,
+        builder: (_, AsyncSnapshot<List<Suggestion>> snapshot) {
+          if (!snapshot.hasData) return const NoResults();
+
+          final List<Suggestion> suggestions = snapshot.data!;
+
+          return Expanded(
             child: ListView.builder(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                bool hasAllAttributes = index < numberFetchMovies;
-                Movie movie = index < numberFetchMovies
-                    ? Movie.fromMap(movies[index])
-                    : Movie.fromIncompleteMovie(movies[index]);
-                return CardMovie(
-                  movie: movie,
-                  hasAllAttributes: hasAllAttributes,
-                  saveToCache: false,
-                );
-              },
-            ),
-          )
-        : const NoResults();
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                itemCount: suggestions.length,
+                itemBuilder: (_, index) {
+                  final suggestion = provider.suggestions[index];
+                  return CardSuggestion(suggestion);
+                }),
+          );
+        });
   }
 }
 

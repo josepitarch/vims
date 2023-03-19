@@ -48,3 +48,6 @@ app.*.map.json
 
 .env
 pubspec.lock
+upload-keystore.jks
+
+/assets/templates

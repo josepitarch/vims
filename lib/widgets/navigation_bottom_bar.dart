@@ -36,6 +36,7 @@ class _NavigatorBottomBarAppState extends State<NavigatorBottomBarApp> {
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        elevation: 0,
         currentIndex: _selectedIndex,
         unselectedItemColor: Colors.white.withOpacity(.60),
         selectedFontSize: 16,
