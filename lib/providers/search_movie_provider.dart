@@ -47,8 +47,7 @@ class SearchMovieProvider extends ChangeNotifier {
     //notifyListeners();
     SearchMovieService().getSuggestions(search, type.name).then((value) {
       suggestions = value;
-      print(suggestions);
-      _suggestionsStream.add(suggestions);
+      _suggestionsStream.add(value);
       error = null;
     }).catchError((error) {
       this.error = error;
@@ -88,5 +87,9 @@ class SearchMovieProvider extends ChangeNotifier {
 
     Future.delayed(const Duration(milliseconds: 301))
         .then((_) => timer.cancel());
+  }
+
+  void fillStream() {
+    _suggestionsStream.add(suggestions);
   }
 }

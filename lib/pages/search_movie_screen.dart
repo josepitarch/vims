@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/search_movie_provider.dart';
-import 'package:vims/shimmer/card_movie_shimmer.dart';
 import 'package:vims/ui/input_decoration.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/widgets/card_suggestion.dart';
-import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'dart:io' as io show Platform;
+
+import 'package:vims/widgets/no_results.dart';
 
 late AppLocalizations i18n;
 final ScrollController scrollController = ScrollController();
@@ -24,19 +24,10 @@ class SearchMovieScreen extends StatelessWidget {
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
       if (provider.error != null)
         return HandleError(provider.error!, provider.onRefresh);
-      if (provider.isLoading) {
-        return SafeArea(
-          child: Column(children: const [
-            _SearchMovieForm(),
-            Expanded(child: CardMovieShimmer())
-          ]),
-        );
-      }
+
+      provider.fillStream();
       return SafeArea(
-        child: Column(children: [
-          const _SearchMovieForm(),
-          _Suggestions(provider.suggestions)
-        ]),
+        child: Column(children: const [_SearchMovieForm(), _Suggestions()]),
       );
     });
   }
@@ -66,7 +57,7 @@ class _SearchMovieForm extends StatelessWidget {
           keyboardAppearance: Brightness.dark,
           decoration: InputDecorations.searchMovieDecoration(
               i18n, controller, provider),
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.disabled,
           validator: (value) {
             if (value!.isEmpty) return i18n.no_empty_search;
 
@@ -87,9 +78,7 @@ class _SearchMovieForm extends StatelessWidget {
 }
 
 class _Suggestions extends StatelessWidget {
-  final List<Suggestion> suggestions;
-
-  const _Suggestions(this.suggestions, {Key? key}) : super(key: key);
+  const _Suggestions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +87,7 @@ class _Suggestions extends StatelessWidget {
     return StreamBuilder(
         stream: provider.suggestionsStream,
         builder: (_, AsyncSnapshot<List<Suggestion>> snapshot) {
+          if (provider.search.isEmpty) return const _HistorySearch();
           if (!snapshot.hasData) return const NoResults();
 
           final List<Suggestion> suggestions = snapshot.data!;
