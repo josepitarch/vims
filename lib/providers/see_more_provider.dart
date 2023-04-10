@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:logger/logger.dart';
-
 import 'package:vims/models/section.dart';
 import 'package:vims/services/see_more_service.dart';
 
@@ -14,7 +12,7 @@ class SeeMoreProvider extends ChangeNotifier {
   SeeMoreProvider();
 
   getSeeMore(String title, bool isRelease) {
-    SeeMoreService().getSeeMore(title, isRelease).then((movieSections) {
+    SeeMoreService().getSeeMore(title).then((movieSections) {
       seeMore[title] = movieSections;
       errors[title] = null;
     }).catchError((error) {

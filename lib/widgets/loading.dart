@@ -1,6 +1,7 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io' as io show Platform;
 
 class Loading extends StatelessWidget {
   const Loading({super.key});

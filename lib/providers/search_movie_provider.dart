@@ -10,9 +10,13 @@ import 'package:vims/utils/debounce.dart';
 class SearchMovieProvider extends ChangeNotifier {
   String search = '';
   List<Suggestion> suggestions = [];
+  int total = -1;
+  int from = 0;
+  final String order = 'relevance';
   bool isLoading = false;
   TypeSearch type = TypeSearch.title;
   Exception? error;
+  double scrollPosition = 0;
 
   final debouncer = Debouncer(
     duration: const Duration(milliseconds: 500),
@@ -29,6 +33,9 @@ class SearchMovieProvider extends ChangeNotifier {
 
   clearSearch() {
     search = '';
+    total = -1;
+    suggestions.clear();
+    _suggestionsStream.sink.add(suggestions);
     notifyListeners();
   }
 
@@ -41,19 +48,33 @@ class SearchMovieProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  searchMovie(String search) async {
-    isLoading = true;
-    this.search = search;
-    //notifyListeners();
-    SearchMovieService().getSuggestions(search, type.name).then((value) {
+  getSuggestionsAutocomplete(String search) async {
+    total = -1;
+    SearchMovieService().getAutocomplete(search, type.name).then((value) {
+      this.search = search;
       suggestions = value;
-      _suggestionsStream.add(value);
+      _suggestionsStream.sink.add(suggestions);
       error = null;
     }).catchError((error) {
       this.error = error;
+    }).whenComplete(() => notifyListeners());
+  }
+
+  getSuggestions(String search) async {
+    isLoading = true;
+    notifyListeners();
+    SearchMovieService()
+        .getSuggestions(search, type.name, from, order)
+        .then((value) {
+      total = value['total'];
+      final List body = value['suggestions'];
+      if (body.isNotEmpty) suggestions.addAll(value['suggestions']);
+      _suggestionsStream.sink.add(suggestions);
+      error = null;
     }).whenComplete(() {
       isLoading = false;
-      //notifyListeners();
+      from += 50;
+      notifyListeners();
     });
   }
 
@@ -63,22 +84,20 @@ class SearchMovieProvider extends ChangeNotifier {
 
   onTapHistorySearch(String search) {
     this.search = search;
-    isLoading = true;
-    notifyListeners();
-    searchMovie(search);
+    getSuggestions(search);
   }
 
   onRefresh() {
     isLoading = true;
     notifyListeners();
-    searchMovie(search);
+    getSuggestionsAutocomplete(search);
   }
 
   void onChanged(String search) {
     search = search.trim();
     debouncer.value = '';
     debouncer.onValue = (value) async {
-      searchMovie(search);
+      getSuggestionsAutocomplete(search);
     };
 
     final timer = Timer.periodic(const Duration(milliseconds: 300), (_) {
@@ -87,9 +106,5 @@ class SearchMovieProvider extends ChangeNotifier {
 
     Future.delayed(const Duration(milliseconds: 301))
         .then((_) => timer.cancel());
-  }
-
-  void fillStream() {
-    _suggestionsStream.add(suggestions);
   }
 }

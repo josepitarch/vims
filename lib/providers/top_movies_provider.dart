@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
-
 import 'package:logger/logger.dart';
 import 'package:vims/enums/mode_views.dart';
 import 'package:vims/models/filters.dart';
-
 import 'package:vims/models/movie.dart';
 import 'package:vims/services/top_movies_service.dart';
 

@@ -1,18 +1,19 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/search_movie_provider.dart';
+import 'package:vims/shimmer/card_movie_shimmer.dart';
 import 'package:vims/ui/input_decoration.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/widgets/card_suggestion.dart';
 import 'package:vims/widgets/handle_error.dart';
-import 'dart:io' as io show Platform;
-
 import 'package:vims/widgets/no_results.dart';
 
 late AppLocalizations i18n;
-final ScrollController scrollController = ScrollController();
+late ScrollController scrollController;
 
 class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
@@ -24,12 +25,25 @@ class SearchMovieScreen extends StatelessWidget {
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
       if (provider.error != null)
         return HandleError(provider.error!, provider.onRefresh);
-
-      provider.fillStream();
       return SafeArea(
-        child: Column(children: const [_SearchMovieForm(), _Suggestions()]),
+        child: Column(children: [
+          const _SearchMovieForm(),
+          _TotalSuggestions(provider.total),
+          const _Body()
+        ]),
       );
     });
+  }
+}
+
+class _TotalSuggestions extends StatelessWidget {
+  final int total;
+  const _TotalSuggestions(this.total);
+
+  @override
+  Widget build(BuildContext context) {
+    final text = total == -1 ? '' : 'Total encontrados: $total';
+    return Text(text);
   }
 }
 
@@ -66,7 +80,9 @@ class _SearchMovieForm extends StatelessWidget {
           onChanged: (value) => provider.onChanged(value),
           onFieldSubmitted: (String value) {
             if (myFormKey.currentState!.validate()) {
+              provider.scrollPosition = 0;
               provider.insertHistorySearch(value);
+              provider.getSuggestions(value);
             } else {
               return;
             }
@@ -77,32 +93,85 @@ class _SearchMovieForm extends StatelessWidget {
   }
 }
 
-class _Suggestions extends StatelessWidget {
-  const _Suggestions({Key? key}) : super(key: key);
+class _Body extends StatelessWidget {
+  const _Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<SearchMovieProvider>();
+    final provider = context.watch<SearchMovieProvider>();
 
     return StreamBuilder(
         stream: provider.suggestionsStream,
         builder: (_, AsyncSnapshot<List<Suggestion>> snapshot) {
+          if (provider.isLoading)
+            return const Expanded(child: CardMovieShimmer());
           if (provider.search.isEmpty) return const _HistorySearch();
-          if (!snapshot.hasData) return const NoResults();
+          if (!snapshot.hasData && provider.suggestions.isEmpty) {
+            return const NoResults();
+          }
+          List<Suggestion> suggestions = [];
+          if (!snapshot.hasData) {
+            suggestions = provider.suggestions;
+          } else {
+            suggestions = snapshot.data!;
+          }
 
-          final List<Suggestion> suggestions = snapshot.data!;
-
-          return Expanded(
-            child: ListView.builder(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                itemCount: suggestions.length,
-                itemBuilder: (_, index) {
-                  final suggestion = provider.suggestions[index];
-                  return CardSuggestion(suggestion);
-                }),
-          );
+          return _Suggestions(suggestions);
         });
+  }
+}
+
+class _Suggestions extends StatefulWidget {
+  const _Suggestions(this.suggestions);
+
+  final List<Suggestion> suggestions;
+
+  @override
+  State<_Suggestions> createState() => _SuggestionsState();
+}
+
+class _SuggestionsState extends State<_Suggestions> {
+  @override
+  void initState() {
+    final SearchMovieProvider provider =
+        Provider.of<SearchMovieProvider>(context, listen: false);
+    scrollController =
+        ScrollController(initialScrollOffset: provider.scrollPosition);
+
+    scrollController.addListener(() {
+      provider.scrollPosition = scrollController.position.pixels;
+      if (scrollController.position.pixels + 300 >=
+          scrollController.position.maxScrollExtent) {
+        if (!provider.isLoading) provider.getSuggestions(provider.search);
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double left = MediaQuery.of(context).size.width * 0.5 - 30;
+    return Expanded(
+      child: Stack(
+        children: [
+          ListView.builder(
+              controller: scrollController,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              itemCount: widget.suggestions.length,
+              itemBuilder: (_, index) {
+                final suggestion = widget.suggestions[index];
+                return CardSuggestion(suggestion);
+              }),
+          Positioned(bottom: 10, left: left, child: const SizedBox())
+        ],
+      ),
+    );
   }
 }
 

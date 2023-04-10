@@ -17,12 +17,15 @@ class BookmarkMoviesProvider extends ChangeNotifier {
   }
 
   Future<bool> insertBookmarkMovie(Movie movie) async {
+    final double? rating =
+        movie.rating != null ? double.parse(movie.rating.toString()) : null;
+
     BookmarkMovie favoriteMovie = BookmarkMovie(
         id: movie.id,
         poster: movie.poster,
         title: movie.title,
         director: movie.director ?? '',
-        rating: movie.rating);
+        rating: rating);
 
     bool response =
         await BookmarkMoviesDatabase.insertBookmarkMovie(favoriteMovie);
