@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
 import 'package:vims/enums/mode_views.dart';
-import 'package:vims/models/movie.dart';
+import 'package:vims/models/topMovie.dart';
 import 'package:vims/providers/top_movies_provider.dart';
 import 'package:vims/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/loading.dart';
 import 'package:vims/widgets/no_results.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/title_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
@@ -82,11 +82,11 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   children: [
                 TitlePage(i18n.title_top_movies_page),
                 _Options(provider: provider),
-                (!provider.isLoading && provider.movies.isEmpty)
+                (!provider.isLoading && provider.topMovies.results.isEmpty)
                     ? const NoResults()
                     : Expanded(
                         child: _Body(
-                            movies: provider.movies,
+                            movies: provider.topMovies.results,
                             isLoading: provider.isLoading)),
               ])),
           floatingActionButton:
@@ -144,7 +144,7 @@ class _FloatingActionButton extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  final List<Movie> movies;
+  final List<TopMovie> movies;
   final bool isLoading;
   const _Body({Key? key, required this.movies, required this.isLoading})
       : super(key: key);

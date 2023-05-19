@@ -42,7 +42,7 @@ class SectionMovie extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   children: [
                     CustomImage(
-                        url: movieSection.image,
+                        url: movieSection.poster.mmed,
                         width: width,
                         height: height - 30,
                         saveToCache: saveToCache,

@@ -15,7 +15,6 @@ class SeeMore extends StatelessWidget {
       final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
       final String title = arguments['title'];
       final String code = arguments['code'];
-      final bool isRelease = arguments['isRelease'];
 
       onRefreshError() => provider.onRefreshError(code);
 
@@ -24,7 +23,7 @@ class SeeMore extends StatelessWidget {
 
       Widget body;
       if (provider.seeMore[code] == null) {
-        provider.getSeeMore(code, isRelease);
+        provider.getSeeMore(code);
         body = SeeMoreShimmer(title: title, height: 160, width: 120);
       } else {
         body = _Body(moviesSection: provider.seeMore[code]!);

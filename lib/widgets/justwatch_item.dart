@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:vims/enums/platforms.dart';
 import 'package:vims/models/movie.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class JustwatchItem extends StatelessWidget {
   final Platform platform;
@@ -20,8 +20,8 @@ class JustwatchItem extends StatelessWidget {
     return InkWell(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
-        onTap: () =>
-            launchUrlString(platform.url, mode: LaunchMode.externalApplication),
+        onTap: () => launchUrlString(platform.url!,
+            mode: LaunchMode.externalApplication),
         child: Container(
           height: 60,
           margin: const EdgeInsets.symmetric(horizontal: 5),
