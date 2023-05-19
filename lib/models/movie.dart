@@ -1,11 +1,11 @@
 import 'dart:convert' as json;
 
-class Movie {
-  final int id;
+import 'package:vims/models/poster.dart';
+
+class Movie extends CommonPropertiesMovie {
   final String flag;
-  final String title;
   final String originalTitle;
-  final String year;
+  final int year;
   final String? duration;
   final String country;
   final String? director;
@@ -17,24 +17,24 @@ class Movie {
   final List<String> genres;
   final List<String>? groups;
   final String synopsis;
-  final String poster;
-  final dynamic rating;
+
+  final double? rating;
   final Justwatch justwatch;
   final List<Review> reviews;
   final List<String>? platforms;
   String? heroTag;
 
   Movie(
-      {required this.id,
+      {required int id,
+      required String title,
+      required Poster poster,
       required this.flag,
-      required this.title,
       required this.originalTitle,
       required this.year,
       required this.country,
       required this.cast,
       required this.genres,
       required this.synopsis,
-      required this.poster,
       this.rating,
       required this.justwatch,
       required this.reviews,
@@ -45,14 +45,20 @@ class Movie {
       this.cinematography,
       this.producer,
       this.groups,
-      this.platforms});
+      this.platforms})
+      : super(
+          id: id,
+          title: title,
+          poster: poster,
+        );
 
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
         id: json['id'],
-        flag: json['flag'],
         title: json['title'],
+        poster: Poster.fromMap(json['poster']),
+        flag: json['flag'],
         originalTitle: json['original_title'],
         year: json['year'],
         duration: json['duration'],
@@ -72,7 +78,6 @@ class Movie {
             ? []
             : List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
-        poster: json['poster'] ?? '',
         rating: json['rating'],
         justwatch: Justwatch.fromMap(json['justwatch']),
         reviews:
@@ -82,6 +87,7 @@ class Movie {
   factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
       id: json['id'],
       title: json['title'],
+      poster: Poster.fromMap(json['poster']),
       originalTitle: json['originalTitle'] ?? json['title'],
       flag: '',
       year: json['year'] ?? '',
@@ -89,7 +95,6 @@ class Movie {
       cast: [],
       genres: [],
       synopsis: '',
-      poster: json['poster'] ?? '',
       justwatch: Justwatch(buy: [], rent: [], flatrate: []),
       director: json['director'],
       rating: json['rating'],
@@ -163,7 +168,7 @@ class Justwatch {
 
 class Platform {
   String name;
-  String url;
+  String? url;
   String icon;
 
   Platform({
@@ -211,4 +216,23 @@ class Review {
         'inclination': inclination,
         'reference': reference,
       };
+}
+
+class CommonPropertiesMovie {
+  final int id;
+  final String title;
+  final Poster poster;
+
+  CommonPropertiesMovie({
+    required this.id,
+    required this.title,
+    required this.poster,
+  });
+
+  factory CommonPropertiesMovie.fromMap(Map<String, dynamic> json) =>
+      CommonPropertiesMovie(
+        id: json['id'],
+        title: json['title'],
+        poster: Poster.fromMap(json['poster']),
+      );
 }
