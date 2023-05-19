@@ -6,6 +6,6 @@ class MaintenanceException implements Exception {
 
   @override
   String toString() {
-    return message;
+    return 'MaintenanceException: $message';
   }
 }
