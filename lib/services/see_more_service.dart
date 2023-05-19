@@ -18,7 +18,7 @@ class SeeMoreService {
     List<MovieSection> seeMoreMovies = [];
 
     final request =
-        Uri.http(url, '/api/$versionApi/release/section', {'section': section});
+        Uri.http(url, '/api/v2/release/section', {'section': section});
 
     final response =
         await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
