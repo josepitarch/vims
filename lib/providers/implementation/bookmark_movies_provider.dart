@@ -1,18 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:vims/database/bookmark_movies_database.dart';
 import 'package:vims/models/bookmark_movie.dart';
 import 'package:vims/models/movie.dart';
+import 'package:vims/providers/interface/base_providert.dart';
 
-class BookmarkMoviesProvider extends ChangeNotifier {
-  List<BookmarkMovie> bookmarkMovies = [];
-
-  BookmarkMoviesProvider() {
-    getBookmarkMovies();
-  }
+final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
+  BookmarkMoviesProvider() : super();
 
   getBookmarkMovies() async {
     BookmarkMoviesDatabase.getBookmarkMovies()
-        .then((value) => bookmarkMovies = value)
+        .then((value) => data = value)
         .whenComplete(() => notifyListeners());
   }
 
@@ -29,7 +25,7 @@ class BookmarkMoviesProvider extends ChangeNotifier {
 
     bool response =
         await BookmarkMoviesDatabase.insertBookmarkMovie(favoriteMovie);
-    if (response) bookmarkMovies.add(favoriteMovie);
+    if (response) data.add(favoriteMovie);
     notifyListeners();
 
     return response;
@@ -38,7 +34,7 @@ class BookmarkMoviesProvider extends ChangeNotifier {
   deleteBookmarkMovie(Movie movie) async {
     bool response = await BookmarkMoviesDatabase.deleteBookmarkMovie(movie.id);
     if (response) {
-      bookmarkMovies.removeWhere((element) => element.id == movie.id);
+      data.removeWhere((element) => element.id == movie.id);
     }
     notifyListeners();
 
@@ -47,7 +43,7 @@ class BookmarkMoviesProvider extends ChangeNotifier {
 
   deleteAllBookmarkMovies() async {
     bool response = await BookmarkMoviesDatabase.deleteAllBookmarkMovies();
-    if (response) bookmarkMovies.clear();
+    if (response) data.clear();
     notifyListeners();
 
     return response;

@@ -1,24 +1,19 @@
-import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 import 'package:vims/models/movie.dart';
+import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/movie_service.dart';
 
-class DetailsMovieProvider extends ChangeNotifier {
+class DetailsMovieProvider extends BaseProvider<Movie> {
   int? id;
-  bool isLoading = true;
-  Exception? error;
   final Map<int, Movie> openedMovies = {};
-  final logger = Logger();
 
-  DetailsMovieProvider();
+  DetailsMovieProvider() : super();
 
   getDetailsMovie(int id) async {
     try {
       Movie? movie = await DetailsMovieService().getMovie(id);
       openedMovies[id] = movie!;
     } on Exception catch (e) {
-      error = e;
-      logger.e(e.toString());
+      exception = e;
     } finally {
       this.id = id;
       isLoading = false;
@@ -29,7 +24,7 @@ class DetailsMovieProvider extends ChangeNotifier {
   onRefresh() async {
     if (id != null) {
       isLoading = true;
-      error = null;
+      exception = null;
       notifyListeners();
       getDetailsMovie(id!);
     }
@@ -37,7 +32,7 @@ class DetailsMovieProvider extends ChangeNotifier {
 
   clear() {
     id = null;
-    error = null;
+    exception = null;
     openedMovies.clear();
   }
 }

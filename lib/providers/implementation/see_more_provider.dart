@@ -1,19 +1,15 @@
-import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 import 'package:vims/models/section.dart';
+import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/see_more_service.dart';
 
-class SeeMoreProvider extends ChangeNotifier {
-  Map<String, List<MovieSection>> seeMore = {};
-  bool isLoading = false;
-  final logger = Logger();
+class SeeMoreProvider extends BaseProvider<Map<String, List<MovieSection>>> {
   Map errors = {};
 
-  SeeMoreProvider();
+  SeeMoreProvider() : super();
 
   getSeeMore(String title) {
     SeeMoreService().getSeeMore(title).then((movieSections) {
-      seeMore[title] = movieSections;
+      data[title] = movieSections;
       errors[title] = null;
     }).whenComplete(() {
       isLoading = false;
@@ -22,7 +18,7 @@ class SeeMoreProvider extends ChangeNotifier {
   }
 
   onRefresh() {
-    seeMore.clear();
+    data.clear();
     errors.clear();
     isLoading = true;
     notifyListeners();

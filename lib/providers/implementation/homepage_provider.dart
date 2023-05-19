@@ -1,15 +1,11 @@
-import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 import 'package:vims/models/section.dart';
+import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/sections_service.dart';
 
-class HomepageProvider extends ChangeNotifier {
+class HomepageProvider extends BaseProvider<List<Section>> {
   List<Section> sections = [];
   Map<String, List<MovieSection>> seeMore = {};
-  bool isLoading = true;
-  final logger = Logger();
   DateTime lastUpdate = DateTime.now();
-  Exception? error;
 
   HomepageProvider() {
     getHomepageMovies();
@@ -18,10 +14,9 @@ class HomepageProvider extends ChangeNotifier {
   getHomepageMovies() async {
     try {
       sections = await HomepageService().getSections();
-      error = null;
+      exception = null;
     } on Exception catch (e) {
-      error = e;
-      logger.e(e.toString());
+      exception = e;
     } finally {
       isLoading = false;
       lastUpdate = DateTime.now();
@@ -32,7 +27,7 @@ class HomepageProvider extends ChangeNotifier {
   onRefresh() async {
     sections.clear();
     seeMore.clear();
-    error = null;
+    exception = null;
     isLoading = true;
     notifyListeners();
     getHomepageMovies();
