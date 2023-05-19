@@ -55,8 +55,6 @@ class SearchMovieProvider extends ChangeNotifier {
       suggestions = value;
       _suggestionsStream.sink.add(suggestions);
       error = null;
-    }).catchError((error) {
-      this.error = error;
     }).whenComplete(() => notifyListeners());
   }
 
@@ -65,10 +63,10 @@ class SearchMovieProvider extends ChangeNotifier {
     notifyListeners();
     SearchMovieService()
         .getSuggestions(search, type.name, from, order)
-        .then((value) {
-      total = value['total'];
-      final List body = value['suggestions'];
-      if (body.isNotEmpty) suggestions.addAll(value['suggestions']);
+        .then((pagedResponse) {
+      total = pagedResponse.total!;
+      final List body = pagedResponse.results;
+      if (body.isNotEmpty) suggestions.addAll(pagedResponse.results);
       _suggestionsStream.sink.add(suggestions);
       error = null;
     }).whenComplete(() {

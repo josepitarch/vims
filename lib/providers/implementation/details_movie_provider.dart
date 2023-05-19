@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
-
-import 'package:vims/models/movie.dart';
-import 'package:vims/services/details_movie_service.dart';
 import 'package:logger/logger.dart';
+import 'package:vims/models/movie.dart';
+import 'package:vims/services/movie_service.dart';
 
 class DetailsMovieProvider extends ChangeNotifier {
   int? id;
@@ -15,7 +14,7 @@ class DetailsMovieProvider extends ChangeNotifier {
 
   getDetailsMovie(int id) async {
     try {
-      Movie? movie = await DetailsMovieService().getDetailsMovie(id);
+      Movie? movie = await DetailsMovieService().getMovie(id);
       openedMovies[id] = movie!;
     } on Exception catch (e) {
       error = e;

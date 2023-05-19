@@ -11,12 +11,10 @@ class SeeMoreProvider extends ChangeNotifier {
 
   SeeMoreProvider();
 
-  getSeeMore(String title, bool isRelease) {
+  getSeeMore(String title) {
     SeeMoreService().getSeeMore(title).then((movieSections) {
       seeMore[title] = movieSections;
       errors[title] = null;
-    }).catchError((error) {
-      errors[title] = error;
     }).whenComplete(() {
       isLoading = false;
       notifyListeners();

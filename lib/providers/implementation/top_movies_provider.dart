@@ -2,14 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:vims/enums/mode_views.dart';
 import 'package:vims/models/filters.dart';
-import 'package:vims/models/movie.dart';
+import 'package:vims/models/paged_response.dart';
+import 'package:vims/models/topMovie.dart';
 import 'package:vims/services/top_movies_service.dart';
 
 List<int> randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
 
 class TopMoviesProvider extends ChangeNotifier {
   int from = 0;
-  List<Movie> movies = [];
+  late PagedResponse<TopMovie> topMovies;
   bool isLoading = false;
   Exception? error;
   bool hasFilters = false;
@@ -44,7 +45,7 @@ class TopMoviesProvider extends ChangeNotifier {
         fromParam = randomNumbers.removeLast();
       }
 
-      final List<Movie> response = await TopMoviesService().getTopMovies(
+      topMovies = await TopMoviesService().getTopMovies(
           from: fromParam,
           platforms: selectedPlatforms,
           genres: selectedGenres,
@@ -52,8 +53,8 @@ class TopMoviesProvider extends ChangeNotifier {
           yearFrom: currentFilters.yearFrom,
           yearTo: currentFilters.yearTo);
 
-      if (!hasFilters) response.shuffle();
-      movies.addAll(response);
+      if (!hasFilters) topMovies.results.shuffle();
+      //topMo.addAll(response.results);
       error = null;
     } on Exception catch (e) {
       error = e;
@@ -68,7 +69,7 @@ class TopMoviesProvider extends ChangeNotifier {
     if (currentFilters.equals(filters)) return;
 
     hasFilters = true;
-    movies.clear();
+    topMovies.results.clear();
     from = 0;
     scrollPosition = 0;
 
@@ -91,7 +92,7 @@ class TopMoviesProvider extends ChangeNotifier {
   }
 
   removeFilters() {
-    movies.clear();
+    topMovies.results.clear();
     currentFilters = Filters.origin();
     hasFilters = false;
     from = 0;
@@ -103,12 +104,12 @@ class TopMoviesProvider extends ChangeNotifier {
   }
 
   onRefresh() {
-    movies.clear();
+    topMovies.results.clear();
     error = null;
     isLoading = true;
     hasFilters = false;
     notifyListeners();
-    TopMoviesService().getTopMovies().then((value) => movies = value);
+    TopMoviesService().getTopMovies().then((value) => topMovies = value);
   }
 
   setModeView() {

@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-
 import 'package:logger/logger.dart';
-
 import 'package:vims/models/section.dart';
-import 'package:vims/services/homepage_service.dart';
+import 'package:vims/services/sections_service.dart';
 
 class HomepageProvider extends ChangeNotifier {
   List<Section> sections = [];
@@ -19,7 +17,7 @@ class HomepageProvider extends ChangeNotifier {
 
   getHomepageMovies() async {
     try {
-      sections = await HomepageService().getHomepageMovies();
+      sections = await HomepageService().getSections();
       error = null;
     } on Exception catch (e) {
       error = e;
