@@ -1,41 +1,72 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:vims/database/history_search_database.dart';
 import 'package:vims/enums/type_search.dart';
 import 'package:vims/models/suggestion.dart';
+import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/services/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
 
-class SearchMovieProvider extends ChangeNotifier {
+enum TypeData { suggestions, autocomplete }
+
+class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
   String search = '';
-  List<Suggestion> suggestions = [];
-  int total = -1;
-  int from = 0;
   final String order = 'relevance';
-  bool isLoading = false;
   TypeSearch type = TypeSearch.title;
-  Exception? error;
-  double scrollPosition = 0;
+  final Logger logger = Logger();
+  TypeData typeData = TypeData.suggestions;
 
   final debouncer = Debouncer(
     duration: const Duration(milliseconds: 500),
   );
 
-  final StreamController<List<Suggestion>> _suggestionsStream =
-      StreamController<List<Suggestion>>.broadcast();
-
-  Stream<List<Suggestion>> get suggestionsStream => _suggestionsStream.stream;
-
-  SearchMovieProvider() {
+  SearchMovieProvider() : super(page: 1, limit: 50) {
+    isLoading = false;
     getHistorySearchs();
+  }
+
+  getSuggestions(String search) {
+    isLoading = true;
+    notifyListeners();
+
+    SearchMovieService()
+        .getSuggestions(search, type.name, page, order)
+        .then((value) {
+      total = value.total;
+      final List<Suggestion> body = value.results;
+      hasNextPage = body.length < total!;
+      if (body.isNotEmpty) data.addAll(value.results);
+      exception = null;
+    }).whenComplete(() {
+      isLoading = false;
+      notifyListeners();
+    });
+  }
+
+  getSuggestionsAutocomplete(String search) {
+    isLoading = true;
+    this.search = search;
+
+    SearchMovieService()
+        .getAutocomplete(search)
+        .then((value) {
+          data = value;
+          exception = null;
+        })
+        .catchError((error) => exception = error)
+        .whenComplete(() {
+          isLoading = false;
+          hasNextPage = false;
+          total = null;
+          notifyListeners();
+        });
   }
 
   clearSearch() {
     search = '';
-    total = -1;
-    suggestions.clear();
-    _suggestionsStream.sink.add(suggestions);
+    total = null;
+    data.clear();
     notifyListeners();
   }
 
@@ -43,41 +74,13 @@ class SearchMovieProvider extends ChangeNotifier {
     return HistorySearchDatabase.getHistorySearchs().then((value) => value);
   }
 
+  insertHistorySearch(String movie) {
+    HistorySearchDatabase.insertSearch(movie);
+  }
+
   deleteAllSearchs() {
     HistorySearchDatabase.deleteAllSearchs();
     notifyListeners();
-  }
-
-  getSuggestionsAutocomplete(String search) async {
-    total = -1;
-    SearchMovieService().getAutocomplete(search, type.name).then((value) {
-      this.search = search;
-      suggestions = value;
-      _suggestionsStream.sink.add(suggestions);
-      error = null;
-    }).whenComplete(() => notifyListeners());
-  }
-
-  getSuggestions(String search) async {
-    isLoading = true;
-    notifyListeners();
-    SearchMovieService()
-        .getSuggestions(search, type.name, from, order)
-        .then((pagedResponse) {
-      total = pagedResponse.total!;
-      final List body = pagedResponse.results;
-      if (body.isNotEmpty) suggestions.addAll(pagedResponse.results);
-      _suggestionsStream.sink.add(suggestions);
-      error = null;
-    }).whenComplete(() {
-      isLoading = false;
-      from += 50;
-      notifyListeners();
-    });
-  }
-
-  insertHistorySearch(String search) {
-    HistorySearchDatabase.insertSearch(search);
   }
 
   onTapHistorySearch(String search) {
@@ -86,8 +89,6 @@ class SearchMovieProvider extends ChangeNotifier {
   }
 
   onRefresh() {
-    isLoading = true;
-    notifyListeners();
     getSuggestionsAutocomplete(search);
   }
 
@@ -95,6 +96,9 @@ class SearchMovieProvider extends ChangeNotifier {
     search = search.trim();
     debouncer.value = '';
     debouncer.onValue = (value) async {
+      data.clear();
+      scrollPosition = 0;
+      typeData = TypeData.autocomplete;
       getSuggestionsAutocomplete(search);
     };
 
@@ -104,5 +108,21 @@ class SearchMovieProvider extends ChangeNotifier {
 
     Future.delayed(const Duration(milliseconds: 301))
         .then((_) => timer.cancel());
+  }
+
+  onSubmitted(String search) {
+    if (search.isEmpty) return;
+    this.search = search;
+    data.clear();
+    page = 1;
+    typeData = TypeData.suggestions;
+    insertHistorySearch(search);
+    getSuggestions(search);
+  }
+
+  @override
+  fetchNextPage() {
+    page = page + 1;
+    getSuggestions(search);
   }
 }

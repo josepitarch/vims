@@ -1,12 +1,14 @@
-import 'package:vims/models/paged_response.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 
-abstract class InfiniteScrollProvider<T> extends BaseProvider {
-  int page = 1;
+abstract class InfiniteScrollProvider<T> extends BaseProvider<List<T>> {
+  int page;
   int? total;
-  int? limit;
-  bool? hasNextPage;
+  int limit;
+  bool hasNextPage = false;
+  double scrollPosition = 0;
 
-  InfiniteScrollProvider() : super(PagedResponse<T>.origin());
+  InfiniteScrollProvider({required this.page, required this.limit})
+      : super(data: []);
+
   fetchNextPage();
 }
