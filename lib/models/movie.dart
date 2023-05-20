@@ -2,7 +2,7 @@ import 'dart:convert' as json;
 
 import 'package:vims/models/poster.dart';
 
-class Movie extends CommonPropertiesMovie {
+class Movie extends BaseMovie {
   final String flag;
   final String originalTitle;
   final int year;
@@ -78,7 +78,7 @@ class Movie extends CommonPropertiesMovie {
             ? []
             : List<String>.from(json['groups'].map((x) => x)),
         synopsis: json['synopsis'],
-        rating: json['rating'],
+        rating: double.parse(json['rating'].toString()),
         justwatch: Justwatch.fromMap(json['justwatch']),
         reviews:
             List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
@@ -127,15 +127,15 @@ class Movie extends CommonPropertiesMovie {
 
 class Actor {
   final String name;
-  final String image;
-  final String link;
+  final String? image;
+  final int id;
 
-  Actor({required this.name, required this.image, required this.link});
+  Actor({required this.name, required this.image, required this.id});
 
   factory Actor.fromMap(Map<String, dynamic> json) => Actor(
+        id: json['id'],
         name: json['name'],
         image: json['image'],
-        link: json['link'],
       );
 }
 
@@ -218,21 +218,23 @@ class Review {
       };
 }
 
-class CommonPropertiesMovie {
+class BaseMovie {
   final int id;
   final String title;
   final Poster poster;
 
-  CommonPropertiesMovie({
+  BaseMovie({
     required this.id,
     required this.title,
     required this.poster,
   });
 
-  factory CommonPropertiesMovie.fromMap(Map<String, dynamic> json) =>
-      CommonPropertiesMovie(
+  factory BaseMovie.fromMap(Map<String, dynamic> json) => BaseMovie(
         id: json['id'],
         title: json['title'],
         poster: Poster.fromMap(json['poster']),
       );
+
+  factory BaseMovie.origin() => BaseMovie(
+      id: 0, title: '', poster: Poster(mtiny: '', mmed: '', large: ''));
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/poster.dart';
 
-class TopMovie extends CommonPropertiesMovie {
+class TopMovie extends BaseMovie {
   final String director;
   final int year;
   final double rating;

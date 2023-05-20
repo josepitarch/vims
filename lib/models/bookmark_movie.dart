@@ -1,4 +1,5 @@
 import 'package:vims/models/movie.dart';
+import 'package:vims/models/poster.dart';
 
 class BookmarkMovie {
   int id;
@@ -30,12 +31,12 @@ class BookmarkMovie {
         flag: '',
         title: title,
         originalTitle: '',
-        year: '',
+        year: -1,
         country: '',
         cast: [],
         genres: [],
         synopsis: '',
-        poster: poster,
+        poster: Poster(mtiny: poster, mmed: poster, large: poster),
         justwatch: Justwatch(buy: [], rent: [], flatrate: []),
         director: director,
         rating: rating,
