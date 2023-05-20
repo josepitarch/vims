@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/poster.dart';
 
-class Suggestion extends CommonPropertiesMovie {
-  final int year;
-  final String country;
+class Suggestion extends BaseMovie {
+  final int? year;
+  final String? country;
   final double? rating;
-  final String director;
+  final String? director;
 
   Suggestion(
       {required id,

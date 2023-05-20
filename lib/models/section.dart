@@ -24,7 +24,7 @@ class Section {
       );
 }
 
-class MovieSection extends CommonPropertiesMovie {
+class MovieSection extends BaseMovie {
   final String premiereDay;
 
   MovieSection({
