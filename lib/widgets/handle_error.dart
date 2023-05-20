@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/exceptions/maintenance_exception.dart';
 import 'package:vims/pages/maintenance_screen.dart';
 import 'package:vims/widgets/material_design_icons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
+
+// TODO: this is a page not a widget
 
 class HandleError extends StatelessWidget {
   final Exception error;
