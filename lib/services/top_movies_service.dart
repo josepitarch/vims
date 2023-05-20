@@ -1,24 +1,20 @@
 import 'dart:async';
 
+import 'package:vims/models/filters.dart';
 import 'package:vims/models/paged_response.dart';
 import 'package:vims/models/topMovie.dart';
 import 'package:vims/utils/request.dart';
 
 class TopMoviesService {
-  Future<PagedResponse<TopMovie>> getTopMovies(
-      {int from = 0,
-      List<String> platforms = const [],
-      List<String> genres = const [],
-      bool excludeAnimation = true,
-      int yearFrom = 1990,
-      int yearTo = 2023}) async {
+  Future<PagedResponse<TopMovie>> getTopMovies(Filters filters,
+      [int page = 1]) async {
     final Map<String, String> parameters = {
-      'from': from.toString(),
-      'platforms': platforms.join(','),
-      'genres': genres.join(','),
-      'exclude_animation': excludeAnimation.toString(),
-      'from_year': yearFrom.toString(),
-      'to_year': yearTo.toString()
+      'page': page.toString(),
+      'platforms': filters.platforms.join(','),
+      'genres': filters.genres.join(','),
+      'exclude_animation': filters.isAnimationExcluded.toString(),
+      'from_year': filters.yearFrom.toString(),
+      'to_year': filters.yearTo.toString()
     };
 
     final Map response = await request('top/movies', 'v2', parameters);
