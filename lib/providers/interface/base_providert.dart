@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 
 abstract class BaseProvider<T> extends ChangeNotifier {
   late T data;
-  bool isLoading = false;
+  bool isLoading;
   Exception? exception;
 
-  BaseProvider();
+  BaseProvider({required this.data, this.isLoading = false});
+
+  onRefresh();
 }

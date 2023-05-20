@@ -5,23 +5,26 @@ import 'package:vims/services/see_more_service.dart';
 class SeeMoreProvider extends BaseProvider<Map<String, List<MovieSection>>> {
   Map errors = {};
 
-  SeeMoreProvider() : super();
+  SeeMoreProvider() : super(data: {}, isLoading: true);
 
   getSeeMore(String title) {
-    SeeMoreService().getSeeMore(title).then((movieSections) {
-      data[title] = movieSections;
-      errors[title] = null;
-    }).whenComplete(() {
-      isLoading = false;
-      notifyListeners();
-    });
+    isLoading = true;
+    SeeMoreService()
+        .getSeeMore(title)
+        .then((movieSections) {
+          data[title] = movieSections;
+          errors[title] = null;
+        })
+        .catchError((e) => errors[title] = e)
+        .whenComplete(() {
+          isLoading = false;
+          notifyListeners();
+        });
   }
 
   onRefresh() {
     data.clear();
     errors.clear();
-    isLoading = true;
-    notifyListeners();
   }
 
   onRefreshError(String title) {

@@ -2,34 +2,31 @@ import 'package:vims/models/section.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/sections_service.dart';
 
-class HomepageProvider extends BaseProvider<List<Section>> {
-  List<Section> sections = [];
-  Map<String, List<MovieSection>> seeMore = {};
+class SectionsProvider extends BaseProvider<List<Section>> {
   DateTime lastUpdate = DateTime.now();
 
-  HomepageProvider() {
+  SectionsProvider() : super(data: [], isLoading: true) {
     getHomepageMovies();
   }
 
   getHomepageMovies() async {
-    try {
-      sections = await HomepageService().getSections();
+    isLoading = true;
+    notifyListeners();
+    SectionsService().getSections().then((sections) {
+      data = sections;
       exception = null;
-    } on Exception catch (e) {
+    }).catchError((e) {
       exception = e;
-    } finally {
+    }).whenComplete(() {
       isLoading = false;
       lastUpdate = DateTime.now();
       notifyListeners();
-    }
+    });
   }
 
   onRefresh() async {
-    sections.clear();
-    seeMore.clear();
+    data.clear();
     exception = null;
-    isLoading = true;
-    notifyListeners();
     getHomepageMovies();
   }
 }
