@@ -11,16 +11,16 @@ class DetailsMovieShimmer extends StatelessWidget {
       body: Shimmer.fromColors(
         baseColor: Colors.black,
         highlightColor: Colors.grey.shade100,
-        child: SingleChildScrollView(
+        child: const SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _HeaderShimmer(),
+              _HeaderShimmer(),
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(10.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       _TitleShimmer(),
                       SizedBox(height: 7),
                       _DirectorShimmer(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/section.dart';
-import 'package:vims/providers/see_more_provider.dart';
+import 'package:vims/providers/implementation/see_more_provider.dart';
 import 'package:vims/shimmer/see_more_shimmer.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/section_movie.dart';
@@ -22,11 +22,11 @@ class SeeMore extends StatelessWidget {
         return HandleError(provider.errors[code], onRefreshError);
 
       Widget body;
-      if (provider.seeMore[code] == null) {
+      if (provider.data[code] == null) {
         provider.getSeeMore(code);
         body = SeeMoreShimmer(title: title, height: 160, width: 120);
       } else {
-        body = _Body(moviesSection: provider.seeMore[code]!);
+        body = _Body(moviesSection: provider.data[code]!);
       }
 
       return Scaffold(
