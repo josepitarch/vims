@@ -1,48 +1,41 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logger/logger.dart';
-
-import 'dart:async';
-import 'dart:convert' as json;
-import 'package:http/http.dart' as http;
-import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:vims/models/paged_response.dart';
+import 'package:vims/models/suggestion.dart';
+import 'package:vims/utils/request.dart';
 
 class SearchMovieService {
-  final url = dotenv.env['URL']!;
-  final timeout = dotenv.env['TIMEOUT']!;
-  final String versionApi = dotenv.env['VERSION_API']!;
-  final int numberFetchMovies = int.parse(dotenv.env['NUMBER_FETCH_MOVIES']!);
+  Future<PagedResponse<Suggestion>> getSuggestions(
+      String query, String type, int from, String order) async {
+    if (query.isEmpty) return PagedResponse.origin();
 
-  final logger = Logger();
-
-  Future getSuggestions(String query, String type) async {
-    List suggestions = [];
-    int countFetch = 0;
-
-    if (query.isEmpty) return suggestions;
-
-    final request = Uri.http(url, '/api/$versionApi/search/film', {
-      'film': query,
-      'lang': 'es',
+    final Map<String, String> parameters = {
+      'movie': query,
+      'from': from.toString(),
+      'order': order,
       'type': type,
-      'numberFetchMovies': numberFetchMovies.toString()
-    });
+    };
 
-    final response =
-        await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
+    final Map response = await request('search/movie', 'v2', parameters);
 
-    if (response.statusCode == 500) throw TimeoutException(response.body);
+    final List<Suggestion> results = response['results']
+        .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
+        .toList();
 
-    if (response.statusCode == 503) {
-      final body = json.jsonDecode(response.body);
-      throw MaintenanceException(body['image'], body['message']);
-    }
+    return PagedResponse<Suggestion>(
+        page: response['page'],
+        limit: response['limit'],
+        total: response['total'],
+        results: results);
+  }
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> body = json.jsonDecode(response.body);
-      countFetch = body['countFetch'];
-      suggestions = body['movies'];
-    }
+  Future<List<Suggestion>> getAutocomplete(String query) async {
+    if (query.isEmpty) return [];
 
-    return {'countFetch': countFetch, 'suggestions': suggestions};
+    final Map<String, String> parameters = {'search': query};
+
+    final response = await request('autocomplete', 'v1', parameters);
+
+    return response['movies']
+        .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
+        .toList();
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/providers/details_movie_provider.dart';
-import 'package:vims/providers/homepage_provider.dart';
-import 'package:vims/providers/see_more_provider.dart';
+import 'package:vims/providers/implementation/movie_provider.dart';
+import 'package:vims/providers/implementation/sections_provider.dart';
+import 'package:vims/providers/implementation/see_more_provider.dart';
 import 'package:vims/shimmer/sections_shimmer.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
+import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/pull_refresh.dart';
 import 'package:vims/widgets/section_widget.dart';
-import 'package:vims/widgets/handle_error.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
@@ -35,9 +35,9 @@ class _HomepageScreenState extends State<HomepageScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomepageProvider>(builder: (_, provider, __) {
-      if (provider.error != null)
-        return HandleError(provider.error!, provider.onRefresh);
+    return Consumer<SectionsProvider>(builder: (_, provider, __) {
+      if (provider.exception != null)
+        return HandleError(provider.exception!, provider.onRefresh);
       if (provider.isLoading) return const SectionsShimmer();
 
       return PullRefresh(
@@ -45,7 +45,7 @@ class _HomepageScreenState extends State<HomepageScreen>
               child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(children: [
-              ...provider.sections
+              ...provider.data
                   .map((section) => SectionWidget(section: section))
                   .toList(),
               const SizedBox(height: 30),
@@ -67,7 +67,7 @@ class _HomepageScreenState extends State<HomepageScreen>
 
 void refreshIfIsNecessary(BuildContext context) {
   final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
-  final HomepageProvider homepageProvider = context.read<HomepageProvider>();
+  final SectionsProvider homepageProvider = context.read<SectionsProvider>();
 
   final Duration difference =
       DateTime.now().difference(homepageProvider.lastUpdate);

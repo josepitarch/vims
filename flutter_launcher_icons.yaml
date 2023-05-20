@@ -1,5 +1,7 @@
 flutter_icons:
   android: "logo"
   ios: true
+  remove_alpha_ios: true
   image_path: "assets/vims_black.png"
+  adaptive_icon_background: "#000000"
   min_sdk_android: 21

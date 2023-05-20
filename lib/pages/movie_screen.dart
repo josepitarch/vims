@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/database/bookmark_movies_database.dart';
-
 import 'package:vims/models/movie.dart';
-import 'package:vims/providers/bookmark_movies_provider.dart';
-import 'package:vims/providers/details_movie_provider.dart';
+import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
+import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/shimmer/details_movie_shimmer.dart';
 import 'package:vims/ui/box_decoration.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/flag.dart';
+import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
-import 'package:vims/widgets/handle_error.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
 
-class DetailsMovieScreen extends StatelessWidget {
-  const DetailsMovieScreen({Key? key}) : super(key: key);
+class MovieScreen extends StatelessWidget {
+  const MovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
@@ -34,20 +32,14 @@ class DetailsMovieScreen extends StatelessWidget {
 
     final int id = arguments['id'];
     final String heroTag = arguments['heroTag'] ?? id.toString();
-    final bool hasAllAttributes = arguments['hasAllAttributes'] ?? false;
 
-    if (provider.error != null)
-      return HandleError(provider.error!, provider.onRefresh);
+    if (provider.exception != null)
+      return HandleError(provider.exception!, provider.onRefresh);
 
-    if (hasAllAttributes) {
-      Movie movie = arguments['movie'];
-      provider.openedMovies[id] = movie;
+    if (provider.data.containsKey(id)) {
+      final Movie movie = provider.data[id]!;
       movie.heroTag = heroTag;
-      return screen(movie);
-    } else if (provider.openedMovies.containsKey(id)) {
-      final Movie movie = provider.openedMovies[id]!;
-      movie.heroTag = heroTag;
-      return screen(provider.openedMovies[id]!);
+      return screen(provider.data[id]!);
     } else {
       provider.getDetailsMovie(id);
       return const DetailsMovieShimmer();
@@ -58,7 +50,7 @@ class DetailsMovieScreen extends StatelessWidget {
     final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(movie.title, movie.poster, heroTag),
+        _CustomAppBar(movie.title, movie.poster.large, heroTag),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -215,7 +207,7 @@ class _Box extends StatelessWidget {
 }
 
 class _YearAndDuration extends StatelessWidget {
-  final String year;
+  final int year;
   final String? duration;
   const _YearAndDuration(this.year, this.duration);
 
@@ -224,7 +216,7 @@ class _YearAndDuration extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       width: double.infinity,
-      child: Text(year + transformDuration(duration),
+      child: Text(year.toString() + transformDuration(duration),
           style: Theme.of(context).textTheme.headlineSmall),
     );
   }

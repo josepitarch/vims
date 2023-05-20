@@ -1,55 +1,28 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logger/logger.dart';
-
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:vims/exceptions/maintenance_exception.dart';
-import 'dart:convert' as json;
 
-import 'package:vims/models/movie.dart';
+import 'package:vims/models/filters.dart';
+import 'package:vims/models/paged_response.dart';
+import 'package:vims/models/topMovie.dart';
+import 'package:vims/utils/request.dart';
 
 class TopMoviesService {
-  final String url = dotenv.env['URL']!;
-  final String timeout = dotenv.env['TIMEOUT']!;
-  final String versionApi = dotenv.env['VERSION_API']!;
+  Future<PagedResponse<TopMovie>> getTopMovies(Filters filters,
+      [int page = 1]) async {
+    final Map<String, String> parameters = {
+      'page': page.toString(),
+      'platforms': filters.platforms.join(','),
+      'genres': filters.genres.join(','),
+      'exclude_animation': filters.isAnimationExcluded.toString(),
+      'from_year': filters.yearFrom.toString(),
+      'to_year': filters.yearTo.toString()
+    };
 
-  final logger = Logger();
+    final Map response = await request('top/movies', 'v2', parameters);
+    final List<TopMovie> results = response['results']
+        .map<TopMovie>((topMovie) => TopMovie.fromMap(topMovie))
+        .toList();
 
-  Future<List<Movie>> getTopMovies(
-      {int from = 0,
-      List<String> platforms = const [],
-      List<String> genres = const [],
-      bool excludeAnimation = true,
-      int yearFrom = 1990,
-      int yearTo = 2023}) async {
-    List<Movie> topMovies = [];
-
-    final request = Uri.http(url, '/api/$versionApi/top/films', {
-      'from': from.toString(),
-      'platforms': platforms.join(','),
-      'genres': genres.join(','),
-      'exclude_animation': excludeAnimation.toString(),
-      'from_year': yearFrom.toString(),
-      'to_year': yearTo.toString()
-    });
-
-    final response =
-        await http.get(request).timeout(Duration(seconds: int.parse(timeout)));
-
-    if (response.statusCode == 500) throw TimeoutException(response.body);
-
-    if (response.statusCode == 503) {
-      final body = json.jsonDecode(response.body);
-      throw MaintenanceException(body['image'], body['message']);
-    }
-
-    if (response.statusCode == 200) {
-      List<dynamic> aux = json.jsonDecode(response.body);
-      for (var element in aux) {
-        topMovies.add(Movie.fromIncompleteMovie(element));
-      }
-    }
-
-    return topMovies;
+    return PagedResponse<TopMovie>(
+        page: response['page'], limit: response['limit'], results: results);
   }
 }

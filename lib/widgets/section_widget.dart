@@ -15,7 +15,6 @@ class SectionWidget extends StatelessWidget {
     Map arguments = {
       'title': section.title,
       'code': section.code,
-      'isRelease': section.isRelease
     };
 
     return Column(

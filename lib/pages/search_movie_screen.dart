@@ -1,18 +1,19 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vims/models/movie.dart';
-import 'package:vims/providers/search_movie_provider.dart';
-import 'package:vims/shimmer/card_movie_shimmer.dart';
-import 'package:vims/ui/input_decoration.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:vims/widgets/card_movie.dart';
-import 'package:vims/widgets/no_results.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'dart:io' as io show Platform;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:vims/providers/implementation/search_movie_provider.dart';
+import 'package:vims/shimmer/card_movie_shimmer.dart';
+import 'package:vims/ui/input_decoration.dart';
+import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/handle_error.dart';
+import 'package:vims/widgets/infinite_scroll.dart';
+import 'package:vims/widgets/no_results.dart';
+
 late AppLocalizations i18n;
-final ScrollController scrollController = ScrollController();
+late ScrollController scrollController;
 
 class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
@@ -22,27 +23,27 @@ class SearchMovieScreen extends StatelessWidget {
     i18n = AppLocalizations.of(context)!;
 
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
-      if (provider.error != null)
-        return HandleError(provider.error!, provider.onRefresh);
-      if (provider.isLoading) {
-        return SafeArea(
-          child: Column(children: const [
-            _SearchMovieForm(),
-            Expanded(child: CardMovieShimmer())
-          ]),
-        );
-      }
+      if (provider.exception != null)
+        return HandleError(provider.exception!, provider.onRefresh);
       return SafeArea(
         child: Column(children: [
           const _SearchMovieForm(),
-          provider.search.isNotEmpty
-              ? _Suggestions(
-                  movies: provider.movies,
-                  numberFetchMovies: provider.countFetch)
-              : const _HistorySearch(),
+          _TotalSuggestions(provider.total),
+          const _Body()
         ]),
       );
     });
+  }
+}
+
+class _TotalSuggestions extends StatelessWidget {
+  final int? total;
+  const _TotalSuggestions(this.total);
+
+  @override
+  Widget build(BuildContext context) {
+    final text = total == null ? '' : 'Total encontrados: $total';
+    return Text(text);
   }
 }
 
@@ -57,31 +58,27 @@ class _SearchMovieForm extends StatelessWidget {
     final TextEditingController controller = TextEditingController();
     final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
 
-    FocusScope.of(context).requestFocus(FocusNode());
-
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Form(
         key: myFormKey,
         child: TextFormField(
+          autofocus: provider.typeData == TypeData.autocomplete,
           controller: controller..text = provider.search,
           keyboardType: TextInputType.text,
           enableSuggestions: false,
           keyboardAppearance: Brightness.dark,
           decoration: InputDecorations.searchMovieDecoration(
               i18n, controller, provider),
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.disabled,
           validator: (value) {
             if (value!.isEmpty) return i18n.no_empty_search;
-
             return null;
           },
+          onChanged: (value) => provider.onChanged(value),
           onFieldSubmitted: (String value) {
             if (myFormKey.currentState!.validate()) {
-              provider.searchMovie(value);
-              provider.insertHistorySearch(value);
-            } else {
-              return;
+              provider.onSubmitted(value);
             }
           },
         ),
@@ -90,35 +87,68 @@ class _SearchMovieForm extends StatelessWidget {
   }
 }
 
-class _Suggestions extends StatelessWidget {
-  final List movies;
-  final int numberFetchMovies;
-
-  const _Suggestions(
-      {Key? key, required this.movies, required this.numberFetchMovies})
-      : super(key: key);
+class _Body extends StatelessWidget {
+  const _Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return movies.isNotEmpty
-        ? Expanded(
-            child: ListView.builder(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                bool hasAllAttributes = index < numberFetchMovies;
-                Movie movie = index < numberFetchMovies
-                    ? Movie.fromMap(movies[index])
-                    : Movie.fromIncompleteMovie(movies[index]);
-                return CardMovie(
-                  movie: movie,
-                  hasAllAttributes: hasAllAttributes,
-                  saveToCache: false,
-                );
-              },
-            ),
-          )
-        : const NoResults();
+    final provider = context.watch<SearchMovieProvider>();
+
+    if (provider.search.isEmpty) return const _HistorySearch();
+    if (provider.isLoading && provider.data.isEmpty)
+      return const Expanded(child: CardMovieShimmer());
+    if (!provider.isLoading && provider.data.isEmpty) return const NoResults();
+
+    return _Suggestions(provider);
+  }
+}
+
+class _Suggestions extends StatefulWidget {
+  final SearchMovieProvider provider;
+  const _Suggestions(this.provider);
+
+  @override
+  State<_Suggestions> createState() => _SuggestionsState();
+}
+
+class _SuggestionsState extends State<_Suggestions> {
+  @override
+  void initState() {
+    scrollController = ScrollController();
+
+    scrollController.addListener(() {
+      widget.provider.scrollPosition = scrollController.position.pixels;
+      if (scrollController.position.pixels + 300 >=
+          scrollController.position.maxScrollExtent) {
+        if (!widget.provider.isLoading && widget.provider.hasNextPage)
+          widget.provider.fetchNextPage();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget data = ListView(
+        controller: scrollController,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        children: widget.provider.data
+            .map((suggestion) => CardMovie(
+                id: suggestion.id,
+                title: suggestion.title,
+                poster: suggestion.poster.mmed,
+                director: suggestion.director,
+                rating: suggestion.rating,
+                saveToCache: true))
+            .toList());
+
+    return InfiniteScroll(data: data, isLoading: widget.provider.isLoading);
   }
 }
 

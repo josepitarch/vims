@@ -1,40 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:vims/models/movie.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/rating.dart';
 
 class CardMovie extends StatelessWidget {
-  final Movie movie;
+  final int id;
+  final String title;
+  final String poster;
+  final String? director;
+  final double? rating;
   final bool saveToCache;
-  final bool hasAllAttributes;
+  final VoidCallback? onTap;
 
   const CardMovie(
       {Key? key,
-      required this.movie,
+      required this.id,
+      required this.title,
+      required this.poster,
+      this.director,
+      this.rating,
       required this.saveToCache,
-      this.hasAllAttributes = false})
+      this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double height = 150.0;
+
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
       onTap: () {
-        Map<String, dynamic> arguments = {
-          'id': movie.id,
-          'movie': movie,
-          'hasAllAttributes': hasAllAttributes
-        };
-        Navigator.pushNamed(context, 'details', arguments: arguments);
+        if (onTap != null) {
+          onTap!();
+        }
+        Navigator.pushNamed(context, 'details', arguments: {'id': id});
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         margin: const EdgeInsets.only(bottom: 20.0),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _Poster(height: height, movie: movie, saveToCache: saveToCache),
+          _Poster(
+              id: id, poster: poster, saveToCache: saveToCache, height: height),
           Expanded(
             child: Container(
                 height: height,
@@ -45,11 +52,11 @@ class CardMovie extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(children: [
-                      _Title(movie.title),
+                      _Title(title),
                       const SizedBox(height: 10.0),
-                      _Director(movie.director),
+                      _Director(director),
                     ]),
-                    Rating(movie.rating)
+                    rating != null ? Rating(rating) : const SizedBox.shrink(),
                   ],
                 )),
           ),
@@ -64,14 +71,16 @@ class CardMovie extends StatelessWidget {
 }
 
 class _Poster extends StatelessWidget {
-  final double height;
-  final Movie movie;
+  final int id;
+  final String poster;
   final bool saveToCache;
+  final double height;
 
   const _Poster({
     Key? key,
+    required this.id,
     required this.height,
-    required this.movie,
+    required this.poster,
     required this.saveToCache,
   }) : super(key: key);
 
@@ -79,11 +88,11 @@ class _Poster extends StatelessWidget {
   Widget build(BuildContext context) {
     const double width = 120.0;
     return Hero(
-      tag: movie.id,
+      tag: id,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: CustomImage(
-            url: movie.poster,
+            url: poster,
             width: width,
             height: height + 20,
             saveToCache: saveToCache,
@@ -116,6 +125,7 @@ class _Title extends StatelessWidget {
 
 class _Director extends StatelessWidget {
   final String? director;
+
   const _Director(
     this.director, {
     Key? key,
@@ -123,10 +133,12 @@ class _Director extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (director == null) return const SizedBox.shrink();
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       child: Text(
-        director ?? '',
+        director!,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontStyle: FontStyle.italic,
               //color: Theme.of(context).colorScheme.secondary
