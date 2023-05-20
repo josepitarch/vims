@@ -1,36 +1,33 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:vims/enums/genres.dart';
+import 'package:vims/enums/platforms.dart';
 import 'package:vims/models/filters.dart';
-import 'package:vims/providers/top_movies_provider.dart';
+import 'package:vims/providers/implementation/top_movies_provider.dart';
 import 'package:vims/widgets/card_genre.dart';
 import 'package:vims/widgets/platform_item.dart';
 import 'package:vims/widgets/year_container.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
 late Filters filters;
-late TopMoviesProvider provider;
-late ScrollController scrollController;
 late bool hasError;
 
 class TopMoviesDialog extends StatelessWidget {
-  final TopMoviesProvider topMoviesProvider;
-  final ScrollController controller;
-
-  const TopMoviesDialog(
-      {Key? key, required this.topMoviesProvider, required this.controller})
-      : super(key: key);
+  const TopMoviesDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-    provider = topMoviesProvider;
-    scrollController = controller;
+    final TopMoviesProvider topMoviesProvider =
+        Provider.of<TopMoviesProvider>(context, listen: false);
     hasError = false;
     filters = Filters(
-        platforms: Map.from(topMoviesProvider.currentFilters.platforms),
-        genres: Map.from(topMoviesProvider.currentFilters.genres),
+        platforms: [...topMoviesProvider.currentFilters.platforms],
+        genres: [...topMoviesProvider.currentFilters.genres],
         isAnimationExcluded:
             topMoviesProvider.currentFilters.isAnimationExcluded,
         yearFrom: topMoviesProvider.currentFilters.yearFrom,
@@ -70,7 +67,7 @@ class TopMoviesDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    if (provider.hasFilters) const _DeleteButton(),
+                    if (topMoviesProvider.hasFilters) const _DeleteButton(),
                     const SizedBox(width: 10),
                     const _ApplyButton(),
                   ],
@@ -98,10 +95,11 @@ class _PlatformsFilter extends StatelessWidget {
           height: 50,
           child: ListView(
               scrollDirection: Axis.horizontal,
-              children: filters.platforms.entries.map((entry) {
+              children: Platforms.values.map((entry) {
+                if (entry.showInTopFilters == false) return const SizedBox();
                 return PlatformItem(
-                    assetName: entry.key,
-                    isSelected: entry.value,
+                    assetName: entry.name,
+                    isSelected: filters.platforms.contains(entry.name),
                     filters: filters);
               }).toList()),
         ),
@@ -127,10 +125,10 @@ class _GenresFilter extends StatelessWidget {
         child: Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: filters.genres.entries.map((entry) {
+            children: Genres.values.map((entry) {
               return CardGenre(
-                genre: entry.key,
-                isSelected: entry.value,
+                genre: entry.name,
+                isSelected: filters.genres.contains(entry.name),
                 filters: filters,
               );
             }).toList()),
@@ -230,6 +228,7 @@ class _ApplyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TopMoviesProvider>(context, listen: false);
     return io.Platform.isAndroid
         ? MaterialButton(
             elevation: 0,
@@ -239,7 +238,6 @@ class _ApplyButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30)),
             onPressed: () {
               if (hasError) return;
-              if (scrollController.hasClients) scrollController.jumpTo(0);
               Navigator.pop(context);
               provider.applyFilters(filters);
             },
@@ -249,7 +247,6 @@ class _ApplyButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             color: Colors.orange,
             onPressed: () {
-              if (scrollController.hasClients) scrollController.jumpTo(0);
               Navigator.pop(context);
               provider.applyFilters(filters);
             },
@@ -262,6 +259,7 @@ class _DeleteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TopMoviesProvider>(context, listen: false);
     return io.Platform.isAndroid
         ? MaterialButton(
             elevation: 0,
@@ -269,7 +267,6 @@ class _DeleteButton extends StatelessWidget {
                 side: const BorderSide(color: Colors.red, width: 2),
                 borderRadius: BorderRadius.circular(30)),
             onPressed: () {
-              if (scrollController.hasClients) scrollController.jumpTo(0);
               Navigator.pop(context);
               provider.removeFilters();
             },
@@ -279,7 +276,6 @@ class _DeleteButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             color: Colors.red,
             onPressed: () {
-              if (scrollController.hasClients) scrollController.jumpTo(0);
               Navigator.pop(context);
               provider.removeFilters();
             },
