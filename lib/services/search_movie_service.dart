@@ -27,7 +27,7 @@ class SearchMovieService {
         results: results);
   }
 
-  Future<List<Suggestion>> getAutocomplete(String query, String type) async {
+  Future<List<Suggestion>> getAutocomplete(String query) async {
     if (query.isEmpty) return [];
 
     final Map<String, String> parameters = {'search': query};
