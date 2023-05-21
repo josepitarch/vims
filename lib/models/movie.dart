@@ -54,35 +54,45 @@ class Movie extends BaseMovie {
 
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 
-  factory Movie.fromMap(Map<String, dynamic> json) => Movie(
-        id: json['id'],
-        title: json['title'],
-        poster: Poster.fromMap(json['poster']),
-        flag: json['flag'],
-        originalTitle: json['original_title'],
-        year: json['year'],
-        duration: json['duration'],
-        country: json['country'],
-        director: json['director'],
-        screenwriter: json['screenwriter'],
-        music: json['music'],
-        cinematography: json['cinematography'],
-        cast: json['cast'] == null
-            ? []
-            : List<Actor>.from(json['cast'].map((x) => Actor.fromMap(x))),
-        producer: json['producer'],
-        genres: json['genres'] == null
-            ? []
-            : List<String>.from(json['genres'].map((x) => x)),
-        groups: json['groups'] == null
-            ? []
-            : List<String>.from(json['groups'].map((x) => x)),
-        synopsis: json['synopsis'],
-        rating: double.parse(json['rating'].toString()),
-        justwatch: Justwatch.fromMap(json['justwatch']),
-        reviews:
-            List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
-      );
+  factory Movie.fromMap(Map<String, dynamic> json) {
+    final double? rating =
+        json['rating'] != null ? double.parse(json['rating'].toString()) : null;
+
+    final List<Actor> cast = json['cast'] != null
+        ? json['cast'].map((x) => Actor.fromMap(x)).toList().cast<Actor>()
+        : [];
+
+    final List<String> genres = json['genres'] != null
+        ? json['genres'].map((x) => x).toList().cast<String>()
+        : [];
+
+    final List<String> groups = json['groups'] != null
+        ? json['groups'].map((x) => x).toList().cast<String>()
+        : [];
+
+    return Movie(
+      id: json['id'],
+      title: json['title'],
+      poster: Poster.fromMap(json['poster']),
+      flag: json['flag'],
+      originalTitle: json['original_title'],
+      year: json['year'],
+      duration: json['duration'],
+      country: json['country'],
+      director: json['director'],
+      screenwriter: json['screenwriter'],
+      music: json['music'],
+      cinematography: json['cinematography'],
+      cast: cast,
+      producer: json['producer'],
+      genres: genres,
+      groups: groups,
+      synopsis: json['synopsis'],
+      rating: rating,
+      justwatch: Justwatch.fromMap(json['justwatch']),
+      reviews: List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
+    );
+  }
 
   factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
       id: json['id'],
