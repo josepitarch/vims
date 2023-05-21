@@ -17,7 +17,8 @@ late Filters filters;
 late bool hasError;
 
 class TopMoviesDialog extends StatelessWidget {
-  const TopMoviesDialog({Key? key}) : super(key: key);
+  final VoidCallback jumpToTop;
+  const TopMoviesDialog({required this.jumpToTop, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +68,12 @@ class TopMoviesDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    if (topMoviesProvider.hasFilters) const _DeleteButton(),
+                    if (topMoviesProvider.hasFilters)
+                      _DeleteButton(
+                        jumpToTop: jumpToTop,
+                      ),
                     const SizedBox(width: 10),
-                    const _ApplyButton(),
+                    _ApplyButton(jumpToTop: jumpToTop),
                   ],
                 ),
               ),
@@ -224,11 +228,20 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
 }
 
 class _ApplyButton extends StatelessWidget {
-  const _ApplyButton();
+  final VoidCallback jumpToTop;
+  const _ApplyButton({required this.jumpToTop});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TopMoviesProvider>(context, listen: false);
+
+    onPressed() {
+      if (hasError) return;
+      jumpToTop();
+      Navigator.pop(context);
+      provider.applyFilters(filters);
+    }
+
     return io.Platform.isAndroid
         ? MaterialButton(
             elevation: 0,
@@ -236,49 +249,45 @@ class _ApplyButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.orange),
                 borderRadius: BorderRadius.circular(30)),
-            onPressed: () {
-              if (hasError) return;
-              Navigator.pop(context);
-              provider.applyFilters(filters);
-            },
+            onPressed: onPressed,
             child: Text(i18n.apply_filters_dialog))
         : CupertinoButton(
             borderRadius: BorderRadius.circular(30),
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             color: Colors.orange,
-            onPressed: () {
-              Navigator.pop(context);
-              provider.applyFilters(filters);
-            },
+            onPressed: onPressed,
             child: Text(i18n.apply_filters_dialog));
   }
 }
 
 class _DeleteButton extends StatelessWidget {
-  const _DeleteButton();
+  final VoidCallback jumpToTop;
+
+  const _DeleteButton({required this.jumpToTop});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TopMoviesProvider>(context, listen: false);
+
+    onPressed() {
+      jumpToTop();
+      Navigator.pop(context);
+      provider.removeFilters();
+    }
+
     return io.Platform.isAndroid
         ? MaterialButton(
             elevation: 0,
             shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.red, width: 2),
                 borderRadius: BorderRadius.circular(30)),
-            onPressed: () {
-              Navigator.pop(context);
-              provider.removeFilters();
-            },
+            onPressed: onPressed,
             child: Text(i18n.delete_filters_dialog))
         : CupertinoButton(
             borderRadius: BorderRadius.circular(30),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             color: Colors.red,
-            onPressed: () {
-              Navigator.pop(context);
-              provider.removeFilters();
-            },
+            onPressed: onPressed,
             child: Text(i18n.delete_filters_dialog));
   }
 }
