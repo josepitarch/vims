@@ -14,7 +14,7 @@ class SectionWidget extends StatelessWidget {
     final i18n = AppLocalizations.of(context)!;
     Map arguments = {
       'title': section.title,
-      'code': section.code,
+      'code': section.id,
     };
 
     return Column(

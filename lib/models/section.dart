@@ -4,21 +4,21 @@ import 'package:vims/models/movie.dart';
 import 'package:vims/models/poster.dart';
 
 class Section {
+  String id;
   String title;
-  String code;
   List<MovieSection> movies;
 
   Section({
+    required this.id,
     required this.title,
-    required this.code,
     required this.movies,
   });
 
   factory Section.fromJson(String str) => Section.fromMap(json.decode(str));
 
   factory Section.fromMap(Map<String, dynamic> json) => Section(
-        title: json['title_section'],
-        code: json['code'],
+        id: json['id'],
+        title: json['title'],
         movies: List<MovieSection>.from(
             json['movies'].map((x) => MovieSection.fromMap(x))),
       );
