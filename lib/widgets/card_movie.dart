@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vims/models/movie.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
+import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 
 class CardMovie extends StatelessWidget {
@@ -9,6 +11,7 @@ class CardMovie extends StatelessWidget {
   final String poster;
   final String? director;
   final double? rating;
+  final List<Platform> platforms;
   final bool saveToCache;
   final VoidCallback? onTap;
 
@@ -19,6 +22,7 @@ class CardMovie extends StatelessWidget {
       required this.poster,
       this.director,
       this.rating,
+      this.platforms = const [],
       required this.saveToCache,
       this.onTap})
       : super(key: key);
@@ -45,18 +49,18 @@ class CardMovie extends StatelessWidget {
           Expanded(
             child: Container(
                 height: height,
-                margin: const EdgeInsets.only(left: 10, top: 15),
-                padding: const EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(left: 10, top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(children: [
-                      _Title(title),
-                      const SizedBox(height: 10.0),
-                      _Director(director),
-                    ]),
+                    _Title(title),
+                    const SizedBox(height: 10.0),
+                    _Director(director),
+                    const SizedBox(height: 10.0),
                     rating != null ? Rating(rating) : const SizedBox.shrink(),
+                    const Expanded(child: SizedBox()),
+                    _Platforms(platforms),
                   ],
                 )),
           ),
@@ -146,6 +150,27 @@ class _Director extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
       ),
+    );
+  }
+}
+
+class _Platforms extends StatelessWidget {
+  final List<Platform> platforms;
+  const _Platforms(this.platforms);
+
+  @override
+  Widget build(BuildContext context) {
+    const double height = 37.5;
+    const double width = height;
+    return SizedBox(
+      height: height,
+      child: ListView(
+          scrollDirection: Axis.horizontal,
+          reverse: false,
+          children: platforms
+              .map((platform) =>
+                  JustwatchItem(platform, height: height, width: width))
+              .toList()),
     );
   }
 }
