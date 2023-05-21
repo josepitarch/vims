@@ -23,7 +23,7 @@ class SeeMore extends StatelessWidget {
 
       Widget body;
       if (provider.data[code] == null) {
-        provider.getSeeMore(code);
+        provider.fetchSection(code);
         body = SeeMoreShimmer(title: title, height: 160, width: 120);
       } else {
         body = _Body(moviesSection: provider.data[code]!);

@@ -41,7 +41,7 @@ class MovieScreen extends StatelessWidget {
       movie.heroTag = heroTag;
       return screen(provider.data[id]!);
     } else {
-      provider.getDetailsMovie(id);
+      provider.fetchMovie(id);
       return const DetailsMovieShimmer();
     }
   }
@@ -359,23 +359,41 @@ class _Cast extends StatelessWidget {
 
   const _Cast(this.cast, {Key? key}) : super(key: key);
 
-  final int _maxLines = 3;
-
   @override
   Widget build(BuildContext context) {
-    final text = cast.map((e) => e.name).join(', ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _TitleHeader(i18n.cast),
         SizedBox(
-          width: double.infinity,
-          child: Text(cast.isNotEmpty ? text : i18n.no_cast,
-              textAlign: cast.isNotEmpty ? TextAlign.start : TextAlign.center,
-              maxLines: _maxLines,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge),
+          height: 110,
+          child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: cast.map((actor) {
+                final String initials =
+                    actor.name.split(' ').map((e) => e[0]).join();
+                return SizedBox(
+                  width: 78,
+                  child: Column(children: [
+                    
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: NetworkImage(actor.image ?? ''),
+                      onBackgroundImageError: (exception, stackTrace) {},
+                      child: actor.image == null
+                          ? Text(initials.toUpperCase())
+                          : null,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(actor.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center)
+                  ]),
+                );
+              }).toList()),
         ),
       ],
     );

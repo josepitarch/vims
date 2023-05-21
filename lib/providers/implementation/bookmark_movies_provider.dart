@@ -6,7 +6,8 @@ import 'package:vims/providers/interface/base_providert.dart';
 final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
   BookmarkMoviesProvider() : super(data: [], isLoading: true);
 
-  getBookmarkMovies() async {
+  @override
+  fetchData() async {
     BookmarkMoviesDatabase.getBookmarkMovies()
         .then((value) => data = value)
         .catchError((e) => exception = e)

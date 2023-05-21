@@ -1,18 +1,19 @@
 import 'package:vims/models/section.dart';
 import 'package:vims/providers/interface/base_providert.dart';
-import 'package:vims/services/sections_service.dart';
+import 'package:vims/services/api/sections_service.dart';
 
 class SectionsProvider extends BaseProvider<List<Section>> {
   DateTime lastUpdate = DateTime.now();
 
   SectionsProvider() : super(data: [], isLoading: true) {
-    getHomepageMovies();
+    fetchData();
   }
 
-  getHomepageMovies() async {
+  @override
+  fetchData() async {
     isLoading = true;
     notifyListeners();
-    SectionsService().getSections().then((sections) {
+    getSections().then((sections) {
       data = sections;
       exception = null;
     }).catchError((e) {
@@ -24,9 +25,10 @@ class SectionsProvider extends BaseProvider<List<Section>> {
     });
   }
 
+  @override
   onRefresh() async {
     data.clear();
     exception = null;
-    getHomepageMovies();
+    fetchData();
   }
 }
