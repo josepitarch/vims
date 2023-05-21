@@ -63,7 +63,7 @@ class _SearchMovieForm extends StatelessWidget {
       child: Form(
         key: myFormKey,
         child: TextFormField(
-          autofocus: provider.typeData == TypeData.autocomplete,
+          autofocus: false,
           controller: controller..text = provider.search,
           keyboardType: TextInputType.text,
           enableSuggestions: false,
@@ -145,10 +145,12 @@ class _SuggestionsState extends State<_Suggestions> {
                 poster: suggestion.poster.mmed,
                 director: suggestion.director,
                 rating: suggestion.rating,
-                saveToCache: true))
+                saveToCache: false))
             .toList());
 
-    return InfiniteScroll(data: data, isLoading: widget.provider.isLoading);
+    return Expanded(
+        child:
+            InfiniteScroll(data: data, isLoading: widget.provider.isLoading));
   }
 }
 

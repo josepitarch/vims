@@ -12,6 +12,7 @@ final String TIMEOUT = dotenv.env['TIMEOUT']!;
 Future request(String path, String versionApi,
     [Map<String, dynamic>? parameters]) async {
   final Uri request = Uri.http(BASE_URL, '/api/$versionApi/$path', parameters);
+
   final Response response =
       await get(request).timeout(Duration(seconds: int.parse(TIMEOUT)));
 

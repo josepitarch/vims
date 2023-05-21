@@ -1,9 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/database/bookmark_movies_database.dart';
 import 'package:vims/database/history_search_database.dart';
+import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
 import 'package:vims/pages/movie_screen.dart';
 import 'package:vims/pages/see_more_screen.dart';
@@ -19,6 +21,7 @@ import 'package:vims/widgets/navigation_bottom_bar.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   BookmarkMoviesDatabase.initDatabase();
   HistorySearchDatabase.initDatabase();
   runApp(const AppState());

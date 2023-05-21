@@ -1,20 +1,21 @@
 import 'dart:async';
 
-class Debouncer<T> {
-  Debouncer({required this.duration, this.onValue});
+import 'package:flutter/foundation.dart';
 
-  final Duration duration;
-
-  void Function(T value)? onValue;
-
-  T? _value;
+class Debouncer {
+  final int milliseconds;
+  VoidCallback? action;
   Timer? _timer;
+  Debouncer({required this.milliseconds});
 
-  T get value => _value!;
+  run(VoidCallback action) {
+    if (_timer != null) {
+      cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
 
-  set value(T val) {
-    _value = val;
+  cancel() {
     _timer?.cancel();
-    _timer = Timer(duration, () => onValue!(_value as T));
   }
 }

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:vims/exceptions/unsupported_exception.dart';
+import 'package:vims/pages/error/unsupported_screen.dart';
 import 'package:vims/pages/maintenance_screen.dart';
 import 'package:vims/widgets/material_design_icons.dart';
 
@@ -28,6 +30,10 @@ class HandleError extends StatelessWidget {
 
     if (error is MaintenanceException) {
       return MaintenanceScreen(error as MaintenanceException);
+    }
+
+    if (error is UnsupportedException) {
+      return const UnssuportedScreen();
     }
 
     return _ConnectivityError(onRefresh: onRefresh);

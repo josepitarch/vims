@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
-import 'package:vims/enums/mode_views.dart';
 import 'package:vims/providers/implementation/top_movies_provider.dart';
 import 'package:vims/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/card_movie.dart';
@@ -23,8 +22,8 @@ class TopMoviesScreen extends StatefulWidget {
 }
 
 class _TopMoviesScreenState extends State<TopMoviesScreen> {
-  bool showFloatingActionButton = false;
   late ScrollController scrollController;
+  bool showFloatingActionButton = false;
 
   @override
   void initState() {
@@ -75,7 +74,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 TitlePage(i18n.title_top_movies_page),
-                _Options(provider: provider),
+                _Options(scrollController: scrollController),
                 (!provider.isLoading && provider.data.isEmpty)
                     ? const NoResults()
                     : Expanded(
@@ -89,12 +88,12 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 }
 
 class _Options extends StatelessWidget {
-  final TopMoviesProvider provider;
-  const _Options({Key? key, required this.provider}) : super(key: key);
+  final ScrollController scrollController;
+  const _Options({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final ModeView modeView = provider.modeView;
+    // final ModeView modeView = provider.modeView;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -104,18 +103,25 @@ class _Options extends StatelessWidget {
         //     onPressed: () => provider.setModeView()),
         IconButton(
             onPressed: () {
-              showDialogFilters(context, provider);
+              showDialogFilters(context);
             },
             icon: const Icon(Icons.filter_list_rounded)),
       ],
     );
   }
 
-  showDialogFilters(BuildContext context, TopMoviesProvider provider) {
+  jumpToTop() {
+    if (scrollController.hasClients) {
+      scrollController.jumpTo(0);
+    }
+  }
+
+  showDialogFilters(BuildContext context) {
     return showCupertinoDialog(
         barrierDismissible: false,
         context: context,
-        builder: (BuildContext context) => const TopMoviesDialog());
+        builder: (BuildContext context) =>
+            TopMoviesDialog(jumpToTop: jumpToTop));
   }
 }
 
@@ -157,6 +163,7 @@ class _Body extends StatelessWidget {
                 title: movie.title,
                 director: movie.director,
                 rating: movie.rating,
+                platforms: movie.platforms,
                 saveToCache: false))
             .toList());
 

@@ -10,16 +10,14 @@ class InfiniteScroll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double left = MediaQuery.of(context).size.width * 0.5 - 20;
-    return Expanded(
-      child: Stack(
-        children: [
-          data,
-          Positioned(
-              bottom: 10,
-              left: left,
-              child: isLoading ? const Loading() : const SizedBox())
-        ],
-      ),
+    return Stack(
+      children: [
+        data,
+        Positioned(
+            bottom: 10,
+            left: left,
+            child: isLoading ? const Loading() : const SizedBox())
+      ],
     );
   }
 }
