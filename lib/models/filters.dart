@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Filters {
@@ -28,8 +29,8 @@ class Filters {
   }
 
   bool equals(Filters filters) {
-    return platforms == filters.platforms &&
-        genres == filters.genres &&
+    return listEquals(platforms, filters.platforms) &&
+        listEquals(genres, filters.genres) &&
         isAnimationExcluded == filters.isAnimationExcluded &&
         yearFrom == filters.yearFrom &&
         yearTo == filters.yearTo;
