@@ -12,9 +12,10 @@ class SectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+    const double height = 220;
     Map arguments = {
       'title': section.title,
-      'code': section.id,
+      'id': section.id,
     };
 
     return Column(
@@ -42,7 +43,7 @@ class SectionWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 210,
+          height: height,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
@@ -52,7 +53,7 @@ class SectionWidget extends StatelessWidget {
                       movieSection: movie,
                       heroTag: "${movie.id}${section.title}",
                       saveToCache: true,
-                      height: 190,
+                      height: height,
                       width: 120))
                   .toList(),
             ],

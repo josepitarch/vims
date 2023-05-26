@@ -15,8 +15,8 @@ class SectionMovie extends StatelessWidget {
       required this.movieSection,
       required this.heroTag,
       this.saveToCache = false,
-      required this.height,
-      required this.width})
+      this.height = 210,
+      this.width = 120})
       : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class SectionMovie extends StatelessWidget {
                     CustomImage(
                         url: movieSection.poster.mmed,
                         width: width,
-                        height: height - 30,
+                        height: height - 50,
                         saveToCache: saveToCache,
                         cacheManager: CustomCacheManager.cacheTinyImages),
                     Container(
