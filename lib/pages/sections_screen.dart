@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/see_more_provider.dart';
-import 'package:vims/shimmer/sections_shimmer.dart';
+import 'package:vims/widgets/shimmer/sections_shimmer.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/pull_refresh.dart';

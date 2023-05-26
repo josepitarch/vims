@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
-import 'package:vims/shimmer/card_movie_shimmer.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 import 'package:vims/ui/input_decoration.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/handle_error.dart';

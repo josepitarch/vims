@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/providers/implementation/see_more_provider.dart';
-import 'package:vims/shimmer/see_more_shimmer.dart';
+import 'package:vims/widgets/shimmer/see_more_shimmer.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/section_movie.dart';
 
@@ -14,7 +14,7 @@ class SeeMore extends StatelessWidget {
     return Consumer<SeeMoreProvider>(builder: (_, provider, __) {
       final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
       final String title = arguments['title'];
-      final String code = arguments['code'];
+      final String code = arguments['id'];
 
       onRefreshError() => provider.onRefreshError(code);
 
@@ -51,6 +51,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double height = 220;
     return GridView.count(
       padding: const EdgeInsets.only(top: 15, left: 10),
       crossAxisCount: 3,
@@ -61,7 +62,7 @@ class _Body extends StatelessWidget {
               movieSection: movieSection,
               heroTag: movieSection.id.toString(),
               saveToCache: false,
-              height: 160,
+              height: 190,
               width: 120))
           .toList(),
     );

@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
 import 'package:vims/providers/implementation/top_movies_provider.dart';
-import 'package:vims/shimmer/card_movie_shimmer.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
