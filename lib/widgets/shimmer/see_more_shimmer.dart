@@ -20,8 +20,8 @@ class SeeMoreShimmer extends StatelessWidget {
       child: GridView.count(
           padding: const EdgeInsets.only(top: 15, left: 10),
           crossAxisCount: 3,
-          childAspectRatio: 1,
-          mainAxisSpacing: 10,
+          childAspectRatio: 0.85,
+          mainAxisSpacing: 15,
           children: List.generate(
               total,
               (index) => Shimmer.fromColors(

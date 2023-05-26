@@ -21,7 +21,7 @@ class SectionShimmer extends StatelessWidget {
   }) : super(key: key);
 
   final double width = 120;
-  final double height = 190;
+  final double height = 200;
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +48,16 @@ class SectionShimmer extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemBuilder: (_, __) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: width,
-                      height: height,
-                      color: Colors.grey[300],
-                    ),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: width,
+                    height: height,
+                    color: Colors.grey[300],
                   ),
                 ),
+              ),
             ),
           ),
         ],
