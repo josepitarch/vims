@@ -3,12 +3,12 @@ import 'package:vims/models/suggestion.dart';
 import 'package:vims/utils/request.dart';
 
 Future<PagedResponse<Suggestion>> getSuggestions(
-    String query, String type, int from, String order) async {
+    String query, String type, int page, String order) async {
   if (query.isEmpty) return PagedResponse.origin();
 
   final Map<String, String> parameters = {
     'movie': query,
-    'from': from.toString(),
+    'page': page.toString(),
     'order': order,
     'type': type,
   };
