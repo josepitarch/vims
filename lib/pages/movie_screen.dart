@@ -6,7 +6,6 @@ import 'package:vims/database/bookmark_movies_database.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
-import 'package:vims/widgets/shimmer/details_movie_shimmer.dart';
 import 'package:vims/ui/box_decoration.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
@@ -17,6 +16,7 @@ import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
+import 'package:vims/widgets/shimmer/details_movie_shimmer.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
@@ -367,33 +367,39 @@ class _Cast extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _TitleHeader(i18n.cast),
-        SizedBox(
-          height: 110,
-          child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: cast.map((actor) {
-                final String initials =
-                    actor.name.split(' ').map((e) => e[0]).join();
-                return SizedBox(
-                  width: 78,
-                  child: Column(children: [
-                    AvatarView(
-                      text: initials,
-                      imagePath: actor.image ?? '',
-                      radius: 32,
-                      borderWidth: 1,
-                      borderColor: Colors.grey[200]!,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(actor.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center)
-                  ]),
-                );
-              }).toList()),
-        ),
+        (cast.length == 1 && cast[0].id == -1)
+            ? Text(cast[0].name, style: Theme.of(context).textTheme.bodyLarge)
+            : renderListAvatars(),
       ],
+    );
+  }
+
+  SizedBox renderListAvatars() {
+    return SizedBox(
+      height: 110,
+      child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: cast.map((actor) {
+            final String initials =
+                actor.name.split(' ').map((e) => e[0]).join();
+            return SizedBox(
+              width: 78,
+              child: Column(children: [
+                AvatarView(
+                  text: initials,
+                  imagePath: actor.image ?? '',
+                  radius: 32,
+                  borderWidth: 1,
+                  borderColor: Colors.grey[200]!,
+                ),
+                const SizedBox(height: 5),
+                Text(actor.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center)
+              ]),
+            );
+          }).toList()),
     );
   }
 }
