@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, TargetPlatform;
 
 Map<TargetPlatform, String> lastestVersionKey = {
-  TargetPlatform.android: 'lastestVersionAndroid',
-  TargetPlatform.iOS: 'lastestVersionIOS',
+  TargetPlatform.android: 'lastVersionAndroid',
+  TargetPlatform.iOS: 'lastVersionIOS',
 };
 
 Future<String> fetchLastestVersion() async {
