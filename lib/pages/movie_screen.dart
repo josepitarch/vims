@@ -6,10 +6,11 @@ import 'package:vims/database/bookmark_movies_database.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
-import 'package:vims/shimmer/details_movie_shimmer.dart';
+import 'package:vims/widgets/shimmer/details_movie_shimmer.dart';
 import 'package:vims/ui/box_decoration.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
+import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/flag.dart';
 import 'package:vims/widgets/handle_error.dart';
@@ -157,7 +158,7 @@ class _Title extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
-                  .copyWith(color: Colors.grey),
+                  .copyWith(color: Colors.grey, fontStyle: FontStyle.italic),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
               maxLines: 1)
@@ -376,15 +377,12 @@ class _Cast extends StatelessWidget {
                 return SizedBox(
                   width: 78,
                   child: Column(children: [
-                    
-                    CircleAvatar(
+                    AvatarView(
+                      text: initials,
+                      imagePath: actor.image ?? '',
                       radius: 32,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: NetworkImage(actor.image ?? ''),
-                      onBackgroundImageError: (exception, stackTrace) {},
-                      child: actor.image == null
-                          ? Text(initials.toUpperCase())
-                          : null,
+                      borderWidth: 1,
+                      borderColor: Colors.grey[200]!,
                     ),
                     const SizedBox(height: 5),
                     Text(actor.name,
