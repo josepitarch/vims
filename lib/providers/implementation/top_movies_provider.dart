@@ -19,6 +19,7 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
     fetchData();
   }
 
+  @override
   fetchData() {
     isLoading = true;
     notifyListeners();
@@ -53,17 +54,16 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
   }
 
   removeFilters() {
-    data.clear();
     currentFilters = Filters.origin();
     hasFilters = false;
-    page = 1;
-    scrollPosition = 0;
+    resetPagination();
 
     randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
 
     fetchData();
   }
 
+  @override
   onRefresh() {
     data.clear();
     currentFilters = Filters.origin();

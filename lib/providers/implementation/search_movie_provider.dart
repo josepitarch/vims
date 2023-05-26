@@ -3,19 +3,18 @@ import 'dart:async';
 import 'package:logger/logger.dart';
 import 'package:vims/database/history_search_database.dart';
 import 'package:vims/enums/type_search.dart';
+import 'package:vims/enums/type_search_view.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/services/api/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
-
-enum TypeData { suggestions, autocomplete }
 
 class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
   String search = '';
   final String order = 'relevance';
   TypeSearch type = TypeSearch.title;
   final Logger logger = Logger();
-  TypeData typeData = TypeData.suggestions;
+  TypeSearchView typeSearchView = TypeSearchView.autocomplete;
 
   final _debouncer = Debouncer(milliseconds: 400);
 
@@ -37,6 +36,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
       exception = null;
     }).whenComplete(() {
       isLoading = false;
+      typeSearchView = TypeSearchView.suggestion;
       notifyListeners();
     });
   }
@@ -55,14 +55,15 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
           isLoading = false;
           hasNextPage = false;
           total = null;
+          typeSearchView = TypeSearchView.autocomplete;
           notifyListeners();
         });
   }
 
   clearSearch() {
     search = '';
-    total = null;
-    data.clear();
+    typeSearchView = TypeSearchView.autocomplete;
+    resetPagination();
     notifyListeners();
   }
 
@@ -95,7 +96,6 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
       total = null;
       data.clear();
       scrollPosition = 0;
-      typeData = TypeData.autocomplete;
       getSuggestionsAutocomplete(search);
     });
   }
@@ -106,7 +106,6 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     this.search = search;
     data.clear();
     page = 1;
-    typeData = TypeData.suggestions;
     insertHistorySearch(search);
     fetchData();
   }
