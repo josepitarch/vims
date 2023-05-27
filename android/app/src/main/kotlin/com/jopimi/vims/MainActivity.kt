@@ -1,4 +1,4 @@
-package com.example.vims
+package com.jopimi.vims
 
 import io.flutter.embedding.android.FlutterActivity
 
