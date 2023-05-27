@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:logger/logger.dart';
 import 'package:vims/database/history_search_database.dart';
-import 'package:vims/enums/type_search.dart';
-import 'package:vims/enums/type_search_view.dart';
+import 'package:vims/models/enums/type_search.dart';
+import 'package:vims/models/enums/type_search_view.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/services/api/search_movie_service.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:vims/enums/platforms.dart';
+import 'package:vims/models/enums/platforms.dart';
 import 'package:vims/models/movie.dart';
 
 class JustwatchItem extends StatelessWidget {

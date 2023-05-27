@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:vims/models/enums/type_search_view.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
-import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 import 'package:vims/ui/input_decoration.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 late AppLocalizations i18n;
 late ScrollController scrollController;
@@ -23,12 +24,15 @@ class SearchMovieScreen extends StatelessWidget {
     i18n = AppLocalizations.of(context)!;
 
     return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
-      if (provider.exception != null)
+      if (provider.exception != null) {
         return HandleError(provider.exception!, provider.onRefresh);
+      }
+
       return SafeArea(
         child: Column(children: [
           const _SearchMovieForm(),
-          _TotalSuggestions(provider.total),
+          if (provider.typeSearchView == TypeSearchView.suggestion)
+            _TotalSuggestions(provider.total!),
           const _Body()
         ]),
       );
@@ -37,13 +41,16 @@ class SearchMovieScreen extends StatelessWidget {
 }
 
 class _TotalSuggestions extends StatelessWidget {
-  final int? total;
+  final int total;
   const _TotalSuggestions(this.total);
 
   @override
   Widget build(BuildContext context) {
-    final text = total == null ? '' : 'Total encontrados: $total';
-    return Text(text);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Text('Resultados encontrados: $total',
+          style: const TextStyle(fontSize: 18)),
+    );
   }
 }
 

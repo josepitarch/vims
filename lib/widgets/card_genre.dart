@@ -2,7 +2,7 @@ import 'dart:io' as io show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:vims/enums/genres.dart';
+import 'package:vims/models/enums/genres.dart';
 import 'package:vims/models/filters.dart';
 
 class CardGenre extends StatefulWidget {

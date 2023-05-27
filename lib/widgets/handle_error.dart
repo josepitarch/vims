@@ -4,8 +4,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:vims/exceptions/maintenance_exception.dart';
-import 'package:vims/exceptions/unsupported_exception.dart';
+import 'package:vims/models/exceptions/error_exception.dart';
+import 'package:vims/models/exceptions/maintenance_exception.dart';
+import 'package:vims/models/exceptions/unsupported_exception.dart';
 import 'package:vims/pages/error/unsupported_screen.dart';
 import 'package:vims/pages/maintenance_screen.dart';
 import 'package:vims/widgets/material_design_icons.dart';
@@ -24,7 +25,7 @@ class HandleError extends StatelessWidget {
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
 
-    if (error is TimeoutException) {
+    if (error is ErrorServerException) {
       return _ServerError(onRefresh);
     }
 
@@ -32,7 +33,7 @@ class HandleError extends StatelessWidget {
       return MaintenanceScreen(error as MaintenanceException);
     }
 
-    if (error is UnsupportedException) {
+    if (error is UnsupportedServerException) {
       return const UnssuportedScreen();
     }
 

@@ -27,7 +27,8 @@ class AvatarView extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(radius),
               color: backgroundColor),
-          child: Center(child: Text(text ?? ''))),
+          child: Center(
+              child: Text(text ?? '', style: const TextStyle(fontSize: 18)))),
     );
   }
 

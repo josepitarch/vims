@@ -43,4 +43,17 @@ List<String> SEARCH_MOVIES_PLACEHOLDER = [
   'El hobbit',
   'El señor de los anillos: El retorno del rey',
   'El diario de Noa',
+  'Memento',
+  'Blade Runner 2049',
+  'Cadena perpetua',
+  'El renacido',
+  'Juego de tronos',
+  'Breaking Bad',
+  'The Walking Dead',
+  'Stranger Things',
+  'The Big Bang Theory',
+  'Friends',
+  'The Office',
+  'Cómo conocí a vuestra madre',
+  'Modern Family'
 ];

@@ -31,7 +31,7 @@ Future<List<Suggestion>> getAutocomplete(String query) async {
 
   final Map<String, String> parameters = {'search': query};
 
-  final response = await request('autocomplete', 'v1', parameters);
+  final response = await request('autocomplete', 'v2', parameters);
 
   return response['movies']
       .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))

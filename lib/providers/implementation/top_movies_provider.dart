@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:vims/enums/mode_views.dart';
+import 'package:vims/models/enums/mode_views.dart';
 import 'package:vims/models/filters.dart';
 import 'package:vims/models/topMovie.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
