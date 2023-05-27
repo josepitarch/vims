@@ -1,7 +1,7 @@
-class UnsupportedException implements Exception {
+class UnsupportedServerException implements Exception {
   final String message;
 
-  UnsupportedException(this.message);
+  UnsupportedServerException(this.message);
 
   @override
   String toString() {
