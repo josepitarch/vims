@@ -1,16 +1,18 @@
-import 'package:vims/database/bookmark_movies_database.dart';
 import 'package:vims/models/bookmark_movie.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/interface/base_providert.dart';
+import 'package:vims/repositories/interface/bookmark_movies_repository.dart';
 
 final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
-  BookmarkMoviesProvider() : super(data: [], isLoading: true);
+  final BookmarkMoviesRepository repository;
+  BookmarkMoviesProvider({required this.repository})
+      : super(data: [], isLoading: true);
 
   @override
-  fetchData() async {
-    BookmarkMoviesDatabase.getBookmarkMovies()
+  Future fetchData() async {
+    repository
+        .getAllBookmarkMovies()
         .then((value) => data = value)
-        .catchError((e) => exception = e)
         .whenComplete(() => notifyListeners());
   }
 
@@ -25,30 +27,25 @@ final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
         director: movie.director ?? '',
         rating: rating);
 
-    bool response =
-        await BookmarkMoviesDatabase.insertBookmarkMovie(favoriteMovie);
+    bool response = await repository.addBookmarkMovie(favoriteMovie);
     if (response) data.add(favoriteMovie);
     notifyListeners();
 
     return response;
   }
 
-  deleteBookmarkMovie(Movie movie) async {
-    bool response = await BookmarkMoviesDatabase.deleteBookmarkMovie(movie.id);
-    if (response) {
-      data.removeWhere((element) => element.id == movie.id);
-    }
-    notifyListeners();
-
-    return response;
+  deleteBookmarkMovie(Movie movie) {
+    repository
+        .removeBookmarkMovie(movie.id)
+        .then((value) => data.removeWhere((element) => element.id == movie.id))
+        .whenComplete(() => notifyListeners());
   }
 
-  deleteAllBookmarkMovies() async {
-    bool response = await BookmarkMoviesDatabase.deleteAllBookmarkMovies();
-    if (response) data.clear();
-    notifyListeners();
-
-    return response;
+  deleteAllBookmarkMovies() {
+    repository
+        .removeAllBookmarkMovies()
+        .then((value) => data.clear())
+        .whenComplete(() => notifyListeners());
   }
 
   @override

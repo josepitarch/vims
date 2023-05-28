@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:logger/logger.dart';
-import 'package:vims/database/history_search_database.dart';
 import 'package:vims/models/enums/type_search.dart';
 import 'package:vims/models/enums/type_search_view.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
+import 'package:vims/repositories/interface/search_history_repository.dart';
 import 'package:vims/services/api/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
 
 class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
+  final SearchHistoryRepository repository;
   String search = '';
   final String order = 'relevance';
   TypeSearch type = TypeSearch.title;
@@ -18,9 +19,8 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
 
   final _debouncer = Debouncer(milliseconds: 400);
 
-  SearchMovieProvider() : super(page: 1, limit: 50) {
+  SearchMovieProvider({required this.repository}) : super(page: 1, limit: 50) {
     isLoading = false;
-    getHistorySearchs();
   }
 
   @override
@@ -28,7 +28,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     isLoading = true;
     notifyListeners();
 
-    getSuggestions(search, type.name, page, order).then((value) {
+    getSuggestions(search.toLowerCase(), type.name, page, order).then((value) {
       total = value.total;
       final List<Suggestion> body = value.results;
       hasNextPage = body.length < total!;
@@ -45,7 +45,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     isLoading = true;
     this.search = search;
 
-    getAutocomplete(search)
+    getAutocomplete(search.toLowerCase())
         .then((value) {
           data = value;
           exception = null;
@@ -67,16 +67,16 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     notifyListeners();
   }
 
-  Future getHistorySearchs() {
-    return HistorySearchDatabase.getHistorySearchs().then((value) => value);
+  Future<List<String>> getHistorySearchs() {
+    return repository.getAllSearchHistory().then((value) => value);
   }
 
-  insertHistorySearch(String movie) {
-    HistorySearchDatabase.insertSearch(movie);
+  insertHistorySearch(String search) {
+    repository.addSearchHistory(search);
   }
 
   deleteAllSearchs() {
-    HistorySearchDatabase.deleteAllSearchs();
+    repository.removeAllSearchHistory();
     notifyListeners();
   }
 

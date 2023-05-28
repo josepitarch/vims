@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/database/bookmark_movies_database.dart';
-import 'package:vims/database/history_search_database.dart';
 import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
 import 'package:vims/pages/movie_screen.dart';
@@ -15,6 +13,8 @@ import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/see_more_provider.dart';
 import 'package:vims/providers/implementation/top_movies_provider.dart';
+import 'package:vims/repositories/implementation/bookmark_movies_repository.dart';
+import 'package:vims/repositories/implementation/search_history_repository.dart';
 import 'package:vims/ui/material_theme.dart';
 import 'package:vims/widgets/navigation_bottom_bar.dart';
 
@@ -22,8 +22,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  BookmarkMoviesDatabase.initDatabase();
-  HistorySearchDatabase.initDatabase();
   runApp(const AppState());
 }
 
@@ -36,9 +34,14 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SectionsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => TopMoviesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => DetailsMovieProvider(), lazy: true),
-      ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
       ChangeNotifierProvider(
-          create: (_) => BookmarkMoviesProvider(), lazy: false),
+          create: (_) =>
+              SearchMovieProvider(repository: SearchHistoryRepositoryImpl()),
+          lazy: false),
+      ChangeNotifierProvider(
+          create: (_) => BookmarkMoviesProvider(
+              repository: BookmarkMoviesRepositoryImpl()),
+          lazy: false),
       ChangeNotifierProvider(create: (_) => SeeMoreProvider(), lazy: false)
     ], child: const MyApp());
   }
