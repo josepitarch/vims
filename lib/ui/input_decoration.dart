@@ -14,7 +14,7 @@ class InputDecorations {
     return InputDecoration(
       prefixIcon: const Icon(Icons.search),
       hintStyle: const TextStyle(fontStyle: FontStyle.italic),
-      hintText: SEARCH_MOVIES_PLACEHOLDER[random] + '...',
+      hintText: '${SEARCH_MOVIES_PLACEHOLDER[random]}...',
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
         borderSide: const BorderSide(
@@ -28,7 +28,7 @@ class InputDecorations {
       suffixIcon: IconButton(
         onPressed: () {
           if (controller.text.isNotEmpty) {
-            controller.clear;
+            controller.text = '';
             provider.clearSearch();
           }
         },

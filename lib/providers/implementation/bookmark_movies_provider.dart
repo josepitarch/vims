@@ -6,7 +6,9 @@ import 'package:vims/repositories/interface/bookmark_movies_repository.dart';
 final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
   final BookmarkMoviesRepository repository;
   BookmarkMoviesProvider({required this.repository})
-      : super(data: [], isLoading: true);
+      : super(data: [], isLoading: true) {
+    fetchData();
+  }
 
   @override
   Future fetchData() async {

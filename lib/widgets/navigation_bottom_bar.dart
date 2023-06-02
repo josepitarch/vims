@@ -5,7 +5,6 @@ import 'package:vims/pages/bookmark_movies_screen.dart';
 import 'package:vims/pages/search_movie_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_movies_screen.dart';
-import 'package:vims/services/config/firebase/last_version.dart';
 
 class NavigatorBottomBarApp extends StatefulWidget {
   const NavigatorBottomBarApp({Key? key}) : super(key: key);
@@ -22,13 +21,6 @@ class _NavigatorBottomBarAppState extends State<NavigatorBottomBarApp> {
     const BookmarkMoviesScreen(),
     const SearchMovieScreen(),
   ];
-
-  @override
-  void initState() {
-    fetchLastestVersion()
-        .then((value) => print('esta es la version más reciente: $value'));
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

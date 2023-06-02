@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/database/bookmark_movies_database.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
@@ -274,11 +273,13 @@ class _BookmarkMovie extends StatefulWidget {
 }
 
 class _BookmarkMovieState extends State<_BookmarkMovie> {
+  late BookmarkMoviesProvider provider;
   late bool isFavorite;
 
   @override
   void initState() {
-    BookmarkMoviesDatabase.getBookmarkMovies().then((value) => setState(() {
+    provider = context.read<BookmarkMoviesProvider>();
+    provider.repository.getAllBookmarkMovies().then((value) => setState(() {
           isFavorite = value.any((element) => element.id == widget.movie.id);
         }));
 
@@ -287,14 +288,12 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
 
   @override
   Widget build(BuildContext context) {
-    final BookmarkMoviesProvider provider =
-        Provider.of<BookmarkMoviesProvider>(context, listen: false);
     try {
       return IconButton(
           iconSize: 27,
           isSelected: isFavorite,
           selectedIcon: const Icon(Icons.bookmark, color: Colors.white),
-          onPressed: () => onPressed(provider),
+          onPressed: onPressed,
           icon: const Icon(
             Icons.bookmark_border_outlined,
           ));
@@ -303,34 +302,32 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
     }
   }
 
-  onPressed(BookmarkMoviesProvider provider) async {
+  onPressed() async {
     Vibrate.canVibrate.then((value) {
       if (value) {
         Vibrate.feedback(FeedbackType.medium);
       }
     });
-    bool response = isFavorite
+    isFavorite
         ? await provider.deleteBookmarkMovie(widget.movie)
         : await provider.insertBookmarkMovie(widget.movie);
 
-    if (response) {
-      Map<String, List<String>> snackbarI18n = {
-        'movie': [i18n.add_movie_bookmark, i18n.delete_movie_bookmark],
-        'serie': [i18n.add_serie_bookmark, i18n.delete_serie_bookmark]
-      };
-      String text = '';
-      if (widget.movie.title.toLowerCase().contains('serie')) {
-        text = snackbarI18n['serie']![isFavorite ? 1 : 0];
-      } else {
-        text = snackbarI18n['movie']![isFavorite ? 1 : 0];
-      }
-
-      if (mounted) SnackBarUtils.show(context, text);
-
-      setState(() {
-        isFavorite = !isFavorite;
-      });
+    Map<String, List<String>> snackbarI18n = {
+      'movie': [i18n.add_movie_bookmark, i18n.delete_movie_bookmark],
+      'serie': [i18n.add_serie_bookmark, i18n.delete_serie_bookmark]
+    };
+    String text = '';
+    if (widget.movie.title.toLowerCase().contains('serie')) {
+      text = snackbarI18n['serie']![isFavorite ? 1 : 0];
+    } else {
+      text = snackbarI18n['movie']![isFavorite ? 1 : 0];
     }
+
+    if (mounted) SnackBarUtils.show(context, text);
+
+    setState(() {
+      isFavorite = !isFavorite;
+    });
   }
 }
 

@@ -49,7 +49,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
     });
   }
 
-  Future<dynamic> _openDialog(BuildContext context) {
+  Future _openDialog(BuildContext context) {
     final bool isAndroid = io.Platform.isAndroid;
     return isAndroid
         ? showDialog(

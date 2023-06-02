@@ -28,7 +28,7 @@ class AvatarView extends StatelessWidget {
               borderRadius: BorderRadius.circular(radius),
               color: backgroundColor),
           child: Center(
-              child: Text(text ?? '', style: const TextStyle(fontSize: 18)))),
+              child: Text(text ?? '', style: const TextStyle(fontSize: 16)))),
     );
   }
 

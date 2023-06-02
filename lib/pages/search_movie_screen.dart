@@ -14,7 +14,7 @@ import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 late AppLocalizations i18n;
-late ScrollController scrollController;
+final TextEditingController _controller = TextEditingController();
 
 class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
@@ -22,47 +22,38 @@ class SearchMovieScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-
-    return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
-      if (provider.exception != null) {
-        return HandleError(provider.exception!, provider.onRefresh);
-      }
-
-      return SafeArea(
-        child: Column(children: [
-          const _SearchMovieForm(),
-          if (provider.typeSearchView == TypeSearchView.suggestion)
-            _TotalSuggestions(provider.total!),
-          const _Body()
-        ]),
-      );
-    });
-  }
-}
-
-class _TotalSuggestions extends StatelessWidget {
-  final int total;
-  const _TotalSuggestions(this.total);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: Text('Resultados encontrados: $total',
-          style: const TextStyle(fontSize: 18)),
+    return const SafeArea(
+      child:
+          Column(children: [_SearchMovieForm(), _TotalSuggestions(), _Body()]),
     );
   }
 }
 
-class _SearchMovieForm extends StatelessWidget {
+final class _TotalSuggestions extends StatelessWidget {
+  const _TotalSuggestions();
+
+  @override
+  Widget build(BuildContext context) {
+    final SearchMovieProvider provider =
+        Provider.of<SearchMovieProvider>(context);
+    if (provider.typeSearchView == TypeSearchView.autocomplete)
+      return const SizedBox();
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Text('${i18n.total_results}: ${provider.total}',
+          style: Theme.of(context).textTheme.headlineMedium!),
+    );
+  }
+}
+
+final class _SearchMovieForm extends StatelessWidget {
   const _SearchMovieForm({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<SearchMovieProvider>(context);
-    final TextEditingController controller = TextEditingController();
+    final provider = Provider.of<SearchMovieProvider>(context, listen: false);
     final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
 
     return Padding(
@@ -71,12 +62,12 @@ class _SearchMovieForm extends StatelessWidget {
         key: myFormKey,
         child: TextFormField(
           autofocus: false,
-          controller: controller..text = provider.search,
+          controller: _controller..text = provider.search,
           keyboardType: TextInputType.text,
           enableSuggestions: false,
           keyboardAppearance: Brightness.dark,
           decoration: InputDecorations.searchMovieDecoration(
-              i18n, controller, provider),
+              i18n, _controller, provider),
           autovalidateMode: AutovalidateMode.disabled,
           validator: (value) {
             if (value!.isEmpty) return i18n.no_empty_search;
@@ -94,44 +85,62 @@ class _SearchMovieForm extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+final class _Body extends StatelessWidget {
   const _Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<SearchMovieProvider>();
+    if (provider.exception != null) {
+      return HandleError(provider.exception!, provider.onRefresh);
+    }
 
-    if (provider.search.isEmpty) return const _HistorySearch();
-    if (provider.isLoading && provider.data.isEmpty)
+    if (provider.search.isEmpty) {
+      return const _HistorySearch();
+    }
+    if (provider.isLoading && provider.data.isEmpty) {
       return const Expanded(child: CardMovieShimmer());
-    if (!provider.isLoading && provider.data.isEmpty) return const NoResults();
+    }
+    if (!provider.isLoading && provider.data.isEmpty) {
+      return const NoResults();
+    }
 
-    return _Suggestions(provider);
+    return const _Suggestions();
   }
 }
 
-class _Suggestions extends StatefulWidget {
-  final SearchMovieProvider provider;
-  const _Suggestions(this.provider);
+final class _Suggestions extends StatefulWidget {
+  const _Suggestions();
 
   @override
   State<_Suggestions> createState() => _SuggestionsState();
 }
 
 class _SuggestionsState extends State<_Suggestions> {
+  final ScrollController scrollController = ScrollController();
+  late SearchMovieProvider provider;
+
   @override
   void initState() {
-    scrollController = ScrollController();
-
     scrollController.addListener(() {
-      widget.provider.scrollPosition = scrollController.position.pixels;
-      if (scrollController.position.pixels + 300 >=
-          scrollController.position.maxScrollExtent) {
-        if (!widget.provider.isLoading && widget.provider.hasNextPage)
-          widget.provider.fetchNextPage();
+      final double currentPosition = scrollController.position.pixels;
+      final double maxScroll = scrollController.position.maxScrollExtent;
+      provider.scrollPosition = currentPosition;
+
+      if (currentPosition + 300 >= maxScroll &&
+          !provider.isLoading &&
+          provider.hasNextPage) {
+        provider.fetchNextPage();
       }
     });
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    provider = Provider.of<SearchMovieProvider>(context, listen: true);
+    super.didChangeDependencies();
   }
 
   @override
@@ -145,7 +154,7 @@ class _SuggestionsState extends State<_Suggestions> {
     final Widget data = ListView(
         controller: scrollController,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: widget.provider.data
+        children: provider.data
             .map((suggestion) => CardMovie(
                 id: suggestion.id,
                 title: suggestion.title,
@@ -156,8 +165,7 @@ class _SuggestionsState extends State<_Suggestions> {
             .toList());
 
     return Expanded(
-        child:
-            InfiniteScroll(data: data, isLoading: widget.provider.isLoading));
+        child: InfiniteScroll(data: data, isLoading: provider.isLoading));
   }
 }
 
@@ -198,7 +206,13 @@ class _HistorySearch extends StatelessWidget {
                               size: 22, color: Colors.grey),
                           title: Text(history,
                               style: Theme.of(context).textTheme.bodyLarge),
-                          onTap: () => provider.onTapHistorySearch(history),
+                          onTap: () {
+                            _controller.value = TextEditingValue(
+                              text: history,
+                            );
+
+                            provider.onTapHistorySearch(history);
+                          },
                         );
                       }).toList(),
                       DeleteSearchersButton(provider: provider),
