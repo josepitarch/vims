@@ -10,9 +10,9 @@ import 'package:vims/models/exceptions/unsupported_exception.dart';
 final String BASE_URL = dotenv.env['URL']!;
 final String TIMEOUT = dotenv.env['TIMEOUT']!;
 
-Future request(String path, String versionApi,
+Future request(String path, int versionApi,
     [Map<String, dynamic>? parameters]) async {
-  final Uri request = Uri.http(BASE_URL, '/$versionApi/$path', parameters);
+  final Uri request = Uri.https(BASE_URL, '/v$versionApi/$path', parameters);
 
   final Response response =
       await get(request).timeout(Duration(seconds: int.parse(TIMEOUT)));
@@ -20,8 +20,7 @@ Future request(String path, String versionApi,
   if (response.statusCode == 200) return jsonDecode(response.body);
 
   if (response.statusCode == 405) {
-    throw UnsupportedServerException(
-        'Method not allowed for this version of API');
+    throw UnsupportedServerException('Method not allowed for this api version');
   }
 
   if (response.statusCode == 503) {
