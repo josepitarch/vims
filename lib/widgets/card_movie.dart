@@ -7,25 +7,25 @@ import 'package:vims/widgets/rating.dart';
 
 class CardMovie extends StatelessWidget {
   final int id;
+  final String? heroTag;
   final String title;
   final String poster;
   final String? director;
   final double? rating;
   final List<Platform> platforms;
   final bool saveToCache;
-  final VoidCallback? onTap;
 
-  const CardMovie(
-      {Key? key,
-      required this.id,
-      required this.title,
-      required this.poster,
-      this.director,
-      this.rating,
-      this.platforms = const [],
-      required this.saveToCache,
-      this.onTap})
-      : super(key: key);
+  const CardMovie({
+    Key? key,
+    required this.id,
+    this.heroTag,
+    required this.title,
+    required this.poster,
+    this.director,
+    this.rating,
+    this.platforms = const [],
+    required this.saveToCache,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +34,8 @@ class CardMovie extends StatelessWidget {
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
-      onTap: () {
-        if (onTap != null) {
-          onTap!();
-        }
-        Navigator.pushNamed(context, 'details', arguments: {'id': id});
-      },
+      onTap: () => Navigator.pushNamed(context, 'details',
+          arguments: {'id': id, 'heroTag': heroTag}),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         margin: const EdgeInsets.only(bottom: 20.0),

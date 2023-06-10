@@ -4,15 +4,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
 import 'package:vims/providers/implementation/top_movies_provider.dart';
-import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/title_page.dart';
 
 late AppLocalizations i18n;
-const double limitShowFab = 300;
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -27,6 +26,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
   @override
   void initState() {
+    const double limitShowFab = 300;
     final TopMoviesProvider provider = context.read<TopMoviesProvider>();
     scrollController =
         ScrollController(initialScrollOffset: provider.scrollPosition);
@@ -75,7 +75,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                   children: [
                 TitlePage(i18n.title_top_movies_page),
                 _Options(scrollController: scrollController),
-                (!provider.isLoading && provider.data.isEmpty)
+                (!provider.isLoading && provider.data!.isEmpty)
                     ? const NoResults()
                     : Expanded(
                         child: _Body(scrollController: scrollController)),
@@ -150,13 +150,13 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TopMoviesProvider provider = context.watch<TopMoviesProvider>();
-    if (provider.isLoading && provider.data.isEmpty) {
+    if (provider.isLoading && provider.data!.isEmpty) {
       return const CardMovieShimmer();
     }
 
     final Widget data = ListView(
         controller: scrollController,
-        children: provider.data
+        children: provider.data!
             .map((movie) => CardMovie(
                 id: movie.id,
                 poster: movie.poster.mmed,

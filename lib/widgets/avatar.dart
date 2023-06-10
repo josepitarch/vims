@@ -44,20 +44,21 @@ class AvatarView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(radius),
                 color: borderColor),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(radius),
-              child: Container(
-                padding: EdgeInsets.all(borderWidth),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(radius),
-                    color: backgroundColor),
-                child: FadeInImage(
-                    placeholder: const AssetImage('assets/loading-actor.gif'),
-                    image: NetworkImage(imagePath),
-                    height: radius * 2,
-                    width: radius * 2,
-                    fit: BoxFit.cover,
-                    imageErrorBuilder: (_, __, ___) => getTextWidget()),
-              ),
-            )));
+                borderRadius: BorderRadius.circular(radius),
+                child: Container(
+                    padding: EdgeInsets.all(borderWidth),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(radius),
+                        color: backgroundColor),
+                    child: imagePath.isNotEmpty
+                        ? FadeInImage(
+                            placeholder:
+                                const AssetImage('assets/loading-actor.gif'),
+                            image: NetworkImage(imagePath),
+                            height: radius * 2,
+                            width: radius * 2,
+                            fit: BoxFit.cover,
+                          )
+                        : getTextWidget()))));
   }
 }
