@@ -12,7 +12,7 @@ class Movie extends BaseMovie {
   final String? screenwriter;
   final String? music;
   final String? cinematography;
-  final List<Actor> cast;
+  final List<Cast> cast;
   final String? producer;
   final List<String> genres;
   final List<String>? groups;
@@ -58,8 +58,8 @@ class Movie extends BaseMovie {
     final double? rating =
         json['rating'] != null ? double.parse(json['rating'].toString()) : null;
 
-    final List<Actor> cast = json['cast'] != null
-        ? json['cast'].map((x) => Actor.fromMap(x)).toList().cast<Actor>()
+    final List<Cast> cast = json['cast'] != null
+        ? json['cast'].map((x) => Cast.fromMap(x)).toList().cast<Cast>()
         : [];
 
     final List<String> genres = json['genres'] != null
@@ -135,14 +135,14 @@ class Movie extends BaseMovie {
       };
 }
 
-class Actor {
+class Cast {
   final String name;
   final String? image;
   final int id;
 
-  Actor({required this.name, required this.image, required this.id});
+  Cast({required this.name, required this.image, required this.id});
 
-  factory Actor.fromMap(Map<String, dynamic> json) => Actor(
+  factory Cast.fromMap(Map<String, dynamic> json) => Cast(
         id: json['id'],
         name: json['name'],
         image: json['image'],

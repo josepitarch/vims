@@ -12,7 +12,7 @@ class SeeMoreProvider extends BaseProvider<Map<String, List<MovieSection>>> {
   fetchData() {
     isLoading = true;
     getSeeMore(title).then((movieSections) {
-      data[title] = movieSections;
+      data![title] = movieSections;
       errors[title] = null;
     }).whenComplete(() {
       isLoading = false;
@@ -25,8 +25,9 @@ class SeeMoreProvider extends BaseProvider<Map<String, List<MovieSection>>> {
     fetchData();
   }
 
+  @override
   onRefresh() {
-    data.clear();
+    data!.clear();
     errors.clear();
   }
 

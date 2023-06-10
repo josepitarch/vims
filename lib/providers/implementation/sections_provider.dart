@@ -27,7 +27,7 @@ class SectionsProvider extends BaseProvider<List<Section>> {
 
   @override
   onRefresh() async {
-    data.clear();
+    data!.clear();
     exception = null;
     fetchData();
   }

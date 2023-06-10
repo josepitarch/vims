@@ -1,12 +1,12 @@
 import 'package:vims/models/bookmark_movie.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/interface/base_providert.dart';
+import 'package:vims/repositories/implementation/bookmark_movies_repository.dart';
 import 'package:vims/repositories/interface/bookmark_movies_repository.dart';
 
 final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
-  final BookmarkMoviesRepository repository;
-  BookmarkMoviesProvider({required this.repository})
-      : super(data: [], isLoading: true) {
+  final BookmarkMoviesRepository repository = BookmarkMoviesRepositoryImpl();
+  BookmarkMoviesProvider() : super(data: [], isLoading: true) {
     fetchData();
   }
 
@@ -30,7 +30,7 @@ final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
         rating: rating);
 
     bool response = await repository.addBookmarkMovie(favoriteMovie);
-    if (response) data.add(favoriteMovie);
+    if (response) data!.add(favoriteMovie);
     notifyListeners();
 
     return response;
@@ -39,14 +39,14 @@ final class BookmarkMoviesProvider extends BaseProvider<List<BookmarkMovie>> {
   deleteBookmarkMovie(Movie movie) {
     repository
         .removeBookmarkMovie(movie.id)
-        .then((value) => data.removeWhere((element) => element.id == movie.id))
+        .then((value) => data!.removeWhere((element) => element.id == movie.id))
         .whenComplete(() => notifyListeners());
   }
 
   deleteAllBookmarkMovies() {
     repository
         .removeAllBookmarkMovies()
-        .then((value) => data.clear())
+        .then((value) => data!.clear())
         .whenComplete(() => notifyListeners());
   }
 

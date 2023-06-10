@@ -5,12 +5,13 @@ import 'package:vims/models/enums/type_search.dart';
 import 'package:vims/models/enums/type_search_view.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
+import 'package:vims/repositories/implementation/search_history_repository.dart';
 import 'package:vims/repositories/interface/search_history_repository.dart';
 import 'package:vims/services/api/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
 
 class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
-  final SearchHistoryRepository repository;
+  final SearchHistoryRepository repository = SearchHistoryRepositoryImpl();
   String search = '';
   final String order = 'relevance';
   TypeSearch type = TypeSearch.title;
@@ -19,7 +20,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
 
   final _debouncer = Debouncer(milliseconds: 400);
 
-  SearchMovieProvider({required this.repository}) : super(page: 1, limit: 50) {
+  SearchMovieProvider() : super(page: 1, limit: 50) {
     isLoading = false;
   }
 
@@ -32,7 +33,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
       total = value.total;
       final List<Suggestion> body = value.results;
       hasNextPage = body.length < total!;
-      if (body.isNotEmpty) data.addAll(value.results);
+      if (body.isNotEmpty) data!.addAll(value.results);
       exception = null;
     }).whenComplete(() {
       isLoading = false;
@@ -94,7 +95,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     search = search.trim();
     _debouncer.run(() {
       total = null;
-      data.clear();
+      data!.clear();
       scrollPosition = 0;
       getSuggestionsAutocomplete(search);
     });
@@ -104,15 +105,9 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     if (search.isEmpty) return;
     _debouncer.cancel();
     this.search = search;
-    data.clear();
+    data!.clear();
     page = 1;
     insertHistorySearch(search);
-    fetchData();
-  }
-
-  @override
-  fetchNextPage() {
-    page = page + 1;
     fetchData();
   }
 }

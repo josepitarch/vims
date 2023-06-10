@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/providers/implementation/see_more_provider.dart';
 import 'package:vims/widgets/handle_error.dart';
-import 'package:vims/widgets/section_movie.dart';
+import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/shimmer/see_more_shimmer.dart';
 
-class SeeMore extends StatelessWidget {
-  const SeeMore({super.key});
+class SeeMoreScreen extends StatelessWidget {
+  const SeeMoreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class SeeMore extends StatelessWidget {
       }
 
       Widget body;
-      if (provider.data[code] == null) {
+      if (provider.data![code] == null) {
         provider.fetchSection(code);
         body = SeeMoreShimmer(title: title, height: 190, width: 120);
       } else {
-        body = _Body(moviesSection: provider.data[code]!);
+        body = _Body(moviesSection: provider.data![code]!);
       }
 
       return Scaffold(

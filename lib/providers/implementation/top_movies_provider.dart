@@ -30,7 +30,7 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
           final List<TopMovie> movies = value.results;
           if (!hasFilters) movies.shuffle();
           hasNextPage = movies.length == limit;
-          data.addAll(value.results);
+          data!.addAll(value.results);
           exception = null;
         })
         .catchError((e) => exception = e)
@@ -44,7 +44,7 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
     if (currentFilters.equals(filters)) return;
 
     hasFilters = true;
-    data.clear();
+    data!.clear();
     page = 1;
     scrollPosition = 0;
 
@@ -65,10 +65,11 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
 
   @override
   onRefresh() {
-    data.clear();
+    data!.clear();
     currentFilters = Filters.origin();
     exception = null;
     hasFilters = false;
+    resetPagination();
 
     fetchData();
   }
@@ -76,11 +77,5 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
   setModeView() {
     modeView = modeView == ModeView.list ? ModeView.grid : ModeView.list;
     notifyListeners();
-  }
-
-  @override
-  fetchNextPage() {
-    page = page + 1;
-    fetchData();
   }
 }

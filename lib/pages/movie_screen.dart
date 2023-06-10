@@ -9,8 +9,8 @@ import 'package:vims/ui/box_decoration.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/avatar.dart';
+import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/custom_image.dart';
-import 'package:vims/widgets/flag.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
@@ -18,15 +18,14 @@ import 'package:vims/widgets/review_item.dart';
 import 'package:vims/widgets/shimmer/details_movie_shimmer.dart';
 
 late AppLocalizations i18n;
-late ScrollController scrollController;
 
 class MovieScreen extends StatelessWidget {
   const MovieScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
     i18n = AppLocalizations.of(context)!;
-    scrollController = ScrollController();
-    final provider = Provider.of<DetailsMovieProvider>(context, listen: true);
+    final provider = Provider.of<MovieProvider>(context);
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
@@ -36,21 +35,22 @@ class MovieScreen extends StatelessWidget {
     if (provider.exception != null)
       return HandleError(provider.exception!, provider.onRefresh);
 
-    if (provider.data.containsKey(id)) {
-      final Movie movie = provider.data[id]!;
+    if (provider.data!.containsKey(id)) {
+      final Movie movie = provider.data![id]!;
       movie.heroTag = heroTag;
-      return screen(provider.data[id]!);
+      return screen(provider.data![id]!, scrollController);
     } else {
       provider.fetchMovie(id);
       return const DetailsMovieShimmer();
     }
   }
 
-  Scaffold screen(Movie movie) {
+  Scaffold screen(Movie movie, ScrollController scrollController) {
     final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(movie.title, movie.poster.large, heroTag),
+        _CustomAppBar(
+            movie.title, movie.poster.large, heroTag, scrollController),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -82,8 +82,9 @@ class _CustomAppBar extends StatefulWidget {
   final String url;
   final String heroTag;
   String auxTitle = '';
+  final ScrollController scrollController;
 
-  _CustomAppBar(this.title, this.url, this.heroTag);
+  _CustomAppBar(this.title, this.url, this.heroTag, this.scrollController);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -92,8 +93,8 @@ class _CustomAppBar extends StatefulWidget {
 class _CustomAppBarState extends State<_CustomAppBar> {
   @override
   void initState() {
-    scrollController.addListener(() {
-      if (scrollController.position.pixels > 250)
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.position.pixels > 250)
         widget.auxTitle = widget.title;
       else
         widget.auxTitle = '';
@@ -105,7 +106,6 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      automaticallyImplyLeading: true,
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
       floating: false,
       pinned: true,
@@ -130,7 +130,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 
   @override
   void dispose() {
-    scrollController.dispose();
+    widget.scrollController.dispose();
     super.dispose();
   }
 }
@@ -198,7 +198,7 @@ class _Box extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        _Country(movie.country, movie.flag),
+        Country(country: movie.country, flag: movie.flag),
         Rating(movie.rating),
         _BookmarkMovie(movie)
       ]),
@@ -230,33 +230,6 @@ class _YearAndDuration extends StatelessWidget {
     String minutesString = minutes > 0 ? '$minutes MIN' : '';
 
     return '  ·  $hoursString$minutesString';
-  }
-}
-
-class _Country extends StatelessWidget {
-  final String country;
-  final String flag;
-
-  const _Country(
-    this.country,
-    this.flag, {
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Flag(flag: flag, country: country),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          country,
-          style: Theme.of(context).textTheme.headlineSmall,
-        )
-      ],
-    );
   }
 }
 
@@ -353,7 +326,7 @@ class _Genres extends StatelessWidget {
 }
 
 class _Cast extends StatelessWidget {
-  final List<Actor> cast;
+  final List<Cast> cast;
 
   const _Cast(this.cast, {Key? key}) : super(key: key);
 
@@ -366,12 +339,12 @@ class _Cast extends StatelessWidget {
         _TitleHeader(i18n.cast),
         (cast.length == 1 && cast[0].id == -1)
             ? Text(cast[0].name, style: Theme.of(context).textTheme.bodyLarge)
-            : renderListAvatars(),
+            : renderListAvatars(context),
       ],
     );
   }
 
-  SizedBox renderListAvatars() {
+  SizedBox renderListAvatars(BuildContext context) {
     return SizedBox(
       height: 110,
       child: ListView(
@@ -388,6 +361,8 @@ class _Cast extends StatelessWidget {
                   radius: 32,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
+                  onTap: () => Navigator.pushNamed(context, 'actor',
+                      arguments: actor.id),
                 ),
                 const SizedBox(height: 5),
                 Text(actor.name,

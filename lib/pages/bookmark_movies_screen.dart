@@ -30,11 +30,11 @@ class BookmarkMoviesScreen extends StatelessWidget {
                     }),
                 icon: const Icon(Icons.delete)),
           ),
-          provider.data.isEmpty
+          provider.data!.isEmpty
               ? const NoBookmarkMovies()
               : Expanded(
                   child: ListView(
-                      children: provider.data
+                      children: provider.data!
                           .map(
                             (movie) => CardMovie(
                                 id: movie.id,

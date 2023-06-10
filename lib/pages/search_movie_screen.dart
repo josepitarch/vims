@@ -98,10 +98,10 @@ final class _Body extends StatelessWidget {
     if (provider.search.isEmpty) {
       return const _HistorySearch();
     }
-    if (provider.isLoading && provider.data.isEmpty) {
+    if (provider.isLoading && provider.data!.isEmpty) {
       return const Expanded(child: CardMovieShimmer());
     }
-    if (!provider.isLoading && provider.data.isEmpty) {
+    if (!provider.isLoading && provider.data!.isEmpty) {
       return const NoResults();
     }
 
@@ -154,7 +154,7 @@ class _SuggestionsState extends State<_Suggestions> {
     final Widget data = ListView(
         controller: scrollController,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: provider.data
+        children: provider.data!
             .map((suggestion) => CardMovie(
                 id: suggestion.id,
                 title: suggestion.title,
