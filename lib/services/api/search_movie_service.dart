@@ -13,7 +13,7 @@ Future<PagedResponse<Suggestion>> getSuggestions(
     'type': type,
   };
 
-  final Map response = await request('search/movie', 'v2', parameters);
+  final Map response = await request('search/movie', 2, parameters);
 
   final List<Suggestion> results = response['results']
       .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
@@ -31,7 +31,7 @@ Future<List<Suggestion>> getAutocomplete(String query) async {
 
   final Map<String, String> parameters = {'search': query};
 
-  final response = await request('autocomplete', 'v2', parameters);
+  final response = await request('autocomplete', 2, parameters);
 
   return response['movies']
       .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
