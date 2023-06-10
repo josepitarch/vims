@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/models/section.dart';
-import 'package:vims/widgets/section_movie.dart';
+import 'package:vims/widgets/card_section.dart';
 
 class SectionWidget extends StatelessWidget {
   final Section section;
@@ -49,7 +49,7 @@ class SectionWidget extends StatelessWidget {
             children: [
               const SizedBox(width: 12),
               ...section.movies
-                  .map((movie) => SectionMovie(
+                  .map((movie) => CardSection(
                       movieSection: movie,
                       heroTag: "${movie.id}${section.title}",
                       saveToCache: true,

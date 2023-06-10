@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/providers/implementation/see_more_provider.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/card_section.dart';
+import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/shimmer/see_more_shimmer.dart';
 
 class SeeMoreScreen extends StatelessWidget {
@@ -59,7 +59,7 @@ class _Body extends StatelessWidget {
       crossAxisCount: 3,
       childAspectRatio: 0.6,
       children: moviesSection
-          .map((movieSection) => SectionMovie(
+          .map((movieSection) => CardSection(
               movieSection: movieSection,
               heroTag: movieSection.id.toString(),
               saveToCache: false,

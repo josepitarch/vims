@@ -3,14 +3,14 @@ import 'package:vims/models/section.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
 
-class SectionMovie extends StatelessWidget {
+class CardSection extends StatelessWidget {
   final MovieSection movieSection;
   final String heroTag;
   final bool saveToCache;
   final double height;
   final double width;
 
-  const SectionMovie(
+  const CardSection(
       {Key? key,
       required this.movieSection,
       required this.heroTag,
@@ -23,7 +23,7 @@ class SectionMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Map<String, dynamic> arguments = {
+        final Map<String, dynamic> arguments = {
           'id': movieSection.id,
           'heroTag': heroTag
         };
