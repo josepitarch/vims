@@ -36,8 +36,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     scrollController.addListener(() {
       final double currentScrollPosition = scrollController.position.pixels;
-      final double maxScrollPosition =
-          scrollController.position.maxScrollExtent;
       provider.scrollPosition = currentScrollPosition;
       if (currentScrollPosition >= limitShowFab && !showFloatingActionButton) {
         setState(() => showFloatingActionButton = true);
@@ -45,18 +43,8 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
           showFloatingActionButton) {
         setState(() => showFloatingActionButton = false);
       }
-      if (currentScrollPosition + 300 >= maxScrollPosition) {
-        if (!provider.isLoading && provider.hasNextPage)
-          provider.fetchNextPage();
-      }
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -68,22 +56,55 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
         return HandleError(provider.exception!, provider.onRefresh);
       }
 
-      return Scaffold(
-          body: SafeArea(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                TitlePage(i18n.title_top_movies_page),
-                _Options(scrollController: scrollController),
-                (!provider.isLoading && provider.data!.isEmpty)
-                    ? const NoResults()
-                    : Expanded(
-                        child: _Body(scrollController: scrollController)),
-              ])),
+      if (provider.isLoading && provider.data == null) {
+        const Widget body = CardMovieShimmer();
+        return const _Layout(body: Expanded(child: body));
+      }
+
+      if (!provider.isLoading && provider.data!.isEmpty) {
+        Widget body = Center(
+            child: Column(
+          children: [
+            _Options(scrollController: scrollController),
+            const NoResults(),
+          ],
+        ));
+        return _Layout(body: body);
+      }
+
+      return _Layout(
+          body: Column(children: [
+            _Options(scrollController: scrollController),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.72,
+                child: _Body(scrollController: scrollController))
+          ]),
           floatingActionButton: showFloatingActionButton
               ? _FloatingActionButton(scrollController: scrollController)
               : null);
     });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+}
+
+class _Layout extends StatelessWidget {
+  final Widget body;
+  final Widget? floatingActionButton;
+  const _Layout({required this.body, this.floatingActionButton, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [TitlePage(i18n.title_top_movies_page), body])),
+        floatingActionButton: floatingActionButton);
   }
 }
 
@@ -149,10 +170,10 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TopMoviesProvider provider = context.watch<TopMoviesProvider>();
-    if (provider.isLoading && provider.data!.isEmpty) {
-      return const CardMovieShimmer();
-    }
+    final TopMoviesProvider provider =
+        Provider.of<TopMoviesProvider>(context, listen: false);
+
+    print(scrollController.toString());
 
     final Widget data = ListView(
         controller: scrollController,
@@ -167,6 +188,10 @@ class _Body extends StatelessWidget {
                 saveToCache: false))
             .toList());
 
-    return InfiniteScroll(data: data, isLoading: provider.isLoading);
+    return InfiniteScroll(
+      provider: provider,
+      scrollController: scrollController,
+      data: data,
+    );
   }
 }

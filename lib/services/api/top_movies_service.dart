@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:vims/models/filters.dart';
 import 'package:vims/models/paged_response.dart';
-import 'package:vims/models/topMovie.dart';
+import 'package:vims/models/top_movie.dart';
 import 'package:vims/utils/request.dart';
 
 Future<PagedResponse<TopMovie>> getTopMovies(Filters filters,
