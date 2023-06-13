@@ -8,11 +8,13 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 30,
-        height: 30,
-        child: io.Platform.isAndroid
-            ? const CircularProgressIndicator()
-            : const CupertinoActivityIndicator());
+    return UnconstrainedBox(
+      child: SizedBox(
+          width: 30,
+          height: 30,
+          child: io.Platform.isAndroid
+              ? const CircularProgressIndicator()
+              : const CupertinoActivityIndicator()),
+    );
   }
 }
