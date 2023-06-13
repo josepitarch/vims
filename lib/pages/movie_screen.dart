@@ -361,8 +361,15 @@ class _Cast extends StatelessWidget {
                   radius: 32,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
-                  onTap: () => Navigator.pushNamed(context, 'actor',
-                      arguments: actor.id),
+                  onTap: () {
+                    final Map<String, dynamic> arguments = {
+                      'id': actor.id,
+                      'name': actor.name,
+                      'image': actor.image,
+                    };
+
+                    Navigator.pushNamed(context, 'actor', arguments: arguments);
+                  },
                 ),
                 const SizedBox(height: 5),
                 Text(actor.name,
