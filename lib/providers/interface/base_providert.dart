@@ -5,7 +5,7 @@ abstract class BaseProvider<T> extends ChangeNotifier {
   bool isLoading;
   Exception? exception;
 
-  BaseProvider({required this.data, this.isLoading = false});
+  BaseProvider({this.data, this.isLoading = false});
 
   fetchData();
 

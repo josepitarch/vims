@@ -7,8 +7,8 @@ abstract class InfiniteScrollProvider<T> extends BaseProvider<List<T>> {
   bool hasNextPage = false;
   double scrollPosition = 0;
 
-  InfiniteScrollProvider({required this.page, required this.limit})
-      : super(data: []);
+  InfiniteScrollProvider({required this.page, required this.limit, data})
+      : super(data: data);
 
   fetchNextPage() {
     if (hasNextPage) {
@@ -22,6 +22,7 @@ abstract class InfiniteScrollProvider<T> extends BaseProvider<List<T>> {
     total = null;
     hasNextPage = false;
     data = null;
+    exception = null;
     scrollPosition = 0;
   }
 }

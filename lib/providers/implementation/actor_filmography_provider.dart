@@ -8,9 +8,13 @@ final Logger logger = Logger();
 class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
   final int id;
 
-  FilmographyProvider({required this.id, required int page})
-      : super(page: page, limit: 20) {
-    fetchData();
+  FilmographyProvider({required this.id, required int page, data})
+      : super(page: page, limit: 20, data: data) {
+    if (page == 1) {
+      fetchData();
+    } else {
+      hasNextPage = data?.length == limit;
+    }
   }
 
   @override
@@ -21,7 +25,7 @@ class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
           data == null ? data = value.results : data!.addAll(value.results);
           total = value.total;
           limit = value.limit;
-          hasNextPage = data!.length == limit;
+          hasNextPage = value.results.length == limit;
         })
         .catchError((error) => exception = error)
         .whenComplete(() {
@@ -34,6 +38,6 @@ class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
   fetchNextPage() {
     isLoading = true;
     notifyListeners();
-    return super.fetchNextPage();
+    super.fetchNextPage();
   }
 }
