@@ -16,16 +16,65 @@ import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 late AppLocalizations i18n;
 final TextEditingController _controller = TextEditingController();
 
-class SearchMovieScreen extends StatelessWidget {
+class SearchMovieScreen extends StatefulWidget {
   const SearchMovieScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SearchMovieScreen> createState() => _SearchMovieScreenState();
+}
+
+class _SearchMovieScreenState extends State<SearchMovieScreen> {
+  late ScrollController scrollController;
+  @override
+  void initState() {
+    final provider = context.read<SearchMovieProvider>();
+    scrollController =
+        ScrollController(initialScrollOffset: provider.scrollPosition);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-    return const SafeArea(
-      child:
-          Column(children: [_SearchMovieForm(), _TotalSuggestions(), _Body()]),
-    );
+
+    return Consumer<SearchMovieProvider>(builder: (_, provider, __) {
+      if (provider.exception != null) {
+        return HandleError(provider.exception!, provider.onRefresh);
+      }
+
+      if (provider.search.isEmpty) {
+        return const _Layout(body: _HistorySearch());
+      }
+      if (provider.isLoading && provider.data == null) {
+        return const _Layout(body: Expanded(child: CardMovieShimmer()));
+      }
+      if (!provider.isLoading && provider.data!.isEmpty) {
+        return const _Layout(body: NoResults());
+      }
+      return _Layout(
+        body: _Suggestions(
+          scrollController: scrollController,
+        ),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+}
+
+class _Layout extends StatelessWidget {
+  final Widget body;
+  const _Layout({required this.body, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+            child: Column(children: [const _SearchMovieForm(), body])));
   }
 }
 
@@ -34,10 +83,11 @@ final class _TotalSuggestions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SearchMovieProvider provider =
-        Provider.of<SearchMovieProvider>(context);
-    if (provider.typeSearchView == TypeSearchView.autocomplete)
-      return const SizedBox();
+    final SearchMovieProvider provider = Provider.of(context, listen: false);
+    if (provider.typeSearchView == TypeSearchView.autocomplete) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: Text('${i18n.total_results}: ${provider.total}',
@@ -53,7 +103,7 @@ final class _SearchMovieForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<SearchMovieProvider>(context, listen: false);
+    final SearchMovieProvider provider = Provider.of(context, listen: false);
     final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
 
     return Padding(
@@ -85,72 +135,15 @@ final class _SearchMovieForm extends StatelessWidget {
   }
 }
 
-final class _Body extends StatelessWidget {
-  const _Body({Key? key}) : super(key: key);
+class _Suggestions extends StatelessWidget {
+  final ScrollController scrollController;
+  const _Suggestions({required this.scrollController, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<SearchMovieProvider>();
-    if (provider.exception != null) {
-      return HandleError(provider.exception!, provider.onRefresh);
-    }
+    final SearchMovieProvider provider = Provider.of(context, listen: false);
+    print(scrollController.toString());
 
-    if (provider.search.isEmpty) {
-      return const _HistorySearch();
-    }
-    if (provider.isLoading && provider.data!.isEmpty) {
-      return const Expanded(child: CardMovieShimmer());
-    }
-    if (!provider.isLoading && provider.data!.isEmpty) {
-      return const NoResults();
-    }
-
-    return const _Suggestions();
-  }
-}
-
-final class _Suggestions extends StatefulWidget {
-  const _Suggestions();
-
-  @override
-  State<_Suggestions> createState() => _SuggestionsState();
-}
-
-class _SuggestionsState extends State<_Suggestions> {
-  final ScrollController scrollController = ScrollController();
-  late SearchMovieProvider provider;
-
-  @override
-  void initState() {
-    scrollController.addListener(() {
-      final double currentPosition = scrollController.position.pixels;
-      final double maxScroll = scrollController.position.maxScrollExtent;
-      provider.scrollPosition = currentPosition;
-
-      if (currentPosition + 300 >= maxScroll &&
-          !provider.isLoading &&
-          provider.hasNextPage) {
-        provider.fetchNextPage();
-      }
-    });
-
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    provider = Provider.of<SearchMovieProvider>(context, listen: true);
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final Widget data = ListView(
         controller: scrollController,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -165,7 +158,11 @@ class _SuggestionsState extends State<_Suggestions> {
             .toList());
 
     return Expanded(
-        child: InfiniteScroll(data: data, isLoading: provider.isLoading));
+        child: InfiniteScroll(
+      provider: provider,
+      scrollController: scrollController,
+      data: data,
+    ));
   }
 }
 
@@ -174,11 +171,11 @@ class _HistorySearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<SearchMovieProvider>();
+    final SearchMovieProvider provider = Provider.of(context, listen: false);
     return FutureBuilder(
         future: provider.getHistorySearchs(),
         builder: (_, snapshot) {
-          if (!snapshot.hasData) return const SizedBox();
+          if (!snapshot.hasData) return const SizedBox.shrink();
 
           List<String> historySearch = snapshot.data as List<String>;
 

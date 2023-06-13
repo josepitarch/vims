@@ -31,9 +31,10 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
 
     getSuggestions(search.toLowerCase(), type.name, page, order).then((value) {
       total = value.total;
-      final List<Suggestion> body = value.results;
-      hasNextPage = body.length < total!;
-      if (body.isNotEmpty) data!.addAll(value.results);
+      hasNextPage = value.results.length < total!;
+      data == null
+          ? data = List.of(value.results)
+          : data!.addAll(value.results);
       exception = null;
     }).whenComplete(() {
       isLoading = false;
@@ -83,6 +84,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
 
   onTapHistorySearch(String search) {
     this.search = search;
+    data = null;
     fetchData();
   }
 
@@ -94,9 +96,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
   void onChanged(String search) {
     search = search.trim();
     _debouncer.run(() {
-      total = null;
-      data!.clear();
-      scrollPosition = 0;
+      resetPagination();
       getSuggestionsAutocomplete(search);
     });
   }
@@ -105,7 +105,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     if (search.isEmpty) return;
     _debouncer.cancel();
     this.search = search;
-    data!.clear();
+    data = null;
     page = 1;
     insertHistorySearch(search);
     fetchData();
