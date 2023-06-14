@@ -13,6 +13,6 @@ abstract class BaseProvider<T> extends ChangeNotifier {
     data = null;
     isLoading = true;
     exception = null;
-    notifyListeners();
+    fetchData();
   }
 }

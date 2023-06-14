@@ -45,7 +45,7 @@ dependencies:
   cached_network_image: 3.2.3
   flutter_cache_manager:  3.3.0
   connectivity_plus: 4.0.1
-  firebase_remote_config: 4.2.2
+  firebase_remote_config: 4.2.3
   package_info: 2.0.2
   
 dev_dependencies:

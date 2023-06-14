@@ -173,8 +173,6 @@ class _Body extends StatelessWidget {
     final TopMoviesProvider provider =
         Provider.of<TopMoviesProvider>(context, listen: false);
 
-    print(scrollController.toString());
-
     final Widget data = ListView(
         controller: scrollController,
         children: provider.data!

@@ -357,7 +357,7 @@ class _Cast extends StatelessWidget {
               child: Column(children: [
                 AvatarView(
                   text: initials,
-                  imagePath: actor.image ?? '',
+                  imagePath: actor.image,
                   radius: 32,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,

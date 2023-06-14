@@ -87,17 +87,14 @@ class _Poster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double width = 120.0;
-    return Hero(
-      tag: id,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
-        child: CustomImage(
-            url: poster,
-            width: width,
-            height: height + 20,
-            saveToCache: saveToCache,
-            cacheManager: CustomCacheManager.cacheTinyImages),
-      ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: CustomImage(
+          url: poster,
+          width: width,
+          height: height + 20,
+          saveToCache: saveToCache,
+          cacheManager: CustomCacheManager.cacheTinyImages),
     );
   }
 }

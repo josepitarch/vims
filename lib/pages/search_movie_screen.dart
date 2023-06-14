@@ -43,19 +43,29 @@ class _SearchMovieScreenState extends State<SearchMovieScreen> {
       }
 
       if (provider.search.isEmpty) {
-        return const _Layout(body: _HistorySearch());
+        return const _Layout(child: _HistorySearch());
       }
       if (provider.isLoading && provider.data == null) {
-        return const _Layout(body: Expanded(child: CardMovieShimmer()));
+        return const _Layout(child: Expanded(child: CardMovieShimmer()));
       }
       if (!provider.isLoading && provider.data!.isEmpty) {
-        return const _Layout(body: NoResults());
+        return const _Layout(child: NoResults());
       }
-      return _Layout(
-        body: _Suggestions(
-          scrollController: scrollController,
-        ),
+
+      final Widget suggestions = _Suggestions(
+        scrollController: scrollController,
       );
+
+      final Widget child =
+          provider.typeSearchView == TypeSearchView.autocomplete
+              ? suggestions
+              : Column(children: [
+                  const _TotalSuggestions(),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.72,
+                      child: suggestions)
+                ]);
+      return _Layout(child: child);
     });
   }
 
@@ -67,14 +77,14 @@ class _SearchMovieScreenState extends State<SearchMovieScreen> {
 }
 
 class _Layout extends StatelessWidget {
-  final Widget body;
-  const _Layout({required this.body, super.key});
+  final Widget child;
+  const _Layout({required this.child, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: Column(children: [const _SearchMovieForm(), body])));
+            child: Column(children: [const _SearchMovieForm(), child])));
   }
 }
 
@@ -142,7 +152,6 @@ class _Suggestions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SearchMovieProvider provider = Provider.of(context, listen: false);
-    print(scrollController.toString());
 
     final Widget data = ListView(
         controller: scrollController,
