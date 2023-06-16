@@ -18,15 +18,18 @@ late AppLocalizations i18n;
 class HandleError extends StatelessWidget {
   final Exception error;
   final VoidCallback onRefresh;
+  final bool withScaffold;
 
-  const HandleError(this.error, this.onRefresh, {Key? key}) : super(key: key);
+  const HandleError(this.error, this.onRefresh,
+      {this.withScaffold = true, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
 
     if (error is ErrorServerException) {
-      return _ServerError(onRefresh);
+      return _ServerError(onRefresh, withScaffold: withScaffold);
     }
 
     if (error is MaintenanceException) {
@@ -43,38 +46,44 @@ class HandleError extends StatelessWidget {
 
 class _ServerError extends StatelessWidget {
   final VoidCallback onRefresh;
+  final bool withScaffold;
   const _ServerError(
     this.onRefresh, {
+    required this.withScaffold,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(MaterialDesignIcons.emoticonConfusedOutline,
-                size: 100, color: Colors.white),
-            const SizedBox(height: 20),
-            Text(i18n.timeout_error,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: onRefresh,
-                child: Text(
-                  i18n.retry,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                ))
-          ],
-        ),
+    return withScaffold
+        ? Scaffold(body: buildBody(context))
+        : buildBody(context);
+  }
+
+  Container buildBody(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(MaterialDesignIcons.emoticonConfusedOutline,
+              size: 100, color: Colors.white),
+          const SizedBox(height: 20),
+          Text(i18n.timeout_error,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 20),
+          ElevatedButton(
+              onPressed: onRefresh,
+              child: Text(
+                i18n.retry,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+              ))
+        ],
       ),
     );
   }

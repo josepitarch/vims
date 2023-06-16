@@ -31,7 +31,9 @@ class AvatarView extends StatelessWidget {
     final Widget child = imagePath != null
         ? FadeInImage(
             placeholder: const AssetImage(assetImage),
-            image: NetworkImage(imagePath!),
+            image: NetworkImage(
+              imagePath!,
+            ),
             imageErrorBuilder: (_, __, ___) => actorInitials,
             height: radius * 2,
             width: radius * 2,

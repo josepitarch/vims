@@ -27,8 +27,6 @@ class CustomImage extends StatelessWidget {
             cacheKey: cacheKey ?? url,
             errorWidget: (context, url, error) =>
                 _ErrorImage(height: height, width: width),
-            // placeholder: (context, url) =>
-            //     const BlurHash(hash: 'LCC\$ZU%L0fM{%%W?IoWA0QIp\$fs+'),
             imageUrl: url,
             width: width,
             height: height,
