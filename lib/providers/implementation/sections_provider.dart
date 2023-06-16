@@ -5,7 +5,7 @@ import 'package:vims/services/api/sections_service.dart';
 class SectionsProvider extends BaseProvider<List<Section>> {
   DateTime lastUpdate = DateTime.now();
 
-  SectionsProvider() : super(data: [], isLoading: true) {
+  SectionsProvider() : super(isLoading: true) {
     fetchData();
   }
 
@@ -27,7 +27,7 @@ class SectionsProvider extends BaseProvider<List<Section>> {
 
   @override
   onRefresh() async {
-    data!.clear();
+    data = null;
     exception = null;
     fetchData();
   }
