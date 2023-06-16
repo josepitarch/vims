@@ -43,28 +43,27 @@ class _SearchMovieScreenState extends State<SearchMovieScreen> {
       }
 
       if (provider.search.isEmpty) {
-        return const _Layout(child: _HistorySearch());
+        const Widget child = _HistorySearch();
+        return const _Layout(child: [child]);
       }
       if (provider.isLoading && provider.data == null) {
-        return const _Layout(child: Expanded(child: CardMovieShimmer()));
+        const Widget child = Expanded(child: CardMovieShimmer());
+        return const _Layout(child: [child]);
       }
-      if (!provider.isLoading && provider.data!.isEmpty) {
-        return const _Layout(child: NoResults());
+      if (!provider.isLoading && provider.data == null) {
+        const Widget child = NoResults();
+        return const _Layout(child: [child]);
       }
 
       final Widget suggestions = _Suggestions(
         scrollController: scrollController,
       );
 
-      final Widget child =
+      final List<Widget> child =
           provider.typeSearchView == TypeSearchView.autocomplete
-              ? suggestions
-              : Column(children: [
-                  const _TotalSuggestions(),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.72,
-                      child: suggestions)
-                ]);
+              ? [suggestions]
+              : [const _TotalSuggestions(), suggestions];
+
       return _Layout(child: child);
     });
   }
@@ -77,27 +76,23 @@ class _SearchMovieScreenState extends State<SearchMovieScreen> {
 }
 
 class _Layout extends StatelessWidget {
-  final Widget child;
-  const _Layout({required this.child, super.key});
+  final List<Widget> child;
+  const _Layout({required this.child, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: Column(children: [const _SearchMovieForm(), child])));
+            child: Column(children: [const _SearchMovieForm(), ...child])));
   }
 }
 
 final class _TotalSuggestions extends StatelessWidget {
-  const _TotalSuggestions();
+  const _TotalSuggestions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final SearchMovieProvider provider = Provider.of(context, listen: false);
-    if (provider.typeSearchView == TypeSearchView.autocomplete) {
-      return const SizedBox.shrink();
-    }
-
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: Text('${i18n.total_results}: ${provider.total}',
@@ -147,7 +142,8 @@ final class _SearchMovieForm extends StatelessWidget {
 
 class _Suggestions extends StatelessWidget {
   final ScrollController scrollController;
-  const _Suggestions({required this.scrollController, super.key});
+  const _Suggestions({required this.scrollController, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +176,7 @@ class _HistorySearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SearchMovieProvider provider = Provider.of(context, listen: false);
+    final SearchMovieProvider provider = Provider.of(context, listen: true);
     return FutureBuilder(
         future: provider.getHistorySearchs(),
         builder: (_, snapshot) {

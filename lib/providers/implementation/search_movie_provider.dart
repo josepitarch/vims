@@ -36,6 +36,8 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
           ? data = List.of(value.results)
           : data!.addAll(value.results);
       exception = null;
+    }).catchError((e) {
+      exception = e;
     }).whenComplete(() {
       isLoading = false;
       typeSearchView = TypeSearchView.suggestion;
@@ -47,25 +49,24 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
     isLoading = true;
     this.search = search;
 
-    getAutocomplete(search.toLowerCase())
-        .then((value) {
-          data = value;
-          exception = null;
-        })
-        .catchError((error) => exception = error)
-        .whenComplete(() {
-          isLoading = false;
-          hasNextPage = false;
-          total = null;
-          typeSearchView = TypeSearchView.autocomplete;
-          notifyListeners();
-        });
+    getAutocomplete(search.toLowerCase()).then((value) {
+      data = value;
+      exception = null;
+    }).catchError((e) {
+      exception = e;
+    }).whenComplete(() {
+      isLoading = false;
+      hasNextPage = false;
+      total = null;
+      typeSearchView = TypeSearchView.autocomplete;
+      notifyListeners();
+    });
   }
 
   clearSearch() {
     search = '';
     typeSearchView = TypeSearchView.autocomplete;
-    resetPagination();
+    onRefresh();
     notifyListeners();
   }
 
@@ -96,7 +97,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<Suggestion> {
   void onChanged(String search) {
     search = search.trim();
     _debouncer.run(() {
-      resetPagination();
+      onRefresh();
       getSuggestionsAutocomplete(search);
     });
   }
