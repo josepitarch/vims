@@ -32,7 +32,7 @@ class Actor {
   factory Actor.fromMap(Map<String, dynamic> json) => Actor(
         id: json['id'],
         name: json['name'],
-        image: Image.fromMap(json['image']),
+        image: json['image'] != null ? Image.fromMap(json['image']) : null,
         age: json['age'],
         birthday: json['birthday'],
         place: json['place'],
@@ -69,10 +69,12 @@ class Image {
 
   String toJson() => json.encode(toMap());
 
-  factory Image.fromMap(Map<String, dynamic> json) => Image(
-        mmed: json['mmed'],
-        large: json['large'],
-      );
+  factory Image.fromMap(Map<String, dynamic> json) {
+    return Image(
+      mmed: json['mmed'],
+      large: json['large'],
+    );
+  }
 
   Map<String, dynamic> toMap() => {
         'mmed': mmed,

@@ -45,12 +45,13 @@ class _ActorScreenState extends State<ActorScreen> {
           scrollController: scrollController,
           sliverAppBarBackground: _Profile(
             image: arguments['image'],
+            name: arguments['name'],
             age: null,
             totalMovies: null,
             country: null,
           ),
           sliverAppBarTitle: arguments['name'],
-          body: UnconstrainedBox(
+          child: UnconstrainedBox(
             child: SizedBox(height: height * 0.5, child: const Loading()),
           ));
     }
@@ -63,12 +64,13 @@ class _ActorScreenState extends State<ActorScreen> {
         scrollController: scrollController,
         sliverAppBarBackground: _Profile(
           image: actor.image?.mmed,
+          name: actor.name,
           age: actor.age,
           totalMovies: actor.totalMovies,
           country: actor.nacionality,
         ),
         sliverAppBarTitle: arguments['name'],
-        body: _Filmography(
+        child: _Filmography(
             scrollController: scrollController, firstPage: movies));
   }
 }
@@ -77,10 +79,10 @@ class _Layout extends StatelessWidget {
   final ScrollController scrollController;
   final String sliverAppBarTitle;
   final Widget sliverAppBarBackground;
-  final Widget body;
+  final Widget child;
   const _Layout(
       {required this.scrollController,
-      required this.body,
+      required this.child,
       required this.sliverAppBarBackground,
       required this.sliverAppBarTitle,
       super.key});
@@ -105,30 +107,37 @@ class _Layout extends StatelessWidget {
             ),
             background: sliverAppBarBackground),
       ),
-      SliverList(delegate: SliverChildListDelegate([body]))
+      SliverList(delegate: SliverChildListDelegate([child]))
     ]));
   }
 }
 
 class _Profile extends StatelessWidget {
   final String? image;
+  final String name;
   final String? age;
   final int? totalMovies;
   final String? country;
   const _Profile(
-      {this.image, this.age, this.totalMovies, this.country, super.key});
+      {this.image,
+      required this.name,
+      this.age,
+      this.totalMovies,
+      this.country,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final imagePath = image != null ? image! : '';
+    final String initials = name.split(' ').map((e) => e[0]).join();
     return SafeArea(
         child: Padding(
-      padding: const EdgeInsets.only(left: 60.0, top: 16.0),
+      padding: const EdgeInsets.only(left: 45.0, top: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AvatarView(imagePath: imagePath, radius: 50),
+          AvatarView(imagePath: image, text: initials, radius: 50),
           const SizedBox(width: 10.0),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -168,7 +177,8 @@ class _Filmography extends StatelessWidget {
         final height = MediaQuery.of(context).size.height;
 
         if (provider.exception != null) {
-          return HandleError(provider.exception!, provider.onRefresh);
+          return HandleError(provider.exception!, provider.onRefresh,
+              withScaffold: false);
         }
 
         if (provider.isLoading && provider.data == null) {

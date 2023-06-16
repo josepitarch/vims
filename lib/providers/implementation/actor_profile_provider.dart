@@ -12,17 +12,16 @@ class ActorProfileProvider extends BaseProvider<Map<Actor, List<ActorMovie>?>> {
   @override
   fetchData() {
     isLoading = true;
-    getActorProfile(id)
-        .then((actor) {
-          currentActor = actor;
-          data!.addAll({actor: null});
-          exception = null;
-        })
-        .catchError((e) => exception = e)
-        .whenComplete(() {
-          isLoading = false;
-          notifyListeners();
-        });
+    getActorProfile(id).then((actor) {
+      currentActor = actor;
+      data!.addAll({actor: null});
+      exception = null;
+    }).catchError((e) {
+      exception = e;
+    }).whenComplete(() {
+      isLoading = false;
+      notifyListeners();
+    });
   }
 
   @override

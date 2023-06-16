@@ -20,18 +20,17 @@ class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
   @override
   fetchData() {
     isLoading = true;
-    getActorFilmography(id, page)
-        .then((value) {
-          data == null ? data = value.results : data!.addAll(value.results);
-          total = value.total;
-          limit = value.limit;
-          hasNextPage = value.results.length == limit;
-        })
-        .catchError((error) => exception = error)
-        .whenComplete(() {
-          isLoading = false;
-          notifyListeners();
-        });
+    getActorFilmography(id, page).then((value) {
+      data == null ? data = value.results : data!.addAll(value.results);
+      total = value.total;
+      limit = value.limit;
+      hasNextPage = value.results.length == limit;
+    }).catchError((e) {
+      exception = e;
+    }).whenComplete(() {
+      isLoading = false;
+      notifyListeners();
+    });
   }
 
   @override
@@ -39,5 +38,12 @@ class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
     isLoading = true;
     notifyListeners();
     super.fetchNextPage();
+  }
+
+  @override
+  onRefresh() {
+    isLoading = true;
+    notifyListeners();
+    super.onRefresh();
   }
 }
