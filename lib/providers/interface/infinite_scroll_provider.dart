@@ -17,12 +17,12 @@ abstract class InfiniteScrollProvider<T> extends BaseProvider<List<T>> {
     }
   }
 
-  resetPagination() {
+  @override
+  onRefresh() {
     page = 1;
     total = null;
     hasNextPage = false;
-    data = null;
-    exception = null;
     scrollPosition = 0;
+    super.onRefresh();
   }
 }
