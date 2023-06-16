@@ -25,21 +25,20 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
     notifyListeners();
     final int currentPage = hasFilters ? page : randomNumbers.removeLast();
 
-    getTopMovies(currentFilters, currentPage)
-        .then((value) {
-          final List<TopMovie> movies = value.results;
-          if (!hasFilters) movies.shuffle();
-          hasNextPage = movies.length == limit;
-          data == null
-              ? data = List.from(value.results)
-              : data!.addAll(value.results);
-          exception = null;
-        })
-        .catchError((e) => exception = e)
-        .whenComplete(() {
-          isLoading = false;
-          notifyListeners();
-        });
+    getTopMovies(currentFilters, currentPage).then((value) {
+      final List<TopMovie> movies = value.results;
+      if (!hasFilters) movies.shuffle();
+      hasNextPage = movies.length == limit;
+      data == null
+          ? data = List.from(value.results)
+          : data!.addAll(value.results);
+      exception = null;
+    }).catchError((e) {
+      exception = e;
+    }).whenComplete(() {
+      isLoading = false;
+      notifyListeners();
+    });
   }
 
   applyFilters(Filters filters) {
@@ -48,28 +47,20 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
     hasFilters = true;
     currentFilters = filters;
 
-    resetPagination();
-
     fetchData();
   }
 
   removeFilters() {
-    currentFilters = Filters.origin();
-    hasFilters = false;
-    resetPagination();
-
     randomNumbers = List.generate(20, (index) => index * 30)..shuffle();
 
-    fetchData();
+    onRefresh();
   }
 
   @override
   onRefresh() {
     currentFilters = Filters.origin();
     hasFilters = false;
-    resetPagination();
-
-    fetchData();
+    super.onRefresh();
   }
 
   setModeView() {

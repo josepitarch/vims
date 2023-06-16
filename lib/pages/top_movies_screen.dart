@@ -57,31 +57,30 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
       }
 
       if (provider.isLoading && provider.data == null) {
-        const Widget body = CardMovieShimmer();
-        return const _Layout(body: Expanded(child: body));
+        const Widget child = Expanded(child: CardMovieShimmer());
+        return const _Layout(child: [child]);
       }
 
       if (!provider.isLoading && provider.data!.isEmpty) {
-        Widget body = Center(
-            child: Column(
-          children: [
-            _Options(scrollController: scrollController),
-            const NoResults(),
-          ],
-        ));
-        return _Layout(body: body);
+        final List<Widget> child = [
+          _Options(scrollController: scrollController),
+          const NoResults(),
+        ];
+        return _Layout(child: child);
       }
 
+      final List<Widget> child = [
+        _Options(scrollController: scrollController),
+        SizedBox(
+            height: MediaQuery.of(context).size.height * 0.72,
+            child: _TopMovies(scrollController: scrollController))
+      ];
+
       return _Layout(
-          body: Column(children: [
-            _Options(scrollController: scrollController),
-            SizedBox(
-                height: MediaQuery.of(context).size.height * 0.72,
-                child: _Body(scrollController: scrollController))
-          ]),
           floatingActionButton: showFloatingActionButton
               ? _FloatingActionButton(scrollController: scrollController)
-              : null);
+              : null,
+          child: child);
     });
   }
 
@@ -93,9 +92,10 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 }
 
 class _Layout extends StatelessWidget {
-  final Widget body;
+  final List<Widget> child;
   final Widget? floatingActionButton;
-  const _Layout({required this.body, this.floatingActionButton, super.key});
+  const _Layout({required this.child, this.floatingActionButton, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class _Layout extends StatelessWidget {
         body: SafeArea(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [TitlePage(i18n.title_top_movies_page), body])),
+                children: [TitlePage(i18n.title_top_movies_page), ...child])),
         floatingActionButton: floatingActionButton);
   }
 }
@@ -164,14 +164,14 @@ class _FloatingActionButton extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _TopMovies extends StatelessWidget {
   final ScrollController scrollController;
-  const _Body({required this.scrollController, Key? key}) : super(key: key);
+  const _TopMovies({required this.scrollController, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TopMoviesProvider provider =
-        Provider.of<TopMoviesProvider>(context, listen: false);
+    final TopMoviesProvider provider = Provider.of(context, listen: false);
 
     final Widget data = ListView(
         controller: scrollController,
