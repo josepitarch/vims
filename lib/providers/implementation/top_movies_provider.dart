@@ -46,6 +46,7 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
 
     hasFilters = true;
     currentFilters = filters;
+    data = null;
 
     fetchData();
   }
