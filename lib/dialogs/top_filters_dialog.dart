@@ -1,36 +1,34 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:vims/models/enums/genres.dart';
+import 'package:vims/models/enums/platforms.dart';
 import 'package:vims/models/filters.dart';
-import 'package:vims/providers/top_movies_provider.dart';
+import 'package:vims/providers/implementation/top_movies_provider.dart';
 import 'package:vims/widgets/card_genre.dart';
 import 'package:vims/widgets/platform_item.dart';
 import 'package:vims/widgets/year_container.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:io' as io show Platform;
 
 late AppLocalizations i18n;
 late Filters filters;
-late TopMoviesProvider provider;
-late ScrollController scrollController;
 late bool hasError;
 
 class TopMoviesDialog extends StatelessWidget {
-  final TopMoviesProvider topMoviesProvider;
-  final ScrollController controller;
-
-  const TopMoviesDialog(
-      {Key? key, required this.topMoviesProvider, required this.controller})
-      : super(key: key);
+  final VoidCallback jumpToTop;
+  const TopMoviesDialog({required this.jumpToTop, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
-    provider = topMoviesProvider;
-    scrollController = controller;
+    final TopMoviesProvider topMoviesProvider =
+        Provider.of<TopMoviesProvider>(context, listen: false);
     hasError = false;
     filters = Filters(
-        platforms: Map.from(topMoviesProvider.currentFilters.platforms),
-        genres: Map.from(topMoviesProvider.currentFilters.genres),
+        platforms: [...topMoviesProvider.currentFilters.platforms],
+        genres: [...topMoviesProvider.currentFilters.genres],
         isAnimationExcluded:
             topMoviesProvider.currentFilters.isAnimationExcluded,
         yearFrom: topMoviesProvider.currentFilters.yearFrom,
@@ -70,9 +68,12 @@ class TopMoviesDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    if (provider.hasFilters) const _DeleteButton(),
+                    if (topMoviesProvider.hasFilters)
+                      _DeleteButton(
+                        jumpToTop: jumpToTop,
+                      ),
                     const SizedBox(width: 10),
-                    const _ApplyButton(),
+                    _ApplyButton(jumpToTop: jumpToTop),
                   ],
                 ),
               ),
@@ -98,10 +99,11 @@ class _PlatformsFilter extends StatelessWidget {
           height: 50,
           child: ListView(
               scrollDirection: Axis.horizontal,
-              children: filters.platforms.entries.map((entry) {
+              children: Platforms.values.map((entry) {
+                if (entry.showInTopFilters == false) return const SizedBox();
                 return PlatformItem(
-                    assetName: entry.key,
-                    isSelected: entry.value,
+                    assetName: entry.name,
+                    isSelected: filters.platforms.contains(entry.name),
                     filters: filters);
               }).toList()),
         ),
@@ -127,10 +129,10 @@ class _GenresFilter extends StatelessWidget {
         child: Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: filters.genres.entries.map((entry) {
+            children: Genres.values.map((entry) {
               return CardGenre(
-                genre: entry.key,
-                isSelected: entry.value,
+                genre: entry.name,
+                isSelected: filters.genres.contains(entry.name),
                 filters: filters,
               );
             }).toList()),
@@ -226,10 +228,20 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
 }
 
 class _ApplyButton extends StatelessWidget {
-  const _ApplyButton();
+  final VoidCallback jumpToTop;
+  const _ApplyButton({required this.jumpToTop});
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TopMoviesProvider>(context, listen: false);
+
+    onPressed() {
+      if (hasError) return;
+      jumpToTop();
+      Navigator.pop(context);
+      provider.applyFilters(filters);
+    }
+
     return io.Platform.isAndroid
         ? MaterialButton(
             elevation: 0,
@@ -237,52 +249,45 @@ class _ApplyButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.orange),
                 borderRadius: BorderRadius.circular(30)),
-            onPressed: () {
-              if (hasError) return;
-              if (scrollController.hasClients) scrollController.jumpTo(0);
-              Navigator.pop(context);
-              provider.applyFilters(filters);
-            },
+            onPressed: onPressed,
             child: Text(i18n.apply_filters_dialog))
         : CupertinoButton(
             borderRadius: BorderRadius.circular(30),
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             color: Colors.orange,
-            onPressed: () {
-              if (scrollController.hasClients) scrollController.jumpTo(0);
-              Navigator.pop(context);
-              provider.applyFilters(filters);
-            },
+            onPressed: onPressed,
             child: Text(i18n.apply_filters_dialog));
   }
 }
 
 class _DeleteButton extends StatelessWidget {
-  const _DeleteButton();
+  final VoidCallback jumpToTop;
+
+  const _DeleteButton({required this.jumpToTop});
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TopMoviesProvider>(context, listen: false);
+
+    onPressed() {
+      jumpToTop();
+      Navigator.pop(context);
+      provider.removeFilters();
+    }
+
     return io.Platform.isAndroid
         ? MaterialButton(
             elevation: 0,
             shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Colors.red, width: 2),
                 borderRadius: BorderRadius.circular(30)),
-            onPressed: () {
-              if (scrollController.hasClients) scrollController.jumpTo(0);
-              Navigator.pop(context);
-              provider.removeFilters();
-            },
+            onPressed: onPressed,
             child: Text(i18n.delete_filters_dialog))
         : CupertinoButton(
             borderRadius: BorderRadius.circular(30),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             color: Colors.red,
-            onPressed: () {
-              if (scrollController.hasClients) scrollController.jumpTo(0);
-              Navigator.pop(context);
-              provider.removeFilters();
-            },
+            onPressed: onPressed,
             child: Text(i18n.delete_filters_dialog));
   }
 }

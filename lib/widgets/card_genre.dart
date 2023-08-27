@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:vims/enums/genres.dart';
-import 'package:vims/models/filters.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io' as io show Platform;
 
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vims/models/enums/genres.dart';
+import 'package:vims/models/filters.dart';
+
 class CardGenre extends StatefulWidget {
-  final Genres genre;
+  final String genre;
   bool isSelected;
   final Filters filters;
 
@@ -39,12 +40,18 @@ class _CardGenreState extends State<CardGenre> {
       Genres.kids.value: i18n.kids,
     };
 
+    // TODO: refactor setState
     return io.Platform.isAndroid
         ? TextButton(
             onPressed: () {
               setState(() {
                 widget.isSelected = !widget.isSelected;
-                widget.filters.genres[widget.genre] = widget.isSelected;
+                final index = widget.filters.genres.indexOf(widget.genre);
+                if (index == -1) {
+                  widget.filters.genres.add(widget.genre);
+                } else {
+                  widget.filters.genres.removeAt(index);
+                }
               });
             },
             style: TextButton.styleFrom(
@@ -54,13 +61,18 @@ class _CardGenreState extends State<CardGenre> {
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
             ),
-            child: Text(genres[widget.genre.value]!),
+            child: Text(genres[widget.genre]!),
           )
         : TextButton(
             onPressed: () {
               setState(() {
                 widget.isSelected = !widget.isSelected;
-                widget.filters.genres[widget.genre] = widget.isSelected;
+                final index = widget.filters.genres.indexOf(widget.genre);
+                if (index == -1) {
+                  widget.filters.genres.add(widget.genre);
+                } else {
+                  widget.filters.genres.removeAt(index);
+                }
               });
             },
             style: ButtonStyle(
@@ -70,7 +82,7 @@ class _CardGenreState extends State<CardGenre> {
                   ? Colors.black.withOpacity(0.4).withAlpha(100)
                   : Colors.black.withOpacity(0.2)),
             ),
-            child: Text(genres[widget.genre.value]!,
+            child: Text(genres[widget.genre]!,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: widget.isSelected ? Colors.white : Colors.grey,
                     )),

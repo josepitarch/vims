@@ -2,54 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
+import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 
 class CardMovie extends StatelessWidget {
-  final Movie movie;
+  final int id;
+  final String? heroTag;
+  final String title;
+  final String poster;
+  final String? director;
+  final double? rating;
+  final List<Platform> platforms;
   final bool saveToCache;
-  final bool hasAllAttributes;
 
-  const CardMovie(
-      {Key? key,
-      required this.movie,
-      required this.saveToCache,
-      this.hasAllAttributes = false})
-      : super(key: key);
+  const CardMovie({
+    Key? key,
+    required this.id,
+    this.heroTag,
+    required this.title,
+    required this.poster,
+    this.director,
+    this.rating,
+    this.platforms = const [],
+    required this.saveToCache,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double height = 150.0;
+
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
-      onTap: () {
-        Map<String, dynamic> arguments = {
-          'id': movie.id,
-          'movie': movie,
-          'hasAllAttributes': hasAllAttributes
-        };
-        Navigator.pushNamed(context, 'details', arguments: arguments);
-      },
+      onTap: () => Navigator.pushNamed(context, 'details',
+          arguments: {'id': id, 'heroTag': heroTag}),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         margin: const EdgeInsets.only(bottom: 20.0),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _Poster(height: height, movie: movie, saveToCache: saveToCache),
+          _Poster(
+              id: id, poster: poster, saveToCache: saveToCache, height: height),
           Expanded(
             child: Container(
                 height: height,
-                margin: const EdgeInsets.only(left: 10, top: 15),
-                padding: const EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(left: 10, top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(children: [
-                      _Title(movie.title),
-                      const SizedBox(height: 10.0),
-                      _Director(movie.director),
-                    ]),
-                    Rating(movie.rating)
+                    _Title(title),
+                    const SizedBox(height: 10.0),
+                    _Director(director),
+                    const SizedBox(height: 10.0),
+                    rating != null ? Rating(rating) : const SizedBox.shrink(),
+                    const Expanded(child: SizedBox()),
+                    _Platforms(platforms),
                   ],
                 )),
           ),
@@ -64,31 +71,30 @@ class CardMovie extends StatelessWidget {
 }
 
 class _Poster extends StatelessWidget {
-  final double height;
-  final Movie movie;
+  final int id;
+  final String poster;
   final bool saveToCache;
+  final double height;
 
   const _Poster({
     Key? key,
+    required this.id,
     required this.height,
-    required this.movie,
+    required this.poster,
     required this.saveToCache,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const double width = 120.0;
-    return Hero(
-      tag: movie.id,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
-        child: CustomImage(
-            url: movie.poster,
-            width: width,
-            height: height + 20,
-            saveToCache: saveToCache,
-            cacheManager: CustomCacheManager.cacheTinyImages),
-      ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: CustomImage(
+          url: poster,
+          width: width,
+          height: height + 20,
+          saveToCache: saveToCache,
+          cacheManager: CustomCacheManager.cacheTinyImages),
     );
   }
 }
@@ -116,6 +122,7 @@ class _Title extends StatelessWidget {
 
 class _Director extends StatelessWidget {
   final String? director;
+
   const _Director(
     this.director, {
     Key? key,
@@ -123,10 +130,12 @@ class _Director extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (director == null) return const SizedBox.shrink();
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       child: Text(
-        director ?? '',
+        director!,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontStyle: FontStyle.italic,
               //color: Theme.of(context).colorScheme.secondary
@@ -134,6 +143,27 @@ class _Director extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
       ),
+    );
+  }
+}
+
+class _Platforms extends StatelessWidget {
+  final List<Platform> platforms;
+  const _Platforms(this.platforms);
+
+  @override
+  Widget build(BuildContext context) {
+    const double height = 37.5;
+    const double width = height;
+    return SizedBox(
+      height: height,
+      child: ListView(
+          scrollDirection: Axis.horizontal,
+          reverse: false,
+          children: platforms
+              .map((platform) =>
+                  JustwatchItem(platform, height: height, width: width))
+              .toList()),
     );
   }
 }

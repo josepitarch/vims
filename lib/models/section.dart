@@ -1,46 +1,50 @@
 import 'dart:convert';
 
+import 'package:vims/models/movie.dart';
+import 'package:vims/models/poster.dart';
+
 class Section {
+  String id;
+  String title;
+  List<MovieSection> movies;
+
   Section({
+    required this.id,
     required this.title,
     required this.movies,
   });
 
-  String title;
-  List<MovieSection> movies;
-
   factory Section.fromJson(String str) => Section.fromMap(json.decode(str));
 
   factory Section.fromMap(Map<String, dynamic> json) => Section(
-        title: json['title_section'],
+        id: json['id'],
+        title: json['title'],
         movies: List<MovieSection>.from(
-            json['films'].map((x) => MovieSection.fromMap(x))),
+            json['movies'].map((x) => MovieSection.fromMap(x))),
       );
 }
 
-class MovieSection {
-  MovieSection({
-    required this.id,
-    required this.link,
-    required this.image,
-    required this.title,
-    required this.premiereDay,
-  });
+class MovieSection extends BaseMovie {
+  final String premiereDay;
 
-  int id;
-  String link;
-  String image;
-  String title;
-  String premiereDay;
+  MovieSection({
+    required id,
+    required title,
+    required poster,
+    required this.premiereDay,
+  }) : super(
+          id: id,
+          title: title,
+          poster: poster,
+        );
 
   factory MovieSection.fromJson(String str) =>
       MovieSection.fromMap(json.decode(str));
 
   factory MovieSection.fromMap(Map<String, dynamic> json) => MovieSection(
         id: json['id'],
-        link: json['link'],
-        image: json['poster'] ?? '',
         title: json['title'],
+        poster: Poster.fromMap(json['poster']),
         premiereDay: json['premiere_day'],
       );
 }

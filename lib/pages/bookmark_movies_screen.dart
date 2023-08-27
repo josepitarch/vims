@@ -1,12 +1,13 @@
+import 'dart:io' as io show Platform;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/delete_all_bookmarks_dialog.dart';
-import 'package:vims/providers/bookmark_movies_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/title_page.dart';
-import 'dart:io' as io show Platform;
 
 class BookmarkMoviesScreen extends StatelessWidget {
   const BookmarkMoviesScreen({Key? key}) : super(key: key);
@@ -29,14 +30,18 @@ class BookmarkMoviesScreen extends StatelessWidget {
                     }),
                 icon: const Icon(Icons.delete)),
           ),
-          provider.bookmarkMovies.isEmpty
+          provider.data!.isEmpty
               ? const NoBookmarkMovies()
               : Expanded(
                   child: ListView(
-                      children: provider.bookmarkMovies
+                      children: provider.data!
                           .map(
                             (movie) => CardMovie(
-                                movie: movie.toMovie(), saveToCache: true),
+                                id: movie.id,
+                                title: movie.title,
+                                poster: movie.poster,
+                                rating: movie.rating,
+                                saveToCache: true),
                           )
                           .toList()))
         ])),
@@ -44,7 +49,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
     });
   }
 
-  Future<dynamic> _openDialog(BuildContext context) {
+  Future _openDialog(BuildContext context) {
     final bool isAndroid = io.Platform.isAndroid;
     return isAndroid
         ? showDialog(

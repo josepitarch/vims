@@ -47,3 +47,7 @@ app.*.map.json
 /android/app/release
 
 .env
+pubspec.lock
+upload-keystore.jks
+
+/assets/templates

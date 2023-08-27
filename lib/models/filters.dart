@@ -1,21 +1,16 @@
 import 'package:flutter/foundation.dart';
-import 'package:vims/enums/genres.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:vims/enums/platforms.dart';
 
 class Filters {
-  Map<String, bool> platforms;
-  Map<Genres, bool> genres;
+  List<String> platforms;
+  List<String> genres;
   bool isAnimationExcluded;
   int yearFrom;
   int yearTo;
 
   Filters.origin()
-      : platforms = {
-          for (var platform in Platforms.values)
-            if (platform.showInTopFilters) platform.name: false
-        },
-        genres = {for (var e in Genres.values) e: false},
+      : platforms = [],
+        genres = [],
         isAnimationExcluded = true,
         yearFrom = int.parse(dotenv.env['YEAR_FROM']!),
         yearTo = DateTime.now().year;
@@ -28,18 +23,14 @@ class Filters {
       required this.yearTo});
 
   removeFilters() {
-    platforms.forEach((key, value) {
-      platforms[key] = false;
-    });
-    genres.forEach((key, value) {
-      genres[key] = false;
-    });
+    platforms.clear();
+    genres.clear();
     isAnimationExcluded = true;
   }
 
   bool equals(Filters filters) {
-    return mapEquals(platforms, filters.platforms) &&
-        mapEquals(genres, filters.genres) &&
+    return listEquals(platforms, filters.platforms) &&
+        listEquals(genres, filters.genres) &&
         isAnimationExcluded == filters.isAnimationExcluded &&
         yearFrom == filters.yearFrom &&
         yearTo == filters.yearTo;

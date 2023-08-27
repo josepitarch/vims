@@ -19,6 +19,7 @@
   "reviews": "Críticas",
   "search_movie": "Buscar película",
   "no_empty_search": "El campo no puede estar vacío",
+  "total_results": "Resultados encontrados",
   "no_results": "No hay resultados",
   "delete_all_searchers": "Eliminar búsquedas recientes",
   "title_bookmarks_page": "Tus marcadores",

@@ -1,6 +1,6 @@
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
-import 'package:vims/enums/flags.dart';
+import 'package:vims/models/enums/flags.dart';
 
 class Flag extends StatelessWidget {
   final String country;

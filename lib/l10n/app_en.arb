@@ -20,6 +20,7 @@
     "search_movie": "Search movie",
     "no_empty_search": "The field cannot be empty",
     "no_results": "No results",
+    "total_results": "Total results",
     "delete_all_searchers": "Delete all searchers",
     "title_bookmarks_page": "Your bookmarks",
     "title_top_movies_page": "If you don't know to see",

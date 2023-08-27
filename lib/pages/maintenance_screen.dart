@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:vims/models/exceptions/maintenance_exception.dart';
 
 class MaintenanceScreen extends StatelessWidget {
   final MaintenanceException error;

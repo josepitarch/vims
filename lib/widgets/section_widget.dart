@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/models/section.dart';
-import 'package:vims/widgets/section_movie.dart';
+import 'package:vims/widgets/card_section.dart';
 
 class SectionWidget extends StatelessWidget {
   final Section section;
@@ -12,6 +12,11 @@ class SectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+    const double height = 220;
+    Map arguments = {
+      'title': section.title,
+      'id': section.id,
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,22 +38,22 @@ class SectionWidget extends StatelessWidget {
                           fontFamily: 'OpenSans',
                           color: Theme.of(context).colorScheme.secondary)),
                   onPressed: () => Navigator.pushNamed(context, 'see_more',
-                      arguments: section.title))
+                      arguments: arguments))
             ],
           ),
         ),
         SizedBox(
-          height: 210,
+          height: height,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
               const SizedBox(width: 12),
               ...section.movies
-                  .map((movie) => SectionMovie(
+                  .map((movie) => CardSection(
                       movieSection: movie,
                       heroTag: "${movie.id}${section.title}",
                       saveToCache: true,
-                      height: 190,
+                      height: height,
                       width: 120))
                   .toList(),
             ],

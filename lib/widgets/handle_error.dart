@@ -3,29 +3,41 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vims/exceptions/maintenance_exception.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vims/models/exceptions/error_exception.dart';
+import 'package:vims/models/exceptions/maintenance_exception.dart';
+import 'package:vims/models/exceptions/unsupported_exception.dart';
+import 'package:vims/pages/error/unsupported_screen.dart';
 import 'package:vims/pages/maintenance_screen.dart';
 import 'package:vims/widgets/material_design_icons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
+
+// TODO: this is a page not a widget
 
 class HandleError extends StatelessWidget {
   final Exception error;
   final VoidCallback onRefresh;
+  final bool withScaffold;
 
-  const HandleError(this.error, this.onRefresh, {Key? key}) : super(key: key);
+  const HandleError(this.error, this.onRefresh,
+      {this.withScaffold = true, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
 
-    if (error is TimeoutException) {
-      return _ServerError(onRefresh);
+    if (error is ErrorServerException) {
+      return _ServerError(onRefresh, withScaffold: withScaffold);
     }
 
     if (error is MaintenanceException) {
       return MaintenanceScreen(error as MaintenanceException);
+    }
+
+    if (error is UnsupportedServerException) {
+      return const UnssuportedScreen();
     }
 
     return _ConnectivityError(onRefresh: onRefresh);
@@ -34,38 +46,44 @@ class HandleError extends StatelessWidget {
 
 class _ServerError extends StatelessWidget {
   final VoidCallback onRefresh;
+  final bool withScaffold;
   const _ServerError(
     this.onRefresh, {
+    required this.withScaffold,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(MaterialDesignIcons.emoticonConfusedOutline,
-                size: 100, color: Colors.white),
-            const SizedBox(height: 20),
-            Text(i18n.timeout_error,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: onRefresh,
-                child: Text(
-                  i18n.retry,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                ))
-          ],
-        ),
+    return withScaffold
+        ? Scaffold(body: buildBody(context))
+        : buildBody(context);
+  }
+
+  Container buildBody(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(MaterialDesignIcons.emoticonConfusedOutline,
+              size: 100, color: Colors.white),
+          const SizedBox(height: 20),
+          Text(i18n.timeout_error,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 20),
+          ElevatedButton(
+              onPressed: onRefresh,
+              child: Text(
+                i18n.retry,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+              ))
+        ],
       ),
     );
   }

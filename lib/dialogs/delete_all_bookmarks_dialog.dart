@@ -21,6 +21,7 @@ class _DialogAndroid extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return AlertDialog(
+      elevation: 0,
       title: Text(i18n.title_bookmark_dialog,
           style: Theme.of(context)
               .textTheme

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.scrapper_filmaffinity">
+    package="com.jopimi.vims">
     <uses-permission
         android:name="android.permission.VIBRATE"/>
     <uses-permission
@@ -10,7 +10,7 @@
         android:icon="@mipmap/logo"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.example.vims.MainActivity"
+            android:name="com.jopimi.vims.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true"
             android:launchMode="singleTop"

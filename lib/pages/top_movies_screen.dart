@@ -1,21 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
-import 'package:vims/enums/mode_views.dart';
-import 'package:vims/models/movie.dart';
-import 'package:vims/providers/top_movies_provider.dart';
-import 'package:vims/shimmer/card_movie_shimmer.dart';
+import 'package:vims/providers/implementation/top_movies_provider.dart';
 import 'package:vims/widgets/card_movie.dart';
-import 'package:vims/widgets/loading.dart';
-import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/handle_error.dart';
+import 'package:vims/widgets/infinite_scroll.dart';
+import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 import 'package:vims/widgets/title_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late AppLocalizations i18n;
-late ScrollController scrollController;
-const double limitShowFab = 300;
 
 class TopMoviesScreen extends StatefulWidget {
   const TopMoviesScreen({Key? key}) : super(key: key);
@@ -25,45 +21,30 @@ class TopMoviesScreen extends StatefulWidget {
 }
 
 class _TopMoviesScreenState extends State<TopMoviesScreen> {
+  late ScrollController scrollController;
   bool showFloatingActionButton = false;
-  late int totalMovies;
-  int pagination = 30;
 
   @override
   void initState() {
-    final TopMoviesProvider provider =
-        Provider.of<TopMoviesProvider>(context, listen: false);
+    const double limitShowFab = 300;
+    final TopMoviesProvider provider = context.read<TopMoviesProvider>();
     scrollController =
         ScrollController(initialScrollOffset: provider.scrollPosition);
 
-    setState(() {
-      showFloatingActionButton = provider.scrollPosition >= limitShowFab;
-    });
+    setState(() =>
+        showFloatingActionButton = provider.scrollPosition >= limitShowFab);
+
     scrollController.addListener(() {
-      provider.scrollPosition = scrollController.position.pixels;
-      if (provider.scrollPosition >= limitShowFab &&
-          !showFloatingActionButton) {
-        setState(() {
-          showFloatingActionButton = true;
-        });
-      } else if (provider.scrollPosition < limitShowFab &&
+      final double currentScrollPosition = scrollController.position.pixels;
+      provider.scrollPosition = currentScrollPosition;
+      if (currentScrollPosition >= limitShowFab && !showFloatingActionButton) {
+        setState(() => showFloatingActionButton = true);
+      } else if (currentScrollPosition < limitShowFab &&
           showFloatingActionButton) {
-        setState(() {
-          showFloatingActionButton = false;
-        });
-      }
-      if (scrollController.position.pixels + 300 >=
-          scrollController.position.maxScrollExtent) {
-        if (!provider.isLoading) provider.getTopMovies();
+        setState(() => showFloatingActionButton = false);
       }
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -71,37 +52,69 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
     i18n = AppLocalizations.of(context)!;
 
     return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
-      if (provider.error != null) {
-        return HandleError(provider.error!, provider.onRefresh);
+      if (provider.exception != null) {
+        return HandleError(provider.exception!, provider.onRefresh);
       }
 
-      return Scaffold(
-          body: SafeArea(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                TitlePage(i18n.title_top_movies_page),
-                _Options(provider: provider),
-                (!provider.isLoading && provider.movies.isEmpty)
-                    ? const NoResults()
-                    : Expanded(
-                        child: _Body(
-                            movies: provider.movies,
-                            isLoading: provider.isLoading)),
-              ])),
-          floatingActionButton:
-              showFloatingActionButton ? const _FloatingActionButton() : null);
+      if (provider.isLoading && provider.data == null) {
+        const Widget child = Expanded(child: CardMovieShimmer());
+        return const _Layout(child: [child]);
+      }
+
+      if (!provider.isLoading && provider.data!.isEmpty) {
+        final List<Widget> child = [
+          _Options(scrollController: scrollController),
+          const NoResults(),
+        ];
+        return _Layout(child: child);
+      }
+
+      final List<Widget> child = [
+        _Options(scrollController: scrollController),
+        SizedBox(
+            height: MediaQuery.of(context).size.height * 0.72,
+            child: _TopMovies(scrollController: scrollController))
+      ];
+
+      return _Layout(
+          floatingActionButton: showFloatingActionButton
+              ? _FloatingActionButton(scrollController: scrollController)
+              : null,
+          child: child);
     });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+}
+
+class _Layout extends StatelessWidget {
+  final List<Widget> child;
+  final Widget? floatingActionButton;
+  const _Layout({required this.child, this.floatingActionButton, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [TitlePage(i18n.title_top_movies_page), ...child])),
+        floatingActionButton: floatingActionButton);
   }
 }
 
 class _Options extends StatelessWidget {
-  final TopMoviesProvider provider;
-  const _Options({Key? key, required this.provider}) : super(key: key);
+  final ScrollController scrollController;
+  const _Options({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final ModeView modeView = provider.modeView;
+    // final ModeView modeView = provider.modeView;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -111,24 +124,32 @@ class _Options extends StatelessWidget {
         //     onPressed: () => provider.setModeView()),
         IconButton(
             onPressed: () {
-              showDialogFilters(context, provider);
+              showDialogFilters(context);
             },
             icon: const Icon(Icons.filter_list_rounded)),
       ],
     );
   }
 
-  showDialogFilters(BuildContext context, TopMoviesProvider provider) {
+  jumpToTop() {
+    if (scrollController.hasClients) {
+      scrollController.jumpTo(0);
+    }
+  }
+
+  showDialogFilters(BuildContext context) {
     return showCupertinoDialog(
         barrierDismissible: false,
         context: context,
-        builder: (BuildContext context) => TopMoviesDialog(
-            topMoviesProvider: provider, controller: scrollController));
+        builder: (BuildContext context) =>
+            TopMoviesDialog(jumpToTop: jumpToTop));
   }
 }
 
 class _FloatingActionButton extends StatelessWidget {
+  final ScrollController scrollController;
   const _FloatingActionButton({
+    required this.scrollController,
     Key? key,
   }) : super(key: key);
 
@@ -143,27 +164,32 @@ class _FloatingActionButton extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
-  final List<Movie> movies;
-  final bool isLoading;
-  const _Body({Key? key, required this.movies, required this.isLoading})
+class _TopMovies extends StatelessWidget {
+  final ScrollController scrollController;
+  const _TopMovies({required this.scrollController, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TopMoviesProvider provider = Provider.of<TopMoviesProvider>(context);
-    if (isLoading && movies.isEmpty) return const CardMovieShimmer();
-    final double left = MediaQuery.of(context).size.width * 0.5 - 30;
-    return Stack(children: [
-      ListView(
-          controller: scrollController,
-          children: movies
-              .map((movie) => CardMovie(movie: movie, saveToCache: false))
-              .toList()),
-      Positioned(
-          bottom: 10,
-          left: left,
-          child: provider.isLoading ? const Loading() : const SizedBox())
-    ]);
+    final TopMoviesProvider provider = Provider.of(context, listen: false);
+
+    final Widget data = ListView(
+        controller: scrollController,
+        children: provider.data!
+            .map((movie) => CardMovie(
+                id: movie.id,
+                poster: movie.poster.mmed,
+                title: movie.title,
+                director: movie.director,
+                rating: movie.rating,
+                platforms: movie.platforms,
+                saveToCache: false))
+            .toList());
+
+    return InfiniteScroll(
+      provider: provider,
+      scrollController: scrollController,
+      data: data,
+    );
   }
 }

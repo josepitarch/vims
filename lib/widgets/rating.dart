@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Rating extends StatelessWidget {
-  final dynamic rating;
+  final double? rating;
 
   const Rating(
     this.rating, {
@@ -20,7 +20,7 @@ class Rating extends StatelessWidget {
         width: 7,
       ),
       Text(
-        rating != null ? '${double.parse(rating.toString())}' : '---',
+        rating?.toString() ?? '---',
         style: Theme.of(context).textTheme.headlineMedium,
       ),
     ]);
