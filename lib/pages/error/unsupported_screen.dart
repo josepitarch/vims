@@ -6,8 +6,7 @@ class UnssuportedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String packageName =
-        'com.jopimi.vims'; // Reemplaza con el paquete de la aplicación que deseas abrir en Google Play Store
+    const String packageName = 'com.jopimi.vims';
 
     const String url = 'market://details?id=$packageName';
     return Scaffold(
@@ -15,7 +14,7 @@ class UnssuportedScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
+        const Text(
             'Esta versión ya no está soportada, por favor actualiza la aplicación.',
             textAlign: TextAlign.center),
         MaterialButton(

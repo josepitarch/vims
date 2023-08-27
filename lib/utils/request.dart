@@ -12,11 +12,16 @@ final String TIMEOUT = dotenv.env['TIMEOUT']!;
 
 Future request(String path, int versionApi,
     [Map<String, dynamic>? parameters]) async {
-  final Uri request = Uri.https(BASE_URL, '/v$versionApi/$path', parameters);
+  const String token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.zljhJvx-95zOkdnAb4DA0CRXx7jYw_6jYd4KbMpIOrA';
 
-  final Response response = await get(request)
-      .timeout(Duration(seconds: int.parse(TIMEOUT)))
-      .catchError(
+  final Uri request = Uri.http(BASE_URL, '/v$versionApi/$path', parameters);
+
+  final Response response = await get(request, headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  }).timeout(Duration(seconds: int.parse(TIMEOUT))).catchError(
         (Object e) => throw ErrorServerException('Connection timeout'),
       );
 
