@@ -15,7 +15,7 @@ Future request(String path, int versionApi,
   const String token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.zljhJvx-95zOkdnAb4DA0CRXx7jYw_6jYd4KbMpIOrA';
 
-  final Uri request = Uri.http(BASE_URL, '/v$versionApi/$path', parameters);
+  final Uri request = Uri.https(BASE_URL, '/v$versionApi/$path', parameters);
 
   final Response response = await get(request, headers: {
     'Content-Type': 'application/json',
