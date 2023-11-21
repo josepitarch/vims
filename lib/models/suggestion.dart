@@ -10,14 +10,13 @@ class Suggestion extends BaseMovie {
   final String? director;
 
   Suggestion(
-      {required id,
-      required title,
-      required poster,
+      {required super.id,
+      required super.title,
+      required super.poster,
       required this.year,
       required this.country,
       required this.rating,
-      required this.director})
-      : super(id: id, title: title, poster: poster);
+      required this.director});
 
   factory Suggestion.fromJson(String str) =>
       Suggestion.fromMap(json.decode(str));

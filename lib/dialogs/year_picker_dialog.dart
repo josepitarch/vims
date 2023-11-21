@@ -10,11 +10,10 @@ class YearPickerCupertino extends StatelessWidget {
   final int selectedYear;
 
   const YearPickerCupertino(
-      {Key? key,
-      required this.isReverse,
+      {required this.isReverse,
       required this.onItemSelectedChanged,
-      required this.selectedYear})
-      : super(key: key);
+      required this.selectedYear,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

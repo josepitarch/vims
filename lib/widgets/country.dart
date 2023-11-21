@@ -5,11 +5,7 @@ class Country extends StatelessWidget {
   final String country;
   final String flag;
 
-  const Country({
-    required this.country,
-    this.flag = '',
-    Key? key,
-  }) : super(key: key);
+  const Country({required this.country, this.flag = '', super.key});
 
   @override
   Widget build(BuildContext context) {

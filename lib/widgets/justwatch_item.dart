@@ -9,8 +9,7 @@ class JustwatchItem extends StatelessWidget {
   final double width;
 
   const JustwatchItem(this.platform,
-      {this.height = 50, this.width = 50, Key? key})
-      : super(key: key);
+      {this.height = 50, this.width = 50, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +37,7 @@ class _Icon extends StatelessWidget {
   final Platform platform;
   final double height;
   final double width;
-  const _Icon(this.platform,
-      {required this.height, required this.width, super.key});
+  const _Icon(this.platform, {required this.height, required this.width});
 
   @override
   Widget build(BuildContext context) {

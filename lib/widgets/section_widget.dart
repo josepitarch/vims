@@ -7,7 +7,7 @@ import 'package:vims/widgets/card_section.dart';
 class SectionWidget extends StatelessWidget {
   final Section section;
 
-  const SectionWidget({Key? key, required this.section}) : super(key: key);
+  const SectionWidget({required this.section, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +48,12 @@ class SectionWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: [
               const SizedBox(width: 12),
-              ...section.movies
-                  .map((movie) => CardSection(
-                      movieSection: movie,
-                      heroTag: "${movie.id}${section.title}",
-                      saveToCache: true,
-                      height: height,
-                      width: 120))
-                  .toList(),
+              ...section.movies.map((movie) => CardSection(
+                  movieSection: movie,
+                  heroTag: "${movie.id}${section.title}",
+                  saveToCache: true,
+                  height: height,
+                  width: 120))
             ],
           ),
         )

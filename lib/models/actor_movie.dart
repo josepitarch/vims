@@ -10,18 +10,13 @@ class ActorMovie extends BaseMovie {
   final int year;
 
   ActorMovie(
-      {required int id,
-      required String title,
-      required Poster poster,
+      {required super.id,
+      required super.title,
+      required super.poster,
       required this.director,
       required this.country,
       required this.flag,
-      required this.year})
-      : super(
-          id: id,
-          title: title,
-          poster: poster,
-        );
+      required this.year});
 
   factory ActorMovie.fromJson(String str) =>
       ActorMovie.fromMap(json.jsonDecode(str));

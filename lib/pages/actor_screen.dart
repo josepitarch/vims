@@ -84,8 +84,7 @@ class _Layout extends StatelessWidget {
       {required this.scrollController,
       required this.child,
       required this.sliverAppBarBackground,
-      required this.sliverAppBarTitle,
-      super.key});
+      required this.sliverAppBarTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +117,14 @@ class _Profile extends StatelessWidget {
   final String? age;
   final int? totalMovies;
   final String? country;
-  const _Profile(
-      {this.image,
-      required this.name,
-      this.age,
-      this.totalMovies,
-      this.country,
-      Key? key})
-      : super(key: key);
+
+  const _Profile({
+    this.image,
+    required this.name,
+    this.age,
+    this.totalMovies,
+    this.country,
+  });
 
   @override
   Widget build(BuildContext context) {

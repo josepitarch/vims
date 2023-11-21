@@ -11,14 +11,13 @@ class CustomImage extends StatelessWidget {
   final String? cacheKey;
 
   const CustomImage(
-      {Key? key,
-      required this.url,
+      {required this.url,
       required this.width,
       required this.height,
       required this.saveToCache,
       required this.cacheManager,
-      this.cacheKey})
-      : super(key: key);
+      this.cacheKey,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +44,7 @@ class CustomImage extends StatelessWidget {
 }
 
 class _ErrorImage extends StatelessWidget {
-  const _ErrorImage({
-    Key? key,
-    required this.height,
-    required this.width,
-  }) : super(key: key);
+  const _ErrorImage({required this.height, required this.width});
 
   final double height;
   final double width;

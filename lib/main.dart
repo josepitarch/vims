@@ -25,7 +25,7 @@ Future<void> main() async {
 }
 
 class AppState extends StatelessWidget {
-  const AppState({Key? key}) : super(key: key);
+  const AppState({super.key});
   @override
   Widget build(BuildContext context) {
     //Locale locale = WidgetsBinding.instance.window.locale;
@@ -44,7 +44,7 @@ class AppState extends StatelessWidget {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

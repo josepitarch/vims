@@ -10,18 +10,14 @@ class TopMovie extends BaseMovie {
   final List<Platform> platforms;
 
   TopMovie({
-    required int id,
-    required String title,
-    required Poster poster,
+    required super.id,
+    required super.title,
+    required super.poster,
     required this.director,
     required this.year,
     required this.rating,
     required this.platforms,
-  }) : super(
-          id: id,
-          title: title,
-          poster: poster,
-        );
+  });
 
   factory TopMovie.fromJson(String str) => TopMovie.fromMap(json.decode(str));
 

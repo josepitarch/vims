@@ -11,7 +11,7 @@ import 'package:vims/widgets/section_widget.dart';
 import 'package:vims/widgets/shimmer/sections_shimmer.dart';
 
 class HomepageScreen extends StatefulWidget {
-  const HomepageScreen({Key? key}) : super(key: key);
+  const HomepageScreen({super.key});
 
   @override
   State<HomepageScreen> createState() => _HomepageScreenState();
@@ -46,8 +46,7 @@ class _HomepageScreenState extends State<HomepageScreen>
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(children: [
               ...provider.data!
-                  .map((section) => SectionWidget(section: section))
-                  .toList(),
+                  .map((section) => SectionWidget(section: section)),
               const SizedBox(height: 30),
             ]),
           )),

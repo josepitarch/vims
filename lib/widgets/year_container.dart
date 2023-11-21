@@ -10,12 +10,11 @@ class YearContainer extends StatelessWidget {
   final bool hasError;
 
   const YearContainer(
-      {Key? key,
-      required this.year,
+      {required this.year,
       required this.onPressed,
       required this.isReverse,
-      this.hasError = false})
-      : super(key: key);
+      this.hasError = false,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

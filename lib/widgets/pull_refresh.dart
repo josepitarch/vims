@@ -20,9 +20,7 @@ class PullRefresh extends StatelessWidget {
 class _PullRefreshAndroid extends StatelessWidget {
   final Widget child;
   final Future<void> Function() onRefresh;
-  const _PullRefreshAndroid(
-      {Key? key, required this.child, required this.onRefresh})
-      : super(key: key);
+  const _PullRefreshAndroid({required this.child, required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +38,7 @@ class _PullRefreshAndroid extends StatelessWidget {
 class _PullRefreshIOS extends StatelessWidget {
   final Widget child;
   final Future<void> Function() onRefresh;
-  const _PullRefreshIOS(
-      {Key? key, required this.child, required this.onRefresh})
-      : super(key: key);
+  const _PullRefreshIOS({required this.child, required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {

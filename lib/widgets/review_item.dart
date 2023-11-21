@@ -3,7 +3,7 @@ import 'package:vims/models/movie.dart';
 
 class ReviewItem extends StatelessWidget {
   final Review review;
-  const ReviewItem({Key? key, required this.review}) : super(key: key);
+  const ReviewItem({required this.review, super.key});
 
   @override
   Widget build(BuildContext context) {

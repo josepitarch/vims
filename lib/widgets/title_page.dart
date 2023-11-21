@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TitlePage extends StatelessWidget {
   final String title;
-  const TitlePage(this.title, {Key? key}) : super(key: key);
+  const TitlePage(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {

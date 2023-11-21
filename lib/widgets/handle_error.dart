@@ -21,8 +21,7 @@ class HandleError extends StatelessWidget {
   final bool withScaffold;
 
   const HandleError(this.error, this.onRefresh,
-      {this.withScaffold = true, Key? key})
-      : super(key: key);
+      {this.withScaffold = true, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +46,7 @@ class HandleError extends StatelessWidget {
 class _ServerError extends StatelessWidget {
   final VoidCallback onRefresh;
   final bool withScaffold;
-  const _ServerError(
-    this.onRefresh, {
-    required this.withScaffold,
-    Key? key,
-  }) : super(key: key);
+  const _ServerError(this.onRefresh, {required this.withScaffold, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +86,8 @@ class _ServerError extends StatelessWidget {
 
 class _ConnectivityError extends StatefulWidget {
   final VoidCallback onRefresh;
-  const _ConnectivityError({required this.onRefresh, Key? key})
-      : super(key: key);
+
+  const _ConnectivityError({required this.onRefresh});
 
   @override
   State<_ConnectivityError> createState() => _ConnectivityErrorState();

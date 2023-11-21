@@ -43,10 +43,7 @@ class SeeMoreScreen extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({
-    Key? key,
-    required this.moviesSection,
-  }) : super(key: key);
+  const _Body({required this.moviesSection});
 
   final List<MovieSection> moviesSection;
 

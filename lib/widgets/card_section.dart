@@ -11,13 +11,12 @@ class CardSection extends StatelessWidget {
   final double width;
 
   const CardSection(
-      {Key? key,
-      required this.movieSection,
+      {required this.movieSection,
       required this.heroTag,
       this.saveToCache = false,
       this.height = 210,
-      this.width = 120})
-      : super(key: key);
+      this.width = 120,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,8 @@ import 'package:shimmer/shimmer.dart';
 
 class CardMovieShimmer extends StatelessWidget {
   final int total;
-  const CardMovieShimmer({this.total = 10, Key? key}) : super(key: key);
+
+  const CardMovieShimmer({this.total = 10, super.key});
 
   @override
   Widget build(BuildContext context) {

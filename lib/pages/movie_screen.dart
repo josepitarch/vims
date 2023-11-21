@@ -20,7 +20,7 @@ import 'package:vims/widgets/shimmer/details_movie_shimmer.dart';
 late AppLocalizations i18n;
 
 class MovieScreen extends StatelessWidget {
-  const MovieScreen({Key? key}) : super(key: key);
+  const MovieScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
@@ -138,7 +138,8 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 class _Title extends StatelessWidget {
   final String title;
   final String originalTitle;
-  const _Title(this.title, this.originalTitle, {Key? key}) : super(key: key);
+
+  const _Title(this.title, this.originalTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +170,8 @@ class _Title extends StatelessWidget {
 
 class _Director extends StatelessWidget {
   final String? director;
-  const _Director(this.director, {Key? key}) : super(key: key);
+
+  const _Director(this.director);
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +188,7 @@ class _Director extends StatelessWidget {
 
 class _Box extends StatelessWidget {
   final Movie movie;
-  const _Box(this.movie, {Key? key}) : super(key: key);
+  const _Box(this.movie);
 
   @override
   Widget build(BuildContext context) {
@@ -236,10 +238,7 @@ class _YearAndDuration extends StatelessWidget {
 class _BookmarkMovie extends StatefulWidget {
   final Movie movie;
 
-  const _BookmarkMovie(
-    this.movie, {
-    Key? key,
-  }) : super(key: key);
+  const _BookmarkMovie(this.movie);
 
   @override
   State<_BookmarkMovie> createState() => _BookmarkMovieState();
@@ -328,7 +327,7 @@ class _Genres extends StatelessWidget {
 class _Cast extends StatelessWidget {
   final List<Cast> cast;
 
-  const _Cast(this.cast, {Key? key}) : super(key: key);
+  const _Cast(this.cast);
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +385,7 @@ class _Cast extends StatelessWidget {
 class _Synopsis extends StatefulWidget {
   final String synopsis;
 
-  const _Synopsis(this.synopsis, {Key? key}) : super(key: key);
+  const _Synopsis(this.synopsis);
 
   @override
   State<_Synopsis> createState() => _SynopsisState();
@@ -463,7 +462,7 @@ class _SynopsisState extends State<_Synopsis> {
 class _Platforms extends StatefulWidget {
   final Justwatch justwatch;
 
-  const _Platforms(this.justwatch, {Key? key}) : super(key: key);
+  const _Platforms(this.justwatch);
 
   @override
   State<_Platforms> createState() => _PlatformsState();
@@ -558,7 +557,7 @@ class _PlatformsState extends State<_Platforms> {
 }
 
 class _Reviews extends StatelessWidget {
-  const _Reviews(this.reviews, {Key? key}) : super(key: key);
+  const _Reviews(this.reviews);
 
   final List<Review> reviews;
 
@@ -570,11 +569,9 @@ class _Reviews extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TitleHeader(i18n.reviews),
-          ...reviews
-              .map((review) => Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: ReviewItem(review: review)))
-              .toList(),
+          ...reviews.map((review) => Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: ReviewItem(review: review)))
         ],
       ),
     );

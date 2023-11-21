@@ -17,7 +17,7 @@ late AppLocalizations i18n;
 final TextEditingController _controller = TextEditingController();
 
 class SearchMovieScreen extends StatefulWidget {
-  const SearchMovieScreen({Key? key}) : super(key: key);
+  const SearchMovieScreen({super.key});
 
   @override
   State<SearchMovieScreen> createState() => _SearchMovieScreenState();
@@ -77,7 +77,7 @@ class _SearchMovieScreenState extends State<SearchMovieScreen> {
 
 class _Layout extends StatelessWidget {
   final List<Widget> child;
-  const _Layout({required this.child, Key? key}) : super(key: key);
+  const _Layout({required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class _Layout extends StatelessWidget {
 }
 
 final class _TotalSuggestions extends StatelessWidget {
-  const _TotalSuggestions({Key? key}) : super(key: key);
+  const _TotalSuggestions();
 
   @override
   Widget build(BuildContext context) {
@@ -102,9 +102,7 @@ final class _TotalSuggestions extends StatelessWidget {
 }
 
 final class _SearchMovieForm extends StatelessWidget {
-  const _SearchMovieForm({
-    Key? key,
-  }) : super(key: key);
+  const _SearchMovieForm();
 
   @override
   Widget build(BuildContext context) {
@@ -142,8 +140,7 @@ final class _SearchMovieForm extends StatelessWidget {
 
 class _Suggestions extends StatelessWidget {
   final ScrollController scrollController;
-  const _Suggestions({required this.scrollController, Key? key})
-      : super(key: key);
+  const _Suggestions({required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +169,7 @@ class _Suggestions extends StatelessWidget {
 }
 
 class _HistorySearch extends StatelessWidget {
-  const _HistorySearch({Key? key}) : super(key: key);
+  const _HistorySearch();
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +213,7 @@ class _HistorySearch extends StatelessWidget {
                             provider.onTapHistorySearch(history);
                           },
                         );
-                      }).toList(),
+                      }),
                       DeleteSearchersButton(provider: provider),
                     ]),
                 Flexible(
@@ -234,10 +231,7 @@ class _HistorySearch extends StatelessWidget {
 }
 
 class DeleteSearchersButton extends StatelessWidget {
-  const DeleteSearchersButton({
-    Key? key,
-    required this.provider,
-  }) : super(key: key);
+  const DeleteSearchersButton({required this.provider, super.key});
 
   final SearchMovieProvider provider;
 

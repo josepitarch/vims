@@ -4,7 +4,6 @@ import 'package:vims/ui/text_theme_custom.dart';
 
 class MaterialTheme {
   static ThemeData materialTheme = ThemeData.dark().copyWith(
-    useMaterial3: true,
     primaryColor: Colors.orange,
     colorScheme: const ColorScheme.dark().copyWith(
       primary: Colors.orange,

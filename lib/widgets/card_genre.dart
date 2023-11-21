@@ -11,11 +11,10 @@ class CardGenre extends StatefulWidget {
   final Filters filters;
 
   CardGenre(
-      {Key? key,
-      required this.genre,
+      {required this.genre,
       required this.isSelected,
-      required this.filters})
-      : super(key: key);
+      required this.filters,
+      super.key});
 
   @override
   State<CardGenre> createState() => _CardGenreState();

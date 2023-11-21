@@ -62,16 +62,16 @@ class _Layout extends StatelessWidget {
   final Color backgroundColor;
   final GestureTapCallback? onTap;
   final Widget child;
-  const _Layout(
-      {this.imagePath,
-      required this.text,
-      required this.radius,
-      required this.borderWidth,
-      required this.borderColor,
-      required this.backgroundColor,
-      required this.onTap,
-      required this.child,
-      super.key});
+  const _Layout({
+    this.imagePath,
+    required this.text,
+    required this.radius,
+    required this.borderWidth,
+    required this.borderColor,
+    required this.backgroundColor,
+    required this.onTap,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +104,7 @@ class _ActorInitials extends StatelessWidget {
       {required this.radius,
       required this.borderWidth,
       required this.backgroundColor,
-      required this.text,
-      super.key});
+      required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/title_page.dart';
 
 class BookmarkMoviesScreen extends StatelessWidget {
-  const BookmarkMoviesScreen({Key? key}) : super(key: key);
+  const BookmarkMoviesScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, BookmarkMoviesProvider provider, _) {
@@ -64,7 +64,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
 }
 
 class NoBookmarkMovies extends StatelessWidget {
-  const NoBookmarkMovies({Key? key}) : super(key: key);
+  const NoBookmarkMovies({super.key});
 
   @override
   Widget build(BuildContext context) {

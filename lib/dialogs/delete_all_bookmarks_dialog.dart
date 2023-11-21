@@ -5,8 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DeleteAllBookmarksDialog extends StatelessWidget {
   final bool isAndroid;
 
-  const DeleteAllBookmarksDialog({Key? key, required this.isAndroid})
-      : super(key: key);
+  const DeleteAllBookmarksDialog({required this.isAndroid, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class DeleteAllBookmarksDialog extends StatelessWidget {
 }
 
 class _DialogAndroid extends StatelessWidget {
-  const _DialogAndroid({Key? key}) : super(key: key);
+  const _DialogAndroid();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class _DialogAndroid extends StatelessWidget {
 }
 
 class _DialogIOS extends StatelessWidget {
-  const _DialogIOS({Key? key}) : super(key: key);
+  const _DialogIOS();
 
   @override
   Widget build(BuildContext context) {

@@ -3,9 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/widgets/material_design_icons.dart';
 
 class NoResults extends StatelessWidget {
-  const NoResults({
-    Key? key,
-  }) : super(key: key);
+  const NoResults({super.key});
 
   @override
   Widget build(BuildContext context) {

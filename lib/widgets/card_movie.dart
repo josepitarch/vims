@@ -16,7 +16,6 @@ class CardMovie extends StatelessWidget {
   final bool saveToCache;
 
   const CardMovie({
-    Key? key,
     required this.id,
     this.heroTag,
     required this.title,
@@ -25,7 +24,8 @@ class CardMovie extends StatelessWidget {
     this.rating,
     this.platforms = const [],
     required this.saveToCache,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +77,11 @@ class _Poster extends StatelessWidget {
   final double height;
 
   const _Poster({
-    Key? key,
     required this.id,
     required this.height,
     required this.poster,
     required this.saveToCache,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +100,8 @@ class _Poster extends StatelessWidget {
 
 class _Title extends StatelessWidget {
   final String title;
-  const _Title(
-    this.title, {
-    Key? key,
-  }) : super(key: key);
+
+  const _Title(this.title);
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +120,7 @@ class _Title extends StatelessWidget {
 class _Director extends StatelessWidget {
   final String? director;
 
-  const _Director(
-    this.director, {
-    Key? key,
-  }) : super(key: key);
+  const _Director(this.director);
 
   @override
   Widget build(BuildContext context) {

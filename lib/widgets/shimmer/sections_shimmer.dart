@@ -3,7 +3,7 @@ import 'package:shimmer/shimmer.dart';
 
 class SectionsShimmer extends StatelessWidget {
   final int total;
-  const SectionsShimmer({this.total = 5, Key? key}) : super(key: key);
+  const SectionsShimmer({this.total = 5, super.key});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,9 +16,7 @@ class SectionsShimmer extends StatelessWidget {
 }
 
 class SectionShimmer extends StatelessWidget {
-  const SectionShimmer({
-    Key? key,
-  }) : super(key: key);
+  const SectionShimmer({super.key});
 
   final double width = 120;
   final double height = 200;

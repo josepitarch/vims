@@ -7,7 +7,7 @@ import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_movies_screen.dart';
 
 class NavigatorBottomBarApp extends StatefulWidget {
-  const NavigatorBottomBarApp({Key? key}) : super(key: key);
+  const NavigatorBottomBarApp({super.key});
 
   @override
   State<NavigatorBottomBarApp> createState() => _NavigatorBottomBarAppState();

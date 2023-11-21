@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DetailsMovieShimmer extends StatelessWidget {
-  const DetailsMovieShimmer({Key? key}) : super(key: key);
+  const DetailsMovieShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class DetailsMovieShimmer extends StatelessWidget {
 }
 
 class _HeaderShimmer extends StatelessWidget {
-  const _HeaderShimmer({Key? key}) : super(key: key);
+  const _HeaderShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _HeaderShimmer extends StatelessWidget {
 }
 
 class _TitleShimmer extends StatelessWidget {
-  const _TitleShimmer({Key? key}) : super(key: key);
+  const _TitleShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class _TitleShimmer extends StatelessWidget {
 }
 
 class _DirectorShimmer extends StatelessWidget {
-  const _DirectorShimmer({Key? key}) : super(key: key);
+  const _DirectorShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class _DirectorShimmer extends StatelessWidget {
 }
 
 class _BoxShimmer extends StatelessWidget {
-  const _BoxShimmer({Key? key}) : super(key: key);
+  const _BoxShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +122,7 @@ class _YearAndDurationShimmer extends StatelessWidget {
 }
 
 class _CastShimmer extends StatelessWidget {
-  const _CastShimmer({Key? key}) : super(key: key);
+  const _CastShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +155,7 @@ class _CastShimmer extends StatelessWidget {
 }
 
 class _SynopsisShimmer extends StatelessWidget {
-  const _SynopsisShimmer({Key? key}) : super(key: key);
+  const _SynopsisShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +188,7 @@ class _SynopsisShimmer extends StatelessWidget {
 }
 
 class _JustwatchShimmer extends StatelessWidget {
-  const _JustwatchShimmer({Key? key}) : super(key: key);
+  const _JustwatchShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +232,7 @@ class _JustwatchShimmer extends StatelessWidget {
 }
 
 class _ReviewsShimmer extends StatelessWidget {
-  const _ReviewsShimmer({Key? key}) : super(key: key);
+  const _ReviewsShimmer();
 
   @override
   Widget build(BuildContext context) {

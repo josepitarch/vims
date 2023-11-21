@@ -14,7 +14,7 @@ import 'package:vims/widgets/title_page.dart';
 late AppLocalizations i18n;
 
 class TopMoviesScreen extends StatefulWidget {
-  const TopMoviesScreen({Key? key}) : super(key: key);
+  const TopMoviesScreen({super.key});
 
   @override
   State<TopMoviesScreen> createState() => _TopMoviesScreenState();
@@ -94,8 +94,8 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 class _Layout extends StatelessWidget {
   final List<Widget> child;
   final Widget? floatingActionButton;
-  const _Layout({required this.child, this.floatingActionButton, Key? key})
-      : super(key: key);
+
+  const _Layout({required this.child, this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,8 @@ class _Layout extends StatelessWidget {
 
 class _Options extends StatelessWidget {
   final ScrollController scrollController;
-  const _Options({Key? key, required this.scrollController}) : super(key: key);
+
+  const _Options({required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -148,10 +149,7 @@ class _Options extends StatelessWidget {
 
 class _FloatingActionButton extends StatelessWidget {
   final ScrollController scrollController;
-  const _FloatingActionButton({
-    required this.scrollController,
-    Key? key,
-  }) : super(key: key);
+  const _FloatingActionButton({required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -166,8 +164,7 @@ class _FloatingActionButton extends StatelessWidget {
 
 class _TopMovies extends StatelessWidget {
   final ScrollController scrollController;
-  const _TopMovies({required this.scrollController, Key? key})
-      : super(key: key);
+  const _TopMovies({required this.scrollController});
 
   @override
   Widget build(BuildContext context) {

@@ -7,11 +7,11 @@ class PlatformItem extends StatefulWidget {
   final Filters filters;
 
   PlatformItem({
-    Key? key,
     required this.assetName,
     required this.isSelected,
     required this.filters,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<PlatformItem> createState() => _PlatformItemState();

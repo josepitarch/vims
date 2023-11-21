@@ -18,7 +18,8 @@ late bool hasError;
 
 class TopMoviesDialog extends StatelessWidget {
   final VoidCallback jumpToTop;
-  const TopMoviesDialog({required this.jumpToTop, Key? key}) : super(key: key);
+
+  const TopMoviesDialog({required this.jumpToTop, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +87,7 @@ class TopMoviesDialog extends StatelessWidget {
 }
 
 class _PlatformsFilter extends StatelessWidget {
-  const _PlatformsFilter({Key? key}) : super(key: key);
+  const _PlatformsFilter();
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +114,7 @@ class _PlatformsFilter extends StatelessWidget {
 }
 
 class _GenresFilter extends StatelessWidget {
-  const _GenresFilter({
-    Key? key,
-  }) : super(key: key);
+  const _GenresFilter();
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +141,7 @@ class _GenresFilter extends StatelessWidget {
 }
 
 class _YearsFilter extends StatefulWidget {
-  const _YearsFilter({Key? key}) : super(key: key);
+  const _YearsFilter();
 
   @override
   State<_YearsFilter> createState() => _YearsFilterState();
@@ -196,7 +195,7 @@ class _YearsFilterState extends State<_YearsFilter> {
 }
 
 class _ExcludeAnimationFilter extends StatefulWidget {
-  const _ExcludeAnimationFilter({Key? key}) : super(key: key);
+  const _ExcludeAnimationFilter();
 
   @override
   State<_ExcludeAnimationFilter> createState() =>
