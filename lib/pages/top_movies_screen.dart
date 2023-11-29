@@ -57,22 +57,22 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
       }
 
       if (provider.isLoading && provider.data == null) {
-        const Widget child = Expanded(child: CardMovieShimmer());
-        return const _Layout(child: [child]);
+        const Widget body = Expanded(child: CardMovieShimmer());
+        return const _Layout(body: [body]);
       }
 
       if (!provider.isLoading && provider.data!.isEmpty) {
-        final List<Widget> child = [
+        final List<Widget> body = [
           _Options(scrollController: scrollController),
           const NoResults(),
         ];
-        return _Layout(child: child);
+        return _Layout(body: body);
       }
 
       final List<Widget> child = [
         _Options(scrollController: scrollController),
         SizedBox(
-            height: MediaQuery.of(context).size.height * 0.72,
+            height: MediaQuery.of(context).size.height * 0.685,
             child: _TopMovies(scrollController: scrollController))
       ];
 
@@ -80,7 +80,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
           floatingActionButton: showFloatingActionButton
               ? _FloatingActionButton(scrollController: scrollController)
               : null,
-          child: child);
+          body: child);
     });
   }
 
@@ -92,10 +92,10 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 }
 
 class _Layout extends StatelessWidget {
-  final List<Widget> child;
+  final List<Widget> body;
   final Widget? floatingActionButton;
 
-  const _Layout({required this.child, this.floatingActionButton});
+  const _Layout({required this.body, this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class _Layout extends StatelessWidget {
         body: SafeArea(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [TitlePage(i18n.title_top_movies_page), ...child])),
+                children: [TitlePage(i18n.title_top_movies_page), ...body])),
         floatingActionButton: floatingActionButton);
   }
 }

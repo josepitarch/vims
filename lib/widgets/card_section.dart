@@ -55,7 +55,7 @@ class CardSection extends StatelessWidget {
                         child: Text(
                           movieSection.premiereDay,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
                     )
@@ -69,7 +69,7 @@ class CardSection extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyMedium,
             )
           ])),
     );
