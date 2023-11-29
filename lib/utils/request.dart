@@ -15,12 +15,15 @@ Future request(String path, int versionApi,
   const String token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.zljhJvx-95zOkdnAb4DA0CRXx7jYw_6jYd4KbMpIOrA';
 
-  final Uri request = Uri.https(BASE_URL, '/v$versionApi/$path', parameters);
+  final Uri request = BASE_URL.contains('vims')
+      ? Uri.https(BASE_URL, '/v$versionApi/$path', parameters)
+      : Uri.http(BASE_URL, '/v$versionApi/$path', parameters);
 
   final Response response = await get(request, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer $token',
+    'User-Agent': 'android',
   }).timeout(Duration(seconds: int.parse(TIMEOUT))).catchError(
         (Object e) => throw ErrorServerException('Connection timeout'),
       );
