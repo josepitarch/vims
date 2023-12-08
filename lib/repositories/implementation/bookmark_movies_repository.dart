@@ -17,10 +17,7 @@ class BookmarkMoviesRepositoryImpl implements BookmarkMoviesRepository {
     _database = await openDatabase(
         join(await getDatabasesPath(), _databaseName), onCreate: (db, version) {
       db.execute(createBookmarkMovieTable(_tableName));
-    }, onUpgrade: (db, oldVersion, newVersion) {
-      db.execute(deleteBookmarkMovieTable(_tableName));
-      db.execute(createBookmarkMovieTable(_tableName));
-    }, version: 8);
+    }, onUpgrade: (db, oldVersion, newVersion) {}, version: 8);
   }
 
   @override

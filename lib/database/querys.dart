@@ -16,4 +16,5 @@ String createHistorySearchTable(tableName) => """
     """;
 
 String deleteBookmarkMovieTable(tableName) => "DROP TABLE $tableName";
-String deleteHistorySearchTable(tableName) => "DROP TABLE $tableName";
+String deleteHistoryMoviesSearchTable(tableName) => "DROP TABLE $tableName";
+String deleteHistoryActorsSearchTable(tableName) => "DROP TABLE $tableName";

@@ -1,7 +1,13 @@
 abstract class SearchHistoryRepository {
-  Future<List<String>> getAllSearchHistory();
+  Future<List<String>> getAllSearchMoviesHistory();
 
-  Future<bool> addSearchHistory(final String searchHistory);
+  Future<List<String>> getAllSearchActorsHistory();
 
-  Future removeAllSearchHistory();
+  Future<bool> addSearchMovieHistory(final String searchMovieHistory);
+
+  Future<bool> addSearchActorHistory(final String searchActorHistory);
+
+  Future removeAllSearchMoviesHistory();
+
+  Future removeAllSearchActorsHistory();
 }
