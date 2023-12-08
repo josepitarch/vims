@@ -3,18 +3,22 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/constants/ui/search_movie_placeholder.dart';
-
-import '../providers/implementation/search_movie_provider.dart';
+import 'package:vims/constants/ui/search_person_placeholder.dart';
+import 'package:vims/providers/implementation/search_provider.dart';
 
 class InputDecorations {
   static InputDecoration searchMovieDecoration(AppLocalizations i18n,
-      TextEditingController controller, SearchMovieProvider provider) {
-    final int length = SEARCH_MOVIES_PLACEHOLDER.length;
-    final int random = Random().nextInt(length);
+      TextEditingController controller, SearchProvider provider) {
+    final List<String> placeholder = provider.tabIndex == 0
+        ? SEARCH_MOVIES_PLACEHOLDER
+        : SEARCH_PERSON_PLACEHOLDER;
+
+    final int random = Random().nextInt(placeholder.length);
+
     return InputDecoration(
       prefixIcon: const Icon(Icons.search),
       hintStyle: const TextStyle(fontStyle: FontStyle.italic),
-      hintText: '${SEARCH_MOVIES_PLACEHOLDER[random]}...',
+      hintText: '${placeholder[random]}...',
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
         borderSide: const BorderSide(
@@ -29,7 +33,6 @@ class InputDecorations {
         onPressed: () {
           if (controller.text.isNotEmpty) {
             controller.text = '';
-            provider.clearSearch();
           }
         },
         icon: const Icon(Icons.clear),
