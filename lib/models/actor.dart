@@ -4,10 +4,10 @@ class Actor {
   final int id;
   final String name;
   final Image? image;
-  final String? age;
+  final int? age;
   final String? birthday;
   final String? place;
-  final String? nacionality;
+  final List<Nacionality>? nacionalities;
   final String? flag;
   final String? height;
   final int? totalMovies;
@@ -19,7 +19,7 @@ class Actor {
     this.age,
     this.birthday,
     this.place,
-    this.nacionality,
+    this.nacionalities,
     this.flag,
     this.height,
     required this.totalMovies,
@@ -36,7 +36,10 @@ class Actor {
         age: json['age'],
         birthday: json['birthday'],
         place: json['place'],
-        nacionality: json['nacionality'],
+        nacionalities: json['nacionalities'] != null
+            ? List<Nacionality>.from(
+                json['nacionalities'].map((x) => Nacionality.fromMap(x)))
+            : null,
         flag: json['flag'],
         height: json['height'],
         totalMovies: json['total_movies'],
@@ -49,7 +52,7 @@ class Actor {
         'age': age,
         'birthday': birthday,
         'place': place,
-        'nacionality': nacionality,
+        'nacionality': nacionalities,
         'flag': flag,
         'height': height,
         'total_movies': totalMovies,
@@ -79,5 +82,30 @@ class Image {
   Map<String, dynamic> toMap() => {
         'mmed': mmed,
         'large': large,
+      };
+}
+
+class Nacionality {
+  final String name;
+  final String flag;
+
+  Nacionality({
+    required this.name,
+    required this.flag,
+  });
+
+  factory Nacionality.fromJson(String str) =>
+      Nacionality.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory Nacionality.fromMap(Map<String, dynamic> json) => Nacionality(
+        name: json['name'],
+        flag: json['flag'],
+      );
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'flag': flag,
       };
 }
