@@ -1,22 +1,13 @@
 import 'dart:convert';
 
-import 'package:vims/models/movie.dart';
-import 'package:vims/models/poster.dart';
+import 'package:vims/models/actor.dart';
+import 'package:vims/models/movie_suggestion.dart';
 
-class Suggestion extends BaseMovie {
-  final int? year;
-  final String? country;
-  final double? rating;
-  final String? director;
+class Suggestion {
+  final List<MovieSuggestion> movies;
+  final List<Actor> actors;
 
-  Suggestion(
-      {required super.id,
-      required super.title,
-      required super.poster,
-      required this.year,
-      required this.country,
-      required this.rating,
-      required this.director});
+  Suggestion({required this.movies, required this.actors});
 
   factory Suggestion.fromJson(String str) =>
       Suggestion.fromMap(json.decode(str));
@@ -24,22 +15,13 @@ class Suggestion extends BaseMovie {
   String toJson() => json.encode(toMap());
 
   factory Suggestion.fromMap(Map<String, dynamic> json) => Suggestion(
-        id: json['id'],
-        title: json['title'],
-        poster: Poster.fromMap(json['poster']),
-        year: json['year'],
-        country: json['country'],
-        rating: json['rating']?.toDouble(),
-        director: json['director'],
+        movies: List<MovieSuggestion>.from(
+            json['movies'].map((x) => MovieSuggestion.fromMap(x))),
+        actors: List<Actor>.from(json['actors'].map((x) => Actor.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'poster': poster,
-        'year': year,
-        'country': country,
-        'rating': rating,
-        'director': director,
+        'movies': List<dynamic>.from(movies.map((x) => x.toMap())),
+        'actors': List<dynamic>.from(actors.map((x) => x.toMap())),
       };
 }

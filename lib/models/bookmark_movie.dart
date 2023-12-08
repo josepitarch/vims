@@ -2,11 +2,11 @@ import 'package:vims/models/movie.dart';
 import 'package:vims/models/poster.dart';
 
 class BookmarkMovie {
-  int id;
-  String poster;
-  String title;
-  String director;
-  double? rating;
+  final int id;
+  final String poster;
+  final String title;
+  final String director;
+  final double? rating;
 
   BookmarkMovie(
       {required this.id,

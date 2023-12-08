@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Filters {
-  List<String> platforms;
-  List<String> genres;
+  final List<String> platforms;
+  final List<String> genres;
   bool isAnimationExcluded;
-  int yearFrom;
-  int yearTo;
+  final int yearFrom;
+  final int yearTo;
 
   Filters.origin()
       : platforms = [],

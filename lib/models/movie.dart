@@ -25,9 +25,9 @@ class Movie extends BaseMovie {
   String? heroTag;
 
   Movie(
-      {required int id,
-      required String title,
-      required Poster poster,
+      {required super.id,
+      required super.title,
+      required super.poster,
       required this.flag,
       required this.originalTitle,
       required this.year,
@@ -45,12 +45,7 @@ class Movie extends BaseMovie {
       this.cinematography,
       this.producer,
       this.groups,
-      this.platforms})
-      : super(
-          id: id,
-          title: title,
-          poster: poster,
-        );
+      this.platforms});
 
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 

@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 class Actor {
-  int id;
-  String name;
-  Image? image;
-  String? age;
-  String? birthday;
-  String? place;
-  String? nacionality;
-  String? flag;
-  String? height;
-  int? totalMovies;
+  final int id;
+  final String name;
+  final Image? image;
+  final String? age;
+  final String? birthday;
+  final String? place;
+  final String? nacionality;
+  final String? flag;
+  final String? height;
+  final int? totalMovies;
 
   Actor({
     required this.id,

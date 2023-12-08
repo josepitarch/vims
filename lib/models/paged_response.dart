@@ -1,8 +1,8 @@
 class PagedResponse<T> {
-  int page;
-  int limit;
-  int? total;
-  List<T> results;
+  final int page;
+  final int limit;
+  final int? total;
+  final List<T> results;
 
   PagedResponse({
     required this.page,

@@ -4,9 +4,9 @@ import 'package:vims/models/movie.dart';
 import 'package:vims/models/poster.dart';
 
 class Section {
-  String id;
-  String title;
-  List<MovieSection> movies;
+  final String id;
+  final String title;
+  final List<MovieSection> movies;
 
   Section({
     required this.id,

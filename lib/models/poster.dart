@@ -1,7 +1,7 @@
 class Poster {
-  String mtiny;
-  String mmed;
-  String large;
+  final String mtiny;
+  final String mmed;
+  final String large;
 
   Poster({
     required this.mtiny,
