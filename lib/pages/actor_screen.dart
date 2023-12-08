@@ -41,15 +41,17 @@ class _ActorScreenState extends State<ActorScreen> {
     }
 
     if (provider.isLoading) {
+      final _Profile profile = _Profile(
+        image: arguments['image'],
+        name: arguments['name'],
+        age: null,
+        totalMovies: null,
+        nacionalities: null,
+      );
+
       return _Layout(
           scrollController: scrollController,
-          sliverAppBarBackground: _Profile(
-            image: arguments['image'],
-            name: arguments['name'],
-            age: null,
-            totalMovies: null,
-            country: null,
-          ),
+          sliverAppBarBackground: profile,
           sliverAppBarTitle: arguments['name'],
           child: UnconstrainedBox(
             child: SizedBox(height: height * 0.5, child: const Loading()),
@@ -60,15 +62,17 @@ class _ActorScreenState extends State<ActorScreen> {
     final Actor actor = data.keys.first;
     final List<ActorMovie>? movies = data.values.first;
 
+    final _Profile profile = _Profile(
+      image: actor.image?.mmed,
+      name: actor.name,
+      age: actor.age,
+      totalMovies: actor.totalMovies,
+      nacionalities: actor.nacionalities,
+    );
+
     return _Layout(
         scrollController: scrollController,
-        sliverAppBarBackground: _Profile(
-          image: actor.image?.mmed,
-          name: actor.name,
-          age: actor.age,
-          totalMovies: actor.totalMovies,
-          country: actor.nacionality,
-        ),
+        sliverAppBarBackground: profile,
         sliverAppBarTitle: arguments['name'],
         child: _Filmography(
             scrollController: scrollController, firstPage: movies));
@@ -91,7 +95,7 @@ class _Layout extends StatelessWidget {
     return Scaffold(
         body: CustomScrollView(controller: scrollController, slivers: [
       SliverAppBar(
-        expandedHeight: MediaQuery.of(context).size.height * 0.23,
+        expandedHeight: MediaQuery.of(context).size.height * 0.2,
         floating: false,
         pinned: true,
         backgroundColor: Colors.grey[900],
@@ -114,41 +118,36 @@ class _Layout extends StatelessWidget {
 class _Profile extends StatelessWidget {
   final String? image;
   final String name;
-  final String? age;
+  final int? age;
   final int? totalMovies;
-  final String? country;
+  final List<Nacionality>? nacionalities;
 
   const _Profile({
     this.image,
     required this.name,
     this.age,
     this.totalMovies,
-    this.country,
+    this.nacionalities,
   });
 
   @override
   Widget build(BuildContext context) {
-    final String initials = name.split(' ').map((e) => e[0]).join();
     return SafeArea(
-        child: Padding(
+        child: Container(
       padding: const EdgeInsets.only(left: 45.0, top: 16.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AvatarView(imagePath: image, text: initials, radius: 50),
+          AvatarView(image: image, text: name, size: 80),
           const SizedBox(width: 10.0),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(age != null ? age! : '',
+              Text('${age.toString()} años · $totalMovies películas',
                   style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(height: 10.0),
-              Text(totalMovies != null ? '$totalMovies películas' : '',
-                  style: Theme.of(context).textTheme.bodyMedium),
-              const SizedBox(height: 10.0),
-              if (country != null) Country(country: country!),
+              const SizedBox(height: 5.0),
+              _Nacionalities(nacionalities: nacionalities ?? []),
             ],
           ),
         ],
@@ -157,11 +156,36 @@ class _Profile extends StatelessWidget {
   }
 }
 
+class _Nacionalities extends StatelessWidget {
+  final List<Nacionality> nacionalities;
+  const _Nacionalities({required this.nacionalities});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30.0,
+      child: Expanded(
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: nacionalities
+              .map((nacionality) => Container(
+                    margin: const EdgeInsets.only(right: 10.0),
+                    child: Country(
+                      country: nacionality.name,
+                      flag: nacionality.flag,
+                    ),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+}
+
 class _Filmography extends StatelessWidget {
   final ScrollController scrollController;
   final List<ActorMovie>? firstPage;
-  const _Filmography(
-      {required this.scrollController, this.firstPage, super.key});
+  const _Filmography({required this.scrollController, this.firstPage});
 
   @override
   Widget build(BuildContext context) {
