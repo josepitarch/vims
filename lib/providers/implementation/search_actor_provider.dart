@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:logger/logger.dart';
-import 'package:vims/models/movie_suggestion.dart';
+import 'package:vims/models/actor.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/repositories/implementation/search_history_repository.dart';
 import 'package:vims/repositories/interface/search_history_repository.dart';
+import 'package:vims/services/api/search_actor_service.dart';
 import 'package:vims/services/api/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
 
-class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
+class SearchActorProvider extends InfiniteScrollProvider<Actor> {
   final SearchHistoryRepository repository = SearchHistoryRepositoryImpl();
   String search = '';
   final String order = 'relevance';
@@ -17,7 +18,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
 
   final _debouncer = Debouncer(milliseconds: 400);
 
-  SearchMovieProvider() : super(page: 1, limit: 50) {
+  SearchActorProvider() : super(page: 1, limit: 50) {
     isLoading = false;
   }
 
@@ -26,7 +27,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
     isLoading = true;
     notifyListeners();
 
-    getMovieSuggestions(search.toLowerCase(), page, order).then((value) {
+    getActorSuggestions(search.toLowerCase(), page, order).then((value) {
       total = value.total;
       hasNextPage = value.results.length < total!;
       data == null
@@ -41,12 +42,17 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
     });
   }
 
+  setTabIndex(int index) {
+    search = '';
+    notifyListeners();
+  }
+
   getSuggestionsAutocomplete(String search) {
     isLoading = true;
     this.search = search;
 
     getAutocomplete(search.toLowerCase()).then((value) {
-      data = value.movies;
+      data = value.actors;
       exception = null;
     }).catchError((e) {
       exception = e;
@@ -65,15 +71,15 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
   }
 
   Future<List<String>> getHistorySearchs() {
-    return repository.getAllSearchMoviesHistory().then((value) => value);
+    return repository.getAllSearchActorsHistory().then((value) => value);
   }
 
   insertHistorySearch(String search) {
-    repository.addSearchMovieHistory(search);
+    repository.addSearchActorHistory(search);
   }
 
   deleteAllSearchs() {
-    repository.removeAllSearchMoviesHistory();
+    repository.removeAllSearchActorsHistory();
     notifyListeners();
   }
 

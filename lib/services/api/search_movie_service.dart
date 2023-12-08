@@ -1,39 +1,36 @@
 import 'package:vims/models/paged_response.dart';
+import 'package:vims/models/movie_suggestion.dart';
 import 'package:vims/models/suggestion.dart';
 import 'package:vims/utils/request.dart';
 
-Future<PagedResponse<Suggestion>> getSuggestions(
-    String query, String type, int page, String order) async {
+Future<PagedResponse<MovieSuggestion>> getMovieSuggestions(
+    String query, int page, String order) async {
   if (query.isEmpty) return PagedResponse.origin();
 
   final Map<String, String> parameters = {
     'movie': query,
     'page': page.toString(),
     'order': order,
-    'type': type,
   };
 
   final Map response = await request('search/movie', 2, parameters);
 
-  final List<Suggestion> results = response['results']
-      .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
+  final List<MovieSuggestion> results = response['results']
+      .map<MovieSuggestion>((suggestion) => MovieSuggestion.fromMap(suggestion))
       .toList();
 
-  return PagedResponse<Suggestion>(
+  return PagedResponse<MovieSuggestion>(
       page: response['page'],
       limit: response['limit'],
       total: response['total'],
       results: results);
 }
 
-Future<List<Suggestion>> getAutocomplete(String query) async {
-  if (query.isEmpty) return [];
+Future<Suggestion> getAutocomplete(String query) async {
+  if (query.isEmpty) return Suggestion(movies: [], actors: []);
 
   final Map<String, String> parameters = {'search': query};
 
-  final response = await request('autocomplete', 2, parameters);
-
-  return response['movies']
-      .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
-      .toList();
+  return await request('autocomplete', 2, parameters)
+      .then((value) => Suggestion.fromMap(value));
 }
