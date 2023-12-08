@@ -349,15 +349,13 @@ class _Cast extends StatelessWidget {
       child: ListView(
           scrollDirection: Axis.horizontal,
           children: cast.map((actor) {
-            final String initials =
-                actor.name.split(' ').map((e) => e[0]).join();
             return SizedBox(
               width: 78,
               child: Column(children: [
                 AvatarView(
-                  text: initials,
-                  imagePath: actor.image,
-                  radius: 32,
+                  text: actor.name,
+                  image: actor.image,
+                  size: 65,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
                   onTap: () {

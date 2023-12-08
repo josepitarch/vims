@@ -5,8 +5,8 @@ class Filters {
   final List<String> platforms;
   final List<String> genres;
   bool isAnimationExcluded;
-  final int yearFrom;
-  final int yearTo;
+  int yearFrom;
+  int yearTo;
 
   Filters.origin()
       : platforms = [],
