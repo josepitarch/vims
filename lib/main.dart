@@ -9,7 +9,9 @@ import 'package:vims/pages/see_more_screen.dart';
 import 'package:vims/providers/implementation/actor_profile_provider.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
+import 'package:vims/providers/implementation/search_actor_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
+import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/see_more_provider.dart';
 import 'package:vims/providers/implementation/top_movies_provider.dart';
@@ -34,7 +36,9 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SectionsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => TopMoviesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => MovieProvider(), lazy: true),
+      ChangeNotifierProvider(create: (_) => SearchProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
       ChangeNotifierProvider(
           create: (_) => BookmarkMoviesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SeeMoreProvider(), lazy: false),
