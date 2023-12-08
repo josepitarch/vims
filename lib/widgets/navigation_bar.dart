@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:vims/pages/bookmark_movies_screen.dart';
-import 'package:vims/pages/search_movie_screen.dart';
+import 'package:vims/pages/search_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_movies_screen.dart';
 
