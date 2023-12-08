@@ -1,1 +1,0 @@
-enum TypeSearchView { suggestion, autocomplete }
