@@ -10,7 +10,7 @@ abstract class InfiniteScrollProvider<T> extends BaseProvider<List<T>> {
   InfiniteScrollProvider({required this.page, required this.limit, super.data});
 
   fetchNextPage() {
-    if (hasNextPage) {
+    if (!isLoading && hasNextPage) {
       page++;
       fetchData();
     }
