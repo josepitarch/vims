@@ -40,7 +40,6 @@ class BookmarkMoviesScreen extends StatelessWidget {
                                 id: movie.id,
                                 title: movie.title,
                                 poster: movie.poster,
-                                rating: movie.rating,
                                 saveToCache: true),
                           )
                           .toList()))
