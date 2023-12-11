@@ -6,7 +6,7 @@ import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/search_history.dart';
-import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
+import 'package:vims/widgets/shimmer/card_actor_shimmer.dart';
 import 'package:vims/widgets/total_suggestions.dart';
 
 class ActorSuggestionsTab extends StatefulWidget {
@@ -28,12 +28,13 @@ class _ActorSuggestionsTabState extends State<ActorSuggestionsTab> {
   @override
   Widget build(BuildContext context) {
     final SearchActorProvider provider = Provider.of(context, listen: true);
+
     if (provider.exception != null) {
       return HandleError(provider.exception!, provider.onRefresh);
     }
 
     if (provider.isLoading && provider.data == null) {
-      return const CardMovieShimmer();
+      return const CardActorShimmer();
     }
 
     if (provider.data == null) {
@@ -59,8 +60,12 @@ class _ActorSuggestionsTabState extends State<ActorSuggestionsTab> {
       ]);
     }
 
-    return _ActorSuggestions(
-      scrollController: scrollController,
+    return Column(
+      children: [
+        _ActorSuggestions(
+          scrollController: scrollController,
+        ),
+      ],
     );
   }
 }
