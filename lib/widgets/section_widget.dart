@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/widgets/card_section.dart';
 
@@ -11,9 +9,8 @@ class SectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final i18n = AppLocalizations.of(context)!;
     const double height = 220;
-    Map arguments = {
+    final Map arguments = {
       'title': section.title,
       'id': section.id,
     };
@@ -22,24 +19,31 @@ class SectionWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(section.title,
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.displayMedium!
-                  //.copyWith(fontFamily: 'Lato'),
-                  ),
-              CupertinoButton(
-                  child: Text(i18n.see_more,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'OpenSans',
-                          color: Theme.of(context).colorScheme.secondary)),
-                  onPressed: () => Navigator.pushNamed(context, 'see_more',
-                      arguments: arguments))
-            ],
+          padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
+          child: InkWell(
+            onTap: () =>
+                Navigator.pushNamed(context, 'see_more', arguments: arguments),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (section.icon != null)
+                  ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      child: Image.network(section.icon!, height: 25)),
+                const SizedBox(width: 7),
+                Text(section.title,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.displayMedium!
+                    //.copyWith(fontFamily: 'Lato'),
+                    ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 18,
+                  color: Colors.white.withOpacity(.5),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(
