@@ -60,8 +60,12 @@ class _MovieSuggestionsTabState extends State<MovieSuggestionsTab> {
       ]);
     }
 
-    return _MovieSuggestions(
-      scrollController: scrollController,
+    return Column(
+      children: [
+        _MovieSuggestions(
+          scrollController: scrollController,
+        ),
+      ],
     );
   }
 }
