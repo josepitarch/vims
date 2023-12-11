@@ -6,11 +6,13 @@ import 'package:vims/models/poster.dart';
 class Section {
   final String id;
   final String title;
+  final String? icon;
   final List<MovieSection> movies;
 
   Section({
     required this.id,
     required this.title,
+    this.icon,
     required this.movies,
   });
 
@@ -19,6 +21,7 @@ class Section {
   factory Section.fromMap(Map<String, dynamic> json) => Section(
         id: json['id'],
         title: json['title'],
+        icon: json['icon'],
         movies: List<MovieSection>.from(
             json['movies'].map((x) => MovieSection.fromMap(x))),
       );
@@ -28,15 +31,11 @@ class MovieSection extends BaseMovie {
   final String premiereDay;
 
   MovieSection({
-    required id,
-    required title,
-    required poster,
+    required super.id,
+    required super.title,
+    required super.poster,
     required this.premiereDay,
-  }) : super(
-          id: id,
-          title: title,
-          poster: poster,
-        );
+  });
 
   factory MovieSection.fromJson(String str) =>
       MovieSection.fromMap(json.decode(str));
