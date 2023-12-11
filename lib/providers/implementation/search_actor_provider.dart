@@ -85,13 +85,8 @@ class SearchActorProvider extends InfiniteScrollProvider<Actor> {
 
   onTapHistorySearch(String search) {
     this.search = search;
-    data = null;
+    onRefresh();
     fetchData();
-  }
-
-  @override
-  onRefresh() {
-    getSuggestionsAutocomplete(search);
   }
 
   void onChanged(String search) {
@@ -106,9 +101,8 @@ class SearchActorProvider extends InfiniteScrollProvider<Actor> {
     if (search.isEmpty) return;
     _debouncer.cancel();
     this.search = search;
-    data = null;
-    page = 1;
     insertHistorySearch(search);
+    onRefresh();
     fetchData();
   }
 }
