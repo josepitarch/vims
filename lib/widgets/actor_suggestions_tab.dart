@@ -52,20 +52,26 @@ class _ActorSuggestionsTabState extends State<ActorSuggestionsTab> {
     }
 
     if (provider.total != null) {
-      return Column(children: [
-        TotalSuggestions(total: provider.total!),
-        _ActorSuggestions(
-          scrollController: scrollController,
-        )
-      ]);
+      return Container(
+        margin: const EdgeInsets.only(top: 10),
+        child: Column(children: [
+          TotalSuggestions(total: provider.total!),
+          _ActorSuggestions(
+            scrollController: scrollController,
+          )
+        ]),
+      );
     }
 
-    return Column(
-      children: [
-        _ActorSuggestions(
-          scrollController: scrollController,
-        ),
-      ],
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          _ActorSuggestions(
+            scrollController: scrollController,
+          ),
+        ],
+      ),
     );
   }
 }
