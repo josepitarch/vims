@@ -5,18 +5,18 @@ import 'package:vims/pages/search_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_movies_screen.dart';
 
-class NavigatorBottomBarApp extends StatefulWidget {
-  const NavigatorBottomBarApp({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<NavigatorBottomBarApp> createState() => _NavigatorBottomBarAppState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _NavigatorBottomBarAppState extends State<NavigatorBottomBarApp> {
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> screens = [
-    const HomepageScreen(),
+    const SectionsScreen(),
     const TopMoviesScreen(),
     const BookmarkMoviesScreen(),
     const SearchMovieScreen(),
