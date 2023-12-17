@@ -10,14 +10,14 @@ import 'package:vims/widgets/pull_refresh.dart';
 import 'package:vims/widgets/section_widget.dart';
 import 'package:vims/widgets/shimmer/sections_shimmer.dart';
 
-class HomepageScreen extends StatefulWidget {
-  const HomepageScreen({super.key});
+class SectionsScreen extends StatefulWidget {
+  const SectionsScreen({super.key});
 
   @override
-  State<HomepageScreen> createState() => _HomepageScreenState();
+  State<SectionsScreen> createState() => _SectionsScreenState();
 }
 
-class _HomepageScreenState extends State<HomepageScreen>
+class _SectionsScreenState extends State<SectionsScreen>
     with WidgetsBindingObserver {
   @override
   initState() {

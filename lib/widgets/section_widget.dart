@@ -22,7 +22,7 @@ class SectionWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
           child: InkWell(
             onTap: () =>
-                Navigator.pushNamed(context, 'see_more', arguments: arguments),
+                Navigator.pushNamed(context, 'section', arguments: arguments),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
