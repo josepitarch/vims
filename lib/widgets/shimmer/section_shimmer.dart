@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class SeeMoreShimmer extends StatelessWidget {
+class SectionShimmer extends StatelessWidget {
   final String title;
   final double height;
   final double width;
   final int total;
-  const SeeMoreShimmer(
+  const SectionShimmer(
       {required this.title,
       required this.height,
       required this.width,
