@@ -39,7 +39,7 @@ class TopMoviesDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
-        color: Colors.black38,
+        color: Colors.black12,
         padding: const EdgeInsets.all(8.0),
         height: 650,
         width: double.infinity,
