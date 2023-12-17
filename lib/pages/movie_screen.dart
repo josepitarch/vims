@@ -109,10 +109,10 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
       floating: false,
       pinned: true,
+      centerTitle: true,
       backgroundColor: const Color.fromARGB(255, 14, 7, 0),
       title: Text(
         widget.auxTitle,
-        textAlign: TextAlign.start,
         style: Theme.of(context).textTheme.displayMedium,
       ),
       flexibleSpace: FlexibleSpaceBar(

@@ -2,33 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
-import 'package:vims/providers/implementation/actor_filmography_provider.dart';
 import 'package:vims/providers/implementation/actor_profile_provider.dart';
+import 'package:vims/services/api/actor_filmography_service.dart';
 import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/handle_error.dart';
-import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/loading.dart';
+import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
-class ActorScreen extends StatefulWidget {
+class ActorScreen extends StatelessWidget {
   const ActorScreen({super.key});
 
   @override
-  State<ActorScreen> createState() => _ActorScreenState();
-}
-
-class _ActorScreenState extends State<ActorScreen> {
-  late ScrollController scrollController;
-  @override
-  void initState() {
-    scrollController = ScrollController();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final int id = arguments['id'];
@@ -41,77 +29,49 @@ class _ActorScreenState extends State<ActorScreen> {
     }
 
     if (provider.isLoading) {
-      final _Profile profile = _Profile(
-        image: arguments['image'],
-        name: arguments['name'],
-        age: null,
-        totalMovies: null,
-        nacionalities: null,
-      );
-
-      return _Layout(
-          scrollController: scrollController,
-          sliverAppBarBackground: profile,
-          sliverAppBarTitle: arguments['name'],
-          child: UnconstrainedBox(
-            child: SizedBox(height: height * 0.5, child: const Loading()),
-          ));
+      return Scaffold(
+          appBar: AppBar(
+            title: Text(arguments['name']),
+            centerTitle: true,
+          ),
+          body: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                    SliverToBoxAdapter(
+                        child: _Profile(
+                      image: arguments['image'],
+                      name: arguments['name'],
+                    )),
+                  ],
+              body: const CardMovieShimmer()));
     }
 
     final Map<Actor, List<ActorMovie>?> data = provider.getActor(id);
     final Actor actor = data.keys.first;
     final List<ActorMovie>? movies = data.values.first;
 
-    final _Profile profile = _Profile(
-      image: actor.image?.mmed,
-      name: actor.name,
-      age: actor.age,
-      totalMovies: actor.totalMovies,
-      nacionalities: actor.nacionalities,
-    );
-
-    return _Layout(
-        scrollController: scrollController,
-        sliverAppBarBackground: profile,
-        sliverAppBarTitle: arguments['name'],
-        child: _Filmography(
-            scrollController: scrollController, firstPage: movies));
-  }
-}
-
-class _Layout extends StatelessWidget {
-  final ScrollController scrollController;
-  final String sliverAppBarTitle;
-  final Widget sliverAppBarBackground;
-  final Widget child;
-  const _Layout(
-      {required this.scrollController,
-      required this.child,
-      required this.sliverAppBarBackground,
-      required this.sliverAppBarTitle});
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(controller: scrollController, slivers: [
-      SliverAppBar(
-        expandedHeight: MediaQuery.of(context).size.height * 0.2,
-        floating: false,
-        pinned: true,
-        backgroundColor: Colors.grey[900],
-        elevation: 0.0,
-        flexibleSpace: FlexibleSpaceBar(
-            title: Text(
-              sliverAppBarTitle,
-              textAlign: TextAlign.start,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            background: sliverAppBarBackground),
-      ),
-      SliverList(delegate: SliverChildListDelegate([child]))
-    ]));
+        appBar: AppBar(
+          title: Text(
+            arguments['name'],
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
+          centerTitle: true,
+        ),
+        body: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverToBoxAdapter(
+                      child: _Profile(
+                    image: actor.image?.mmed,
+                    name: actor.name,
+                    age: actor.age,
+                    totalMovies: actor.totalMovies,
+                    nacionalities: actor.nacionalities,
+                  )),
+                ],
+            body: Container(
+              margin: const EdgeInsets.only(top: 10.0),
+              child: _Filmography(id: id, movies: movies),
+            )));
   }
 }
 
@@ -122,37 +82,47 @@ class _Profile extends StatelessWidget {
   final int? totalMovies;
   final List<Nacionality>? nacionalities;
 
-  const _Profile({
-    this.image,
-    required this.name,
-    this.age,
-    this.totalMovies,
-    this.nacionalities,
-  });
+  const _Profile(
+      {this.image,
+      required this.name,
+      this.age,
+      this.totalMovies,
+      this.nacionalities});
+
+  String buildAgeAndMovies() {
+    final String ageAndMovies;
+    if (age != null && totalMovies != null) {
+      ageAndMovies = '$age años · $totalMovies películas';
+    } else if (age != null) {
+      ageAndMovies = '$age años';
+    } else if (totalMovies != null) {
+      ageAndMovies = '$totalMovies películas';
+    } else {
+      ageAndMovies = '';
+    }
+
+    return ageAndMovies;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Container(
-      padding: const EdgeInsets.only(left: 45.0, top: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AvatarView(image: image, text: name, size: 80),
-          const SizedBox(width: 10.0),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('${age.toString()} años · $totalMovies películas',
-                  style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(height: 5.0),
-              _Nacionalities(nacionalities: nacionalities ?? []),
-            ],
-          ),
-        ],
-      ),
-    ));
+    final String ageAndMovies = buildAgeAndMovies();
+
+    return Container(
+      margin: const EdgeInsets.only(top: 10.0),
+      width: double.infinity,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AvatarView(image: image, text: name, size: 90),
+            const SizedBox(height: 10.0),
+            Text(ageAndMovies,
+                style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: 5.0),
+            _Nacionalities(nacionalities: nacionalities ?? [])
+          ]),
+    );
   }
 }
 
@@ -162,76 +132,113 @@ class _Nacionalities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30.0,
-      child: Expanded(
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: nacionalities
-              .map((nacionality) => Container(
-                    margin: const EdgeInsets.only(right: 10.0),
-                    child: Country(
-                      country: nacionality.name,
-                      flag: nacionality.flag,
-                    ),
-                  ))
-              .toList(),
-        ),
-      ),
-    );
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: nacionalities
+            .map((nacionality) => Container(
+                  margin: const EdgeInsets.only(right: 10.0),
+                  child: Country(
+                    country: nacionality.name,
+                    flag: nacionality.flag,
+                  ),
+                ))
+            .toList());
   }
 }
 
-class _Filmography extends StatelessWidget {
-  final ScrollController scrollController;
-  final List<ActorMovie>? firstPage;
-  const _Filmography({required this.scrollController, this.firstPage});
+class _Filmography extends StatefulWidget {
+  final int id;
+  List<ActorMovie>? movies;
+
+  _Filmography({required this.id, this.movies});
+
+  @override
+  State<_Filmography> createState() => _FilmographyState();
+}
+
+class _FilmographyState extends State<_Filmography> {
+  int page = 1;
+  int? total;
+  int? limit;
+  bool hasNextPage = false;
+  bool isLoading = false;
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    if (widget.movies == null) {
+      widget.movies = [];
+      fetchData(widget.id, page).then((_) => context
+          .read<ActorProfileProvider>()
+          .addFirstMoviesPage(widget.id, widget.movies!));
+    } else {
+      page = 2;
+    }
+    scrollController.addListener(() {
+      final double currentPosition = scrollController.position.pixels;
+      final double maxScroll = scrollController.position.maxScrollExtent;
+
+      if (currentPosition + 300 >= maxScroll && !isLoading && hasNextPage) {
+        fetchData(widget.id, page);
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchData(int id, int page) {
+    setState(() {
+      isLoading = true;
+    });
+    getActorFilmography(id, page).then((value) {
+      widget.movies!.addAll(value.results);
+      total = value.total;
+      limit = value.limit;
+      hasNextPage = value.results.length == limit;
+      this.page++;
+    }).catchError((e) {
+      print(e);
+    }).whenComplete(() {
+      setState(() {
+        isLoading = false;
+      });
+    });
+
+    return Future.value();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final int id = arguments['id'];
-    final int page = firstPage == null ? 1 : 2;
-    return ChangeNotifierProvider(
-      create: (_) => FilmographyProvider(id: id, page: page, data: firstPage),
-      builder: (context, child) {
-        final FilmographyProvider provider = Provider.of(context, listen: true);
-        final height = MediaQuery.of(context).size.height;
+    final double left = MediaQuery.of(context).size.width * 0.5 - 20;
+    if (isLoading && widget.movies!.isEmpty) {
+      return const CardMovieShimmer();
+    }
 
-        if (provider.exception != null) {
-          return HandleError(provider.exception!, provider.onRefresh,
-              withScaffold: false);
-        }
-
-        if (provider.isLoading && provider.data == null) {
-          return UnconstrainedBox(
-            child: SizedBox(height: height * 0.5, child: const Loading()),
-          );
-        }
-
-        if (provider.page == 1) {
-          context
-              .read<ActorProfileProvider>()
-              .addFirstMoviesPage(id, provider.data!);
-        }
-
-        final Widget data = Column(
-            children: provider.data!
-                .map((e) => CardMovie(
-                    id: e.id,
-                    heroTag: '${e.id.toString()}-$id}',
-                    title: e.title,
-                    poster: e.poster.mmed,
-                    saveToCache: false))
-                .toList());
-
-        return InfiniteScroll(
-          provider: provider,
-          scrollController: scrollController,
-          data: data,
-        );
-      },
-    );
+    if (!isLoading && widget.movies!.isEmpty) {
+      return const NoResults();
+    }
+    return Stack(children: [
+      Positioned(
+          bottom: 10,
+          left: left,
+          child: isLoading && widget.movies!.isNotEmpty
+              ? const Loading()
+              : const SizedBox()),
+      ListView(
+          controller: scrollController,
+          children: widget.movies!
+              .map((e) => CardMovie(
+                  id: e.id,
+                  heroTag: '${e.id.toString()}-${widget.id}',
+                  title: e.title,
+                  poster: e.poster.mmed,
+                  saveToCache: false))
+              .toList()),
+    ]);
   }
 }

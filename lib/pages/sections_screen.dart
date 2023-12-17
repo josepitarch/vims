@@ -51,7 +51,7 @@ class _SectionsScreenState extends State<SectionsScreen>
             ]),
           )),
           onRefresh: () {
-            context.read<SeeMoreProvider>().onRefresh();
+            context.read<SectionProvider>().onRefresh();
             return provider.onRefresh();
           });
     });
@@ -75,7 +75,7 @@ void refreshIfIsNecessary(BuildContext context) {
     if (difference.inSeconds >= int.parse(timeToRefresh)) {
       CustomCacheManager.cacheTinyImages.emptyCache();
       homepageProvider.onRefresh();
-      context.read<SeeMoreProvider>().onRefresh();
+      context.read<SectionProvider>().onRefresh();
       context.read<MovieProvider>().clear();
     }
   });

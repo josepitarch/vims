@@ -41,7 +41,7 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
       ChangeNotifierProvider(
           create: (_) => BookmarkMoviesProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => SeeMoreProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ActorProfileProvider(), lazy: true)
     ], child: const MyApp());
   }

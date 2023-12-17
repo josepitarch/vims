@@ -11,7 +11,7 @@ class SectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SeeMoreProvider>(builder: (_, provider, __) {
+    return Consumer<SectionProvider>(builder: (_, provider, __) {
       final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
       final String title = arguments['title'];
       final String code = arguments['id'];
