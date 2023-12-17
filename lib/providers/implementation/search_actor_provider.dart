@@ -64,12 +64,6 @@ class SearchActorProvider extends InfiniteScrollProvider<Actor> {
     });
   }
 
-  clearSearch() {
-    search = '';
-    onRefresh();
-    notifyListeners();
-  }
-
   Future<List<String>> getHistorySearchs() {
     return repository.getAllSearchActorsHistory().then((value) => value);
   }
@@ -86,13 +80,11 @@ class SearchActorProvider extends InfiniteScrollProvider<Actor> {
   onTapHistorySearch(String search) {
     this.search = search;
     onRefresh();
-    fetchData();
   }
 
   void onChanged(String search) {
     search = search.trim();
     _debouncer.run(() {
-      onRefresh();
       getSuggestionsAutocomplete(search);
     });
   }
@@ -101,8 +93,7 @@ class SearchActorProvider extends InfiniteScrollProvider<Actor> {
     if (search.isEmpty) return;
     _debouncer.cancel();
     this.search = search;
-    insertHistorySearch(search);
     onRefresh();
-    fetchData();
+    insertHistorySearch(search);
   }
 }

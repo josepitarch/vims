@@ -58,12 +58,6 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
     });
   }
 
-  clearSearch() {
-    search = '';
-    onRefresh();
-    notifyListeners();
-  }
-
   Future<List<String>> getHistorySearchs() {
     return repository.getAllSearchMoviesHistory().then((value) => value);
   }
@@ -80,13 +74,11 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
   onTapHistorySearch(String search) {
     this.search = search;
     onRefresh();
-    fetchData();
   }
 
   void onChanged(String search) {
     search = search.trim();
     _debouncer.run(() {
-      onRefresh();
       getSuggestionsAutocomplete(search);
     });
   }
@@ -95,8 +87,7 @@ class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
     if (search.isEmpty) return;
     _debouncer.cancel();
     this.search = search;
-    insertHistorySearch(search);
     onRefresh();
-    fetchData();
+    insertHistorySearch(search);
   }
 }
