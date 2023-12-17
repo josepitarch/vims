@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vims/l10n/l10n.dart';
 import 'package:vims/pages/actor_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
-import 'package:vims/pages/see_more_screen.dart';
+import 'package:vims/pages/section_screen.dart';
 import 'package:vims/providers/implementation/actor_profile_provider.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
@@ -64,9 +64,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: 'home',
         routes: {
-          'home': (_) => const NavigatorBottomBarApp(),
+          'home': (_) => const HomeScreen(),
           'details': (_) => const MovieScreen(),
-          'see_more': (_) => const SeeMoreScreen(),
+          'section': (_) => const SectionScreen(),
           'actor': (_) => const ActorScreen()
         },
         theme: MaterialTheme.materialTheme);
