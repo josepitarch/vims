@@ -73,7 +73,7 @@ final class _SearchMovieForm extends StatelessWidget {
               i18n, controller, provider),
           autovalidateMode: AutovalidateMode.disabled,
           validator: (value) {
-            if (value!.isEmpty) return i18n.no_empty_search;
+            if (value!.isEmpty) return '';
             return null;
           },
           onChanged: (value) {
@@ -83,6 +83,7 @@ final class _SearchMovieForm extends StatelessWidget {
           },
           onFieldSubmitted: (String value) {
             if (myFormKey.currentState!.validate()) {
+              controller.text = '';
               provider.tabIndex == 0
                   ? context.read<SearchMovieProvider>().onSubmitted(value)
                   : context.read<SearchActorProvider>().onSubmitted(value);
