@@ -30,7 +30,11 @@ class SectionWidget extends StatelessWidget {
                 if (section.icon != null)
                   ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: Image.network(section.icon!, height: 25)),
+                      child: Image.network(section.icon!,
+                          height: 25,
+                          semanticLabel: "Icono de ${section.title}",
+                          errorBuilder: (context, error, stackTrace) =>
+                              const SizedBox.shrink())),
                 const SizedBox(width: 7),
                 Text(section.title,
                     textAlign: TextAlign.start,
