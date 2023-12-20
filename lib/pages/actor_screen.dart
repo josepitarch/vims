@@ -162,6 +162,7 @@ class _FilmographyState extends State<_Filmography> {
   int? limit;
   bool hasNextPage = false;
   bool isLoading = false;
+  Exception? exception;
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -202,7 +203,7 @@ class _FilmographyState extends State<_Filmography> {
       hasNextPage = value.results.length == limit;
       this.page++;
     }).catchError((e) {
-      print(e);
+      exception = e;
     }).whenComplete(() {
       setState(() {
         isLoading = false;
@@ -215,6 +216,16 @@ class _FilmographyState extends State<_Filmography> {
   @override
   Widget build(BuildContext context) {
     final double left = MediaQuery.of(context).size.width * 0.5 - 20;
+
+    if (exception != null) {
+      return HandleError(exception!, () {
+        setState(() {
+          exception = null;
+        });
+        fetchData(widget.id, page);
+      });
+    }
+
     if (isLoading && widget.movies!.isEmpty) {
       return const CardMovieShimmer();
     }

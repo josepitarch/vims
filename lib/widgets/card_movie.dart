@@ -40,8 +40,14 @@ class CardMovie extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         margin: const EdgeInsets.only(bottom: 20.0),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _Poster(
-              id: id, poster: poster, saveToCache: saveToCache, height: height),
+          Hero(
+            tag: heroTag ?? id,
+            child: _Poster(
+                id: id,
+                poster: poster,
+                saveToCache: saveToCache,
+                height: height),
+          ),
           Expanded(
             child: Container(
                 height: height,

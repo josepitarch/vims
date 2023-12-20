@@ -31,7 +31,7 @@ class _AssetFlag extends StatelessWidget {
         'assets/flags/$flag.png',
         width: 30,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const SizedBox(),
+        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
       ),
     );
   }
@@ -47,7 +47,7 @@ class _NetworkFlag extends StatelessWidget {
       flag,
       width: 30,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => const SizedBox(),
+      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
     );
   }
 }

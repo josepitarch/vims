@@ -13,7 +13,7 @@ import 'package:vims/providers/implementation/search_actor_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
-import 'package:vims/providers/implementation/see_more_provider.dart';
+import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/top_movies_provider.dart';
 import 'package:vims/ui/material_theme.dart';
 import 'package:vims/widgets/navigation_bar.dart';
