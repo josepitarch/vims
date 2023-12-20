@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/section.dart';
-import 'package:vims/providers/implementation/see_more_provider.dart';
+import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/shimmer/section_shimmer.dart';
