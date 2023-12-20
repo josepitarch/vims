@@ -61,14 +61,14 @@ class MovieScreen extends StatelessWidget {
               _Director(movie.director),
               _Box(movie),
               _YearAndDuration(movie.year, movie.duration),
-              _Cast(movie.cast),
-              _Genres(movie.genres),
               _Synopsis(movie.synopsis),
+              _Genres(movie.genres),
+              _Cast(movie.cast),
               _Platforms(movie.justwatch),
               movie.reviews.isNotEmpty
                   ? _Reviews(movie.reviews)
                   : const SizedBox(),
-              const SizedBox(height: 50)
+              const SizedBox(height: 10)
             ]),
           )
         ]))
@@ -117,13 +117,14 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
-            tag: widget.heroTag,
-            child: CustomImage(
-                url: widget.url,
-                width: double.infinity,
-                height: double.infinity,
-                saveToCache: true,
-                cacheManager: CustomCacheManager.cacheLargeImages)),
+          tag: widget.heroTag,
+          child: CustomImage(
+              url: widget.url,
+              width: double.infinity,
+              height: double.infinity,
+              saveToCache: true,
+              cacheManager: CustomCacheManager.cacheLargeImages),
+        ),
       ),
     );
   }
@@ -380,80 +381,17 @@ class _Cast extends StatelessWidget {
   }
 }
 
-class _Synopsis extends StatefulWidget {
+class _Synopsis extends StatelessWidget {
   final String synopsis;
 
   const _Synopsis(this.synopsis);
 
   @override
-  State<_Synopsis> createState() => _SynopsisState();
-}
-
-class _SynopsisState extends State<_Synopsis> {
-  final int minLines = 5;
-  int showMore = 0;
-  int maxLines = 5;
-  final int delimiterLines = 420;
-  late String text;
-
-  @override
-  void initState() {
-    text = widget.synopsis.isNotEmpty ? widget.synopsis : i18n.no_synopsis;
-    text.length > delimiterLines ? maxLines = minLines : maxLines = text.length;
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    Map<int, String> textButton = {
-      0: i18n.see_more,
-      1: i18n.see_less,
-    };
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _TitleHeader(i18n.synopsis),
-        SizedBox(
-          width: double.infinity,
-          child: Text(text,
-              textAlign:
-                  widget.synopsis.isEmpty ? TextAlign.center : TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge,
-              maxLines: maxLines),
-        ),
-        if (widget.synopsis.length > delimiterLines)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Align(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                  onPressed: () => updateState(),
-                  child: Text(
-                    textButton[showMore]!,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontFamily: 'OpenSans',
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                  )),
-            ),
-          )
-      ],
-    );
-  }
-
-  updateState() {
-    if (maxLines == minLines) {
-      maxLines = widget.synopsis.length;
-      showMore = 1;
-    } else {
-      maxLines = minLines;
-      showMore = 0;
-    }
-    setState(() {});
+    final AppLocalizations i18n = AppLocalizations.of(context)!;
+    return Text(synopsis.isNotEmpty ? synopsis : i18n.no_synopsis,
+        textAlign: synopsis.isEmpty ? TextAlign.center : TextAlign.start,
+        style: Theme.of(context).textTheme.bodyLarge);
   }
 }
 
@@ -567,9 +505,7 @@ class _Reviews extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TitleHeader(i18n.reviews),
-          ...reviews.map((review) => Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              child: ReviewItem(review: review)))
+          ...reviews.map((review) => ReviewItem(review: review))
         ],
       ),
     );
