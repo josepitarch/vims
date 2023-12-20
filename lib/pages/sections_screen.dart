@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
-import 'package:vims/providers/implementation/see_more_provider.dart';
+import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/pull_refresh.dart';
@@ -41,15 +41,14 @@ class _SectionsScreenState extends State<SectionsScreen>
       if (provider.isLoading) return const SectionsShimmer();
 
       return PullRefresh(
-          child: SingleChildScrollView(
-              child: Padding(
+          child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Column(children: [
+            child: ListView(children: [
               ...provider.data!
                   .map((section) => SectionWidget(section: section)),
               const SizedBox(height: 30),
             ]),
-          )),
+          ),
           onRefresh: () {
             context.read<SectionProvider>().onRefresh();
             return provider.onRefresh();
