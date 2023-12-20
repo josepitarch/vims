@@ -43,7 +43,6 @@ class AvatarView extends StatelessWidget {
 
     return _Layout(
         imagePath: image,
-        text: text,
         size: size,
         borderWidth: borderWidth,
         borderColor: borderColor,
@@ -55,7 +54,6 @@ class AvatarView extends StatelessWidget {
 
 class _Layout extends StatelessWidget {
   final String? imagePath;
-  final String text;
   final double size;
   final double borderWidth;
   final Color borderColor;
@@ -64,7 +62,6 @@ class _Layout extends StatelessWidget {
   final Widget child;
   const _Layout({
     this.imagePath,
-    required this.text,
     required this.size,
     required this.borderWidth,
     required this.borderColor,
