@@ -46,7 +46,7 @@ class HandleError extends StatelessWidget {
 class _ServerError extends StatelessWidget {
   final VoidCallback onRefresh;
   final bool withScaffold;
-  const _ServerError(this.onRefresh, {required this.withScaffold, super.key});
+  const _ServerError(this.onRefresh, {required this.withScaffold});
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +130,7 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
-      if (result != ConnectionState.none) {
+      if (result != ConnectivityResult.none) {
         widget.onRefresh();
       }
     });
