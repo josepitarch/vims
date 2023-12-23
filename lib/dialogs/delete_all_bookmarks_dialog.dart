@@ -9,11 +9,6 @@ class DeleteAllBookmarksDialog extends StatelessWidget {
     final i18n = AppLocalizations.of(context)!;
     return AlertDialog.adaptive(
       elevation: 0,
-      title: Text(i18n.title_bookmark_dialog,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .copyWith(color: Colors.white)),
       content: Text(i18n.delete_all_bookmarks,
           style: Theme.of(context).textTheme.bodyLarge),
       actions: [
