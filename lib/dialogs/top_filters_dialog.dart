@@ -1,5 +1,3 @@
-import 'dart:io' as io show Platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -129,10 +127,13 @@ class _GenresFilter extends StatelessWidget {
             spacing: 5,
             runSpacing: 5,
             children: Genres.values.map((entry) {
-              return CardGenre(
-                genre: entry.name,
-                isSelected: filters.genres.contains(entry.name),
-                filters: filters,
+              return FractionallySizedBox(
+                widthFactor: 0.230,
+                child: CardGenre(
+                  genre: entry.name,
+                  isSelected: filters.genres.contains(entry.name),
+                  filters: filters,
+                ),
               );
             }).toList()),
       ),
@@ -205,12 +206,14 @@ class _ExcludeAnimationFilter extends StatefulWidget {
 class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
   @override
   Widget build(BuildContext context) {
-    final activeColor = io.Platform.isAndroid ? Colors.orange : Colors.green;
+    final activeColor = Theme.of(context).platform == TargetPlatform.android
+        ? Colors.orange
+        : Colors.green;
 
     return Column(
       children: [
         _TitleFilter(i18n.title_exclude_dialog),
-        SwitchListTile(
+        SwitchListTile.adaptive(
             contentPadding: const EdgeInsets.all(0),
             dense: true,
             title: Text(i18n.exclude_animation,
@@ -241,7 +244,7 @@ class _ApplyButton extends StatelessWidget {
       provider.applyFilters(filters);
     }
 
-    return io.Platform.isAndroid
+    return Theme.of(context).platform == TargetPlatform.android
         ? MaterialButton(
             elevation: 0,
             color: Colors.orange,
@@ -251,11 +254,11 @@ class _ApplyButton extends StatelessWidget {
             onPressed: onPressed,
             child: Text(i18n.apply_filters_dialog))
         : CupertinoButton(
-            borderRadius: BorderRadius.circular(30),
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-            color: Colors.orange,
             onPressed: onPressed,
-            child: Text(i18n.apply_filters_dialog));
+            child: Text(
+              i18n.apply_filters_dialog,
+              style: const TextStyle(color: Colors.orange),
+            ));
   }
 }
 
@@ -274,7 +277,7 @@ class _DeleteButton extends StatelessWidget {
       provider.removeFilters();
     }
 
-    return io.Platform.isAndroid
+    return Theme.of(context).platform == TargetPlatform.android
         ? MaterialButton(
             elevation: 0,
             shape: RoundedRectangleBorder(
@@ -283,11 +286,11 @@ class _DeleteButton extends StatelessWidget {
             onPressed: onPressed,
             child: Text(i18n.delete_filters_dialog))
         : CupertinoButton(
-            borderRadius: BorderRadius.circular(30),
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            color: Colors.red,
             onPressed: onPressed,
-            child: Text(i18n.delete_filters_dialog));
+            child: Text(
+              i18n.delete_filters_dialog,
+              style: const TextStyle(color: Colors.red),
+            ));
   }
 }
 
