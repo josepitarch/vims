@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:vims/models/section.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
@@ -38,16 +39,30 @@ class _SectionsScreenState extends State<SectionsScreen>
     return Consumer<SectionsProvider>(builder: (_, provider, __) {
       if (provider.exception != null)
         return HandleError(provider.exception!, provider.onRefresh);
+
       if (provider.isLoading) return const SectionsShimmer();
+      final List<SectionWidget> sections = provider.data!
+          .map((section) => SectionWidget(section: section))
+          .toList();
+
+      final Widget body = Theme.of(context).platform == TargetPlatform.android
+          ? ListView(
+              children: [
+                ...sections,
+                const SizedBox(height: 30),
+              ],
+            )
+          : Column(
+              children: [
+                ...sections,
+                const SizedBox(height: 30),
+              ],
+            );
 
       return PullRefresh(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListView(children: [
-              ...provider.data!
-                  .map((section) => SectionWidget(section: section)),
-              const SizedBox(height: 30),
-            ]),
+            child: body,
           ),
           onRefresh: () {
             context.read<SectionProvider>().onRefresh();
