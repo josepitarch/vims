@@ -7,11 +7,11 @@ class GenreListTitle extends StatelessWidget {
   final Function onTap;
 
   GenreListTitle({
-    Key? key,
     required this.genre,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

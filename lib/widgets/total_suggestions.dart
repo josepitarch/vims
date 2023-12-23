@@ -10,7 +10,7 @@ class TotalSuggestions extends StatelessWidget {
     final AppLocalizations i18n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: Text('${i18n.total_results}: ${total}',
+      child: Text('${i18n.total_results}: $total',
           style: Theme.of(context).textTheme.headlineMedium!),
     );
   }

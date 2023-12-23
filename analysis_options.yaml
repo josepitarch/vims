@@ -6,3 +6,4 @@ linter:
     curly_braces_in_flow_control_structures: false
     depend_on_referenced_packages: false
     non_constant_identifier_names: false
+    constant_identifier_names: false
