@@ -1,5 +1,3 @@
-import 'dart:io' as io show Platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +10,7 @@ class Loading extends StatelessWidget {
       child: SizedBox(
           width: 30,
           height: 30,
-          child: io.Platform.isAndroid
+          child: Theme.of(context).platform == TargetPlatform.android
               ? const CircularProgressIndicator()
               : const CupertinoActivityIndicator()),
     );

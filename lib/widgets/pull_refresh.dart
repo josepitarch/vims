@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:io' as io show Platform;
-
 class PullRefresh extends StatelessWidget {
   final Widget child;
   final Future<void> Function() onRefresh;
@@ -11,7 +9,7 @@ class PullRefresh extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return io.Platform.isAndroid
+    return Theme.of(context).platform == TargetPlatform.android
         ? _PullRefreshAndroid(onRefresh: onRefresh, child: child)
         : _PullRefreshIOS(onRefresh: onRefresh, child: child);
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:io' as io show Platform;
 
 class HistorySearch extends StatelessWidget {
   final Future<List<String>> Function() future;
@@ -74,7 +73,7 @@ class _DeleteSearchersButton extends StatelessWidget {
     final AppLocalizations i18n = AppLocalizations.of(context)!;
     final Text text =
         Text(i18n.delete_all_searchers, style: _textStyle(context));
-    return io.Platform.isAndroid
+    return Theme.of(context).platform == TargetPlatform.android
         ? MaterialButton(onPressed: onPressed, child: text)
         : CupertinoButton(onPressed: onPressed, child: text);
   }

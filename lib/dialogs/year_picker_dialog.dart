@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:io' as io show Platform;
 
 class YearPickerCupertino extends StatelessWidget {
   final bool isReverse;
@@ -29,7 +28,7 @@ class YearPickerCupertino extends StatelessWidget {
     }
 
     return CupertinoActionSheet(
-        title: io.Platform.isIOS
+        title: Theme.of(context).platform == TargetPlatform.android
             ? Text(i18n.select_year,
                 style: Theme.of(context).textTheme.titleLarge)
             : null,
@@ -43,9 +42,10 @@ class YearPickerCupertino extends StatelessWidget {
                 onSelectedItemChanged: (int index) =>
                     onItemSelectedChanged(years[index]),
                 selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-                  background: io.Platform.isAndroid
-                      ? Colors.orange.withOpacity(0.6)
-                      : Colors.transparent,
+                  background:
+                      Theme.of(context).platform == TargetPlatform.android
+                          ? Colors.orange.withOpacity(0.6)
+                          : Colors.transparent,
                 ),
                 children: years
                     .map((value) => Center(child: Text(value.toString())))

@@ -49,16 +49,14 @@ class BookmarkMoviesScreen extends StatelessWidget {
   }
 
   Future _openDialog(BuildContext context) {
-    final bool isAndroid = io.Platform.isAndroid;
-    return isAndroid
+    return Theme.of(context).platform == TargetPlatform.android
         ? showDialog(
             context: context,
-            builder: (BuildContext context) =>
-                DeleteAllBookmarksDialog(isAndroid: isAndroid))
+            builder: (BuildContext context) => const DeleteAllBookmarksDialog())
         : showCupertinoDialog(
             context: context,
             builder: (BuildContext context) =>
-                DeleteAllBookmarksDialog(isAndroid: isAndroid));
+                const DeleteAllBookmarksDialog());
   }
 }
 
