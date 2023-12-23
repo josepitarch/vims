@@ -43,6 +43,7 @@ class SectionWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.displayMedium!
                     //.copyWith(fontFamily: 'Lato'),
                     ),
+                const SizedBox(width: 5),
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
