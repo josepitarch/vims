@@ -90,6 +90,7 @@ class _MovieSuggestions extends StatelessWidget {
         children: provider.data!
             .map((suggestion) => CardMovie(
                 id: suggestion.id,
+                heroTag: suggestion.id.toString(),
                 title: suggestion.title,
                 poster: suggestion.poster.mmed,
                 director: suggestion.director,

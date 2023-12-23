@@ -1,5 +1,3 @@
-import 'dart:io' as io show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/models/enums/genres.dart';
@@ -40,51 +38,26 @@ class _CardGenreState extends State<CardGenre> {
     };
 
     // TODO: refactor setState
-    return io.Platform.isAndroid
-        ? TextButton(
-            onPressed: () {
-              setState(() {
-                widget.isSelected = !widget.isSelected;
-                final index = widget.filters.genres.indexOf(widget.genre);
-                if (index == -1) {
-                  widget.filters.genres.add(widget.genre);
-                } else {
-                  widget.filters.genres.removeAt(index);
-                }
-              });
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: widget.isSelected ? Colors.white : Colors.orange,
-              backgroundColor: widget.isSelected ? Colors.orange : Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-              ),
-            ),
-            child: Text(genres[widget.genre]!),
-          )
-        : TextButton(
-            onPressed: () {
-              setState(() {
-                widget.isSelected = !widget.isSelected;
-                final index = widget.filters.genres.indexOf(widget.genre);
-                if (index == -1) {
-                  widget.filters.genres.add(widget.genre);
-                } else {
-                  widget.filters.genres.removeAt(index);
-                }
-              });
-            },
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-              //foregroundColor: widget.isSelected ? Colors.red : Colors.red,
-              backgroundColor: MaterialStateProperty.all(widget.isSelected
-                  ? Colors.black.withOpacity(0.4).withAlpha(100)
-                  : Colors.black.withOpacity(0.2)),
-            ),
-            child: Text(genres[widget.genre]!,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: widget.isSelected ? Colors.white : Colors.grey,
-                    )),
-          );
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+          final index = widget.filters.genres.indexOf(widget.genre);
+          if (index == -1) {
+            widget.filters.genres.add(widget.genre);
+          } else {
+            widget.filters.genres.removeAt(index);
+          }
+        });
+      },
+      style: TextButton.styleFrom(
+        foregroundColor: widget.isSelected ? Colors.white : Colors.orange,
+        backgroundColor: widget.isSelected ? Colors.orange : Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+      ),
+      child: Text(genres[widget.genre]!),
+    );
   }
 }
