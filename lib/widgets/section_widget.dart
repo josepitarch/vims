@@ -21,6 +21,8 @@ class SectionWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
           child: InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             onTap: () =>
                 Navigator.pushNamed(context, 'section', arguments: arguments),
             child: Row(

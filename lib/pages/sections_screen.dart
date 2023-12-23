@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/models/section.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
-import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
+import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/pull_refresh.dart';
