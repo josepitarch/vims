@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '938335500353',
     projectId: 'vims-app',
     storageBucket: 'vims-app.appspot.com',
-    iosClientId: '938335500353-c4nlch3i513mak4nn1la0cg78t83kkns.apps.googleusercontent.com',
-    iosBundleId: 'com.example.scrapperFilmaffinity',
+    iosClientId:
+        '938335500353-c4nlch3i513mak4nn1la0cg78t83kkns.apps.googleusercontent.com',
+    iosBundleId: 'com.jopimi.vims',
   );
 }
