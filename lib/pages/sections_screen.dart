@@ -8,7 +8,7 @@ import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/pull_refresh.dart';
 import 'package:vims/widgets/section_widget.dart';
-import 'package:vims/widgets/shimmer/sections_shimmer.dart';
+import 'package:vims/widgets/shimmer/sections_screen_shimmer.dart';
 
 class SectionsScreen extends StatefulWidget {
   const SectionsScreen({super.key});
@@ -35,39 +35,39 @@ class _SectionsScreenState extends State<SectionsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SectionsProvider>(builder: (_, provider, __) {
-      if (provider.exception != null)
-        return HandleError(provider.exception!, provider.onRefresh);
+    final SectionsProvider provider = Provider.of(context, listen: true);
 
-      if (provider.isLoading) return const SectionsShimmer();
-      final List<SectionWidget> sections = provider.data!
-          .map((section) => SectionWidget(section: section))
-          .toList();
+    if (provider.exception != null)
+      return HandleError(provider.exception!, provider.onRefresh);
 
-      final Widget body = Theme.of(context).platform == TargetPlatform.android
-          ? ListView(
-              children: [
-                ...sections,
-                const SizedBox(height: 30),
-              ],
-            )
-          : Column(
-              children: [
-                ...sections,
-                const SizedBox(height: 30),
-              ],
-            );
+    if (provider.isLoading) return const SectionsShimmer();
+    final List<SectionWidget> sections = provider.data!
+        .map((section) => SectionWidget(section: section))
+        .toList();
 
-      return PullRefresh(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: body,
-          ),
-          onRefresh: () {
-            context.read<SectionProvider>().onRefresh();
-            return provider.onRefresh();
-          });
-    });
+    final Widget body = Theme.of(context).platform == TargetPlatform.android
+        ? ListView(
+            children: [
+              ...sections,
+              const SizedBox(height: 30),
+            ],
+          )
+        : Column(
+            children: [
+              ...sections,
+              const SizedBox(height: 30),
+            ],
+          );
+
+    return PullRefresh(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: body,
+        ),
+        onRefresh: () {
+          context.read<SectionProvider>().onRefresh();
+          return provider.onRefresh();
+        });
   }
 
   @override
