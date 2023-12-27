@@ -15,7 +15,7 @@ import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
-import 'package:vims/widgets/shimmer/details_movie_shimmer.dart';
+import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
 
 late AppLocalizations i18n;
 
@@ -120,8 +120,6 @@ class _CustomAppBarState extends State<_CustomAppBar> {
           tag: widget.heroTag,
           child: CustomImage(
               url: widget.url,
-              width: double.infinity,
-              height: double.infinity,
               saveToCache: true,
               cacheManager: CustomCacheManager.cacheLargeImages),
         ),
@@ -345,18 +343,20 @@ class _Cast extends StatelessWidget {
   }
 
   SizedBox renderListAvatars(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: 110,
+      height: width <= 414 ? 120 : 140,
       child: ListView(
           scrollDirection: Axis.horizontal,
           children: cast.map((actor) {
-            return SizedBox(
-              width: 78,
+            return Container(
+              width: width <= 414 ? 65 : 80,
+              margin: const EdgeInsets.only(right: 10),
               child: Column(children: [
                 AvatarView(
                   text: actor.name,
                   image: actor.image,
-                  size: 65,
+                  size: width <= 414 ? 65 : 80,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
                   onTap: () {
