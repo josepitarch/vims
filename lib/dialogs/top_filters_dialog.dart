@@ -25,6 +25,7 @@ class TopMoviesDialog extends StatelessWidget {
     final TopMoviesProvider topMoviesProvider =
         Provider.of<TopMoviesProvider>(context, listen: false);
     hasError = false;
+    final double width = MediaQuery.of(context).size.width;
     filters = Filters(
         platforms: [...topMoviesProvider.currentFilters.platforms],
         genres: [...topMoviesProvider.currentFilters.genres],
@@ -40,7 +41,7 @@ class TopMoviesDialog extends StatelessWidget {
         color: Colors.black12,
         padding: const EdgeInsets.all(8.0),
         height: 650,
-        width: double.infinity,
+        width: width <= 414 ? double.infinity : 700,
         child: SizedBox(
           width: double.infinity,
           child: Column(
