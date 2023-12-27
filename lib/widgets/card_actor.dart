@@ -9,6 +9,8 @@ class CardActor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: () {
         final Map<String, dynamic> arguments = {
@@ -21,9 +23,10 @@ class CardActor extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(10.0),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          AvatarView(image: actor.image?.mmed, text: actor.name),
+          AvatarView(
+              image: actor.image?.mmed, text: actor.name, size: width * 0.15),
           const SizedBox(width: 10),
-          Text(actor.name, style: const TextStyle(fontSize: 18))
+          Text(actor.name, style: Theme.of(context).textTheme.displaySmall!)
         ]),
       ),
     );

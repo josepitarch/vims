@@ -8,22 +8,24 @@ class CardMovieShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 170.0;
+    final double height = MediaQuery.of(context).size.height;
     return ListView.builder(
       itemCount: total,
       itemBuilder: (_, __) => Shimmer.fromColors(
         baseColor: Colors.black,
         highlightColor: Colors.grey.shade100,
         child: SafeArea(
-          child: Padding(
+          child: Container(
+            height: height * 0.2,
             padding: const EdgeInsets.all(8.0),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(25)),
-                height: height,
-                width: 120,
+              AspectRatio(
+                aspectRatio: 3 / 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(25)),
+                ),
               ),
               Expanded(
                 child: Container(

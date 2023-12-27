@@ -29,24 +29,29 @@ class CardMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 150.0;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
+    onTap() => Navigator.pushNamed(context, 'movie',
+        arguments: {'id': id, 'heroTag': heroTag});
 
     return InkWell(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      onTap: () => Navigator.pushNamed(context, 'details',
-          arguments: {'id': id, 'heroTag': heroTag}),
+      onTap: onTap,
       child: Container(
+        height: height * 0.2,
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         margin: const EdgeInsets.only(bottom: 20.0),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Hero(
             tag: heroTag ?? id,
-            child: _Poster(
+            child: AspectRatio(
+              aspectRatio: 3 / 4,
+              child: _Poster(
                 id: id,
                 poster: poster,
                 saveToCache: saveToCache,
-                height: height),
+              ),
+            ),
           ),
           Expanded(
             child: Container(
@@ -68,8 +73,8 @@ class CardMovie extends StatelessWidget {
           ),
           SizedBox(
               height: height,
-              child: const Icon(Icons.arrow_forward_ios_outlined,
-                  size: 22, color: Colors.grey))
+              child: Icon(Icons.arrow_forward_ios_outlined,
+                  size: width <= 414 ? 22 : 27, color: Colors.grey))
         ]),
       ),
     );
@@ -80,24 +85,19 @@ class _Poster extends StatelessWidget {
   final int id;
   final String poster;
   final bool saveToCache;
-  final double height;
 
   const _Poster({
     required this.id,
-    required this.height,
     required this.poster,
     required this.saveToCache,
   });
 
   @override
   Widget build(BuildContext context) {
-    const double width = 120.0;
     return ClipRRect(
       borderRadius: BorderRadius.circular(25),
       child: CustomImage(
           url: poster,
-          width: width,
-          height: height + 20,
           saveToCache: saveToCache,
           cacheManager: CustomCacheManager.cacheTinyImages),
     );

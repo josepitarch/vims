@@ -106,6 +106,7 @@ class _Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     final String ageAndMovies = buildAgeAndMovies();
 
     return Container(
@@ -115,7 +116,7 @@ class _Profile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AvatarView(image: image, text: name, size: 90),
+            AvatarView(image: image, text: name, size: width <= 414 ? 90 : 110),
             const SizedBox(height: 10.0),
             Text(ageAndMovies,
                 style: Theme.of(context).textTheme.headlineMedium),

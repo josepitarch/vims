@@ -9,11 +9,12 @@ class SectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double height = 220;
     final Map arguments = {
       'title': section.title,
       'id': section.id,
     };
+
+    final double width = MediaQuery.of(context).size.width;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,16 +34,14 @@ class SectionWidget extends StatelessWidget {
                   ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                       child: Image.network(section.icon!,
-                          height: 25,
+                          height: width <= 414 ? 25 : 35,
                           semanticLabel: "Icono de ${section.title}",
                           errorBuilder: (context, error, stackTrace) =>
                               const SizedBox.shrink())),
                 const SizedBox(width: 7),
                 Text(section.title,
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.displayMedium!
-                    //.copyWith(fontFamily: 'Lato'),
-                    ),
+                    style: Theme.of(context).textTheme.displayMedium!),
                 const SizedBox(width: 5),
                 Icon(
                   Icons.arrow_forward_ios,
@@ -54,17 +53,16 @@ class SectionWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: height,
+          height: MediaQuery.of(context).size.height * 0.29,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
               const SizedBox(width: 12),
               ...section.movies.map((movie) => CardSection(
-                  movieSection: movie,
-                  heroTag: "${movie.id}${section.title}",
-                  saveToCache: true,
-                  height: height,
-                  width: 120))
+                    movieSection: movie,
+                    heroTag: "${movie.id}${section.title}",
+                    saveToCache: true,
+                  ))
             ],
           ),
         )

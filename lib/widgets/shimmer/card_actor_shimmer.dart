@@ -7,6 +7,7 @@ class CardActorShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return ListView.builder(
         itemCount: total,
         itemBuilder: (_, __) => Shimmer.fromColors(
@@ -20,9 +21,9 @@ class CardActorShimmer extends StatelessWidget {
                       Container(
                         decoration: BoxDecoration(
                             color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(30)),
-                        height: 60,
-                        width: 60,
+                            borderRadius: BorderRadius.circular(100)),
+                        height: width * 0.15,
+                        width: width * 0.15,
                       ),
                       const SizedBox(width: 10),
                       Container(
