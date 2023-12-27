@@ -7,10 +7,8 @@ class SectionsShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: SingleChildScrollView(
-      child: Column(
-        children: List.generate(total, (index) => const SectionShimmer()),
-      ),
+        child: ListView(
+      children: List.generate(total, (index) => const SectionShimmer()),
     ));
   }
 }
@@ -18,11 +16,10 @@ class SectionsShimmer extends StatelessWidget {
 class SectionShimmer extends StatelessWidget {
   const SectionShimmer({super.key});
 
-  final double width = 120;
-  final double height = 200;
-
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Shimmer.fromColors(
       baseColor: Colors.black,
       highlightColor: Colors.grey.shade100,
@@ -33,27 +30,25 @@ class SectionShimmer extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Container(
               width: 200,
-              height: 20,
+              height: width <= 414 ? 25 : 30,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(width <= 414 ? 10.0 : 15.0),
               ),
             ),
           ),
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            height: height - 30,
+            height: MediaQuery.of(context).size.height * 0.2,
             child: ListView.builder(
+              itemCount: 10,
               scrollDirection: Axis.horizontal,
               itemBuilder: (_, __) => Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: ClipRRect(
+                width: MediaQuery.of(context).size.width * 0.29,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    width: width,
-                    height: height,
-                    color: Colors.grey[300],
-                  ),
                 ),
               ),
             ),
