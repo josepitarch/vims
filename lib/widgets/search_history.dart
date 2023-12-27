@@ -14,6 +14,8 @@ class HistorySearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+    final double size = width <= 414 ? 25 : 30;
     return FutureBuilder(
         future: future(),
         builder: (_, snapshot) {
@@ -40,9 +42,9 @@ class HistorySearch extends StatelessWidget {
                     children: [
                       ...historySearch.map((history) {
                         return ListTile(
-                          leading: const Icon(Icons.history),
-                          trailing: const Icon(Icons.arrow_forward_ios,
-                              size: 22, color: Colors.grey),
+                          leading: Icon(Icons.history, size: size),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              size: size, color: Colors.grey),
                           title: Text(history,
                               style: Theme.of(context).textTheme.bodyLarge),
                           onTap: () => onTap(history),
