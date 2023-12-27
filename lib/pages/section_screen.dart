@@ -4,7 +4,7 @@ import 'package:vims/models/section.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/handle_error.dart';
-import 'package:vims/widgets/shimmer/section_shimmer.dart';
+import 'package:vims/widgets/shimmer/section_screen_shimmer.dart';
 
 class SectionScreen extends StatelessWidget {
   const SectionScreen({super.key});
@@ -49,19 +49,16 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double height = 195;
-    double width = MediaQuery.of(context).size.width / 3 - 15;
     return GridView.count(
       padding: const EdgeInsets.only(top: 15, left: 10),
       crossAxisCount: 3,
       childAspectRatio: 0.6,
       children: moviesSection
           .map((movieSection) => CardSection(
-              movieSection: movieSection,
-              heroTag: movieSection.id.toString(),
-              saveToCache: false,
-              height: height,
-              width: width))
+                movieSection: movieSection,
+                heroTag: movieSection.id.toString(),
+                saveToCache: false,
+              ))
           .toList(),
     );
   }

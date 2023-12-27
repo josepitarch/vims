@@ -9,19 +9,15 @@ class NoResults extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
 
-    return SizedBox(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.7,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Icon(MaterialDesignIcons.emoticonConfusedOutline,
-              size: 100, color: Colors.white),
-          const SizedBox(height: 20),
-          Text(i18n.no_results, style: Theme.of(context).textTheme.titleLarge),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Icon(MaterialDesignIcons.emoticonConfusedOutline,
+            size: 100, color: Colors.white),
+        const SizedBox(height: 20),
+        Text(i18n.no_results, style: Theme.of(context).textTheme.titleLarge),
+      ],
     );
   }
 }
