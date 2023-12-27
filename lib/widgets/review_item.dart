@@ -19,17 +19,17 @@ class ReviewItem extends StatelessWidget {
             review.body.replaceAll("\"", ''),
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              buildInclination(review.inclination),
               Text(
                 review.author,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontStyle: FontStyle.italic,
                     ),
               ),
-              buildInclination(review.inclination)
             ],
           )
         ],
@@ -47,7 +47,6 @@ class ReviewItem extends StatelessWidget {
     return Container(
       height: 20,
       width: 20,
-      margin: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
         color: inclinationColors[inclination] ?? Colors.yellow,
         shape: BoxShape.circle,
