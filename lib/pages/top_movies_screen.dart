@@ -9,7 +9,6 @@ import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
-import 'package:vims/widgets/title_page.dart';
 
 late AppLocalizations i18n;
 
@@ -50,86 +49,64 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
   @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
+    final TopMoviesProvider provider = Provider.of(context, listen: true);
 
-    return Consumer<TopMoviesProvider>(builder: (_, provider, __) {
-      if (provider.exception != null) {
-        return HandleError(provider.exception!, provider.onRefresh);
-      }
+    if (provider.exception != null) {
+      return HandleError(provider.exception!, provider.onRefresh);
+    }
 
-      if (provider.isLoading && provider.data == null) {
-        const Widget body = Expanded(child: CardMovieShimmer());
-        return const _Layout(body: [body]);
-      }
+    Widget body;
 
-      if (!provider.isLoading && provider.data!.isEmpty) {
-        final List<Widget> body = [
-          _Options(scrollController: scrollController),
+    if (provider.isLoading && provider.data == null) {
+      body = const CardMovieShimmer();
+    } else if (!provider.isLoading && provider.data!.isEmpty) {
+      if (provider.currentFilters.genres.length >= 3) {
+        body = Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const NoResults(),
-        ];
-        return _Layout(body: body);
+          const SizedBox(height: 20),
+          Text(
+            'Recuerda que las películas deben contener todos los géneros seleccionados. Prueba a seleccionar menos.',
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          )
+        ]);
+      } else {
+        body = const Center(child: NoResults());
       }
+    } else {
+      body = _TopMovies(scrollController: scrollController);
+    }
 
-      final List<Widget> child = [
-        _Options(scrollController: scrollController),
-        SizedBox(
-            height: MediaQuery.of(context).size.height * 0.685,
-            child: _TopMovies(scrollController: scrollController))
-      ];
-
-      return _Layout(
-          floatingActionButton: showFloatingActionButton
-              ? _FloatingActionButton(scrollController: scrollController)
-              : null,
-          body: child);
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-}
-
-class _Layout extends StatelessWidget {
-  final List<Widget> body;
-  final Widget? floatingActionButton;
-
-  const _Layout({required this.body, this.floatingActionButton});
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [TitlePage(i18n.title_top_movies_page), ...body])),
-        floatingActionButton: floatingActionButton);
-  }
-}
-
-class _Options extends StatelessWidget {
-  final ScrollController scrollController;
-
-  const _Options({required this.scrollController});
-
-  @override
-  Widget build(BuildContext context) {
-    // final ModeView modeView = provider.modeView;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        // IconButton(
-        //     icon: Icon(
-        //         modeView == ModeView.list ? Icons.list : Icons.apps_rounded),
-        //     onPressed: () => provider.setModeView()),
-        IconButton(
-            onPressed: () {
-              showDialogFilters(context);
-            },
-            icon: const Icon(Icons.filter_list_rounded)),
-      ],
-    );
+        appBar: AppBar(
+          title: Text(i18n.title_top_movies_page,
+              style: Theme.of(context).textTheme.displayMedium!),
+          centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showCupertinoDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) =>
+                          TopMoviesDialog(jumpToTop: jumpToTop));
+                },
+                icon: const Icon(Icons.filter_list_rounded)),
+            // IconButton(
+            //     icon: Icon(provider.modeView == ModeView.list
+            //         ? Icons.list
+            //         : Icons.apps_rounded),
+            //     onPressed: () => provider.setModeView())
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 15, right: 5.0),
+          child: body,
+        ),
+        floatingActionButton: showFloatingActionButton
+            ? _FloatingActionButton(scrollController: scrollController)
+            : null);
   }
 
   jumpToTop() {
@@ -138,12 +115,10 @@ class _Options extends StatelessWidget {
     }
   }
 
-  showDialogFilters(BuildContext context) {
-    return showCupertinoDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) =>
-            TopMoviesDialog(jumpToTop: jumpToTop));
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
 
