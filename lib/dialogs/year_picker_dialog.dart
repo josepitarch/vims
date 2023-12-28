@@ -28,10 +28,8 @@ class YearPickerCupertino extends StatelessWidget {
     }
 
     return CupertinoActionSheet(
-        title: Theme.of(context).platform == TargetPlatform.android
-            ? Text(i18n.select_year,
-                style: Theme.of(context).textTheme.titleLarge)
-            : null,
+        title: Text(i18n.select_year,
+            style: Theme.of(context).textTheme.titleLarge),
         actions: [
           SizedBox(
               height: 250,
