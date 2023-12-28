@@ -15,9 +15,7 @@ late Filters filters;
 late bool hasError;
 
 class TopMoviesDialog extends StatelessWidget {
-  final VoidCallback jumpToTop;
-
-  const TopMoviesDialog({required this.jumpToTop, super.key});
+  const TopMoviesDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +65,9 @@ class TopMoviesDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    if (topMoviesProvider.hasFilters)
-                      _DeleteButton(
-                        jumpToTop: jumpToTop,
-                      ),
+                    if (topMoviesProvider.hasFilters) _DeleteButton(),
                     const SizedBox(width: 10),
-                    _ApplyButton(jumpToTop: jumpToTop),
+                    _ApplyButton(),
                   ],
                 ),
               ),
@@ -231,8 +226,7 @@ class _ExcludeAnimationFilterState extends State<_ExcludeAnimationFilter> {
 }
 
 class _ApplyButton extends StatelessWidget {
-  final VoidCallback jumpToTop;
-  const _ApplyButton({required this.jumpToTop});
+  const _ApplyButton();
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +234,6 @@ class _ApplyButton extends StatelessWidget {
 
     onPressed() {
       if (hasError) return;
-      jumpToTop();
       Navigator.pop(context);
       provider.applyFilters(filters);
     }
@@ -264,16 +257,13 @@ class _ApplyButton extends StatelessWidget {
 }
 
 class _DeleteButton extends StatelessWidget {
-  final VoidCallback jumpToTop;
-
-  const _DeleteButton({required this.jumpToTop});
+  const _DeleteButton();
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TopMoviesProvider>(context, listen: false);
 
     onPressed() {
-      jumpToTop();
       Navigator.pop(context);
       provider.removeFilters();
     }

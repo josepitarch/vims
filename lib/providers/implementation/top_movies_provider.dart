@@ -37,6 +37,7 @@ class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
       exception = e;
     }).whenComplete(() {
       isLoading = false;
+      scrollPosition = 0;
       notifyListeners();
     });
   }

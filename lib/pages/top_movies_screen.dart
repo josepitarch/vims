@@ -64,6 +64,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
         body = Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           const NoResults(),
           const SizedBox(height: 20),
+          // TODO: use i18n
           Text(
             'Recuerda que las películas deben contener todos los géneros seleccionados. Prueba a seleccionar menos.',
             softWrap: true,
@@ -90,7 +91,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                       barrierDismissible: false,
                       context: context,
                       builder: (BuildContext context) =>
-                          TopMoviesDialog(jumpToTop: jumpToTop));
+                          TopMoviesDialog());
                 },
                 icon: const Icon(Icons.filter_list_rounded)),
             // IconButton(
@@ -104,12 +105,6 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
         floatingActionButton: showFloatingActionButton
             ? _FloatingActionButton(scrollController: scrollController)
             : null);
-  }
-
-  jumpToTop() {
-    if (scrollController.hasClients) {
-      scrollController.jumpTo(0);
-    }
   }
 
   @override
