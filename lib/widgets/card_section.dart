@@ -4,24 +4,22 @@ import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
 
 class CardSection extends StatelessWidget {
-  final MovieSection movieSection;
+  final MovieSection movie;
   final String heroTag;
   final bool saveToCache;
 
   const CardSection(
-      {required this.movieSection,
+      {required this.movie,
       required this.heroTag,
       this.saveToCache = false,
       super.key});
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-
     return GestureDetector(
       onTap: () {
         final Map<String, dynamic> arguments = {
-          'id': movieSection.id,
+          'id': movie.id,
           'heroTag': heroTag
         };
         Navigator.pushNamed(context, 'movie', arguments: arguments);
@@ -40,33 +38,57 @@ class CardSection extends StatelessWidget {
                     AspectRatio(
                       aspectRatio: 3 / 4,
                       child: CustomImage(
-                          url: movieSection.poster.mmed,
+                          url: movie.poster.mmed,
                           saveToCache: saveToCache,
                           cacheManager: CustomCacheManager.cacheTinyImages),
                     ),
-                    Container(
-                        height: width <= 414 ? 37 : 45,
-                        width: double.infinity,
-                        color: Theme.of(context).primaryColor.withOpacity(0.8),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              movieSection.premiereDay,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            )))
+                    _PremiereDay(movie.premiereDay)
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 5),
-            Text(
-              movieSection.title,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            )
+            _Title(movie.title)
           ])),
     );
+  }
+}
+
+class _Title extends StatelessWidget {
+  final String title;
+
+  const _Title(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.bodyMedium,
+    );
+  }
+}
+
+class _PremiereDay extends StatelessWidget {
+  final String premiereDay;
+
+  const _PremiereDay(this.premiereDay);
+
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
+    return Container(
+        height: width <= 414 ? 37 : 45,
+        width: double.infinity,
+        color: Theme.of(context).primaryColor.withOpacity(0.8),
+        child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              premiereDay,
+              style: Theme.of(context).textTheme.bodyMedium,
+            )));
   }
 }

@@ -55,7 +55,7 @@ class _Body extends StatelessWidget {
       childAspectRatio: 0.6,
       children: moviesSection
           .map((movieSection) => CardSection(
-                movieSection: movieSection,
+                movie: movieSection,
                 heroTag: movieSection.id.toString(),
                 saveToCache: false,
               ))
