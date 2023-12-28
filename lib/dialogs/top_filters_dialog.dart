@@ -25,7 +25,7 @@ class TopMoviesDialog extends StatelessWidget {
     final TopMoviesProvider topMoviesProvider =
         Provider.of<TopMoviesProvider>(context, listen: false);
     hasError = false;
-    final double width = MediaQuery.of(context).size.width;
+
     filters = Filters(
         platforms: [...topMoviesProvider.currentFilters.platforms],
         genres: [...topMoviesProvider.currentFilters.genres],
@@ -38,10 +38,9 @@ class TopMoviesDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
+        constraints: const BoxConstraints(maxHeight: 700, maxWidth: 650),
         color: Colors.black12,
         padding: const EdgeInsets.all(8.0),
-        height: 650,
-        width: width <= 414 ? double.infinity : 700,
         child: SizedBox(
           width: double.infinity,
           child: Column(
@@ -90,17 +89,21 @@ class _PlatformsFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _TitleFilter(i18n.title_platforms_dialog),
         const SizedBox(height: 20),
-        SizedBox(
-          height: 50,
+        Container(
+          height: height * 0.06,
+          constraints: const BoxConstraints(maxHeight: 65),
           child: ListView(
               scrollDirection: Axis.horizontal,
               children: Platforms.values.map((entry) {
-                if (entry.showInTopFilters == false) return const SizedBox();
+                if (entry.showInTopFilters == false)
+                  return const SizedBox.shrink();
                 return PlatformItem(
                     assetName: entry.name,
                     isSelected: filters.platforms.contains(entry.name),
@@ -128,13 +131,10 @@ class _GenresFilter extends StatelessWidget {
             spacing: 5,
             runSpacing: 5,
             children: Genres.values.map((entry) {
-              return FractionallySizedBox(
-                widthFactor: 0.230,
-                child: CardGenre(
-                  genre: entry.name,
-                  isSelected: filters.genres.contains(entry.name),
-                  filters: filters,
-                ),
+              return CardGenre(
+                genre: entry.name,
+                isSelected: filters.genres.contains(entry.name),
+                filters: filters,
               );
             }).toList()),
       ),

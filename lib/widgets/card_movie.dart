@@ -35,12 +35,21 @@ class CardMovie extends StatelessWidget {
     onTap() => Navigator.pushNamed(context, 'movie',
         arguments: {'id': id, 'heroTag': heroTag});
 
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: height * 0.2,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        margin: const EdgeInsets.only(bottom: 20.0),
+    return Container(
+      height: height * 0.23,
+      margin: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 5.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black26, offset: Offset(0, 2), blurRadius: 1.0)
+          ]),
+      child: InkWell(
+        customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        onTap: onTap,
+        radius: 25,
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Hero(
             tag: heroTag ?? id,
@@ -56,7 +65,7 @@ class CardMovie extends StatelessWidget {
           Expanded(
             child: Container(
                 height: height,
-                margin: const EdgeInsets.only(left: 10, top: 10),
+                margin: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -64,17 +73,13 @@ class CardMovie extends StatelessWidget {
                     _Title(title),
                     const SizedBox(height: 10.0),
                     _Director(director),
-                    const SizedBox(height: 10.0),
+                    const SizedBox(height: 7.0),
                     rating != null ? Rating(rating) : const SizedBox.shrink(),
-                    const Expanded(child: SizedBox()),
-                    _Platforms(platforms),
+                    const Expanded(child: SizedBox.shrink()),
+                    if (platforms.isNotEmpty) _Platforms(platforms),
                   ],
                 )),
           ),
-          SizedBox(
-              height: height,
-              child: Icon(Icons.arrow_forward_ios_outlined,
-                  size: width <= 414 ? 22 : 27, color: Colors.grey))
         ]),
       ),
     );
@@ -94,6 +99,11 @@ class _Poster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /*
+    borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(25),
+        bottomLeft: Radius.circular(25),
+      ),*/
     return ClipRRect(
       borderRadius: BorderRadius.circular(25),
       child: CustomImage(
@@ -132,17 +142,13 @@ class _Director extends StatelessWidget {
   Widget build(BuildContext context) {
     if (director == null) return const SizedBox.shrink();
 
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.5,
-      child: Text(
-        director!,
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontStyle: FontStyle.italic,
-              //color: Theme.of(context).colorScheme.secondary
-            ),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-      ),
+    return Text(
+      director!,
+      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            fontStyle: FontStyle.italic,
+          ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
@@ -153,16 +159,20 @@ class _Platforms extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double height = 37.5;
-    const double width = height;
+    const double width = 40;
+    const double height = 40;
+
     return SizedBox(
       height: height,
       child: ListView(
           scrollDirection: Axis.horizontal,
           reverse: false,
           children: platforms
-              .map((platform) =>
-                  JustwatchItem(platform, height: height, width: width))
+              .map((platform) => JustwatchItem(
+                    platform,
+                    height: height,
+                    width: width,
+                  ))
               .toList()),
     );
   }

@@ -11,7 +11,11 @@ class ReviewItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.grey[800]),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black26, offset: Offset(0, 2), blurRadius: 2.0)
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

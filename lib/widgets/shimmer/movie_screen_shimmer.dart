@@ -27,10 +27,12 @@ class DetailsMovieShimmer extends StatelessWidget {
                       _BoxShimmer(),
                       _YearAndDurationShimmer(),
                       SizedBox(height: 7),
-                      _CastShimmer(),
-                      _CastShimmer(),
                       _SynopsisShimmer(),
-                      _JustwatchShimmer()
+                      SizedBox(height: 7),
+                      _GenresShimmer(),
+                      SizedBox(height: 7),
+                      _CastShimmer(),
+                      _PlatformsShimmer(),
                     ]),
               ),
             ],
@@ -62,10 +64,10 @@ class _TitleShimmer extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
       ),
-      height: 35,
-      width: 180,
+      height: 30,
+      width: 200,
     );
   }
 }
@@ -121,39 +123,6 @@ class _YearAndDurationShimmer extends StatelessWidget {
   }
 }
 
-class _CastShimmer extends StatelessWidget {
-  const _CastShimmer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-            ),
-            height: 20,
-            width: 100,
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-          ),
-          height: 70,
-          width: double.infinity,
-        ),
-      ],
-    );
-  }
-}
-
 class _SynopsisShimmer extends StatelessWidget {
   const _SynopsisShimmer();
 
@@ -164,6 +133,59 @@ class _SynopsisShimmer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          ),
+          height: 180,
+          width: double.infinity,
+        ),
+      ],
+    );
+  }
+}
+
+class _GenresShimmer extends StatelessWidget {
+  const _GenresShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        ),
+        height: 20,
+        width: 100,
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        ),
+        height: 40,
+        width: 400,
+      )
+    ]);
+  }
+}
+
+class _CastShimmer extends StatelessWidget {
+  const _CastShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
           margin: const EdgeInsets.symmetric(vertical: 20.0),
           child: Container(
             decoration: BoxDecoration(
@@ -174,24 +196,39 @@ class _SynopsisShimmer extends StatelessWidget {
             width: 100,
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-          ),
-          height: 120,
+        SizedBox(
+          height: 90,
           width: double.infinity,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  shape: BoxShape.circle,
+                ),
+                height: width <= 414 ? 65 : 80,
+                width: width <= 414 ? 65 : 80,
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
 
-class _JustwatchShimmer extends StatelessWidget {
-  const _JustwatchShimmer();
+class _PlatformsShimmer extends StatelessWidget {
+  const _PlatformsShimmer();
 
   @override
   Widget build(BuildContext context) {
+    final double widthScreen = MediaQuery.of(context).size.width;
+    final double height = widthScreen <= 414 ? 60 : 80;
+    final double width = widthScreen <= 414 ? 60 : 70;
+
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 10),
       child: Column(children: [
@@ -204,27 +241,29 @@ class _JustwatchShimmer extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                 ),
-                width: 70,
-                height: 20,
+                width: 90,
+                height: 30,
               )
           ]),
         ),
         const SizedBox(
           height: 15,
         ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Wrap(spacing: 15, runSpacing: 10, children: [
-            for (int i = 0; i < 4; i++)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                ),
-                width: 50,
-                height: 50,
-              )
-          ]),
+        SizedBox(
+          height: height,
+          child: ListView.builder(
+              itemCount: 5,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, __) => Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    width: width,
+                    height: height,
+                  )),
         ),
       ]),
     );

@@ -100,10 +100,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
             //     onPressed: () => provider.setModeView())
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 15, right: 5.0),
-          child: body,
-        ),
+        body: body,
         floatingActionButton: showFloatingActionButton
             ? _FloatingActionButton(scrollController: scrollController)
             : null);

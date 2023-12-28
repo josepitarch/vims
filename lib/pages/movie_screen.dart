@@ -389,9 +389,12 @@ class _Synopsis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations i18n = AppLocalizations.of(context)!;
-    return Text(synopsis.isNotEmpty ? synopsis : i18n.no_synopsis,
-        textAlign: synopsis.isEmpty ? TextAlign.center : TextAlign.start,
-        style: Theme.of(context).textTheme.bodyLarge);
+    final String text = synopsis.isNotEmpty ? synopsis : i18n.no_synopsis;
+    final TextAlign textAlign =
+        synopsis.isEmpty ? TextAlign.center : TextAlign.start;
+
+    return Text(text,
+        textAlign: textAlign, style: Theme.of(context).textTheme.bodyLarge);
   }
 }
 
@@ -426,6 +429,9 @@ class _PlatformsState extends State<_Platforms> {
 
   @override
   Widget build(BuildContext context) {
+    final double widthScreen = MediaQuery.of(context).size.width;
+    final double height = widthScreen <= 414 ? 60 : 80;
+
     Map<String, String> textButton = {
       'flatrate': i18n.flatrate,
       'rent': i18n.rent,
@@ -452,7 +458,8 @@ class _PlatformsState extends State<_Platforms> {
           Row(
               children: justwatch.keys.map((key) {
             return Container(
-                margin: const EdgeInsets.only(right: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 height: 40,
                 decoration: key == platformMode
                     ? BoxDecorators.decoratorSelectedButton()
@@ -461,22 +468,23 @@ class _PlatformsState extends State<_Platforms> {
                     onPressed: () => setPlatforms(key),
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 12))),
+                            const EdgeInsets.symmetric(horizontal: 5))),
                     child: Text(textButton[key]!,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.blue,
+                            color: Colors.orange[600]!,
                             fontFamily: 'OpenSans',
                             fontWeight: FontWeight.w500))));
           }).toList()),
         if (platforms.isNotEmpty)
           SizedBox(
-            height: 60,
+            height: height,
             child: ListView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.only(top: 10),
                 shrinkWrap: false,
                 children: platforms
-                    .map((platform) => JustwatchItem(platform))
+                    .map((platform) => JustwatchItem(platform,
+                        height: height, width: height - 10))
                     .toList()),
           ),
       ],

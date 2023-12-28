@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:vims/models/enums/platforms.dart';
 import 'package:vims/models/movie.dart';
+import 'package:collection/collection.dart';
 
 class JustwatchItem extends StatelessWidget {
   final Platform platform;
@@ -9,7 +10,7 @@ class JustwatchItem extends StatelessWidget {
   final double width;
 
   const JustwatchItem(this.platform,
-      {this.height = 50, this.width = 50, super.key});
+      {required this.height, required this.width, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,24 +42,23 @@ class _Icon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      Platforms asset = Platforms.values.firstWhere(
-          (element) => element.value.contains(platform.name.toLowerCase()));
-      return Image.asset(
-        'assets/justwatch/${asset.name}.jpg',
-        fit: BoxFit.cover,
-        height: height,
-        width: width,
-        errorBuilder: (_, __, ___) => const SizedBox(),
-      );
-    } catch (IterableElementError) {
-      return Image.network(
-        platform.icon,
-        fit: BoxFit.cover,
-        height: height,
-        width: width,
-        errorBuilder: (_, __, ___) => const SizedBox(),
-      );
+    Platforms? asset = Platforms.values.firstWhereOrNull(
+        (element) => element.value.contains(platform.name.toLowerCase()));
+
+    if (asset == null) {
+      return Image.network(platform.icon,
+          fit: BoxFit.cover,
+          height: height,
+          width: width,
+          errorBuilder: (_, __, ___) => const SizedBox.shrink());
     }
+
+    return Image.asset(
+      'assets/justwatch/${asset.name}.jpg',
+      fit: BoxFit.cover,
+      height: height,
+      width: width,
+      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+    );
   }
 }
