@@ -7,7 +7,7 @@ enum Platforms {
   filmin(['filmin'], true),
   sky_show_time(['skyshowtime'], true),
   rakuten(['rakuten tv'], true),
-  apple(['apple itunes', 'apple tv plus'], true),
+  apple(['apple itunes', 'apple tv plus', 'apple tv'], true),
   flixole(['flixolé'], true),
   acontra(['acontra plus'], true),
   google(['google play movies'], false),
