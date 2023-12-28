@@ -47,7 +47,7 @@ class TopMoviesDialog extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.pop(context, false),
                 ),
               ),
               const _PlatformsFilter(),
@@ -234,7 +234,7 @@ class _ApplyButton extends StatelessWidget {
 
     onPressed() {
       if (hasError) return;
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       provider.applyFilters(filters);
     }
 
@@ -264,7 +264,7 @@ class _DeleteButton extends StatelessWidget {
     final provider = Provider.of<TopMoviesProvider>(context, listen: false);
 
     onPressed() {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       provider.removeFilters();
     }
 

@@ -91,7 +91,11 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                       barrierDismissible: false,
                       context: context,
                       builder: (BuildContext context) =>
-                          TopMoviesDialog());
+                          const TopMoviesDialog()).then((value) {
+                    if (value) {
+                      scrollController.jumpTo(0);
+                    }
+                  });
                 },
                 icon: const Icon(Icons.filter_list_rounded)),
             // IconButton(
