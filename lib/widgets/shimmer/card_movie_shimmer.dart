@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardMovieShimmer extends StatelessWidget {
   final int total;
@@ -8,53 +9,32 @@ class CardMovieShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations i18n = AppLocalizations.of(context)!;
     final double height = MediaQuery.of(context).size.height;
-    return ListView.builder(
-      itemCount: total,
-      itemBuilder: (_, __) => Shimmer.fromColors(
-        baseColor: Colors.black,
-        highlightColor: Colors.grey.shade100,
-        child: SafeArea(
-          child: Container(
-            height: height * 0.2,
-            padding: const EdgeInsets.all(8.0),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              AspectRatio(
-                aspectRatio: 3 / 4,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(25)),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                    margin: const EdgeInsets.only(left: 10, top: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 20,
-                          width: 180,
-                        ),
-                        const SizedBox(height: 10.0),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 20,
-                          width: 150,
-                        ),
-                      ],
-                    )),
-              ),
-            ]),
-          ),
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(i18n.title_top_movies_page,
+              style: Theme.of(context).textTheme.displayMedium!),
+          centerTitle: true,
         ),
-      ),
-    );
+        body: ListView.builder(
+            itemCount: total,
+            itemBuilder: (_, __) {
+              return Shimmer.fromColors(
+                baseColor: Colors.black,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 7.0, horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  height: height * 0.23,
+                  width: double.infinity,
+                ),
+              );
+            }));
   }
 }
