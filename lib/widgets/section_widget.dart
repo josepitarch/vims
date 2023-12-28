@@ -14,7 +14,7 @@ class SectionWidget extends StatelessWidget {
       'id': section.id,
     };
 
-    final double width = MediaQuery.of(context).size.width;
+    onTap() => Navigator.pushNamed(context, 'section', arguments: arguments);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,32 +24,8 @@ class SectionWidget extends StatelessWidget {
           child: InkWell(
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
-            onTap: () =>
-                Navigator.pushNamed(context, 'section', arguments: arguments),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (section.icon != null)
-                  ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: Image.network(section.icon!,
-                          height: width <= 414 ? 25 : 35,
-                          semanticLabel: "Icono de ${section.title}",
-                          errorBuilder: (context, error, stackTrace) =>
-                              const SizedBox.shrink())),
-                const SizedBox(width: 7),
-                Text(section.title,
-                    textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.displayMedium!),
-                const SizedBox(width: 5),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18,
-                  color: Colors.white.withOpacity(.5),
-                )
-              ],
-            ),
+            onTap: onTap,
+            child: _HeadlineSection(icon: section.icon, title: section.title),
           ),
         ),
         SizedBox(
@@ -68,5 +44,59 @@ class SectionWidget extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class _HeadlineSection extends StatelessWidget {
+  const _HeadlineSection({
+    required this.icon,
+    required this.title,
+  });
+
+  final String? icon;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (icon != null) _IconSection(icon: icon!, title: title),
+        const SizedBox(width: 7),
+        Text(title,
+            textAlign: TextAlign.start,
+            style: Theme.of(context).textTheme.displayMedium!),
+        const SizedBox(width: 5),
+        Icon(
+          Icons.arrow_forward_ios,
+          size: 18,
+          color: Colors.white.withOpacity(.5),
+        )
+      ],
+    );
+  }
+}
+
+class _IconSection extends StatelessWidget {
+  const _IconSection({
+    required this.icon,
+    required this.title,
+  });
+
+  final String icon;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
+    return ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Image.network(icon,
+            height: width <= 414 ? 25 : 35,
+            semanticLabel: "Icono de $title",
+            errorBuilder: (context, error, stackTrace) =>
+                const SizedBox.shrink()));
   }
 }
