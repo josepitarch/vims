@@ -41,6 +41,7 @@ class _SectionsScreenState extends State<SectionsScreen>
       return HandleError(provider.exception!, provider.onRefresh);
 
     if (provider.isLoading) return const SectionsShimmer();
+
     final List<SectionWidget> sections = provider.data!
         .map((section) => SectionWidget(section: section))
         .toList();

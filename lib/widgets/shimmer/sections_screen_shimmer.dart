@@ -18,6 +18,7 @@ class SectionShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return Shimmer.fromColors(
@@ -39,16 +40,18 @@ class SectionShimmer extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            height: MediaQuery.of(context).size.height * 0.2,
+            height: width <= 514 ? height * 0.28 : height * 0.3,
             child: ListView.builder(
               itemCount: 10,
               scrollDirection: Axis.horizontal,
-              itemBuilder: (_, __) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                width: MediaQuery.of(context).size.width * 0.29,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(20),
+              itemBuilder: (_, __) => AspectRatio(
+                aspectRatio: 3 / 4,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
               ),
             ),

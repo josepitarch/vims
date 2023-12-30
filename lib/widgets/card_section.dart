@@ -16,40 +16,40 @@ class CardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    onTap() {
+      final Map<String, dynamic> arguments = {
+        'id': movie.id,
+        'heroTag': heroTag
+      };
+      Navigator.pushNamed(context, 'movie', arguments: arguments);
+    }
+
     return GestureDetector(
-      onTap: () {
-        final Map<String, dynamic> arguments = {
-          'id': movie.id,
-          'heroTag': heroTag
-        };
-        Navigator.pushNamed(context, 'movie', arguments: arguments);
-      },
+      onTap: onTap,
       child: Container(
-          width: MediaQuery.of(context).size.width * 0.29,
-          margin: const EdgeInsets.only(right: 15),
-          child: Column(children: [
-            Hero(
-              tag: heroTag,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 3 / 4,
-                      child: CustomImage(
-                          url: movie.poster.mmed,
-                          saveToCache: saveToCache,
-                          cacheManager: CustomCacheManager.cacheTinyImages),
-                    ),
-                    _PremiereDay(movie.premiereDay)
-                  ],
+        width: MediaQuery.of(context).size.width * 0.34,
+        margin: const EdgeInsets.only(right: 15),
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: CustomImage(
+                      url: movie.poster.mmed,
+                      saveToCache: saveToCache,
+                      borderRadius: 20,
+                      cacheManager: CustomCacheManager.cacheTinyImages),
                 ),
-              ),
+                _PremiereDay(movie.premiereDay),
+              ],
             ),
             const SizedBox(height: 5),
             _Title(movie.title)
-          ])),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -83,7 +83,12 @@ class _PremiereDay extends StatelessWidget {
     return Container(
         height: width <= 414 ? 37 : 45,
         width: double.infinity,
-        color: Theme.of(context).primaryColor.withOpacity(0.8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
+        ),
         child: Align(
             alignment: Alignment.center,
             child: Text(

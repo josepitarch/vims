@@ -12,29 +12,23 @@ class CardMovieShimmer extends StatelessWidget {
     final AppLocalizations i18n = AppLocalizations.of(context)!;
     final double height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(i18n.title_top_movies_page,
-              style: Theme.of(context).textTheme.displayMedium!),
-          centerTitle: true,
-        ),
-        body: ListView.builder(
-            itemCount: total,
-            itemBuilder: (_, __) {
-              return Shimmer.fromColors(
-                baseColor: Colors.black,
-                highlightColor: Colors.grey.shade100,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 7.0, horizontal: 5.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                  ),
-                  height: height * 0.23,
-                  width: double.infinity,
-                ),
-              );
-            }));
+    return ListView.builder(
+        itemCount: total,
+        itemBuilder: (_, __) {
+          return Shimmer.fromColors(
+            baseColor: Colors.black,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              margin:
+                  const EdgeInsets.symmetric(vertical: 7.0, horizontal: 5.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+              ),
+              height: height * 0.23,
+              width: double.infinity,
+            ),
+          );
+        });
   }
 }

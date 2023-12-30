@@ -9,6 +9,8 @@ class SectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     final Map arguments = {
       'title': section.title,
       'id': section.id,
@@ -19,23 +21,21 @@ class SectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
-          child: InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: onTap,
-            child: _HeadlineSection(icon: section.icon, title: section.title),
-          ),
+        InkWell(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: onTap,
+          child: _HeadlineSection(icon: section.icon, title: section.title),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.29,
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          height: width <= 514 ? height * 0.29 : height * 0.35,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
               const SizedBox(width: 12),
               ...section.movies.map((movie) => CardSection(
-                    movieSection: movie,
+                    movie: movie,
                     heroTag: "${movie.id}${section.title}",
                     saveToCache: true,
                   ))
@@ -58,22 +58,25 @@ class _HeadlineSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (icon != null) _IconSection(icon: icon!, title: title),
-        const SizedBox(width: 7),
-        Text(title,
-            textAlign: TextAlign.start,
-            style: Theme.of(context).textTheme.displayMedium!),
-        const SizedBox(width: 5),
-        Icon(
-          Icons.arrow_forward_ios,
-          size: 18,
-          color: Colors.white.withOpacity(.5),
-        )
-      ],
+    return Container(
+      padding: const EdgeInsets.only(left: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (icon != null) _IconSection(icon: icon!, title: title),
+          if (icon != null) const SizedBox(width: 7),
+          Text(title,
+              textAlign: TextAlign.start,
+              style: Theme.of(context).textTheme.displayMedium!),
+          const SizedBox(width: 5),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Colors.white.withOpacity(.5),
+          )
+        ],
+      ),
     );
   }
 }
