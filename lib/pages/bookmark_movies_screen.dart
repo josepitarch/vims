@@ -30,17 +30,16 @@ class BookmarkMoviesScreen extends StatelessWidget {
       ),
       body: provider.data!.isEmpty
           ? const NoBookmarkMovies()
-          : Expanded(
-              child: ListView(
-                  children: provider.data!
-                      .map(
-                        (movie) => CardMovie(
-                            id: movie.id,
-                            title: movie.title,
-                            poster: movie.poster,
-                            saveToCache: true),
-                      )
-                      .toList())),
+          : ListView(
+              children: provider.data!
+                  .map(
+                    (movie) => CardMovie(
+                        id: movie.id,
+                        title: movie.title,
+                        poster: movie.poster,
+                        saveToCache: true),
+                  )
+                  .toList()),
     );
   }
 

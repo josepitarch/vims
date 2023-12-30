@@ -36,7 +36,7 @@ class _PlatformItemState extends State<PlatformItem> {
       onTap: onTap,
       child: Stack(children: [
         Container(
-          margin: const EdgeInsets.only(right: 10),
+          margin: const EdgeInsets.only(right: 5),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(

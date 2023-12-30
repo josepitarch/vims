@@ -8,29 +8,37 @@ class CustomImage extends StatelessWidget {
   final bool saveToCache;
   final CacheManager cacheManager;
   final String? cacheKey;
+  final double borderRadius;
 
   const CustomImage(
       {required this.url,
       required this.saveToCache,
       required this.cacheManager,
       this.cacheKey,
+      this.borderRadius = 0,
       super.key});
 
   @override
   Widget build(BuildContext context) {
     return saveToCache
-        ? CachedNetworkImage(
-            cacheKey: cacheKey ?? url,
-            errorWidget: (context, url, error) => const _ErrorImage(),
-            imageUrl: url,
-            cacheManager: cacheManager,
-            fit: BoxFit.cover,
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: CachedNetworkImage(
+              cacheKey: cacheKey ?? url,
+              errorWidget: (context, url, error) => const _ErrorImage(),
+              imageUrl: url,
+              cacheManager: cacheManager,
+              fit: BoxFit.cover,
+            ),
           )
-        : FadeInImage(
-            placeholder: const AssetImage('assets/loading.gif'),
-            image: NetworkImage(url),
-            fit: BoxFit.cover,
-            imageErrorBuilder: (_, __, ___) => const _ErrorImage());
+        : ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: FadeInImage(
+                placeholder: const AssetImage('assets/loading.gif'),
+                image: NetworkImage(url),
+                fit: BoxFit.cover,
+                imageErrorBuilder: (_, __, ___) => const _ErrorImage()),
+          );
   }
 }
 

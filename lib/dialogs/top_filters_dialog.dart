@@ -65,9 +65,9 @@ class TopMoviesDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    if (topMoviesProvider.hasFilters) _DeleteButton(),
+                    if (topMoviesProvider.hasFilters) const _DeleteButton(),
                     const SizedBox(width: 10),
-                    _ApplyButton(),
+                    const _ApplyButton(),
                   ],
                 ),
               ),
