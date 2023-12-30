@@ -64,7 +64,7 @@ class CardMovie extends StatelessWidget {
           Expanded(
             child: Container(
                 height: height,
-                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -120,14 +120,11 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.5,
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.displaySmall,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-      ),
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.displaySmall,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
     );
   }
 }
