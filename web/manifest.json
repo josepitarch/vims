@@ -1,6 +1,6 @@
 {
-    "name": "scrapper_filmaffinity",
-    "short_name": "scrapper_filmaffinity",
+    "name": "vims",
+    "short_name": "vims",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
