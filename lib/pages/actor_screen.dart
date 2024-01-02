@@ -31,7 +31,8 @@ class ActorScreen extends StatelessWidget {
     if (provider.isLoading) {
       return Scaffold(
           appBar: AppBar(
-            title: Text(arguments['name']),
+            title: Text(arguments['name'],
+                style: Theme.of(context).textTheme.displayMedium),
             centerTitle: true,
           ),
           body: NestedScrollView(
