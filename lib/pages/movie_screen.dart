@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
@@ -274,11 +273,6 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   }
 
   onPressed() async {
-    Vibrate.canVibrate.then((value) {
-      if (value) {
-        Vibrate.feedback(FeedbackType.medium);
-      }
-    });
     isFavorite
         ? await provider.deleteBookmarkMovie(widget.movie)
         : await provider.insertBookmarkMovie(widget.movie);
@@ -430,7 +424,7 @@ class _PlatformsState extends State<_Platforms> {
   @override
   Widget build(BuildContext context) {
     final double widthScreen = MediaQuery.of(context).size.width;
-    final double height = widthScreen <= 414 ? 60 : 80;
+    final double height = widthScreen <= 514 ? 60 : 80;
 
     Map<String, String> textButton = {
       'flatrate': i18n.flatrate,
