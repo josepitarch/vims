@@ -84,7 +84,7 @@ class _PremiereDay extends StatelessWidget {
         height: width <= 414 ? 37 : 45,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).primaryColor.withOpacity(0.8),
           borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20)),
