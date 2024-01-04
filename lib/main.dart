@@ -71,6 +71,9 @@ class App extends StatelessWidget {
               onSecondary: Colors.grey.shade200,
             ),
             textTheme: MyTextTheme(context),
+            appBarTheme: AppBarTheme(
+                centerTitle: true,
+                titleTextStyle: Theme.of(context).textTheme.displayMedium),
             scaffoldBackgroundColor: Colors.grey[900],
             floatingActionButtonTheme: FloatingActionButtonThemeData(
               foregroundColor: Colors.grey.shade200,

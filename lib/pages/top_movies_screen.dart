@@ -81,9 +81,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(i18n.title_top_movies_page,
-              style: Theme.of(context).textTheme.displayMedium!),
-          centerTitle: true,
+          title: Text(i18n.title_top_movies_page),
           actions: [
             IconButton(
                 onPressed: () {

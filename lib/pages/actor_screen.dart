@@ -30,11 +30,7 @@ class ActorScreen extends StatelessWidget {
 
     if (provider.isLoading) {
       return Scaffold(
-          appBar: AppBar(
-            title: Text(arguments['name'],
-                style: Theme.of(context).textTheme.displayMedium),
-            centerTitle: true,
-          ),
+          appBar: AppBar(title: Text(arguments['name'])),
           body: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                     SliverToBoxAdapter(
@@ -52,11 +48,7 @@ class ActorScreen extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            arguments['name'],
-            style: Theme.of(context).textTheme.displayMedium,
-          ),
-          centerTitle: true,
+          title: Text(arguments['name']),
         ),
         body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [

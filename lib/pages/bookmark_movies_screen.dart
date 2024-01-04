@@ -17,9 +17,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(i18n.title_bookmarks_page,
-            style: Theme.of(context).textTheme.displayMedium),
-        centerTitle: true,
+        title: Text(i18n.title_bookmarks_page),
         actions: [
           IconButton(
               onPressed: () => _openDialog(context).then((value) {
