@@ -28,22 +28,14 @@ class Section {
 }
 
 class MovieSection extends BaseMovie {
-  final String premiereDay;
-
-  MovieSection({
-    required super.id,
-    required super.title,
-    required super.poster,
-    required this.premiereDay,
-  });
+  MovieSection(
+      {required super.id, required super.title, required super.poster});
 
   factory MovieSection.fromJson(String str) =>
       MovieSection.fromMap(json.decode(str));
 
   factory MovieSection.fromMap(Map<String, dynamic> json) => MovieSection(
-        id: json['id'],
-        title: json['title'],
-        poster: Poster.fromMap(json['poster']),
-        premiereDay: json['premiere_day'],
-      );
+      id: json['id'],
+      title: json['title'],
+      poster: Poster.fromMap(json['poster']));
 }
