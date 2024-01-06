@@ -92,6 +92,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
                           const TopMoviesDialog()).then((value) {
                     if (value) {
                       scrollController.jumpTo(0);
+                      provider.scrollPosition = 0;
                     }
                   });
                 },
