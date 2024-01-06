@@ -34,7 +34,7 @@ List<String> SEARCH_PERSON_PLACEHOLDER = [
   'Charlize Theron',
   'Kate Winslet',
   'Jennifer Aniston',
-  'Chritofer Nolan',
+  'Chritopher Nolan',
   'Steven Spielberg',
   'Martin Scorsese',
   'Quentin Tarantino',
