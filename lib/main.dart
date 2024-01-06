@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/l10n/l10n.dart';
@@ -21,7 +22,8 @@ Future<void> main() async {
   await dotenv.load(fileName: '.env');
   //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const AppState());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(const AppState()));
 }
 
 class AppState extends StatelessWidget {
