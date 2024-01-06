@@ -33,7 +33,6 @@ class SectionScreen extends StatelessWidget {
       return Scaffold(
           appBar: AppBar(
             title: Text(title),
-            centerTitle: false,
           ),
           body: SafeArea(
             child: body,
