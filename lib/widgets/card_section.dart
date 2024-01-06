@@ -31,19 +31,13 @@ class CardSection extends StatelessWidget {
         margin: const EdgeInsets.only(right: 15),
         child: Column(
           children: [
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: CustomImage(
-                      url: movie.poster.mmed,
-                      saveToCache: saveToCache,
-                      borderRadius: 20,
-                      cacheManager: CustomCacheManager.cacheTinyImages),
-                ),
-                _PremiereDay(movie.premiereDay),
-              ],
+            AspectRatio(
+              aspectRatio: 3 / 4,
+              child: CustomImage(
+                  url: movie.poster.mmed,
+                  saveToCache: saveToCache,
+                  borderRadius: 20,
+                  cacheManager: CustomCacheManager.cacheTinyImages),
             ),
             const SizedBox(height: 5),
             _Title(movie.title)
@@ -68,32 +62,5 @@ class _Title extends StatelessWidget {
       textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.bodyMedium,
     );
-  }
-}
-
-class _PremiereDay extends StatelessWidget {
-  final String premiereDay;
-
-  const _PremiereDay(this.premiereDay);
-
-  @override
-  Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-
-    return Container(
-        height: width <= 414 ? 37 : 45,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.8),
-          borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20)),
-        ),
-        child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              premiereDay,
-              style: Theme.of(context).textTheme.bodyMedium,
-            )));
   }
 }
