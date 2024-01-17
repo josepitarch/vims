@@ -11,6 +11,8 @@ class MovieProvider extends BaseProvider<Map<int, Movie>> {
     getMovie(id).then((movie) {
       data![movie.id] = movie;
       exception = null;
+    }).catchError((e) {
+      exception = e;
     }).whenComplete(() {
       isLoading = false;
       notifyListeners();
