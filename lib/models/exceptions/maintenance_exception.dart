@@ -1,8 +1,7 @@
 class MaintenanceException implements Exception {
-  final String image;
   final String message;
 
-  MaintenanceException(this.image, this.message);
+  MaintenanceException(this.message);
 
   @override
   String toString() {

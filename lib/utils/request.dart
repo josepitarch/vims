@@ -11,13 +11,10 @@ import 'dart:io' as io show Platform;
 
 final String BASE_URL = dotenv.env['URL']!;
 final String TIMEOUT = dotenv.env['TIMEOUT']!;
+final String API_TOKEN = dotenv.env['API_TOKEN']!;
 
 Future request(String path, int versionApi,
     [Map<String, dynamic>? parameters]) async {
-  final String token = io.Platform.isAndroid
-      ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.zljhJvx-95zOkdnAb4DA0CRXx7jYw_6jYd4KbMpIOrA'
-      : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.WcFmDL9UTmYvwx8Yjnp2u7_iix9J6taUK7GnFoE6Zso';
-
   final String userAgent = io.Platform.isAndroid ? 'android' : 'ios';
 
   final Uri request = BASE_URL.contains('vims')
@@ -27,7 +24,7 @@ Future request(String path, int versionApi,
   final Response response = await get(request, headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': 'Bearer $token',
+    'Authorization': 'Bearer $API_TOKEN',
     'User-Agent': userAgent,
   }).timeout(Duration(seconds: int.parse(TIMEOUT))).catchError(
         (Object e) => throw ErrorServerException('Connection timeout'),
@@ -41,10 +38,9 @@ Future request(String path, int versionApi,
 
   if (response.statusCode == 503) {
     final body = jsonDecode(response.body);
-    final String image = body['image'];
     final String message = body['message'];
 
-    throw MaintenanceException(image, message);
+    throw MaintenanceException(message);
   }
 
   throw ErrorServerException(response.body);
