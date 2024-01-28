@@ -349,7 +349,7 @@ class _Cast extends StatelessWidget {
               child: Column(children: [
                 AvatarView(
                   text: actor.name,
-                  image: actor.image,
+                  image: actor.image?.mmed,
                   size: width <= 414 ? 65 : 80,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
@@ -357,7 +357,7 @@ class _Cast extends StatelessWidget {
                     final Map<String, dynamic> arguments = {
                       'id': actor.id,
                       'name': actor.name,
-                      'image': actor.image,
+                      'image': actor.image?.mmed,
                     };
 
                     Navigator.pushNamed(context, 'actor', arguments: arguments);

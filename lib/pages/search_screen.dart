@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/providers/implementation/search_actor_provider.dart';
+import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/ui/input_decoration.dart';

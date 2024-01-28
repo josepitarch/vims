@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/providers/interface/base_providert.dart';
-import 'package:vims/services/api/actor_profile_service.dart';
+import 'package:vims/services/api/person_profile_service.dart';
 
 class ActorProfileProvider extends BaseProvider<Map<Actor, List<ActorMovie>?>> {
   late int id;

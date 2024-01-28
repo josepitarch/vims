@@ -1,5 +1,6 @@
 import 'dart:convert' as json;
 
+import 'package:vims/models/image.dart';
 import 'package:vims/models/poster.dart';
 
 class Movie extends BaseMovie {
@@ -131,16 +132,16 @@ class Movie extends BaseMovie {
 }
 
 class Cast {
-  final String name;
-  final String? image;
   final int id;
+  final String name;
+  final Image? image;
 
   Cast({required this.name, required this.image, required this.id});
 
   factory Cast.fromMap(Map<String, dynamic> json) => Cast(
         id: json['id'],
         name: json['name'],
-        image: json['image'],
+        image: json['image'] != null ? Image.fromMap(json['image']) : null,
       );
 }
 

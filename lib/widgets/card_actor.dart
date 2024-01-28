@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
-import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/custom_image.dart';
 
 class CardActor extends StatelessWidget {
@@ -12,7 +11,6 @@ class CardActor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     onTap() {
       final Map<String, dynamic> arguments = {

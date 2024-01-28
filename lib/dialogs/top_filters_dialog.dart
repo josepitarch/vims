@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vims/models/enums/genres.dart';
 import 'package:vims/models/enums/platforms.dart';
 import 'package:vims/models/filters.dart';
-import 'package:vims/providers/implementation/top_movies_provider.dart';
+import 'package:vims/providers/implementation/top_provider.dart';
 import 'package:vims/widgets/card_genre.dart';
 import 'package:vims/widgets/platform_item.dart';
 import 'package:vims/widgets/year_container.dart';

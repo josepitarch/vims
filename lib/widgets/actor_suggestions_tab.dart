@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/providers/implementation/search_actor_provider.dart';
+import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/widgets/card_actor.dart';
 import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';

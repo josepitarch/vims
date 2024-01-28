@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
-import 'package:vims/services/api/actor_filmography_service.dart';
+import 'package:vims/services/api/person_filmography.dart';
 
 final Logger logger = Logger();
 

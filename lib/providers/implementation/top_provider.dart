@@ -1,9 +1,9 @@
 import 'package:logger/logger.dart';
 import 'package:vims/models/enums/mode_views.dart';
 import 'package:vims/models/filters.dart';
-import 'package:vims/models/top_movie.dart';
+import 'package:vims/models/top.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
-import 'package:vims/services/api/top_movies_service.dart';
+import 'package:vims/services/api/top_service.dart';
 
 List<int> randomNumbers = List.generate(20, (index) => index + 1)..shuffle();
 

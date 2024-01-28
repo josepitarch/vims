@@ -3,18 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/l10n/l10n.dart';
-import 'package:vims/pages/actor_screen.dart';
+import 'package:vims/pages/person_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
 import 'package:vims/pages/section_screen.dart';
-import 'package:vims/providers/implementation/actor_profile_provider.dart';
+import 'package:vims/providers/implementation/person_profile_provider.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
-import 'package:vims/providers/implementation/search_actor_provider.dart';
+import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
-import 'package:vims/providers/implementation/top_movies_provider.dart';
+import 'package:vims/providers/implementation/top_provider.dart';
 import 'package:vims/widgets/navigation_bar.dart';
 
 Future<void> main() async {

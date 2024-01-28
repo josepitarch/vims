@@ -8,12 +8,12 @@ Future<PagedResponse<MovieSuggestion>> getMovieSuggestions(
   if (query.isEmpty) return PagedResponse.origin();
 
   final Map<String, String> parameters = {
-    'movie': query,
+    'q': query,
     'page': page.toString(),
     'order': order,
   };
 
-  final Map response = await request('search/movie', 2, parameters);
+  final Map response = await request('search/movie', 1, parameters);
 
   final List<MovieSuggestion> results = response['results']
       .map<MovieSuggestion>((suggestion) => MovieSuggestion.fromMap(suggestion))
@@ -31,6 +31,6 @@ Future<Suggestion> getAutocomplete(String query) async {
 
   final Map<String, String> parameters = {'search': query};
 
-  return await request('autocomplete', 2, parameters)
+  return await request('autocomplete', 1, parameters)
       .then((value) => Suggestion.fromMap(value));
 }
