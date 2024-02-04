@@ -53,7 +53,7 @@ android {
         applicationId "com.jopimi.vims"
         minSdkVersion 28
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 22
+        versionCode 23
         versionName flutterVersionName
     }
 
