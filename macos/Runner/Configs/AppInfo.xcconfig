@@ -8,7 +8,7 @@
 PRODUCT_NAME = vims
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.jopimi.vims
+PRODUCT_BUNDLE_IDENTIFIER = com.jopimir.vims
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 com.jopimi.vims All rights reserved.
