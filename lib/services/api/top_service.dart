@@ -17,7 +17,7 @@ Future<PagedResponse<TopMovie>> getTopMovies(Filters filters,
     'to_year': filters.yearTo.toString()
   };
 
-  final Map response = await request('top', 1, parameters);
+  final Map response = await request('top', 1, queryParams: parameters);
   final List<TopMovie> results = response['results']
       .map<TopMovie>((topMovie) => TopMovie.fromMap(topMovie))
       .toList();

@@ -8,3 +8,10 @@ Future<Movie> getMovie(int id) async {
 
   return Movie.fromMap(response);
 }
+
+Future<dynamic> createUserReview(int userId, int movieId, String review) async {
+  final Map<String, dynamic> response =
+      await request('movie/$movieId/review', 1, body: review);
+
+  return response;
+}

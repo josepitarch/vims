@@ -12,7 +12,8 @@ Future<PagedResponse<Actor>> getActorSuggestions(
     'order': order,
   };
 
-  final Map response = await request('search/person', 1, parameters);
+  final Map response =
+      await request('search/person', 1, queryParams: parameters);
 
   final List<Actor> results = response['results']
       .map<Actor>((suggestion) => Actor.fromMap(suggestion))
