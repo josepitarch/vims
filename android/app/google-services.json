@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "938335500353",
+    "project_id": "vims-app",
+    "storage_bucket": "vims-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938335500353:android:15ffadd054e647a19b6ec0",
+        "android_client_info": {
+          "package_name": "com.jopimi.vims"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938335500353-okabudlrvoufnp4rq44f4gnfpsn0d4k6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jopimi.vims",
+            "certificate_hash": "732befb3eabb864d400a9c86c17fa7bd6131da20"
+          }
+        },
+        {
+          "client_id": "938335500353-bap2s9kqg5t3k27l916i1aafof6a34k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcN3C8FtbQPfwRrEHexd6mEAnJUjEhADM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938335500353-5obmnfrcbeik951579rggaqscct5vt68.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "938335500353-c4nlch3i513mak4nn1la0cg78t83kkns.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.scrapperFilmaffinity"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
