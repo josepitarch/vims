@@ -2,6 +2,7 @@ import 'dart:convert' as json;
 
 import 'package:vims/models/image.dart';
 import 'package:vims/models/poster.dart';
+import 'package:vims/models/review.dart';
 
 class Movie extends BaseMovie {
   final String flag;
@@ -18,10 +19,9 @@ class Movie extends BaseMovie {
   final List<String> genres;
   final List<String>? groups;
   final String synopsis;
-
   final double? rating;
   final Justwatch justwatch;
-  final List<Review> reviews;
+  final Review reviews;
   final List<String>? platforms;
   String? heroTag;
 
@@ -86,29 +86,9 @@ class Movie extends BaseMovie {
       synopsis: json['synopsis'],
       rating: rating,
       justwatch: Justwatch.fromMap(json['justwatch']),
-      reviews: List<Review>.from(json['reviews'].map((x) => Review.fromMap(x))),
+      reviews: Review.fromMap(json['reviews']),
     );
   }
-
-  factory Movie.fromIncompleteMovie(Map<String, dynamic> json) => Movie(
-      id: json['id'],
-      title: json['title'],
-      poster: Poster.fromMap(json['poster']),
-      originalTitle: json['originalTitle'] ?? json['title'],
-      flag: '',
-      year: json['year'] ?? '',
-      country: json['country'] ?? '',
-      cast: [],
-      genres: [],
-      synopsis: '',
-      justwatch: Justwatch(buy: [], rent: [], flatrate: []),
-      director: json['director'],
-      rating: json['rating'],
-      reviews: [],
-      platforms: json['platforms'] == null
-          ? []
-          : List<String>.from(json['platforms'].map((x) => x)));
-
   Map<String, dynamic> toMap() => {
         'id': id,
         'year': year,
@@ -127,7 +107,7 @@ class Movie extends BaseMovie {
         'poster': poster,
         'average': rating,
         'justwatch': justwatch,
-        'reviews': List<Review>.from(reviews.map((x) => x.toMap())),
+        'reviews': reviews.toMap(),
       };
 }
 
@@ -193,34 +173,6 @@ class Platform {
         'name': name,
         'url': url,
         'icon': icon,
-      };
-}
-
-class Review {
-  String body;
-  String author;
-  String inclination;
-  String? reference;
-
-  Review({
-    required this.body,
-    required this.author,
-    required this.inclination,
-    this.reference,
-  });
-
-  factory Review.fromMap(Map<String, dynamic> json) => Review(
-        body: json['body'],
-        author: json['author'],
-        inclination: json['inclination'],
-        reference: json['reference'],
-      );
-
-  Map<String, dynamic> toMap() => {
-        'body': body,
-        'author': author,
-        'inclination': inclination,
-        'reference': reference,
       };
 }
 

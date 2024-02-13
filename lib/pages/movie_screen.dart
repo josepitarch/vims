@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/movie.dart';
+import 'package:vims/models/review.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/ui/box_decoration.dart';
@@ -64,8 +65,8 @@ class MovieScreen extends StatelessWidget {
               _Genres(movie.genres),
               _Cast(movie.cast),
               _Platforms(movie.justwatch),
-              movie.reviews.isNotEmpty
-                  ? _Reviews(movie.reviews)
+              movie.reviews.critics.isNotEmpty
+                  ? _Reviews(movie.reviews.critics)
                   : const SizedBox(),
               const SizedBox(height: 10)
             ]),
@@ -497,7 +498,7 @@ class _PlatformsState extends State<_Platforms> {
 class _Reviews extends StatelessWidget {
   const _Reviews(this.reviews);
 
-  final List<Review> reviews;
+  final List<CriticReview> reviews;
 
   @override
   Widget build(BuildContext context) {

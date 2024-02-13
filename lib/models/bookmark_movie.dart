@@ -1,5 +1,6 @@
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/poster.dart';
+import 'package:vims/models/review.dart';
 
 class BookmarkMovie {
   final int id;
@@ -40,6 +41,6 @@ class BookmarkMovie {
         justwatch: Justwatch(buy: [], rent: [], flatrate: []),
         director: director,
         rating: rating,
-        reviews: []);
+        reviews: Review(critics: [], users: []));
   }
 }

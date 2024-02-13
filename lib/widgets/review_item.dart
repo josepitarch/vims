@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:vims/models/enums/inclination.dart';
 import 'package:vims/models/movie.dart';
+import 'package:vims/models/review.dart';
 
 class ReviewItem extends StatelessWidget {
-  final Review review;
+  final CriticReview review;
   const ReviewItem({required this.review, super.key});
 
   @override
@@ -20,7 +22,7 @@ class ReviewItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            review.body.replaceAll("\"", ''),
+            review.content.replaceAll("\"", ''),
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 15),
@@ -41,11 +43,11 @@ class ReviewItem extends StatelessWidget {
     );
   }
 
-  Container buildInclination(String inclination) {
+  Container buildInclination(Inclination inclination) {
     Map inclinationColors = {
-      'positive': Colors.green,
-      'negative': Colors.red,
-      'neutral': Colors.yellow,
+      Inclination.POSITIVE: Colors.green,
+      Inclination.NEUTRAL: Colors.yellow,
+      Inclination.NEGATIVE: Colors.red,
     };
 
     return Container(
