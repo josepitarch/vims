@@ -1,8 +1,10 @@
 {
     "home": "Home",
     "top": "Top",
-    "bookmarks": "Bookmarks",
     "search": "Search",
+    "account": "Account",
+    "my_reviews": "My reviews",
+    "my_bookmarks": "My bookmarks",
     "no_bookmarks": "No bookmarks yet",
     "see_more": "See more",
     "see_less": "See less",
@@ -61,5 +63,23 @@
     "thriller": "Thriller",
     "mystery": "Mystery",
     "western": "Western",
-    "kids": "Kids"
+    "kids": "Kids",
+    
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign in",
+    "mandatory_email": "Please, enter your email",
+    "mandatory_password": "Please, enter your password",
+    "forgot_password": "Forgot your password?",
+    "create_account": "Create an account",
+    "confirm_password": "Confirm password",
+    "invalid_email": "Invalid email",
+    "unregistered_account": "The email is not registered",
+    "incorrect_password": "Incorrect password",
+    "reset_password": "Reset password",
+    "reset_email": "We have sent you an email to reset your password",
+    "no_account_yet": "Don't have an account yet?",
+    "register": "Register",
+    "back": "Back"
+
 }

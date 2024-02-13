@@ -1,8 +1,10 @@
 {
   "home": "Inicio",
   "top": "Top",
-  "bookmarks": "Guardados",
   "search": "Buscar",
+  "account": "Cuenta",
+  "my_reviews": "Mis críticas",
+  "my_bookmarks": "Mis marcadores",
   "no_bookmarks": "No tienes marcada ninguna película todavía",
   "see_more": "Ver más",
   "see_less": "Ver menos",
@@ -61,5 +63,22 @@
   "thriller": "Thriller",
   "mystery": "Misterio",
   "western": "Western",
-  "kids": "Infantil"
+  "kids": "Infantil",
+
+  "email": "Tu correo",
+  "password": "Tu contraseña",
+  "sign_in": "Acceder",
+  "mandatory_email": "Por favor, introduce tu correo",
+  "mandatory_password": "Por favor, introduce tu contraseña",
+  "forgot_password": "¿Olvidate tu contraseña?",
+  "create_account": "Crear cuenta",
+  "confirm_password": "Confirma tu contraseña",
+  "invalid_email": "Por favor, introduce un correo válido",
+  "unregistered_account": "El correo introducido no está registrado",
+  "incorrect_password": "La contraseña es incorrecta",
+  "reset_password": "Restablecer contraseña",
+  "reset_email": "Introduce tu correo para restablecer tu contraseña",
+  "no_account_yet": "¿No tienes cuenta?",
+  "register": "Regístrate",
+  "back": "Volver"
 }
