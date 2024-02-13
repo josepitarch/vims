@@ -1,1 +1,5 @@
-enum Inclination { POSITIVE, NEUTRAL, NEGATIVE }
+enum Inclination {
+  POSITIVE,
+  NEUTRAL,
+  NEGATIVE,
+}

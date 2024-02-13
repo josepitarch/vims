@@ -51,6 +51,7 @@ pubspec.lock
 upload-keystore.jks
 
 /assets/templates
-windows/
+
 linux/
+windows/
 web/

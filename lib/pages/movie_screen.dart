@@ -68,7 +68,13 @@ class MovieScreen extends StatelessWidget {
               _Genres(movie.genres),
               _Cast(movie.cast),
               _Platforms(movie.justwatch),
+<<<<<<< HEAD
               _Reviews(movie.reviews),
+=======
+              movie.reviews.critics.isNotEmpty
+                  ? _Reviews(movie.reviews.critics)
+                  : const SizedBox(),
+>>>>>>> main
               const SizedBox(height: 10)
             ]),
           )
