@@ -4,6 +4,7 @@ import 'package:vims/pages/bookmark_movies_screen.dart';
 import 'package:vims/pages/search_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_screen.dart';
+import 'package:vims/pages/user_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> screens = [
     const SectionsScreen(),
     const TopMoviesScreen(),
-    const BookmarkMoviesScreen(),
     const SearchMovieScreen(),
+    const UserProfileScreen()
   ];
 
   @override
@@ -29,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final List destinations = [
       {'label': i18n.home, 'icon': Icons.home},
       {'label': i18n.top, 'icon': Icons.list_alt_sharp},
-      {'label': i18n.bookmarks, 'icon': Icons.bookmark},
-      {'label': i18n.search, 'icon': Icons.search_outlined}
+      {'label': i18n.search, 'icon': Icons.search_outlined},
+      {'label': i18n.account, 'icon': Icons.account_circle_sharp}
     ];
 
     return Scaffold(

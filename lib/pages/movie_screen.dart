@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:vims/dialogs/user_review_dialog.dart';
 import 'package:vims/models/movie.dart';
+import 'package:vims/models/review.dart';
 import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/ui/box_decoration.dart';
@@ -64,9 +68,7 @@ class MovieScreen extends StatelessWidget {
               _Genres(movie.genres),
               _Cast(movie.cast),
               _Platforms(movie.justwatch),
-              movie.reviews.isNotEmpty
-                  ? _Reviews(movie.reviews)
-                  : const SizedBox(),
+              _Reviews(movie.reviews),
               const SizedBox(height: 10)
             ]),
           )
@@ -494,23 +496,97 @@ class _PlatformsState extends State<_Platforms> {
   }
 }
 
-class _Reviews extends StatelessWidget {
+class _Reviews extends StatefulWidget {
+  final Review reviews;
+
   const _Reviews(this.reviews);
 
-  final List<Review> reviews;
+  @override
+  State<_Reviews> createState() => _ReviewsState();
+}
+
+class _ReviewsState extends State<_Reviews> {
+  int tab = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _TitleHeader(i18n.reviews),
+        Row(children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    tab == 0 ? Colors.black26 : Colors.transparent),
+            onPressed: () => setState(() => tab = 0),
+            child: Text('Críticos',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: Colors.orange)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    tab == 1 ? Colors.orange[600] : Colors.transparent),
+            onPressed: () => setState(() => tab = 1),
+            child: Text('Usuarios',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: Colors.orange)),
+          ),
+        ]),
+        tab == 0 ? _CriticReviews(widget.reviews.critics) : _UserReviews(),
+      ],
+    );
+  }
+}
+
+class _CriticReviews extends StatelessWidget {
+  final List<CriticReview> criticReviews;
+  const _CriticReviews(this.criticReviews);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TitleHeader(i18n.reviews),
-          ...reviews.map((review) => ReviewItem(review: review))
-        ],
-      ),
-    );
+    return Column(
+        children:
+            criticReviews.map((review) => ReviewItem(review: review)).toList());
+  }
+}
+
+class _UserReviews extends StatelessWidget {
+  const _UserReviews();
+
+  @override
+  Widget build(BuildContext context) {
+    //onPresssed with arrow function
+    onPressed() {
+      // TODO: redirect to login screen
+      if (FirebaseAuth.instance.currentUser == null) {
+        SnackBarUtils.show(
+            context, 'Debes iniciar sesión para escribir una crítica');
+        return;
+      }
+      showCupertinoDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => const UserReviewDialog())
+          .then((value) {
+        if (value != null) {
+          SnackBarUtils.show(context, 'Crítica: $value');
+        }
+      });
+    }
+
+    // TODO
+
+    return Column(children: [
+      ElevatedButton(
+        onPressed: onPressed,
+        child: Text('Escribe una crítica',
+            style: TextStyle(color: Colors.orange, fontSize: 18)),
+      )
+    ]);
   }
 }
 
