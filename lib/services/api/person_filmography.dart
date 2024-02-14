@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/models/paged_response.dart';
-import 'package:vims/utils/request.dart';
+import 'package:vims/utils/api.dart';
 
 Future<PagedResponse<ActorMovie>> getActorFilmography(int id, int page) async {
-  final Map<String, dynamic> parameters = {'page': page.toString()};
+  final Map<String, String> parameters = {'page': page.toString()};
   final Map response =
-      await request('person/filmography/$id', 1, queryParams: parameters);
+      await api('person/filmography/$id', 1, queryParams: parameters);
 
   final List<ActorMovie> results = response['results']
       .map<ActorMovie>((topMovie) => ActorMovie.fromMap(topMovie))

@@ -1,7 +1,7 @@
 import 'package:vims/models/paged_response.dart';
 import 'package:vims/models/movie_suggestion.dart';
 import 'package:vims/models/suggestion.dart';
-import 'package:vims/utils/request.dart';
+import 'package:vims/utils/api.dart';
 
 Future<PagedResponse<MovieSuggestion>> getMovieSuggestions(
     String query, int page, String order) async {
@@ -13,8 +13,7 @@ Future<PagedResponse<MovieSuggestion>> getMovieSuggestions(
     'order': order,
   };
 
-  final Map response =
-      await request('search/movie', 1, queryParams: parameters);
+  final Map response = await api('search/movie', 1, queryParams: parameters);
 
   final List<MovieSuggestion> results = response['results']
       .map<MovieSuggestion>((suggestion) => MovieSuggestion.fromMap(suggestion))
@@ -32,6 +31,6 @@ Future<Suggestion> getAutocomplete(String query) async {
 
   final Map<String, String> parameters = {'search': query};
 
-  return await request('autocomplete', 1, queryParams: parameters)
+  return await api('autocomplete', 1, queryParams: parameters)
       .then((value) => Suggestion.fromMap(value));
 }

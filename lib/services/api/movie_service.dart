@@ -1,17 +1,22 @@
 import 'dart:async';
 
+import 'package:vims/models/enums/http_method.dart';
 import 'package:vims/models/movie.dart';
-import 'package:vims/utils/request.dart';
+import 'package:vims/models/review.dart';
+import 'package:vims/utils/api.dart';
 
 Future<Movie> getMovie(int id) async {
-  final Map<String, dynamic> response = await request('movie/$id', 1);
+  final Map<String, dynamic> response = await api('movie/$id', 1);
 
   return Movie.fromMap(response);
 }
 
-Future<dynamic> createUserReview(int userId, int movieId, String review) async {
-  final Map<String, dynamic> response =
-      await request('movie/$movieId/review', 1, body: review);
+Future<UserReview> createUserReview(
+    String userId, int movieId, UserReview review) async {
+  final Map<String, dynamic> response = await api('movie/$movieId/review', 1,
+      method: HttpMethod.POST,
+      queryParams: {'user_id': userId},
+      body: {'review': review.toMap()});
 
-  return response;
+  return UserReview.fromMap(response);
 }

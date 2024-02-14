@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:vims/models/filters.dart';
 import 'package:vims/models/paged_response.dart';
 import 'package:vims/models/top.dart';
-import 'package:vims/utils/request.dart';
+import 'package:vims/utils/api.dart';
 
 Future<PagedResponse<TopMovie>> getTopMovies(Filters filters,
     [int page = 1]) async {
@@ -17,7 +17,7 @@ Future<PagedResponse<TopMovie>> getTopMovies(Filters filters,
     'to_year': filters.yearTo.toString()
   };
 
-  final Map response = await request('top', 1, queryParams: parameters);
+  final Map response = await api('top', 1, queryParams: parameters);
   final List<TopMovie> results = response['results']
       .map<TopMovie>((topMovie) => TopMovie.fromMap(topMovie))
       .toList();
