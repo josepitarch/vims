@@ -7,7 +7,7 @@ import 'package:vims/services/api/top_service.dart';
 
 List<int> randomNumbers = List.generate(20, (index) => index + 1)..shuffle();
 
-class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
+final class TopMoviesProvider extends InfiniteScrollProvider<TopMovie> {
   bool hasFilters = false;
   ModeView modeView = ModeView.list;
 

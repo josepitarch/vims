@@ -1,8 +1,9 @@
 import 'package:vims/models/movie.dart';
+import 'package:vims/models/review.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/api/movie_service.dart';
 
-class MovieProvider extends BaseProvider<Map<int, Movie>> {
+final class MovieProvider extends BaseProvider<Map<int, Movie>> {
   late int id;
   MovieProvider() : super(data: {}, isLoading: true);
 
@@ -35,5 +36,18 @@ class MovieProvider extends BaseProvider<Map<int, Movie>> {
   clear() {
     exception = null;
     data!.clear();
+  }
+
+  createReview(String userId, int movieId, UserReview review) {
+    createUserReview(userId, movieId, review).then((userReview) {
+      data![movieId]!.reviews.users.add(userReview);
+      exception = null;
+    }).catchError((e) {
+      // TODO: show error message
+      print(e);
+    }).whenComplete(() {
+      isLoading = false;
+      notifyListeners();
+    });
   }
 }

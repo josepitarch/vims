@@ -9,7 +9,7 @@ import 'package:vims/services/api/search_person_service.dart';
 import 'package:vims/services/api/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
 
-class SearchActorProvider extends InfiniteScrollProvider<Actor> {
+final class SearchActorProvider extends InfiniteScrollProvider<Actor> {
   final SearchHistoryRepository repository = SearchHistoryRepositoryImpl();
   String search = '';
   final String order = 'relevance';

@@ -5,7 +5,7 @@ import 'package:vims/services/api/person_filmography.dart';
 
 final Logger logger = Logger();
 
-class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
+final class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
   final int id;
 
   FilmographyProvider({required this.id, required int page, data})

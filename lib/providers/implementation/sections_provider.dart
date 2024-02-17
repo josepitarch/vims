@@ -2,7 +2,7 @@ import 'package:vims/models/section.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/api/sections_service.dart';
 
-class SectionsProvider extends BaseProvider<List<Section>> {
+final class SectionsProvider extends BaseProvider<List<Section>> {
   DateTime lastUpdate = DateTime.now();
 
   SectionsProvider() : super(isLoading: true) {

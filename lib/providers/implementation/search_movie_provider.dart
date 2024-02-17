@@ -8,7 +8,7 @@ import 'package:vims/repositories/interface/search_history_repository.dart';
 import 'package:vims/services/api/search_movie_service.dart';
 import 'package:vims/utils/debounce.dart';
 
-class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
+final class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
   final SearchHistoryRepository repository = SearchHistoryRepositoryImpl();
   String search = '';
   final String order = 'relevance';

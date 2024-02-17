@@ -2,7 +2,7 @@ import 'package:vims/models/section.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/api/section_service.dart';
 
-class SectionProvider extends BaseProvider<Map<String, List<MovieSection>>> {
+final class SectionProvider extends BaseProvider<Map<String, List<MovieSection>>> {
   Map errors = {};
   late String title;
 
