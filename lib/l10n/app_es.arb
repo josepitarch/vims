@@ -19,12 +19,14 @@
   "no_synopsis": "Sinopsis no disponible",
   "no_platforms": "Plataformas no disponibles",
   "reviews": "Críticas",
+  "critic_reviews": "Críticos",
+  "user_reviews": "Usuarios",
   "search_movie": "Buscar película",
   "no_empty_search": "El campo no puede estar vacío",
   "total_results": "Resultados encontrados",
   "no_results": "No hay resultados",
   "delete_all_searchers": "Eliminar búsquedas recientes",
-  "title_bookmarks_page": "Tus marcadores",
+  "title_bookmarks_page": "Mis marcadores",
   "title_top_movies_page": "Top películas",
   "title_platforms_dialog": "Plataformas streaming",
   "title_years_dialog": "Años",
@@ -65,6 +67,10 @@
   "western": "Western",
   "kids": "Infantil",
 
+  "no_user_reviews": "Parece que todavía no hay críticas para esta película...\n ¡Sé el primero!",
+  "write_review": "Escribir una crítica",
+  "publish": "Publicar",
+
   "email": "Tu correo",
   "password": "Tu contraseña",
   "sign_in": "Acceder",
@@ -80,5 +86,16 @@
   "reset_email": "Introduce tu correo para restablecer tu contraseña",
   "no_account_yet": "¿No tienes cuenta?",
   "register": "Regístrate",
-  "back": "Volver"
+  "back": "Volver",
+  "required_login_review": "Debes iniciar sesión para escribir una crítica",
+  "required_login_bookmark": "Debes iniciar sesión para agregar a marcadores",
+
+  "delete_review_title_dialog": "Eliminar crítica",
+  "delete_review_content_dialog": "¿Estás seguro de que quieres eliminar esta crítica?",
+  "delete_review_successfully": "Crítica eliminada correctamente",
+  "delete_review_error": "Ha habido un problema al eliminar la crítica",
+  "delete_bookmark_title_dialog": "Eliminar marcador",
+  "delete_bookmark_content_dialog": "¿Estás seguro de que quieres eliminar este marcador?",
+  "delete_bookmark_successfully": "Marcador eliminado correctamente",
+  "delete_bookmark_error": "Ha habido un problema al eliminar el marcador"
 }
