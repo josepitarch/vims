@@ -4,8 +4,6 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 class LabelOverrides extends DefaultLocalizations {
   const LabelOverrides();
 
-  // TODO: migrate to i18n
-
   @override
   String get emailInputLabel => 'Tu correo';
 
