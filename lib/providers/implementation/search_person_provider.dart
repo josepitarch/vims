@@ -5,8 +5,7 @@ import 'package:vims/models/actor.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/repositories/implementation/search_history_repository.dart';
 import 'package:vims/repositories/interface/search_history_repository.dart';
-import 'package:vims/services/api/search_person_service.dart';
-import 'package:vims/services/api/search_movie_service.dart';
+import 'package:vims/services/api/search_service.dart';
 import 'package:vims/utils/debounce.dart';
 
 final class SearchActorProvider extends InfiniteScrollProvider<Actor> {
@@ -27,7 +26,7 @@ final class SearchActorProvider extends InfiniteScrollProvider<Actor> {
     isLoading = true;
     notifyListeners();
 
-    getActorSuggestions(search.toLowerCase(), page, order).then((value) {
+    getPeopleSuggestions(search.toLowerCase(), page, order).then((value) {
       total = value.total;
       hasNextPage = value.results.length < total!;
       data == null

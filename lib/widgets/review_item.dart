@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vims/models/enums/inclination.dart';
-import 'package:vims/models/movie.dart';
-import 'package:vims/models/review.dart';
 
 class ReviewItem extends StatelessWidget {
-  final CriticReview review;
-  const ReviewItem({required this.review, super.key});
+  final String? title;
+  final String content;
+  final String author;
+  final DateTime? date;
+  final Inclination inclination;
+
+  const ReviewItem(
+      {this.title,
+      required this.content,
+      required this.author,
+      this.date,
+      required this.inclination,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,29 +31,87 @@ class ReviewItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            review.content.replaceAll("\"", ''),
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          _Header(title: title, date: date),
+          _Body(content: content),
           const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildInclination(review.inclination),
-              Text(
-                review.author,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontStyle: FontStyle.italic,
-                    ),
-              ),
-            ],
-          )
+          _Footer(inclination: inclination, author: author),
         ],
       ),
     );
   }
+}
 
-  Container buildInclination(Inclination inclination) {
+class _Header extends StatelessWidget {
+  final String? title;
+  final DateTime? date;
+  const _Header({this.title, this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    if (title == null || date == null) {
+      return const SizedBox();
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title!,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+        ),
+        Text(
+          DateFormat('dd/MM/yyyy').format(date!),
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  final String content;
+  const _Body({required this.content});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      content,
+      style: Theme.of(context).textTheme.bodyLarge,
+    );
+  }
+}
+
+class _Footer extends StatelessWidget {
+  final Inclination inclination;
+  final String author;
+  const _Footer({required this.inclination, required this.author});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _Inclination(inclination),
+        Text(
+          author,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Inclination extends StatelessWidget {
+  final Inclination inclination;
+  const _Inclination(this.inclination);
+
+  @override
+  Widget build(BuildContext context) {
     Map inclinationColors = {
       Inclination.POSITIVE: Colors.green,
       Inclination.NEUTRAL: Colors.yellow,

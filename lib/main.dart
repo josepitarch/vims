@@ -8,12 +8,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
+import 'package:vims/pages/bookmark_movies_screen.dart';
 import 'package:vims/pages/person_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
 import 'package:vims/pages/section_screen.dart';
+import 'package:vims/pages/user_reviews_screen.dart';
 import 'package:vims/providers/implementation/person_profile_provider.dart';
-import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
+import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
+import 'package:vims/providers/implementation/reviews_provider.dart';
 import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
@@ -40,14 +43,14 @@ class AppState extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => SectionsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => TopMoviesProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => MovieProvider(), lazy: true),
+      ChangeNotifierProvider(create: (_) => MovieProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
-      ChangeNotifierProvider(
-          create: (_) => BookmarkMoviesProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => ActorProfileProvider(), lazy: true)
+      ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: true),
+      ChangeNotifierProvider(create: (_) => ActorProfileProvider(), lazy: true),
+      ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: false)
     ], child: const App());
   }
 }
@@ -68,7 +71,9 @@ class App extends StatelessWidget {
           'home': (_) => const HomeScreen(),
           'movie': (_) => const MovieScreen(),
           'section': (_) => const SectionScreen(),
-          'actor': (_) => const ActorScreen()
+          'actor': (_) => const ActorScreen(),
+          'bookmarks': (_) => const BookmarkMoviesScreen(),
+          'user-reviews': (_) => const UserReviewsScreen(),
         },
         theme: ThemeData.dark().copyWith(
             primaryColor: Colors.orange,

@@ -16,9 +16,18 @@ class BookmarkMovie {
       required this.director,
       this.rating});
 
+  factory BookmarkMovie.fromMap(Map<String, dynamic> map) {
+    return BookmarkMovie(
+        id: map['movie_id'],
+        poster: map['poster'],
+        title: map['title'],
+        director: map['director'],
+        rating: map['rating']);
+  }
+
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'movie_id': id,
       'poster': poster,
       'title': title,
       'director': director,

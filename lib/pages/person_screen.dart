@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/providers/implementation/person_profile_provider.dart';
-import 'package:vims/services/api/person_filmography.dart';
+import 'package:vims/services/api/person_service.dart';
 import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/country.dart';
@@ -190,7 +190,7 @@ class _FilmographyState extends State<_Filmography> {
     setState(() {
       isLoading = true;
     });
-    getActorFilmography(id, page).then((value) {
+    getPersonFilmography(id, page).then((value) {
       widget.movies!.addAll(value.results);
       total = value.total;
       limit = value.limit;

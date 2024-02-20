@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
-import 'package:vims/services/api/person_filmography.dart';
+import 'package:vims/services/api/person_service.dart';
 
 final Logger logger = Logger();
 
@@ -20,7 +20,7 @@ final class FilmographyProvider extends InfiniteScrollProvider<ActorMovie> {
   @override
   fetchData() {
     isLoading = true;
-    getActorFilmography(id, page).then((value) {
+    getPersonFilmography(id, page).then((value) {
       data == null ? data = value.results : data!.addAll(value.results);
       total = value.total;
       limit = value.limit;

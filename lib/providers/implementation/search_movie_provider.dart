@@ -5,7 +5,7 @@ import 'package:vims/models/movie_suggestion.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/repositories/implementation/search_history_repository.dart';
 import 'package:vims/repositories/interface/search_history_repository.dart';
-import 'package:vims/services/api/search_movie_service.dart';
+import 'package:vims/services/api/search_service.dart';
 import 'package:vims/utils/debounce.dart';
 
 final class SearchMovieProvider extends InfiniteScrollProvider<MovieSuggestion> {
