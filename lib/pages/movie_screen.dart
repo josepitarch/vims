@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/dialogs/user_review_dialog.dart';
+import 'package:vims/dialogs/create_review_dialog.dart';
+import 'package:vims/models/enums/inclination.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
-import 'package:vims/providers/implementation/bookmark_movies_provider.dart';
+import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
+import 'package:vims/providers/implementation/reviews_provider.dart';
 import 'package:vims/ui/box_decoration.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
@@ -68,13 +70,7 @@ class MovieScreen extends StatelessWidget {
               _Genres(movie.genres),
               _Cast(movie.cast),
               _Platforms(movie.justwatch),
-<<<<<<< HEAD
               _Reviews(movie.reviews),
-=======
-              movie.reviews.critics.isNotEmpty
-                  ? _Reviews(movie.reviews.critics)
-                  : const SizedBox(),
->>>>>>> main
               const SizedBox(height: 10)
             ]),
           )
@@ -251,21 +247,26 @@ class _BookmarkMovie extends StatefulWidget {
 }
 
 class _BookmarkMovieState extends State<_BookmarkMovie> {
-  late BookmarkMoviesProvider provider;
-  late bool isFavorite;
+  late BookmarksProvider provider;
+  bool isFavorite = false;
 
   @override
   void initState() {
-    provider = context.read<BookmarkMoviesProvider>();
-    provider.repository.getAllBookmarkMovies().then((value) => setState(() {
-          isFavorite = value.any((element) => element.id == widget.movie.id);
-        }));
+    provider = context.read<BookmarksProvider>();
+    if (FirebaseAuth.instance.currentUser != null) {
+      final bool isBookmark =
+          provider.data!.any((element) => element.id == widget.movie.id);
 
+      setState(() {
+        isFavorite = isBookmark;
+      });
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final i8n = AppLocalizations.of(context)!;
     try {
       return IconButton(
           iconSize: 27,
@@ -281,8 +282,12 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   }
 
   onPressed() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      SnackBarUtils.show(context, i18n.required_login_bookmark);
+      return;
+    }
     isFavorite
-        ? await provider.deleteBookmarkMovie(widget.movie)
+        ? await provider.removeBookmark(widget.movie.id)
         : await provider.insertBookmarkMovie(widget.movie);
 
     Map<String, List<String>> snackbarI18n = {
@@ -515,6 +520,7 @@ class _ReviewsState extends State<_Reviews> {
   int tab = 0;
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     return Column(
       children: [
         _TitleHeader(i18n.reviews),
@@ -524,7 +530,7 @@ class _ReviewsState extends State<_Reviews> {
                 backgroundColor:
                     tab == 0 ? Colors.black26 : Colors.transparent),
             onPressed: () => setState(() => tab = 0),
-            child: Text('Críticos',
+            child: Text(i18n.critic_reviews,
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge!
@@ -535,14 +541,16 @@ class _ReviewsState extends State<_Reviews> {
                 backgroundColor:
                     tab == 1 ? Colors.orange[600] : Colors.transparent),
             onPressed: () => setState(() => tab = 1),
-            child: Text('Usuarios',
+            child: Text(i18n.user_reviews,
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge!
                     .copyWith(color: Colors.orange)),
           ),
         ]),
-        tab == 0 ? _CriticReviews(widget.reviews.critics) : _UserReviews(),
+        tab == 0
+            ? _CriticReviews(widget.reviews.critics)
+            : _UserReviews(widget.reviews.users),
       ],
     );
   }
@@ -555,22 +563,29 @@ class _CriticReviews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        children:
-            criticReviews.map((review) => ReviewItem(review: review)).toList());
+        children: criticReviews
+            .map((review) => ReviewItem(
+                  author: review.author,
+                  content: review.content,
+                  inclination: review.inclination,
+                ))
+            .toList());
   }
 }
 
 class _UserReviews extends StatelessWidget {
-  const _UserReviews();
+  final List<UserReview> userReviews;
+  const _UserReviews(this.userReviews);
 
   @override
   Widget build(BuildContext context) {
-    //onPresssed with arrow function
+    final i18n = AppLocalizations.of(context)!;
+    final provider = Provider.of<MovieProvider>(context);
+    final user = FirebaseAuth.instance.currentUser;
+
     onPressed() {
-      // TODO: redirect to login screen
-      if (FirebaseAuth.instance.currentUser == null) {
-        SnackBarUtils.show(
-            context, 'Debes iniciar sesión para escribir una crítica');
+      if (user == null) {
+        SnackBarUtils.show(context, i18n.required_login_review);
         return;
       }
       showCupertinoDialog(
@@ -579,20 +594,42 @@ class _UserReviews extends StatelessWidget {
               builder: (BuildContext context) => const UserReviewDialog())
           .then((value) {
         if (value != null) {
-          SnackBarUtils.show(context, 'Crítica: $value');
+          final review = UserReview(
+              id: -1,
+              userId: user.uid,
+              movieId: provider.id,
+              title: 'Título',
+              content: value,
+              createdAt: DateTime.now(),
+              inclination: Inclination.POSITIVE);
+
+          provider.createReview(user.uid, provider.id, review);
+          context.read<UserReviewsProvider>().data!.add(review);
         }
       });
     }
 
-    // TODO
+    if (userReviews.isEmpty) {
+      return Column(children: [
+        Text(i18n.no_user_reviews,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyLarge!),
+        ElevatedButton(
+          onPressed: onPressed,
+          child: Text(i18n.write_review,
+              style: const TextStyle(color: Colors.orange, fontSize: 18)),
+        )
+      ]);
+    }
 
-    return Column(children: [
-      ElevatedButton(
-        onPressed: onPressed,
-        child: Text('Escribe una crítica',
-            style: TextStyle(color: Colors.orange, fontSize: 18)),
-      )
-    ]);
+    return Column(
+        children: userReviews
+            .map((review) => ReviewItem(
+                  author: '',
+                  content: review.content,
+                  inclination: review.inclination,
+                ))
+            .toList());
   }
 }
 
