@@ -50,4 +50,12 @@ final class MovieProvider extends BaseProvider<Map<int, Movie>> {
       notifyListeners();
     });
   }
+
+  removeReview(int movieId, int reviewId) {
+    data![movieId]!
+        .reviews
+        .users
+        .removeWhere((element) => element.id == reviewId);
+    notifyListeners();
+  }
 }
