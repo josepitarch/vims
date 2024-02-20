@@ -32,9 +32,17 @@ Future api(String path, int versionApi,
     'User-Agent': userAgent,
   };
 
-  Future<Response> request = method == HttpMethod.GET
-      ? get(uri, headers: headers)
-      : post(uri, headers: headers, body: jsonEncode(body));
+  Future<Response> request;
+
+  if (method == HttpMethod.GET) {
+    request = get(uri, headers: headers);
+  } else if (method == HttpMethod.POST) {
+    request = post(uri, headers: headers, body: jsonEncode(body));
+  } else if (method == HttpMethod.DELETE) {
+    request = delete(uri, headers: headers);
+  } else {
+    throw UnsupportedServerException('Method not allowed for this api version');
+  }
 
   Response response =
       await request.timeout(Duration(seconds: int.parse(TIMEOUT))).catchError(
@@ -42,6 +50,10 @@ Future api(String path, int versionApi,
           );
 
   if (response.statusCode == 200) return jsonDecode(response.body);
+
+  if (response.statusCode == 201) return jsonDecode(response.body);
+
+  if (response.statusCode == 204) return null;
 
   if (response.statusCode == 400) {
     throw BadRequestException('');
