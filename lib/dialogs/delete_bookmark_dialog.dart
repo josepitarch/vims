@@ -1,30 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class DeleteAllBookmarksDialog extends StatelessWidget {
-  const DeleteAllBookmarksDialog({super.key});
+class DeleteBookmarkDialog extends StatelessWidget {
+  final String userId;
+  final int movieId;
+  const DeleteBookmarkDialog(
+      {required this.userId, required this.movieId, super.key});
 
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return AlertDialog.adaptive(
       elevation: 0,
-      content: Text(i18n.delete_all_bookmarks,
-          style: Theme.of(context).textTheme.bodyLarge),
+      title: Text(i18n.delete_bookmark_title_dialog),
+      content: Text(i18n.delete_bookmark_content_dialog),
       actions: [
         TextButton(
-          child: Text(
-            i18n.cancel,
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-          ),
           onPressed: () => Navigator.pop(context, false),
+          child: Text(i18n.cancel),
         ),
         TextButton(
-          child: Text(
-            i18n.delete,
-            style: const TextStyle(color: Colors.red),
-          ),
           onPressed: () => Navigator.pop(context, true),
+          child: Text(i18n.delete),
         ),
       ],
     );
