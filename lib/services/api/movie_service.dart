@@ -13,7 +13,7 @@ Future<Movie> getMovie(int id) async {
 
 Future<UserReview> createUserReview(
     String userId, int movieId, UserReview review) async {
-  final Map<String, dynamic> response = await api('movie/$movieId/review', 1,
+  final Map<String, dynamic> response = await api('movie/$movieId/reviews', 1,
       method: HttpMethod.POST,
       queryParams: {'user_id': userId},
       body: {'review': review.toMap()});
