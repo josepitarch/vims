@@ -59,14 +59,18 @@ final class CriticReview {
 }
 
 final class UserReview {
+  final int id;
   final String userId;
+  final int movieId;
   final String title;
   final String content;
   final Inclination inclination;
   final DateTime createdAt;
 
   UserReview({
+    required this.id,
     required this.userId,
+    required this.movieId,
     required this.title,
     required this.content,
     required this.inclination,
@@ -74,7 +78,9 @@ final class UserReview {
   });
 
   factory UserReview.fromMap(Map<String, dynamic> json) => UserReview(
+        id: json['id'],
         userId: json['user_id'],
+        movieId: json['movie_id'],
         title: json['title'],
         content: json['content'],
         inclination: Inclination.values
@@ -83,11 +89,9 @@ final class UserReview {
       );
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
         'title': title,
         'content': content,
-        'inclination': inclination,
-        'createdAt': createdAt.toIso8601String(),
+        'inclination': inclination.name.toLowerCase(),
       };
 
   String toJson() => json.jsonEncode(toMap());

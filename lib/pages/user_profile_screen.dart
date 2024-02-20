@@ -108,13 +108,9 @@ class _UserMenuOptions extends StatelessWidget {
       {
         'title': i18n.my_reviews,
         'icon': Icons.rate_review,
-        'route': '/user-reviews'
+        'route': 'user-reviews'
       },
-      {
-        'title': i18n.my_bookmarks,
-        'icon': Icons.bookmark,
-        'route': '/user-favorites'
-      }
+      {'title': i18n.my_bookmarks, 'icon': Icons.bookmark, 'route': 'bookmarks'}
     ];
 
     return Expanded(
