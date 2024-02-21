@@ -266,7 +266,6 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
 
   @override
   Widget build(BuildContext context) {
-    final i8n = AppLocalizations.of(context)!;
     try {
       return IconButton(
           iconSize: 27,
@@ -277,7 +276,7 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
             Icons.bookmark_border_outlined,
           ));
     } catch (e) {
-      return const SizedBox();
+      return const SizedBox.shrink();
     }
   }
 
@@ -445,55 +444,38 @@ class _PlatformsState extends State<_Platforms> {
       'buy': i18n.buy,
     };
 
+    if (platforms.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _TitleHeader(i18n.watch_now),
+          const _NoStreamingPlatforms(),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _TitleHeader(i18n.watch_now),
-        if (platforms.isEmpty)
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              i18n.no_platforms,
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(fontStyle: FontStyle.italic),
-            ),
-          ),
-        if (platforms.isNotEmpty)
-          Row(
-              children: justwatch.keys.map((key) {
-            return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                height: 40,
-                decoration: key == platformMode
-                    ? BoxDecorators.decoratorSelectedButton()
-                    : BoxDecorators.decoratorUnselectedButton(),
-                child: TextButton(
-                    onPressed: () => setPlatforms(key),
-                    style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 5))),
-                    child: Text(textButton[key]!,
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.orange[600]!,
-                            fontFamily: 'OpenSans',
-                            fontWeight: FontWeight.w500))));
-          }).toList()),
-        if (platforms.isNotEmpty)
-          SizedBox(
-            height: height,
-            child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(top: 10),
-                shrinkWrap: false,
-                children: platforms
-                    .map((platform) => JustwatchItem(platform,
-                        height: height, width: height - 10))
-                    .toList()),
-          ),
+        Row(
+            children: justwatch.keys.map((key) {
+          return _Button(
+              text: textButton[key]!,
+              isSelected: key == platformMode,
+              onPressed: () => setPlatforms(key));
+        }).toList()),
+        SizedBox(
+          height: height,
+          child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(top: 10),
+              shrinkWrap: false,
+              children: platforms
+                  .map((platform) => JustwatchItem(platform,
+                      height: height, width: height - 10))
+                  .toList()),
+        ),
       ],
     );
   }
@@ -525,28 +507,14 @@ class _ReviewsState extends State<_Reviews> {
       children: [
         _TitleHeader(i18n.reviews),
         Row(children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    tab == 0 ? Colors.black26 : Colors.transparent),
-            onPressed: () => setState(() => tab = 0),
-            child: Text(i18n.critic_reviews,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Colors.orange)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    tab == 1 ? Colors.orange[600] : Colors.transparent),
-            onPressed: () => setState(() => tab = 1),
-            child: Text(i18n.user_reviews,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Colors.orange)),
-          ),
+          _Button(
+              text: i18n.critic_reviews,
+              isSelected: tab == 0,
+              onPressed: () => setState(() => tab = 0)),
+          _Button(
+              text: i18n.user_reviews,
+              isSelected: tab == 1,
+              onPressed: () => setState(() => tab = 1)),
         ]),
         tab == 0
             ? _CriticReviews(widget.reviews.critics)
@@ -580,7 +548,33 @@ class _UserReviews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
-    final provider = Provider.of<MovieProvider>(context);
+
+    if (userReviews.isEmpty) {
+      return Column(children: [
+        Text(i18n.no_user_reviews,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyLarge!),
+        const _WriteReviewButton()
+      ]);
+    }
+
+    return Column(children: [
+      const _WriteReviewButton(),
+      ...userReviews.map((review) => ReviewItem(
+            author: '',
+            content: review.content,
+            inclination: review.inclination,
+          ))
+    ]);
+  }
+}
+
+class _WriteReviewButton extends StatelessWidget {
+  const _WriteReviewButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<MovieProvider>(context, listen: false);
     final user = FirebaseAuth.instance.currentUser;
 
     onPressed() {
@@ -598,8 +592,8 @@ class _UserReviews extends StatelessWidget {
               id: -1,
               userId: user.uid,
               movieId: provider.id,
-              title: 'Título',
-              content: value,
+              title: value['title'],
+              content: value['content'],
               createdAt: DateTime.now(),
               inclination: Inclination.POSITIVE);
 
@@ -609,27 +603,57 @@ class _UserReviews extends StatelessWidget {
       });
     }
 
-    if (userReviews.isEmpty) {
-      return Column(children: [
-        Text(i18n.no_user_reviews,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge!),
-        ElevatedButton(
-          onPressed: onPressed,
-          child: Text(i18n.write_review,
-              style: const TextStyle(color: Colors.orange, fontSize: 18)),
-        )
-      ]);
-    }
+    return TextButton.icon(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+            foregroundColor: Colors.grey[400]!,
+            elevation: 0,
+            textStyle: Theme.of(context).textTheme.bodyLarge),
+        icon: const Icon(Icons.rate_review),
+        label: Text(i18n.write_review));
+  }
+}
 
-    return Column(
-        children: userReviews
-            .map((review) => ReviewItem(
-                  author: '',
-                  content: review.content,
-                  inclination: review.inclination,
-                ))
-            .toList());
+class _Button extends StatelessWidget {
+  final String text;
+  final Function onPressed;
+  final bool isSelected;
+
+  const _Button(
+      {required this.text, required this.onPressed, required this.isSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: ButtonStyle(
+          backgroundColor:
+              isSelected ? MaterialStateProperty.all(Colors.black26) : null),
+      onPressed: () => onPressed(),
+      child: Text(text,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: Colors.orange)),
+    );
+  }
+}
+
+class _NoStreamingPlatforms extends StatelessWidget {
+  const _NoStreamingPlatforms();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Text(
+        i18n.no_platforms,
+        textAlign: TextAlign.center,
+        style: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(fontStyle: FontStyle.italic),
+      ),
+    );
   }
 }
 
