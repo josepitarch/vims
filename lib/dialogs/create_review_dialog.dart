@@ -7,19 +7,57 @@ class UserReviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
-    String userInput = '';
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController contentController = TextEditingController();
+
+    final formKey = GlobalKey<FormState>();
+    String title = '';
+    String content = '';
     return SafeArea(
       child: AlertDialog(
-        title: const Text('Escribe tu crítica'),
-        contentPadding: const EdgeInsets.all(16.0),
+        contentPadding: const EdgeInsets.all(10.0),
         titlePadding: const EdgeInsets.all(16.0),
-        content: SingleChildScrollView(
-          child: TextField(
-            onChanged: (value) {
-              userInput = value;
-            },
-            maxLines: 15,
-            maxLength: 500,
+        content: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(maxHeight: 700, maxWidth: 650),
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: titleController,
+                    onChanged: (value) {
+                      title = value;
+                    },
+                    validator: (value) =>
+                        value!.isEmpty ? 'i18n.required' : null,
+                    decoration: const InputDecoration(
+                      labelText: 'Título',
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red)),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    controller: contentController,
+                    onChanged: (value) {
+                      content = value;
+                    },
+                    validator: (value) =>
+                        value!.isEmpty ? 'i18n.required' : null,
+                    maxLines: 15,
+                    maxLength: 500,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
         actions: [
@@ -31,7 +69,9 @@ class UserReviewDialog extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context, userInput);
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(context, {'title': title, 'content': content});
+              }
             },
             child: Text(i18n.publish),
           ),
