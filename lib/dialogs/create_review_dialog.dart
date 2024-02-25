@@ -9,10 +9,11 @@ class UserReviewDialog extends StatelessWidget {
     final i18n = AppLocalizations.of(context)!;
     final TextEditingController titleController = TextEditingController();
     final TextEditingController contentController = TextEditingController();
-
     final formKey = GlobalKey<FormState>();
+
     String title = '';
     String content = '';
+
     return SafeArea(
       child: AlertDialog(
         contentPadding: const EdgeInsets.all(10.0),
@@ -31,7 +32,7 @@ class UserReviewDialog extends StatelessWidget {
                       title = value;
                     },
                     validator: (value) =>
-                        value!.isEmpty ? 'i18n.required' : null,
+                        value!.isEmpty ? i18n.mandatory_title_review : null,
                     decoration: const InputDecoration(
                       labelText: 'Título',
                       border: UnderlineInputBorder(
@@ -51,7 +52,7 @@ class UserReviewDialog extends StatelessWidget {
                       content = value;
                     },
                     validator: (value) =>
-                        value!.isEmpty ? 'i18n.required' : null,
+                        value!.isEmpty ? i18n.mandatory_content_review : null,
                     maxLines: 15,
                     maxLength: 500,
                   ),

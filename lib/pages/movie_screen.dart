@@ -10,7 +10,6 @@ import 'package:vims/models/review.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/reviews_provider.dart';
-import 'package:vims/ui/box_decoration.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/avatar.dart';
@@ -530,6 +529,14 @@ class _CriticReviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (criticReviews.isEmpty) {
+      return Text(i18n.no_critic_reviews,
+          textAlign: TextAlign.center,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontStyle: FontStyle.italic));
+    }
     return Column(
         children: criticReviews
             .map((review) => ReviewItem(

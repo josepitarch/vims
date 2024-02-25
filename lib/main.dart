@@ -1,24 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
 import 'package:vims/pages/bookmark_movies_screen.dart';
-import 'package:vims/pages/person_screen.dart';
+import 'package:vims/pages/edit_profile_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
+import 'package:vims/pages/person_screen.dart';
 import 'package:vims/pages/section_screen.dart';
 import 'package:vims/pages/user_reviews_screen.dart';
-import 'package:vims/providers/implementation/person_profile_provider.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
+import 'package:vims/providers/implementation/person_profile_provider.dart';
 import 'package:vims/providers/implementation/reviews_provider.dart';
-import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
+import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
@@ -74,6 +72,7 @@ class App extends StatelessWidget {
           'actor': (_) => const ActorScreen(),
           'bookmarks': (_) => const BookmarkMoviesScreen(),
           'user-reviews': (_) => const UserReviewsScreen(),
+          'edit-profile': (_) => const EditProfileScreen(),
         },
         theme: ThemeData.dark().copyWith(
             primaryColor: Colors.orange,
