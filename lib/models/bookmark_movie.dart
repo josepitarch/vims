@@ -7,22 +7,20 @@ class BookmarkMovie {
   final String poster;
   final String title;
   final String director;
-  final double? rating;
 
-  BookmarkMovie(
-      {required this.id,
-      required this.poster,
-      required this.title,
-      required this.director,
-      this.rating});
+  BookmarkMovie({
+    required this.id,
+    required this.poster,
+    required this.title,
+    required this.director,
+  });
 
   factory BookmarkMovie.fromMap(Map<String, dynamic> map) {
     return BookmarkMovie(
         id: map['movie_id'],
         poster: map['poster'],
         title: map['title'],
-        director: map['director'],
-        rating: map['rating']);
+        director: map['director']);
   }
 
   Map<String, dynamic> toMap() {
@@ -31,7 +29,6 @@ class BookmarkMovie {
       'poster': poster,
       'title': title,
       'director': director,
-      if (rating != null) 'rating': rating!
     };
   }
 
@@ -49,7 +46,6 @@ class BookmarkMovie {
         poster: Poster(mtiny: poster, mmed: poster, large: poster),
         justwatch: Justwatch(buy: [], rent: [], flatrate: []),
         director: director,
-        rating: rating,
         reviews: Review(critics: [], users: []));
   }
 }

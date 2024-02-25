@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,16 +38,13 @@ class BookmarkMoviesScreen extends StatelessWidget {
   }
 
   Future _openDialog(BuildContext context) {
-    final User user = FirebaseAuth.instance.currentUser!;
     return Theme.of(context).platform == TargetPlatform.android
         ? showDialog(
             context: context,
-            builder: (BuildContext context) =>
-                DeleteBookmarkDialog(userId: user.uid, movieId: 1))
+            builder: (BuildContext context) => const DeleteBookmarkDialog())
         : showCupertinoDialog(
             context: context,
-            builder: (BuildContext context) =>
-                DeleteBookmarkDialog(userId: user.uid, movieId: 1));
+            builder: (BuildContext context) => const DeleteBookmarkDialog());
   }
 }
 

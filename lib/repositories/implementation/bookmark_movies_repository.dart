@@ -30,8 +30,7 @@ class BookmarkMoviesRepositoryImpl implements BookmarkMoviesRepository {
           id: maps[i]['id'],
           poster: maps[i]['poster'],
           title: maps[i]['title'],
-          director: maps[i]['director'],
-          rating: maps[i]['rating']);
+          director: maps[i]['director']);
     });
   }
 

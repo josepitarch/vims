@@ -39,15 +39,12 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
   }
 
   Future<bool> insertBookmarkMovie(Movie movie) async {
-    final double? rating =
-        movie.rating != null ? double.parse(movie.rating.toString()) : null;
-
     final bookmarkMovie = BookmarkMovie(
-        id: movie.id,
-        poster: movie.poster.large,
-        title: movie.title,
-        director: movie.director ?? '',
-        rating: rating);
+      id: movie.id,
+      poster: movie.poster.large,
+      title: movie.title,
+      director: movie.director ?? '',
+    );
 
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
