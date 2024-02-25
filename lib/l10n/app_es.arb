@@ -28,6 +28,8 @@
   "delete_all_searchers": "Eliminar búsquedas recientes",
   "title_bookmarks_page": "Mis marcadores",
   "title_top_movies_page": "Top películas",
+  "title_profile_page": "Tu perfil",
+  "title_user_reviews_page": "Mis críticas",
   "title_platforms_dialog": "Plataformas streaming",
   "title_years_dialog": "Años",
   "select_year": "Selecciona un año",
@@ -47,12 +49,15 @@
   "add_serie_bookmark": "Serie añadida correctamente",
   "delete_serie_bookmark": "Serie eliminada correctamente",
   "title_bookmark_dialog": "Ventana de confirmación",
-  "delete_all_bookmarks": "¿Estás seguro de que quieres eliminar todos los marcadores?",
   "timeout_error": "¡Ups! Parece que ha habido un problema con el servidor",
   "no_internet": "Compruebe su conexión a internet",
+  "accept": "Aceptar",
   "retry": "Reintentar",
   "cancel": "Cancelar",
   "delete": "Eliminar",
+  "verify_email": "Verificar email", 
+  "save": "Guardar",
+  "publish": "Publicar",
   
   "action": "Acción",
   "adventure": "Aventura",
@@ -67,9 +72,11 @@
   "western": "Western",
   "kids": "Infantil",
 
+  "no_critic_reviews": "Críticas de críticos no disponibles",
   "no_user_reviews": "Parece que todavía no hay críticas para esta película...\n ¡Sé el primero!",
   "write_review": "Escribir una crítica",
-  "publish": "Publicar",
+  "mandatory_title_review": "Campo obligatorio",
+  "mandatory_content_review": "Campo obligatorio",
 
   "email": "Tu correo",
   "password": "Tu contraseña",
@@ -87,8 +94,13 @@
   "no_account_yet": "¿No tienes cuenta?",
   "register": "Regístrate",
   "back": "Volver",
+  "logout": "Cerrar sesión",
   "required_login_review": "Debes iniciar sesión para escribir una crítica",
   "required_login_bookmark": "Debes iniciar sesión para agregar a marcadores",
+  "required_relogin": "Debes volver a iniciar sesión",
+  "photo_profile_scope": "La foto de perfil solamente puedes verla tú.",
+  "error_update_photo_profile": "No se ha podido actualizar la foto de perfil",
+  "your_name": "Tu nombre",
 
   "delete_review_title_dialog": "Eliminar crítica",
   "delete_review_content_dialog": "¿Estás seguro de que quieres eliminar esta crítica?",
@@ -97,5 +109,9 @@
   "delete_bookmark_title_dialog": "Eliminar marcador",
   "delete_bookmark_content_dialog": "¿Estás seguro de que quieres eliminar este marcador?",
   "delete_bookmark_successfully": "Marcador eliminado correctamente",
-  "delete_bookmark_error": "Ha habido un problema al eliminar el marcador"
+  "delete_bookmark_error": "Ha habido un problema al eliminar el marcador",
+  "email_verified_content_dialog": "Tu correo está verificado",
+  "email_not_verified_content_dialog": "Tu correo no está verificado",
+  "delete_account_title_dialog": "Eliminar cuenta",
+  "delete_account_content_dialog": "Esta acción implica que se borrará tu perfil y tanto todas tus reseñas como tus marcadores. ¡Esta acción no se puede deshacer!\n\n Lamentamos que te vayas... seguiremos por aquí por si decides volver."
 }
