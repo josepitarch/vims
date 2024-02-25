@@ -43,3 +43,7 @@ Future<void> deleteBookmark(String userId, int movieId) async {
   return await api('users/$userId/bookmarks/$movieId', 1,
       method: HttpMethod.DELETE);
 }
+
+Future<void> deleteAccount(String userId) async {
+  return await api('users/$userId', 1, method: HttpMethod.DELETE);
+}
