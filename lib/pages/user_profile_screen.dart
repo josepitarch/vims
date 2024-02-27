@@ -6,14 +6,12 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/constants/ui/assets.dart';
 import 'package:vims/dialogs/delete_account_dialog.dart';
-import 'package:vims/models/enums/http_method.dart';
 import 'package:vims/services/api/user_service.dart';
-import 'package:vims/utils/api.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/user_info_profile.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/widgets/user_menu_options.dart';
 
 final GOOGLE_CLIENT_ID = dotenv.env['GOOGLE_CLIENT_ID'];
@@ -29,10 +27,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
+    final googleClientId = Theme.of(context).platform == TargetPlatform.android
+        ? dotenv.env['GOOGLE_CLIENT_ID_ANDROID']
+        : dotenv.env['GOOGLE_CLIENT_ID_IOS'];
 
     final List<AuthProvider> providers = [
       EmailAuthProvider(),
-      GoogleProvider(clientId: GOOGLE_CLIENT_ID!)
+      GoogleProvider(clientId: googleClientId!)
     ];
 
     return StreamBuilder<User?>(
