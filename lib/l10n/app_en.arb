@@ -72,6 +72,7 @@
     "western": "Western",
     "kids": "Kids",
 
+    "no_reviews": "It looks like you haven't written any reviews yet... Cheer up!",
     "no_critic_reviews": "Critics reviews no available",
     "no_user_reviews": "Seems there is no reviews yet...\nBe the first one to write a review!",
     "write_review": "Write a review",

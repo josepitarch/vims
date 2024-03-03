@@ -72,6 +72,7 @@
   "western": "Western",
   "kids": "Infantil",
 
+  "no_reviews": "Parece que todavía no has escrito ninguna crítica...\n ¡Anímate!",
   "no_critic_reviews": "Críticas de críticos no disponibles",
   "no_user_reviews": "Parece que todavía no hay críticas para esta película...\n ¡Sé el primero!",
   "write_review": "Escribir una crítica",
