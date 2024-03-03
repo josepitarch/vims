@@ -33,58 +33,62 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     final i18n = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser!;
 
-    return SafeArea(
-      child: Scaffold(
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          physics: const BouncingScrollPhysics(),
-          children: [
-            ProfileWidget(
-              userName: user.displayName ?? '',
-              isVerified: user.emailVerified,
-              imagePath: imagePath,
-              isEdit: true,
-              onClicked: () async {
-                final pickedImage =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (pickedImage == null) return;
+    return Scaffold(
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+        physics: const BouncingScrollPhysics(),
+        children: [
+          ProfileWidget(
+            userName: user.displayName ?? '',
+            isVerified: user.emailVerified,
+            imagePath: imagePath,
+            isEdit: true,
+            onClicked: () async {
+              final pickedImage =
+                  await ImagePicker().pickImage(source: ImageSource.gallery);
+              if (pickedImage == null) return;
 
-                setState(() {
-                  imagePath = pickedImage.path;
-                });
-              },
+              setState(() {
+                imagePath = pickedImage.path;
+              });
+            },
+          ),
+          const SizedBox(height: 24),
+          Text(
+            i18n.photo_profile_scope,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+          const SizedBox(height: 24),
+          TextField(
+            decoration: InputDecoration(
+              labelText: i18n.your_name,
             ),
-            const SizedBox(height: 24),
-            Text(
-              i18n.photo_profile_scope,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontStyle: FontStyle.italic),
-            ),
-            const SizedBox(height: 24),
-            TextField(
-              decoration: InputDecoration(
-                labelText: i18n.your_name,
-              ),
-              controller: _controller,
-              onChanged: (value) {
-                setState(() {
-                  userName = value;
-                });
-              },
-            ),
-            const SizedBox(height: 24),
-            _SaveButton(userName: userName, imagePath: imagePath),
-          ],
-        ),
+            controller: _controller,
+            onChanged: (value) {
+              setState(() {
+                userName = value;
+              });
+            },
+          ),
+          const SizedBox(height: 24),
+          _SaveButton(
+              userId: user.uid, userName: userName, imagePath: imagePath),
+        ],
       ),
     );
   }
 }
 
 class _SaveButton extends StatelessWidget {
+  final String userId;
   final String? userName;
   final String? imagePath;
-  const _SaveButton({required this.userName, required this.imagePath});
+  const _SaveButton(
+      {required this.userId, required this.userName, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,7 @@ class _SaveButton extends StatelessWidget {
       child: Text(i18n.save),
       onPressed: () async {
         if (imagePath != FirebaseAuth.instance.currentUser!.photoURL) {
-          postPhotoProfile(imagePath!)
+          postPhotoProfile(imagePath!, userId)
               .then((value) =>
                   FirebaseAuth.instance.currentUser!.updatePhotoURL(value))
               .catchError((error) =>

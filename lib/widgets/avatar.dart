@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vims/constants/ui/assets.dart';
 
 class AvatarView extends StatelessWidget {
   final String? image;
@@ -21,7 +22,6 @@ class AvatarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String assetImage = 'assets/loading-actor.gif';
     final Widget actorInitials = _ActorInitials(
         radius: size,
         borderWidth: borderWidth,
@@ -30,7 +30,7 @@ class AvatarView extends StatelessWidget {
 
     final Widget child = image != null
         ? FadeInImage(
-            placeholder: const AssetImage(assetImage),
+            placeholder: const AssetImage(Assets.SPINNER),
             image: NetworkImage(
               image!,
             ),

@@ -28,7 +28,7 @@ class ProfileWidget extends StatelessWidget {
     dynamic image;
 
     if (imagePath == null || imagePath!.isEmpty) {
-      image = AssetImage(ASSETS['NO_IMAGE']!);
+      image = const AssetImage(Assets.SPINNER);
     } else {
       image = imagePath!.contains('https')
           ? NetworkImage(imagePath!)
@@ -43,10 +43,10 @@ class ProfileWidget extends StatelessWidget {
                 color: Colors.transparent,
                 child: Ink.image(
                   image: FadeInImage(
-                    placeholder: AssetImage(ASSETS['LOADING_ACTOR']!),
+                    placeholder: const AssetImage(Assets.SPINNER),
                     image: image as ImageProvider,
                     imageErrorBuilder: (context, error, stackTrace) =>
-                        Image.asset(ASSETS['NO_IMAGE']!,
+                        Image.asset(Assets.NO_IMAGE,
                             fit: BoxFit.cover, width: 128, height: 128),
                   ).image,
                   fit: BoxFit.cover,

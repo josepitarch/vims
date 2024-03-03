@@ -569,6 +569,7 @@ class _UserReviews extends StatelessWidget {
       const _WriteReviewButton(),
       ...userReviews.map((review) => ReviewItem(
             author: '',
+            createdAt: review.createdAt,
             content: review.content,
             inclination: review.inclination,
           ))
@@ -599,7 +600,6 @@ class _WriteReviewButton extends StatelessWidget {
               id: -1,
               userId: user.uid,
               movieId: provider.id,
-              title: value['title'],
               content: value['content'],
               createdAt: DateTime.now(),
               inclination: Inclination.POSITIVE);

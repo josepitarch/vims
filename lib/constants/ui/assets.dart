@@ -1,5 +1,5 @@
-const Map<String, String> ASSETS = {
-  "NO_IMAGE": "assets/no-image.jpg",
-  "LOADING_ACTOR": "assets/loading-actor.gif",
-  "MOVIES_WALLPAPER": "assets/movies-wallpaper.png",
-};
+final class Assets {
+  static const String NO_IMAGE = "assets/no-image.jpg";
+  static const String SPINNER = "assets/loading-actor.gif";
+  static const String MOVIES_WALLPAPER = "assets/movies-wallpaper.png";
+}

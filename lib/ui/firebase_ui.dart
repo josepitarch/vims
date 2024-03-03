@@ -58,4 +58,17 @@ class LabelOverrides extends DefaultLocalizations {
 
   @override
   String get goBackButtonLabel => 'Volver';
+
+  @override
+  String get signInHintText => '¿Ya tienes cuenta?';
+
+  @override
+  String get forgotPasswordViewTitle => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get passwordResetEmailSentText =>
+      'Te hemos enviado un correo con un enlace para restablecer tu contraseña. Por favor, revisa tu bandeja de entrada.';
+
+  @override
+  String get signInWithGoogleButtonText => 'Acceder con Google';
 }

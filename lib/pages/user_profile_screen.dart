@@ -51,7 +51,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   return ImageFiltered(
                       imageFilter: ImageFilter.blur(sigmaX: 1.75, sigmaY: 0),
                       child: Image.asset(
-                        ASSETS['MOVIES_WALLPAPER']!,
+                        Assets.MOVIES_WALLPAPER,
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height * 0.40,
                         fit: BoxFit.cover,
@@ -99,16 +99,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       StreamBuilder<User?>(
                           stream: FirebaseAuth.instance.userChanges(),
                           builder: (context, snapshot) {
-                            // TODO
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            }
-                            final user = snapshot.data!;
+                            final displayName =
+                                snapshot.data?.displayName ?? '';
+                            final emailVerified =
+                                snapshot.data?.emailVerified ?? false;
+                            final photoURL =
+                                snapshot.data?.photoURL ?? Assets.SPINNER;
+
                             return ProfileWidget(
-                              userName: user.displayName,
-                              isVerified: user.emailVerified,
-                              imagePath: user.photoURL,
+                              userName: displayName,
+                              isVerified: emailVerified,
+                              imagePath: photoURL,
                               onClicked: () async {
                                 Navigator.pushNamed(context, 'edit-profile');
                                 setState(() {});

@@ -55,23 +55,10 @@ class NoBookmarkMovies extends StatelessWidget {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/icons/bookmark.png',
-          width: 100,
-          height: 100,
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          child: Text(i18n.no_bookmarks,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge),
-        ),
-      ],
+    return Center(
+      child: Text(i18n.no_bookmarks,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleLarge),
     );
   }
 }
