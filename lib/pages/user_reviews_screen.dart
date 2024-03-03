@@ -15,31 +15,46 @@ class UserReviewsScreen extends StatelessWidget {
     final provider = Provider.of<UserReviewsProvider>(context);
     final reviews = provider.data!;
 
+    if (reviews.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(i18n.title_user_reviews_page),
+        ),
+        body: Center(
+          child: Text(i18n.no_reviews,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge!),
+        ),
+      );
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text(i18n.title_user_reviews_page),
         ),
-        body: ListView(
-            children: reviews
-                .map((review) => InkWell(
-                      onLongPress: () => showDialog(
-                        context: context,
-                        builder: (context) => const DeleteReviewDialog(),
-                      ).then((value) {
-                        if (value) {
-                          provider.deleteReview(review);
-                          context
-                              .read<MovieProvider>()
-                              .removeReview(review.movieId, review.id);
-                        }
-                      }),
-                      child: ReviewItem(
-                          title: review.title,
-                          content: review.content,
-                          author: '',
-                          date: review.createdAt,
-                          inclination: review.inclination),
-                    ))
-                .toList()));
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+              children: reviews
+                  .map((review) => InkWell(
+                        onLongPress: () => showDialog(
+                          context: context,
+                          builder: (context) => const DeleteReviewDialog(),
+                        ).then((value) {
+                          if (value) {
+                            provider.deleteReview(review);
+                            context
+                                .read<MovieProvider>()
+                                .removeReview(review.movieId, review.id);
+                          }
+                        }),
+                        child: ReviewItem(
+                            content: review.content,
+                            author: '',
+                            createdAt: review.createdAt,
+                            inclination: review.inclination),
+                      ))
+                  .toList()),
+        ));
   }
 }

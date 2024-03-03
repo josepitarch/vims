@@ -62,7 +62,6 @@ final class UserReview {
   final int id;
   final String userId;
   final int movieId;
-  final String title;
   final String content;
   final Inclination inclination;
   final DateTime createdAt;
@@ -71,7 +70,6 @@ final class UserReview {
     required this.id,
     required this.userId,
     required this.movieId,
-    required this.title,
     required this.content,
     required this.inclination,
     required this.createdAt,
@@ -81,7 +79,6 @@ final class UserReview {
         id: json['id'],
         userId: json['user_id'],
         movieId: json['movie_id'],
-        title: json['title'],
         content: json['content'],
         inclination: Inclination.values
             .firstWhere((e) => e.name.toLowerCase() == json['inclination']),
@@ -89,7 +86,6 @@ final class UserReview {
       );
 
   Map<String, dynamic> toMap() => {
-        'title': title,
         'content': content,
         'inclination': inclination.name.toLowerCase(),
       };

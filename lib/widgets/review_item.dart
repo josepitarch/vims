@@ -3,17 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:vims/models/enums/inclination.dart';
 
 class ReviewItem extends StatelessWidget {
-  final String? title;
   final String content;
   final String author;
-  final DateTime? date;
+  final DateTime? createdAt;
   final Inclination inclination;
 
   const ReviewItem(
-      {this.title,
-      required this.content,
+      {required this.content,
       required this.author,
-      this.date,
+      this.createdAt,
       required this.inclination,
       super.key});
 
@@ -31,7 +29,7 @@ class ReviewItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Header(title: title, date: date),
+          _Header(createdAt: createdAt),
           _Body(content: content),
           const SizedBox(height: 15),
           _Footer(inclination: inclination, author: author),
@@ -42,26 +40,23 @@ class ReviewItem extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  final String? title;
-  final DateTime? date;
-  const _Header({this.title, this.date});
+  final DateTime? createdAt;
+
+  const _Header({this.createdAt});
 
   @override
   Widget build(BuildContext context) {
-    if (title == null || date == null) {
-      return const SizedBox();
+    if (createdAt == null) {
+      return const SizedBox.shrink();
     }
+    final date =
+        createdAt != null ? DateFormat('dd/MM/yyyy').format(createdAt!) : '';
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
-          title!,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontStyle: FontStyle.italic,
-              ),
-        ),
-        Text(
-          DateFormat('dd/MM/yyyy').format(date!),
+          date,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontStyle: FontStyle.italic,
               ),
