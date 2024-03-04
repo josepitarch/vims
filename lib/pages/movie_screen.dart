@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
-import 'package:vims/models/enums/inclination.dart';
+
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
@@ -23,11 +23,23 @@ import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
 
 late AppLocalizations i18n;
 
-class MovieScreen extends StatelessWidget {
+class MovieScreen extends StatefulWidget {
   const MovieScreen({super.key});
+
+  @override
+  State<MovieScreen> createState() => _MovieScreenState();
+}
+
+class _MovieScreenState extends State<MovieScreen> {
+  late ScrollController scrollController;
+  @override
+  void initState() {
+    scrollController = ScrollController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
     i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
     final Map<String, dynamic> arguments =
@@ -83,7 +95,6 @@ class _CustomAppBar extends StatefulWidget {
   final String title;
   final String url;
   final String heroTag;
-  String auxTitle = '';
   final ScrollController scrollController;
 
   _CustomAppBar(this.title, this.url, this.heroTag, this.scrollController);
@@ -93,14 +104,20 @@ class _CustomAppBar extends StatefulWidget {
 }
 
 class _CustomAppBarState extends State<_CustomAppBar> {
+  String auxTitle = '';
+
   @override
   void initState() {
+    auxTitle = '';
     widget.scrollController.addListener(() {
-      if (widget.scrollController.position.pixels > 250)
-        widget.auxTitle = widget.title;
-      else
-        widget.auxTitle = '';
-      if (mounted) setState(() {});
+      if (widget.scrollController.position.pixels > 250 && auxTitle.isEmpty) {
+        auxTitle = widget.title;
+        if (mounted) setState(() {});
+      } else if (widget.scrollController.position.pixels <= 250 &&
+          auxTitle.isNotEmpty) {
+        auxTitle = '';
+        if (mounted) setState(() {});
+      }
     });
     super.initState();
   }
@@ -114,7 +131,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       centerTitle: true,
       backgroundColor: const Color.fromARGB(255, 14, 7, 0),
       title: Text(
-        widget.auxTitle,
+        auxTitle,
         style: Theme.of(context).textTheme.displayMedium,
       ),
       flexibleSpace: FlexibleSpaceBar(
@@ -131,6 +148,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 
   @override
   void dispose() {
+    print('dispose');
     widget.scrollController.dispose();
     super.dispose();
   }
@@ -602,7 +620,7 @@ class _WriteReviewButton extends StatelessWidget {
               movieId: provider.id,
               content: value['content'],
               createdAt: DateTime.now(),
-              inclination: Inclination.POSITIVE);
+              inclination: value['inclination']);
 
           provider.createReview(user.uid, provider.id, review);
           context.read<UserReviewsProvider>().data!.add(review);

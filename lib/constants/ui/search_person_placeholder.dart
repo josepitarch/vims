@@ -1,4 +1,4 @@
-List<String> SEARCH_PERSON_PLACEHOLDER = [
+final List<String> SEARCH_PERSON_PLACEHOLDER = [
   'Leonardo DiCaprio',
   'Brad Pitt',
   'Tom Hanks',

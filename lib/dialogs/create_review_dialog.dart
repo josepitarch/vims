@@ -12,8 +12,12 @@ class UserReviewDialog extends StatelessWidget {
     final TextEditingController contentController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    String title = '';
+    Inclination inclination = Inclination.POSITIVE;
     String content = '';
+
+    onInclinationChanged(Inclination value) {
+      inclination = value;
+    }
 
     return SafeArea(
       child: AlertDialog(
@@ -58,7 +62,7 @@ class UserReviewDialog extends StatelessWidget {
                     maxLines: 15,
                     maxLength: 500,
                   ),
-                  const RadioListTileExample()
+                  RadioListTileExample(onChanged: onInclinationChanged)
                 ],
               ),
             ),
@@ -74,7 +78,8 @@ class UserReviewDialog extends StatelessWidget {
           TextButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                Navigator.pop(context, {'title': title, 'content': content});
+                Navigator.pop(
+                    context, {'content': content, 'inclination': inclination});
               }
             },
             child: Text(i18n.publish),
@@ -86,7 +91,8 @@ class UserReviewDialog extends StatelessWidget {
 }
 
 class RadioListTileExample extends StatefulWidget {
-  const RadioListTileExample({super.key});
+  final Function(Inclination) onChanged;
+  const RadioListTileExample({required this.onChanged, super.key});
 
   @override
   State<RadioListTileExample> createState() => _RadioListTileExampleState();
@@ -110,6 +116,7 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
               value: Inclination.POSITIVE,
               groupValue: _character,
               onChanged: (Inclination? value) {
+                widget.onChanged(value!);
                 setState(() {
                   _character = value;
                 });
@@ -123,6 +130,7 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
               value: Inclination.NEUTRAL,
               groupValue: _character,
               onChanged: (Inclination? value) {
+                widget.onChanged(value!);
                 setState(() {
                   _character = value;
                 });
@@ -136,6 +144,7 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
               value: Inclination.NEGATIVE,
               groupValue: _character,
               onChanged: (Inclination? value) {
+                widget.onChanged(value!);
                 setState(() {
                   _character = value;
                 });

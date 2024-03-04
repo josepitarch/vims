@@ -1,4 +1,4 @@
-List<String> SEARCH_MOVIES_PLACEHOLDER = [
+final List<String> SEARCH_MOVIES_PLACEHOLDER = [
   'El club de la lucha',
   'Mystic River',
   'El club de los poetas muertos',

@@ -75,7 +75,7 @@ class _ServerError extends StatelessWidget {
                 i18n.retry,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Colors.orange,
                     ),
               ))
         ],
