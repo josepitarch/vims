@@ -38,13 +38,14 @@ final class MovieProvider extends BaseProvider<Map<int, Movie>> {
     data!.clear();
   }
 
-  createReview(String userId, int movieId, UserReview review) {
-    createUserReview(userId, movieId, review).then((userReview) {
+  Future<UserReview> createReview(
+      String userId, int movieId, UserReview review) {
+    return createUserReview(userId, movieId, review).then((userReview) {
       data![movieId]!.reviews.users.add(userReview);
       exception = null;
+      return userReview;
     }).catchError((e) {
       // TODO: show error message
-      print(e);
     }).whenComplete(() {
       isLoading = false;
       notifyListeners();

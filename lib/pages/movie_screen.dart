@@ -622,8 +622,8 @@ class _WriteReviewButton extends StatelessWidget {
               createdAt: DateTime.now(),
               inclination: value['inclination']);
 
-          provider.createReview(user.uid, provider.id, review);
-          context.read<UserReviewsProvider>().data!.add(review);
+          provider.createReview(user.uid, provider.id, review).then((review) =>
+              context.read<UserReviewsProvider>().data!.add(review));
         }
       });
     }
