@@ -103,6 +103,8 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
+
     return SizedBox(
       height: 100,
       child: ListView(
@@ -112,7 +114,7 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
           Container(
             constraints: const BoxConstraints(maxWidth: 160, maxHeight: 100),
             child: RadioListTile.adaptive(
-              title: const Text('Positive'),
+              title: Text(i18n.positive),
               value: Inclination.POSITIVE,
               groupValue: _character,
               onChanged: (Inclination? value) {
@@ -126,7 +128,7 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
           Container(
             constraints: const BoxConstraints(maxWidth: 160, maxHeight: 100),
             child: RadioListTile.adaptive(
-              title: const Text('Neutral'),
+              title: Text(i18n.neutral),
               value: Inclination.NEUTRAL,
               groupValue: _character,
               onChanged: (Inclination? value) {
@@ -140,7 +142,7 @@ class _RadioListTileExampleState extends State<RadioListTileExample> {
           Container(
             constraints: const BoxConstraints(maxWidth: 180, maxHeight: 100),
             child: RadioListTile.adaptive(
-              title: const Text('Negative'),
+              title: Text(i18n.negative),
               value: Inclination.NEGATIVE,
               groupValue: _character,
               onChanged: (Inclination? value) {

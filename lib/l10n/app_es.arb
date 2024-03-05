@@ -72,6 +72,10 @@
   "western": "Western",
   "kids": "Infantil",
 
+  "positive": "Positiva",
+  "neutral": "Neutral",
+  "negative": "Negativa",
+
   "no_reviews": "Parece que todavía no has escrito ninguna crítica...\n ¡Anímate!",
   "no_critic_reviews": "Críticas de críticos no disponibles",
   "no_user_reviews": "Parece que todavía no hay críticas para esta película...\n ¡Sé el primero!",
