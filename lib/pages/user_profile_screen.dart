@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException, User;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -33,7 +34,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     final List<AuthProvider> providers = [
       EmailAuthProvider(),
-      GoogleProvider(clientId: googleClientId!)
+      GoogleProvider(clientId: googleClientId!),
+      if (Theme.of(context).platform == TargetPlatform.iOS) AppleProvider()
     ];
 
     return StreamBuilder<User?>(
