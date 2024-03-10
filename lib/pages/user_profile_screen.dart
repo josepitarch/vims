@@ -48,6 +48,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               removeTop: true,
               child: SignInScreen(
                 providers: providers,
+                breakpoint: 2000,
                 headerMaxExtent: MediaQuery.of(context).size.height * 0.40,
                 headerBuilder: (context, constraints, shrinkOffset) {
                   return ImageFiltered(

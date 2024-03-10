@@ -29,7 +29,7 @@ class SectionWidget extends StatelessWidget {
         ),
         Container(
           margin: const EdgeInsets.only(top: 10),
-          height: width <= 514 ? height * 0.3 : height * 0.35,
+          height: width <= 514 ? height * 0.3 : height * 0.36,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
