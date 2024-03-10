@@ -35,7 +35,7 @@ class CustomImage extends StatelessWidget {
         : ClipRRect(
             borderRadius: BorderRadius.circular(borderRadius),
             child: FadeInImage(
-                placeholder: const AssetImage(Assets.SPINNER),
+                placeholder: const AssetImage(Assets.LOADING),
                 image: NetworkImage(url),
                 fit: BoxFit.cover,
                 imageErrorBuilder: (_, __, ___) => const _ErrorImage()),
