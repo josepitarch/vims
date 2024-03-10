@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:vims/constants/ui/assets.dart';
 
 class CustomImage extends StatelessWidget {
   final String url;
@@ -34,7 +35,7 @@ class CustomImage extends StatelessWidget {
         : ClipRRect(
             borderRadius: BorderRadius.circular(borderRadius),
             child: FadeInImage(
-                placeholder: const AssetImage('assets/loading.gif'),
+                placeholder: const AssetImage(Assets.SPINNER),
                 image: NetworkImage(url),
                 fit: BoxFit.cover,
                 imageErrorBuilder: (_, __, ___) => const _ErrorImage()),
@@ -48,7 +49,7 @@ class _ErrorImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/no-image.jpg',
+      Assets.NO_IMAGE,
       fit: BoxFit.cover,
     );
   }

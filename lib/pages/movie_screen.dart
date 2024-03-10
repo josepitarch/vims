@@ -148,7 +148,6 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 
   @override
   void dispose() {
-    print('dispose');
     widget.scrollController.dispose();
     super.dispose();
   }

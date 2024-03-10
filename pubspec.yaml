@@ -59,7 +59,7 @@ dev_dependencies:
   flutter_native_splash: 2.3.10
   flutter_launcher_icons: 0.13.1
   flutter_lints: 3.0.1
-  logger: 2.0.2
+  logger: 2.1.0
   change_app_package_name: 1.1.0
 
 # For information on the generic Dart part of this file, see the
@@ -73,10 +73,10 @@ flutter:
   assets:
     - .env
     - assets/loading.gif
-    - assets/loading-actor.gif
+    - assets/spinner.gif
     - assets/no-image.jpg
     - assets/logo.png
-    - assets/movies-wallpaper.png
+    - assets/movies-wallpaper.jpg
     - assets/justwatch/
     - assets/flags/
     - assets/icons/

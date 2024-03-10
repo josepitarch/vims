@@ -8,13 +8,13 @@ import 'package:vims/dialogs/email_verified_dialog.dart';
 class ProfileWidget extends StatelessWidget {
   final String? userName;
   final bool isVerified;
-  final String? imagePath;
+  final String imagePath;
   final bool isEdit;
   final VoidCallback onClicked;
 
   const ProfileWidget({
     super.key,
-    this.imagePath,
+    required this.imagePath,
     this.userName,
     required this.isVerified,
     this.isEdit = false,
@@ -27,13 +27,14 @@ class ProfileWidget extends StatelessWidget {
 
     dynamic image;
 
-    if (imagePath == null || imagePath!.isEmpty) {
-      image = const AssetImage(Assets.SPINNER);
+    if (imagePath.contains('assets')) {
+      image = AssetImage(imagePath);
     } else {
-      image = imagePath!.contains('https')
-          ? NetworkImage(imagePath!)
-          : FileImage(File(imagePath!));
+      image = imagePath.contains('https')
+          ? NetworkImage(imagePath)
+          : FileImage(File(imagePath));
     }
+
     return Column(
       children: [
         Stack(
@@ -45,9 +46,6 @@ class ProfileWidget extends StatelessWidget {
                   image: FadeInImage(
                     placeholder: const AssetImage(Assets.SPINNER),
                     image: image as ImageProvider,
-                    imageErrorBuilder: (context, error, stackTrace) =>
-                        Image.asset(Assets.NO_IMAGE,
-                            fit: BoxFit.cover, width: 128, height: 128),
                   ).image,
                   fit: BoxFit.cover,
                   width: 128,

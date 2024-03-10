@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vims/constants/ui/assets.dart';
 import 'package:vims/services/cloudinary/cloudinary.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/user_info_profile.dart';
@@ -15,10 +16,9 @@ class EditProfileScreen extends StatefulWidget {
 
 class EditProfileScreenState extends State<EditProfileScreen> {
   final user = FirebaseAuth.instance.currentUser!;
-  late String? userName = user.displayName!;
-  late String? imagePath = user.photoURL;
-  late TextEditingController _controller =
-      TextEditingController(text: userName);
+  late String? userName;
+  late String? imagePath;
+  late TextEditingController _controller;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
           ProfileWidget(
             userName: user.displayName ?? '',
             isVerified: user.emailVerified,
-            imagePath: imagePath,
+            imagePath: imagePath ?? Assets.NO_IMAGE,
             isEdit: true,
             onClicked: () async {
               final pickedImage =

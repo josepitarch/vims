@@ -106,7 +106,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             final emailVerified =
                                 snapshot.data?.emailVerified ?? false;
                             final photoURL =
-                                snapshot.data?.photoURL ?? Assets.SPINNER;
+                                snapshot.data?.photoURL ?? Assets.NO_IMAGE;
 
                             return ProfileWidget(
                               userName: displayName,
