@@ -73,5 +73,8 @@ class LabelOverrides extends DefaultLocalizations {
   String get signInWithGoogleButtonText => 'Acceder con Google';
 
   @override
+  String get signInWithAppleButtonText => 'Acceder con Apple';
+
+  @override
   String get unknownError => 'Ha ocurrido un error inesperado';
 }
