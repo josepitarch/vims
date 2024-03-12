@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/widgets/card_actor.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/search_history.dart';
@@ -30,7 +30,7 @@ class _ActorSuggestionsTabState extends State<ActorSuggestionsTab> {
     final SearchActorProvider provider = Provider.of(context, listen: true);
 
     if (provider.exception != null) {
-      return HandleError(provider.exception!, provider.onRefresh);
+      return ErrorScreen(provider.exception!, provider.onRefresh);
     }
 
     if (provider.isLoading && provider.data == null) {

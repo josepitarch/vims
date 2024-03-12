@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/top_filters_dialog.dart';
+import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/top_provider.dart';
 import 'package:vims/widgets/card_movie.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
@@ -52,7 +52,7 @@ class _TopMoviesScreenState extends State<TopMoviesScreen> {
     final TopMoviesProvider provider = Provider.of(context, listen: true);
 
     if (provider.exception != null) {
-      return HandleError(provider.exception!, provider.onRefresh);
+      return ErrorScreen(provider.exception!, provider.onRefresh);
     }
 
     Widget body;

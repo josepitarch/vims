@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:vims/pages/bookmark_movies_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:vims/pages/search_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_screen.dart';
 import 'package:vims/pages/user_profile_screen.dart';
+import 'package:vims/providers/implementation/movie_provider.dart';
+import 'package:vims/providers/implementation/section_provider.dart';
+import 'package:vims/providers/implementation/sections_provider.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +18,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _selectedIndex = 0;
 
   final List<Widget> screens = [
@@ -22,6 +27,26 @@ class _HomeScreenState extends State<HomeScreen> {
     const SearchMovieScreen(),
     const UserProfileScreen()
   ];
+
+  @override
+  initState() {
+    refreshIfIsNecessary(context);
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      refreshIfIsNecessary(context);
+    }
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,5 +75,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: destination['label'] as String))
               .toList(),
         ));
+  }
+
+  void refreshIfIsNecessary(BuildContext context) {
+    final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
+    final SectionsProvider homepageProvider = context.read<SectionsProvider>();
+
+    final Duration difference =
+        DateTime.now().difference(homepageProvider.lastUpdate);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (difference.inSeconds >= int.parse(timeToRefresh)) {
+        CustomCacheManager.cacheTinyImages.emptyCache();
+        homepageProvider.onRefresh();
+        context.read<SectionProvider>().onRefresh();
+        context.read<MovieProvider>().clear();
+      }
+    });
   }
 }

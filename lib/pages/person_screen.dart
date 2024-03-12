@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
+import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/person_profile_provider.dart';
 import 'package:vims/services/api/person_service.dart';
 import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/country.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/loading.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
@@ -25,7 +25,7 @@ class ActorScreen extends StatelessWidget {
       ..fetchProfile(id);
 
     if (provider.exception != null) {
-      return HandleError(provider.exception!, provider.onRefresh);
+      return ErrorScreen(provider.exception!, provider.onRefresh);
     }
 
     if (provider.isLoading) {
@@ -212,7 +212,7 @@ class _FilmographyState extends State<_Filmography> {
     final double left = MediaQuery.of(context).size.width * 0.5 - 20;
 
     if (exception != null) {
-      return HandleError(exception!, () {
+      return ErrorScreen(exception!, () {
         setState(() {
           exception = null;
         });
