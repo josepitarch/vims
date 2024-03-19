@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:vims/models/exceptions/connectivity_exception.dart';
 import 'package:vims/models/exceptions/error_exception.dart';
 import 'package:vims/models/exceptions/maintenance_exception.dart';
 import 'package:vims/models/exceptions/unsupported_exception.dart';
@@ -37,7 +38,11 @@ class ErrorScreen extends StatelessWidget {
       return const UnssuportedScreen();
     }
 
-    return _ConnectivityError(onRefresh: onRefresh);
+    if (error is ConnectivityException) {
+      return _ConnectivityError(onRefresh: onRefresh);
+    }
+
+    return _ServerError(onRefresh, withScaffold: withScaffold);
   }
 }
 

@@ -6,9 +6,11 @@ import 'package:vims/pages/search_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_screen.dart';
 import 'package:vims/pages/user_profile_screen.dart';
+import 'package:vims/providers/implementation/app_state_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
+import 'package:vims/utils/api.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   initState() {
-    refreshIfIsNecessary(context);
+    refreshIfIsNecessary();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -38,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      refreshIfIsNecessary(context);
+      refreshIfIsNecessary();
     }
   }
 
@@ -77,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ));
   }
 
-  void refreshIfIsNecessary(BuildContext context) {
+  refreshIfIsNecessary() {
     final String timeToRefresh = dotenv.env['TIME_REFRESH_HOMEPAGE']!;
     final SectionsProvider homepageProvider = context.read<SectionsProvider>();
 
@@ -92,5 +94,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         context.read<MovieProvider>().clear();
       }
     });
+  }
+
+  checkIfIsMaintenance() {
+    final AppStateProvider appStateProvider = context.read<AppStateProvider>();
+
+    api('sections', 1)
+        .then((value) => appStateProvider.setMaintenance(false))
+        .catchError((e) => appStateProvider.setMaintenance(true));
   }
 }
