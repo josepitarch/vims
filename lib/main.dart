@@ -21,7 +21,7 @@ import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/top_provider.dart';
-import 'package:vims/widgets/navigation_bar.dart';
+import 'package:vims/pages/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

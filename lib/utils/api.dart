@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:vims/models/enums/http_method.dart';
 import 'package:vims/models/exceptions/bad_request_exception.dart';
+import 'package:vims/models/exceptions/connectivity_exception.dart';
 import 'package:vims/models/exceptions/error_exception.dart';
 import 'package:vims/models/exceptions/maintenance_exception.dart';
 import 'package:vims/models/exceptions/unsupported_exception.dart';
@@ -20,6 +22,7 @@ Future api(String path, int versionApi,
     Map<String, String>? queryParams,
     Object? body}) async {
   final String userAgent = io.Platform.isAndroid ? 'android' : 'ios';
+  final apiToken = await FirebaseAuth.instance.currentUser?.getIdToken();
 
   final Uri uri = BASE_URL.contains('vims')
       ? Uri.https(BASE_URL, '/v$versionApi/$path', queryParams)
@@ -28,7 +31,7 @@ Future api(String path, int versionApi,
   final headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': 'Bearer $API_TOKEN',
+    'Authorization': 'Bearer $apiToken',
     'User-Agent': userAgent,
   };
 
@@ -46,7 +49,7 @@ Future api(String path, int versionApi,
 
   Response response =
       await request.timeout(Duration(seconds: int.parse(TIMEOUT))).catchError(
-            (Object e) => throw ErrorServerException('Connection timeout'),
+            (Object e) => throw ConnectivityException('Connection timeout'),
           );
 
   if (response.statusCode == 200) return jsonDecode(response.body);

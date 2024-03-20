@@ -8,6 +8,7 @@ import 'package:vims/dialogs/create_review_dialog.dart';
 
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
+import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/reviews_provider.dart';
@@ -16,7 +17,6 @@ import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/custom_image.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
@@ -50,7 +50,7 @@ class _MovieScreenState extends State<MovieScreen> {
     final String heroTag = arguments['heroTag'] ?? id.toString();
 
     if (provider.exception != null)
-      return HandleError(provider.exception!, provider.onRefresh);
+      return ErrorScreen(provider.exception!, provider.onRefresh);
 
     if (provider.data!.containsKey(id)) {
       final Movie movie = provider.data![id]!;

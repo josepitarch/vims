@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/models/section.dart';
+import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/widgets/card_section.dart';
-import 'package:vims/widgets/handle_error.dart';
 import 'package:vims/widgets/shimmer/section_screen_shimmer.dart';
 
 class SectionScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class SectionScreen extends StatelessWidget {
       onRefreshError() => provider.onRefreshError(code);
 
       if (provider.errors[code] != null) {
-        return HandleError(provider.errors[code], onRefreshError);
+        return ErrorScreen(provider.errors[code], onRefreshError);
       }
 
       Widget body;

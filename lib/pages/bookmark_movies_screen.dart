@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/delete_bookmark_dialog.dart';
+import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/widgets/card_movie.dart';
 
@@ -13,6 +14,10 @@ class BookmarkMoviesScreen extends StatelessWidget {
     final BookmarksProvider provider = Provider.of<BookmarksProvider>(context);
 
     final i18n = AppLocalizations.of(context)!;
+
+    if (provider.exception != null) {
+      return ErrorScreen(provider.exception!, provider.onRefresh);
+    }
 
     return Scaffold(
       appBar: AppBar(
