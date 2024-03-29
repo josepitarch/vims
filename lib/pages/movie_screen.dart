@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
@@ -71,11 +72,12 @@ class _MovieScreenState extends State<MovieScreen> {
             delegate: SliverChildListDelegate([
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Column(children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               _Title(movie.title, movie.originalTitle),
               const SizedBox(height: 7),
               _Director(movie.director),
-              _Box(movie),
+              Align(alignment: Alignment.center, child: _Box(movie)),
               _YearAndDuration(movie.year, movie.duration),
               _Synopsis(movie.synopsis),
               _Genres(movie.genres),
