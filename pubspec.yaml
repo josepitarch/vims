@@ -42,7 +42,7 @@ dependencies:
   url_launcher: 6.2.5
   cached_network_image: 3.3.1
   flutter_cache_manager:  3.3.1
-  connectivity_plus: 5.0.2
+  connectivity_plus: 6.0.1
   firebase_auth: 4.17.6
   firebase_core: 2.25.5
   firebase_ui_auth: 1.13.1
@@ -56,10 +56,10 @@ dependencies:
 
   
 dev_dependencies:
-  flutter_native_splash: 2.3.10
+  flutter_native_splash: 2.4.0
   flutter_launcher_icons: 0.13.1
-  flutter_lints: 3.0.1
-  logger: 2.1.0
+  flutter_lints: 3.0.2
+  logger: 2.2.0
   change_app_package_name: 1.1.0
 
 # For information on the generic Dart part of this file, see the

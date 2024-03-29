@@ -98,7 +98,7 @@ class _ConnectivityError extends StatefulWidget {
 
 class _ConnectivityErrorState extends State<_ConnectivityError> {
   final Connectivity _connectivity = Connectivity();
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   @override
   void initState() {
@@ -116,7 +116,7 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
   }
 
   Future<void> initConnectivity() async {
-    late ConnectivityResult result;
+    late List<ConnectivityResult> result;
 
     try {
       result = await _connectivity.checkConnectivity();
@@ -131,9 +131,10 @@ class _ConnectivityErrorState extends State<_ConnectivityError> {
     return _updateConnectionStatus(result);
   }
 
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
     setState(() {
-      if (result != ConnectivityResult.none) {
+      if (result.contains(ConnectivityResult.mobile) ||
+          result.contains(ConnectivityResult.wifi)) {
         widget.onRefresh();
       }
     });
