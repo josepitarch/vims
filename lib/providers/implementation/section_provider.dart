@@ -15,6 +15,8 @@ final class SectionProvider
     getSection(title).then((movieSections) {
       data![title] = movieSections;
       errors[title] = null;
+    }).catchError((e) {
+      errors[title] = e;
     }).whenComplete(() {
       isLoading = false;
       notifyListeners();
