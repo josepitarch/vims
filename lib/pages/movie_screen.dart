@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
-
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -66,26 +66,28 @@ class _MovieScreenState extends State<MovieScreen> {
     final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(
-            movie.title, movie.poster.large, heroTag, scrollController),
+        _CustomAppBar(movie.id, movie.title, movie.poster.large, heroTag,
+            scrollController),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
             padding: const EdgeInsets.all(10),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              _Title(movie.title, movie.originalTitle),
-              const SizedBox(height: 7),
-              _Director(movie.director),
-              Align(alignment: Alignment.center, child: _Box(movie)),
-              _YearAndDuration(movie.year, movie.duration),
-              _Synopsis(movie.synopsis),
-              _Genres(movie.genres),
-              _Cast(movie.cast),
-              _Platforms(movie.justwatch),
-              _Reviews(movie.reviews),
-              const SizedBox(height: 10)
-            ]),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _Title(movie.title, movie.originalTitle),
+                  const SizedBox(height: 7),
+                  _Director(movie.director),
+                  Align(alignment: Alignment.center, child: _Box(movie)),
+                  _YearAndDuration(movie.year, movie.duration),
+                  _Synopsis(movie.synopsis),
+                  _Genres(movie.genres),
+                  _Cast(movie.cast),
+                  _Platforms(movie.justwatch),
+                  _Reviews(movie.reviews),
+                  const SizedBox(height: 10)
+                ]),
           )
         ]))
       ]),
@@ -94,12 +96,14 @@ class _MovieScreenState extends State<MovieScreen> {
 }
 
 class _CustomAppBar extends StatefulWidget {
+  final int movieId;
   final String title;
   final String url;
   final String heroTag;
   final ScrollController scrollController;
 
-  _CustomAppBar(this.title, this.url, this.heroTag, this.scrollController);
+  _CustomAppBar(
+      this.movieId, this.title, this.url, this.heroTag, this.scrollController);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -127,6 +131,14 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      actions: [
+        IconButton(
+            onPressed: () async {
+              await Share.share('https://vims.app/movie/${widget.movieId}',
+                  subject: 'Compartir ${widget.title}');
+            },
+            icon: const Icon(Icons.share))
+      ],
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
       floating: false,
       pinned: true,
@@ -335,15 +347,18 @@ class _Genres extends StatelessWidget {
     String genresString = genres.join(', ');
     genresString = genresString[0] + genresString.substring(1).toLowerCase();
 
-    return Column(children: [
-      _TitleHeader(i18n.genres),
-      SizedBox(
-        width: double.infinity,
-        child: Text(genres.join(', '),
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.start),
-      ),
-    ]);
+    return SizedBox(
+      width: double.infinity,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _TitleHeader(i18n.genres),
+        SizedBox(
+          width: double.infinity,
+          child: Text(genres.join(', '),
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.start),
+        ),
+      ]),
+    );
   }
 }
 
@@ -466,7 +481,33 @@ class _PlatformsState extends State<_Platforms> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _TitleHeader(i18n.watch_now),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _TitleHeader(i18n.watch_now),
+              IconButton(
+                icon: const Icon(Icons.notifications_none_sharp),
+                onPressed: () {
+                  FirebaseMessaging.instance
+                      .requestPermission(
+                    alert: true,
+                    announcement: false,
+                    badge: true,
+                    carPlay: false,
+                    criticalAlert: false,
+                    provisional: false,
+                    sound: true,
+                  )
+                      .then((value) {
+                    if (value.authorizationStatus ==
+                        AuthorizationStatus.authorized) {
+                      SnackBarUtils.show(context, 'i18n.notifications_enabled');
+                    }
+                  });
+                },
+              )
+            ],
+          ),
           const _NoStreamingPlatforms(),
         ],
       );
@@ -475,7 +516,34 @@ class _PlatformsState extends State<_Platforms> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TitleHeader(i18n.watch_now),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _TitleHeader(i18n.watch_now),
+            IconButton(
+              icon: const Icon(Icons.notifications_none_sharp),
+              onPressed: () {
+                FirebaseMessaging.instance
+                    .requestPermission(
+                  alert: true,
+                  announcement: false,
+                  badge: true,
+                  carPlay: false,
+                  criticalAlert: false,
+                  provisional: false,
+                  sound: true,
+                )
+                    .then((value) {
+                  if (value.authorizationStatus ==
+                      AuthorizationStatus.authorized) {
+                    SnackBarUtils.show(context, 'i18n.notifications_enabled');
+                  }
+                });
+              },
+            )
+          ],
+        ),
         Row(
             children: justwatch.keys.map((key) {
           return _Button(
@@ -522,6 +590,7 @@ class _ReviewsState extends State<_Reviews> {
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _TitleHeader(i18n.reviews),
         Row(children: [
@@ -690,7 +759,6 @@ class _TitleHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       margin: const EdgeInsets.only(top: 15.0, bottom: 7.0),
       child: Text(
         title,

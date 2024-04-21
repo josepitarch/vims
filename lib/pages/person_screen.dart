@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -19,6 +20,7 @@ class ActorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final String name = arguments['name'];
     final int id = arguments['id'];
 
     final ActorProfileProvider provider = Provider.of(context, listen: true)
@@ -30,7 +32,17 @@ class ActorScreen extends StatelessWidget {
 
     if (provider.isLoading) {
       return Scaffold(
-          appBar: AppBar(title: Text(arguments['name'])),
+          appBar: AppBar(
+            title: Text(name),
+            actions: [
+              IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () async {
+                    await Share.share('https://vims.app/profile/$id',
+                        subject: 'Compartir $name');
+                  })
+            ],
+          ),
           body: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                     SliverToBoxAdapter(
@@ -47,9 +59,14 @@ class ActorScreen extends StatelessWidget {
     final List<ActorMovie>? movies = data.values.first;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(arguments['name']),
-        ),
+        appBar: AppBar(title: Text(name), actions: [
+          IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: () async {
+                await Share.share('https://vims.app/profile/$id',
+                    subject: 'Compartir $name');
+              })
+        ]),
         body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   SliverToBoxAdapter(

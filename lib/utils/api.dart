@@ -23,6 +23,7 @@ Future api(String path, int versionApi,
     Object? body}) async {
   final String userAgent = io.Platform.isAndroid ? 'android' : 'ios';
   final apiToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+  print(apiToken);
 
   final Uri uri = BASE_URL.contains('vims')
       ? Uri.https(BASE_URL, '/v$versionApi/$path', queryParams)
