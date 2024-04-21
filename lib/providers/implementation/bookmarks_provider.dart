@@ -28,7 +28,6 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
                   exception = null,
                 })
             .catchError((e) {
-          print(e);
           exception = e;
         }).whenComplete(() {
           isLoading = false;
