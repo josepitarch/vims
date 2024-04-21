@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,10 +24,15 @@ import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/top_provider.dart';
 import 'package:vims/pages/home_screen.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(const AppState()));
@@ -58,8 +64,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigatorKey = GlobalKey<NavigatorState>();
     return MaterialApp(
         title: 'Vims',
+        navigatorKey: navigatorKey,
+        builder: (context, child) =>
+            Notifications(navigatorKey: navigatorKey, child: child!),
         localizationsDelegates: L10n.localizationsDelegates,
         supportedLocales: L10n.supportedLocales,
         localeResolutionCallback: L10n.localeResolutionCallback,
@@ -190,4 +200,49 @@ TextTheme MyTextTheme(BuildContext context) {
         fontFamily: 'Lato',
         fontWeight: FontWeight.normal),
   );
+}
+
+class Notifications extends StatefulWidget {
+  final GlobalKey<NavigatorState> navigatorKey;
+  final Widget child;
+  const Notifications(
+      {required this.navigatorKey, required this.child, super.key});
+
+  @override
+  State<Notifications> createState() => _NotificationsState();
+}
+
+class _NotificationsState extends State<Notifications> {
+  Future setupInteractedMessage() async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'justwatch') {
+      widget.navigatorKey.currentState!.pushNamed('movie',
+          arguments: {'id': int.parse(message.data['movie-id'])});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupInteractedMessage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
 }

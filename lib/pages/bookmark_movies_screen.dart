@@ -33,6 +33,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
                           {if (value) provider.removeBookmark(movie.id)}),
                       child: CardMovie(
                           id: movie.id,
+                          heroTag: movie.id.toString(),
                           title: movie.title,
                           poster: movie.poster,
                           saveToCache: true),
