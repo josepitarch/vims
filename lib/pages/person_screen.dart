@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -29,8 +30,19 @@ class ActorScreen extends StatelessWidget {
     }
 
     if (provider.isLoading) {
+      final name = arguments['name'];
       return Scaffold(
-          appBar: AppBar(title: Text(arguments['name'])),
+          appBar: AppBar(
+            title: Text(name),
+            actions: [
+              IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () async {
+                    await Share.share('https://vims.app/profile/$id',
+                        subject: 'Compartir $name');
+                  })
+            ],
+          ),
           body: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                     SliverToBoxAdapter(
@@ -45,10 +57,19 @@ class ActorScreen extends StatelessWidget {
     final Map<Actor, List<ActorMovie>?> data = provider.getActor(id);
     final Actor actor = data.keys.first;
     final List<ActorMovie>? movies = data.values.first;
+    final name = actor.name;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(arguments['name']),
+          title: Text(name),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () async {
+                  await Share.share('https://vims.app/profile/$id',
+                      subject: 'Compartir $name');
+                })
+          ],
         ),
         body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [

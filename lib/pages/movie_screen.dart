@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
 
 import 'package:vims/models/movie.dart';
@@ -66,8 +67,8 @@ class _MovieScreenState extends State<MovieScreen> {
     final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(
-            movie.title, movie.poster.large, heroTag, scrollController),
+        _CustomAppBar(movie.id, movie.title, movie.poster.large, heroTag,
+            scrollController),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -94,12 +95,14 @@ class _MovieScreenState extends State<MovieScreen> {
 }
 
 class _CustomAppBar extends StatefulWidget {
+  final int movieId;
   final String title;
   final String url;
   final String heroTag;
   final ScrollController scrollController;
 
-  _CustomAppBar(this.title, this.url, this.heroTag, this.scrollController);
+  _CustomAppBar(
+      this.movieId, this.title, this.url, this.heroTag, this.scrollController);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -128,6 +131,14 @@ class _CustomAppBarState extends State<_CustomAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
+      actions: [
+        IconButton(
+            onPressed: () async {
+              await Share.share('https://vims.app/movie/${widget.movieId}',
+                  subject: 'Compartir ${widget.title}');
+            },
+            icon: const Icon(Icons.share))
+      ],
       floating: false,
       pinned: true,
       centerTitle: true,
