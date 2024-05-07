@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class UserMenuOptions extends StatelessWidget {
   const UserMenuOptions({super.key});
@@ -11,9 +12,13 @@ class UserMenuOptions extends StatelessWidget {
       {
         'title': i18n.my_reviews,
         'icon': Icons.rate_review,
-        'route': 'user-reviews'
+        'route': '/user-reviews'
       },
-      {'title': i18n.my_bookmarks, 'icon': Icons.bookmark, 'route': 'bookmarks'}
+      {
+        'title': i18n.my_bookmarks,
+        'icon': Icons.bookmark,
+        'route': '/bookmarks'
+      }
     ];
 
     return Expanded(
@@ -23,7 +28,8 @@ class UserMenuOptions extends StatelessWidget {
               leading: Icon(options[index]['icon'] as IconData),
               title: Text(options[index]['title'] as String),
               onTap: () {
-                Navigator.pushNamed(context, options[index]['route'] as String);
+                final url = options[index]['route'] as String;
+                context.push(url);
               },
             );
           },

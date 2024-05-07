@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vims/models/movie.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
@@ -31,8 +32,7 @@ class CardMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
 
-    onTap() => Navigator.pushNamed(context, 'movie',
-        arguments: {'id': id, 'heroTag': heroTag});
+    onTap() => context.push('/movie/$id?heroTag=$heroTag');
 
     return Container(
       height: height * 0.23,

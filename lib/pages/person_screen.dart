@@ -14,14 +14,11 @@ import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 class ActorScreen extends StatelessWidget {
-  const ActorScreen({super.key});
+  final int id;
+  const ActorScreen({required this.id, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final int id = arguments['id'];
-
     final ActorProfileProvider provider = Provider.of(context, listen: true)
       ..fetchProfile(id);
 
@@ -30,7 +27,8 @@ class ActorScreen extends StatelessWidget {
     }
 
     if (provider.isLoading) {
-      final name = arguments['name'];
+      //TODO: retrieve name
+      final name = 'Provisional name';
       return Scaffold(
           appBar: AppBar(
             title: Text(name),
@@ -47,8 +45,9 @@ class ActorScreen extends StatelessWidget {
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                     SliverToBoxAdapter(
                         child: _Profile(
-                      image: arguments['image'],
-                      name: arguments['name'],
+                      //TODO: retrieve image
+                      image: null,
+                      name: name,
                     )),
                   ],
               body: const CardMovieShimmer()));

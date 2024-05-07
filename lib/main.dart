@@ -22,6 +22,7 @@ import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/providers/implementation/top_provider.dart';
 import 'package:vims/pages/home_screen.dart';
+import 'package:go_router/go_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,22 +59,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
         title: 'Vims',
         localizationsDelegates: L10n.localizationsDelegates,
         supportedLocales: L10n.supportedLocales,
         localeResolutionCallback: L10n.localeResolutionCallback,
         debugShowCheckedModeBanner: false,
-        initialRoute: 'home',
-        routes: {
-          'home': (_) => const HomeScreen(),
-          'movie': (_) => const MovieScreen(),
-          'section': (_) => const SectionScreen(),
-          'actor': (_) => const ActorScreen(),
-          'bookmarks': (_) => const BookmarkMoviesScreen(),
-          'user-reviews': (_) => const UserReviewsScreen(),
-          'edit-profile': (_) => const EditProfileScreen(),
-        },
+        routerConfig: _router,
         theme: ThemeData.dark().copyWith(
             primaryColor: Colors.orange,
             colorScheme: const ColorScheme.dark().copyWith(
@@ -142,6 +134,43 @@ class App extends StatelessWidget {
             )));
   }
 }
+
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/movie/:id',
+      builder: (context, state) =>
+          MovieScreen(id: int.parse(state.pathParameters['id']!)),
+    ),
+    GoRoute(
+      path: '/section/:id',
+      builder: (context, state) => SectionScreen(
+          id: state.pathParameters['id']!,
+          title: state.uri.queryParameters['title']!),
+    ),
+    GoRoute(
+      path: '/person/:id/profile',
+      builder: (context, state) =>
+          ActorScreen(id: int.parse(state.pathParameters['id']!)),
+    ),
+    GoRoute(
+      path: '/bookmarks',
+      builder: (context, state) => const BookmarkMoviesScreen(),
+    ),
+    GoRoute(
+      path: '/user-reviews',
+      builder: (context, state) => const UserReviewsScreen(),
+    ),
+    GoRoute(
+      path: '/edit-profile',
+      builder: (context, state) => const EditProfileScreen(),
+    ),
+  ],
+);
 
 TextTheme MyTextTheme(BuildContext context) {
   final List<int> breakpoints = [414, 768, 1024, 1280];

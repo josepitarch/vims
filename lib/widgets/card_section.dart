@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
@@ -16,13 +17,7 @@ class CardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    onTap() {
-      final Map<String, dynamic> arguments = {
-        'id': movie.id,
-        'heroTag': heroTag
-      };
-      Navigator.pushNamed(context, 'movie', arguments: arguments);
-    }
+    onTap() => context.push('/movie/${movie.id}');
 
     return GestureDetector(
       onTap: onTap,
