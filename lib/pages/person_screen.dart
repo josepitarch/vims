@@ -15,7 +15,11 @@ import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 class ActorScreen extends StatelessWidget {
   final int id;
-  const ActorScreen({required this.id, super.key});
+  final String name;
+  final String? image;
+
+  const ActorScreen(
+      {required this.id, required this.name, this.image, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +31,6 @@ class ActorScreen extends StatelessWidget {
     }
 
     if (provider.isLoading) {
-      //TODO: retrieve name
-      final name = 'Provisional name';
       return Scaffold(
           appBar: AppBar(
             title: Text(name),
@@ -45,8 +47,7 @@ class ActorScreen extends StatelessWidget {
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                     SliverToBoxAdapter(
                         child: _Profile(
-                      //TODO: retrieve image
-                      image: null,
+                      image: image,
                       name: name,
                     )),
                   ],
@@ -56,7 +57,6 @@ class ActorScreen extends StatelessWidget {
     final Map<Actor, List<ActorMovie>?> data = provider.getActor(id);
     final Actor actor = data.keys.first;
     final List<ActorMovie>? movies = data.values.first;
-    final name = actor.name;
 
     return Scaffold(
         appBar: AppBar(

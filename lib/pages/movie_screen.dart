@@ -394,7 +394,8 @@ class _Cast extends StatelessWidget {
                   size: width <= 414 ? 65 : 80,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
-                  onTap: () => context.push('/person/${actor.id}/profile'),
+                  onTap: () => context.push(
+                      '/person/${actor.id}/profile?name=${actor.name}&image=${actor.image?.mmed}'),
                 ),
                 const SizedBox(height: 5),
                 Text(actor.name,

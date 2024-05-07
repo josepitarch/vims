@@ -154,8 +154,10 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/person/:id/profile',
-      builder: (context, state) =>
-          ActorScreen(id: int.parse(state.pathParameters['id']!)),
+      builder: (context, state) => ActorScreen(
+          id: int.parse(state.pathParameters['id']!),
+          name: state.uri.queryParameters['name']!,
+          image: state.uri.queryParameters['image']),
     ),
     GoRoute(
       path: '/bookmarks',
