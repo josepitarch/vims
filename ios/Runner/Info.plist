@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>FLTEnableImpeller</key>
-  <false />
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -47,20 +47,22 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>Se rquiere acceso a tu biblioteca de fotos para que puedas seleccionar o subir imágenes y establecerlas como tu foto de perfil. Tu privacidad es fundamental, y solo se utilizará la biblioteca de fotos con este propósito específico.</string>
-<key>NSCameraUsageDescription</key>
-<string>Se requiere acceso a la cámara para que puedas capturar y establecer tu foto de perfil en la aplicación. Tu privacidad es importante para nosotros y se utilizará la cámara con este propósito específico.</string>
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleTypeRole</key>
-    <string>Editor</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>com.googleusercontent.apps.938335500353-uk6polcsq69i8l7vi3t4862fuvcf4gt1</string>
-    </array>
-  </dict>
-</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Se rquiere acceso a tu biblioteca de fotos para que puedas seleccionar o subir imágenes y establecerlas como tu foto de perfil. Tu privacidad es fundamental, y solo se utilizará la biblioteca de fotos con este propósito específico.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Se requiere acceso a la cámara para que puedas capturar y establecer tu foto de perfil en la aplicación. Tu privacidad es importante para nosotros y se utilizará la cámara con este propósito específico.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.938335500353-uk6polcsq69i8l7vi3t4862fuvcf4gt1</string>
+			</array>
+		</dict>
+	</array>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 </dict>
 </plist>
