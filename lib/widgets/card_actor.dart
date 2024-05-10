@@ -14,7 +14,7 @@ class CardActor extends StatelessWidget {
     final double height = MediaQuery.of(context).size.height;
 
     onTap() => context.push(
-        '/person/${actor.id}/profile?name=${actor.name}&image=${actor.image?.mmed}');
+        '/profile/${actor.id}?name=${actor.name}&image=${actor.image?.mmed}');
 
     return Container(
       height: height * 0.23,

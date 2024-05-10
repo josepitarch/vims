@@ -39,7 +39,6 @@ class _MovieScreenState extends State<MovieScreen> {
   late ScrollController scrollController;
   @override
   void initState() {
-    BookmarksProvider();
     scrollController = ScrollController();
     super.initState();
   }
@@ -48,7 +47,8 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
-    final bookmarksProvider = Provider.of<BookmarksProvider>(context);
+    final bookmarksProvider =
+        Provider.of<BookmarksProvider>(context, listen: false);
 
     final String heroTag = widget.heroTag ?? widget.id.toString();
 
@@ -413,7 +413,7 @@ class _Cast extends StatelessWidget {
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
                   onTap: () => context.push(
-                      '/person/${actor.id}/profile?name=${actor.name}&image=${actor.image?.mmed}'),
+                      '/profile/${actor.id}?name=${actor.name}&image=${actor.image?.mmed}'),
                 ),
                 const SizedBox(height: 5),
                 Text(actor.name,

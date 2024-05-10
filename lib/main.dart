@@ -48,7 +48,8 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: true),
-      ChangeNotifierProvider(create: (_) => ActorProfileProvider(), lazy: true),
+      ChangeNotifierProvider(
+          create: (_) => ActorProfileProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: false)
     ], child: const App());
   }
@@ -153,7 +154,7 @@ final _router = GoRouter(
           title: state.uri.queryParameters['title']!),
     ),
     GoRoute(
-      path: '/person/:id/profile',
+      path: '/profile/:id',
       builder: (context, state) => ActorScreen(
           id: int.parse(state.pathParameters['id']!),
           name: state.uri.queryParameters['name']!,
