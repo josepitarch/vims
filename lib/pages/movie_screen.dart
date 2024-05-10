@@ -39,6 +39,7 @@ class _MovieScreenState extends State<MovieScreen> {
   late ScrollController scrollController;
   @override
   void initState() {
+    BookmarksProvider();
     scrollController = ScrollController();
     super.initState();
   }
@@ -47,13 +48,16 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
+    final bookmarksProvider = Provider.of<BookmarksProvider>(context);
 
     final String heroTag = widget.heroTag ?? widget.id.toString();
 
     if (provider.exception != null)
       return ErrorScreen(provider.exception!, provider.onRefresh);
 
-    if (provider.data!.containsKey(widget.id)) {
+    if (provider.data!.containsKey(widget.id) &&
+        !provider.isLoading &&
+        !bookmarksProvider.isLoading) {
       final Movie movie = provider.data![widget.id]!;
       movie.heroTag = heroTag;
       return screen(provider.data![widget.id]!, scrollController);
@@ -129,8 +133,21 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final icon = Theme.of(context).platform == TargetPlatform.iOS
+        ? Icons.arrow_back_ios
+        : Icons.arrow_back;
+
     return SliverAppBar(
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
+      leading: IconButton(
+          icon: Icon(icon),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/');
+            }
+          }),
       actions: [
         IconButton(
             onPressed: () async {
@@ -283,8 +300,9 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   void initState() {
     provider = context.read<BookmarksProvider>();
     if (FirebaseAuth.instance.currentUser != null) {
-      final bool isBookmark =
-          provider.data!.any((element) => element.id == widget.movie.id);
+      final isBookmark =
+          provider.data?.any((element) => element.id == widget.movie.id) ??
+              false;
 
       setState(() {
         isFavorite = isBookmark;

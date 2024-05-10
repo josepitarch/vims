@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vims/models/actor.dart';
@@ -58,8 +59,21 @@ class ActorScreen extends StatelessWidget {
     final Actor actor = data.keys.first;
     final List<ActorMovie>? movies = data.values.first;
 
+    final icon = Theme.of(context).platform == TargetPlatform.iOS
+        ? Icons.arrow_back_ios
+        : Icons.arrow_back;
+
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(icon),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go('/');
+                }
+              }),
           title: Text(name),
           actions: [
             IconButton(
