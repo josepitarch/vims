@@ -155,9 +155,9 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/profile/:id',
-      builder: (context, state) => ActorScreen(
+      builder: (context, state) => PersonScreen(
           id: int.parse(state.pathParameters['id']!),
-          name: state.uri.queryParameters['name']!,
+          name: state.uri.queryParameters['name'],
           image: state.uri.queryParameters['image']),
     ),
     GoRoute(

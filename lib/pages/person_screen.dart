@@ -14,13 +14,12 @@ import 'package:vims/widgets/loading.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
-class ActorScreen extends StatelessWidget {
+class PersonScreen extends StatelessWidget {
   final int id;
-  final String name;
+  String? name;
   final String? image;
 
-  const ActorScreen(
-      {required this.id, required this.name, this.image, super.key});
+  PersonScreen({required this.id, this.name, this.image, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class ActorScreen extends StatelessWidget {
     if (provider.isLoading) {
       return Scaffold(
           appBar: AppBar(
-            title: Text(name),
+            title: Text(name ?? ''),
             actions: [
               IconButton(
                   icon: const Icon(Icons.share),
@@ -49,7 +48,7 @@ class ActorScreen extends StatelessWidget {
                     SliverToBoxAdapter(
                         child: _Profile(
                       image: image,
-                      name: name,
+                      name: name ?? '',
                     )),
                   ],
               body: const CardMovieShimmer()));
@@ -57,6 +56,7 @@ class ActorScreen extends StatelessWidget {
 
     final Map<Actor, List<ActorMovie>?> data = provider.getActor(id);
     final Actor actor = data.keys.first;
+    name = actor.name;
     final List<ActorMovie>? movies = data.values.first;
 
     final icon = Theme.of(context).platform == TargetPlatform.iOS
@@ -74,7 +74,7 @@ class ActorScreen extends StatelessWidget {
                   context.go('/');
                 }
               }),
-          title: Text(name),
+          title: Text(name!),
           actions: [
             IconButton(
                 icon: const Icon(Icons.share),
