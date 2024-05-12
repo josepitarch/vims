@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
@@ -25,7 +26,10 @@ import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
 late AppLocalizations i18n;
 
 class MovieScreen extends StatefulWidget {
-  const MovieScreen({super.key});
+  final int id;
+  final String? heroTag;
+
+  const MovieScreen({required this.id, this.heroTag, super.key});
 
   @override
   State<MovieScreen> createState() => _MovieScreenState();
@@ -43,21 +47,22 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final bookmarksProvider =
+        Provider.of<BookmarksProvider>(context, listen: false);
 
-    final int id = arguments['id'];
-    final String heroTag = arguments['heroTag'] ?? id.toString();
+    final String heroTag = widget.heroTag ?? widget.id.toString();
 
     if (provider.exception != null)
       return ErrorScreen(provider.exception!, provider.onRefresh);
 
-    if (provider.data!.containsKey(id)) {
-      final Movie movie = provider.data![id]!;
+    if (provider.data!.containsKey(widget.id) &&
+        !provider.isLoading &&
+        !bookmarksProvider.isLoading) {
+      final Movie movie = provider.data![widget.id]!;
       movie.heroTag = heroTag;
-      return screen(provider.data![id]!, scrollController);
+      return screen(provider.data![widget.id]!, scrollController);
     } else {
-      provider.fetchMovie(id);
+      provider.fetchMovie(widget.id);
       return const DetailsMovieShimmer();
     }
   }
@@ -130,6 +135,10 @@ class _CustomAppBarState extends State<_CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final icon = Theme.of(context).platform == TargetPlatform.iOS
+        ? Icons.arrow_back_ios
+        : Icons.arrow_back;
+
     return SliverAppBar(
       actions: [
         IconButton(
@@ -140,6 +149,15 @@ class _CustomAppBarState extends State<_CustomAppBar> {
             icon: const Icon(Icons.share))
       ],
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
+      leading: IconButton(
+          icon: Icon(icon),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/');
+            }
+          }),
       floating: false,
       pinned: true,
       centerTitle: true,
@@ -284,8 +302,9 @@ class _BookmarkMovieState extends State<_BookmarkMovie> {
   void initState() {
     provider = context.read<BookmarksProvider>();
     if (FirebaseAuth.instance.currentUser != null) {
-      final bool isBookmark =
-          provider.data!.any((element) => element.id == widget.movie.id);
+      final isBookmark =
+          provider.data?.any((element) => element.id == widget.movie.id) ??
+              false;
 
       setState(() {
         isFavorite = isBookmark;
@@ -398,15 +417,8 @@ class _Cast extends StatelessWidget {
                   size: width <= 414 ? 65 : 80,
                   borderWidth: 1,
                   borderColor: Colors.grey[200]!,
-                  onTap: () {
-                    final Map<String, dynamic> arguments = {
-                      'id': actor.id,
-                      'name': actor.name,
-                      'image': actor.image?.mmed,
-                    };
-
-                    Navigator.pushNamed(context, 'actor', arguments: arguments);
-                  },
+                  onTap: () => context.push(
+                      '/profile/${actor.id}?name=${actor.name}&image=${actor.image?.mmed}'),
                 ),
                 const SizedBox(height: 5),
                 Text(actor.name,

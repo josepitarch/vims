@@ -8,6 +8,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vims/constants/ui/assets.dart';
 import 'package:vims/dialogs/delete_account_dialog.dart';
 import 'package:vims/services/api/user_service.dart';
@@ -114,7 +115,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               isVerified: emailVerified,
                               imagePath: photoURL,
                               onClicked: () async {
-                                Navigator.pushNamed(context, 'edit-profile');
+                                context.push('/edit-profile');
                                 setState(() {});
                               },
                             );

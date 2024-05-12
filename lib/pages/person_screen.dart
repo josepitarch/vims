@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vims/models/actor.dart';
@@ -14,15 +15,15 @@ import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 class ActorScreen extends StatelessWidget {
-  const ActorScreen({super.key});
+  final int id;
+  final String name;
+  final String? image;
+
+  const ActorScreen(
+      {required this.id, required this.name, this.image, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final String name = arguments['name'];
-    final int id = arguments['id'];
-
     final ActorProfileProvider provider = Provider.of(context, listen: true)
       ..fetchProfile(id);
 
@@ -47,8 +48,8 @@ class ActorScreen extends StatelessWidget {
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                     SliverToBoxAdapter(
                         child: _Profile(
-                      image: arguments['image'],
-                      name: arguments['name'],
+                      image: image,
+                      name: name,
                     )),
                   ],
               body: const CardMovieShimmer()));
@@ -58,15 +59,31 @@ class ActorScreen extends StatelessWidget {
     final Actor actor = data.keys.first;
     final List<ActorMovie>? movies = data.values.first;
 
+    final icon = Theme.of(context).platform == TargetPlatform.iOS
+        ? Icons.arrow_back_ios
+        : Icons.arrow_back;
+
     return Scaffold(
-        appBar: AppBar(title: Text(name), actions: [
-          IconButton(
-              icon: const Icon(Icons.share),
-              onPressed: () async {
-                await Share.share('https://vims.app/profile/$id',
-                    subject: 'Compartir $name');
-              })
-        ]),
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(icon),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go('/');
+                }
+              }),
+          title: Text(name),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () async {
+                  await Share.share('https://vims.app/profile/$id',
+                      subject: 'Compartir $name');
+                })
+          ],
+        ),
         body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
                   SliverToBoxAdapter(

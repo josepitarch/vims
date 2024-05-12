@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/widgets/card_section.dart';
 
@@ -11,12 +12,8 @@ class SectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    final Map arguments = {
-      'title': section.title,
-      'id': section.id,
-    };
 
-    onTap() => Navigator.pushNamed(context, 'section', arguments: arguments);
+    onTap() => context.push('/section/${section.id}?title=${section.title}');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

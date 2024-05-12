@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
@@ -12,14 +13,8 @@ class CardActor extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
 
-    onTap() {
-      final Map<String, dynamic> arguments = {
-        'id': actor.id,
-        'name': actor.name,
-        'image': actor.image?.mmed,
-      };
-      Navigator.pushNamed(context, 'actor', arguments: arguments);
-    }
+    onTap() => context.push(
+        '/profile/${actor.id}?name=${actor.name}&image=${actor.image?.mmed}');
 
     return Container(
       height: height * 0.23,
