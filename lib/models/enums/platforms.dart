@@ -1,7 +1,7 @@
 enum Platforms {
   netflix(['netflix'], true),
   prime(['amazon video', 'amazon prime video'], true),
-  hbo_max(['hbo max'], true),
+  max(['max'], true),
   disney(['disney plus'], true),
   movistar(['movistar plus'], true),
   filmin(['filmin'], true),
