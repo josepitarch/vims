@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
+import 'package:vims/models/enums/share_page.dart';
 
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
@@ -21,6 +22,7 @@ import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
+import 'package:vims/widgets/share_item.dart';
 import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
 
 late AppLocalizations i18n;
@@ -149,12 +151,10 @@ class _CustomAppBarState extends State<_CustomAppBar> {
             }
           }),
       actions: [
-        IconButton(
-            onPressed: () async {
-              await Share.share('https://vims.app/movie/${widget.movieId}',
-                  subject: 'Compartir ${widget.title}');
-            },
-            icon: const Icon(Icons.share))
+        ShareItem(
+            subject: widget.title,
+            sharePage: SharePage.MOVIE,
+            id: widget.movieId)
       ],
       floating: false,
       pinned: true,

@@ -1,0 +1,1 @@
+enum SharePage { MOVIE, PROFILE }

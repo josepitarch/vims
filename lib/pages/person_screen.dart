@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
+import 'package:vims/models/enums/share_page.dart';
 import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/person_profile_provider.dart';
 import 'package:vims/services/api/person_service.dart';
@@ -12,6 +12,7 @@ import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/loading.dart';
 import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/share_item.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 class PersonScreen extends StatelessWidget {
@@ -35,12 +36,8 @@ class PersonScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text(name ?? ''),
             actions: [
-              IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () async {
-                    await Share.share('https://vims.app/profile/$id',
-                        subject: 'Compartir $name');
-                  })
+              ShareItem(
+                  subject: name ?? '', sharePage: SharePage.PROFILE, id: id)
             ],
           ),
           body: NestedScrollView(
@@ -76,12 +73,7 @@ class PersonScreen extends StatelessWidget {
               }),
           title: Text(name!),
           actions: [
-            IconButton(
-                icon: const Icon(Icons.share),
-                onPressed: () async {
-                  await Share.share('https://vims.app/profile/$id',
-                      subject: 'Compartir $name');
-                })
+            ShareItem(subject: name ?? '', sharePage: SharePage.PROFILE, id: id)
           ],
         ),
         body: NestedScrollView(
