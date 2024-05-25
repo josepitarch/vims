@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
 import 'package:vims/models/enums/share_page.dart';
 
@@ -52,16 +51,12 @@ class _MovieScreenState extends State<MovieScreen> {
     final bookmarksProvider =
         Provider.of<BookmarksProvider>(context, listen: false);
 
-    final String heroTag = widget.heroTag ?? widget.id.toString();
-
     if (provider.exception != null)
       return ErrorScreen(provider.exception!, provider.onRefresh);
 
     if (provider.data!.containsKey(widget.id) &&
         !provider.isLoading &&
         !bookmarksProvider.isLoading) {
-      final Movie movie = provider.data![widget.id]!;
-      movie.heroTag = heroTag;
       return screen(provider.data![widget.id]!, scrollController);
     } else {
       provider.fetchMovie(widget.id);
@@ -70,11 +65,10 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
   Scaffold screen(Movie movie, ScrollController scrollController) {
-    final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(movie.id, movie.title, movie.poster.large, heroTag,
-            scrollController),
+        _CustomAppBar(
+            movie.id, movie.title, movie.poster.large, scrollController),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -104,11 +98,9 @@ class _CustomAppBar extends StatefulWidget {
   final int movieId;
   final String title;
   final String url;
-  final String heroTag;
   final ScrollController scrollController;
 
-  _CustomAppBar(
-      this.movieId, this.title, this.url, this.heroTag, this.scrollController);
+  _CustomAppBar(this.movieId, this.title, this.url, this.scrollController);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -166,7 +158,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
-          tag: widget.heroTag,
+          tag: widget.movieId,
           child: CustomImage(
               url: widget.url,
               saveToCache: true,

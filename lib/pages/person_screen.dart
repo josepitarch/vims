@@ -265,7 +265,6 @@ class _FilmographyState extends State<_Filmography> {
           children: widget.movies!
               .map((e) => CardMovie(
                   id: e.id,
-                  heroTag: '${e.id.toString()}-${widget.id}',
                   title: e.title,
                   poster: e.poster.mmed,
                   saveToCache: false))

@@ -37,6 +37,7 @@ class SearchMovieScreen extends StatelessWidget {
             ),
             bottom: const TabBar(
               tabs: tabs,
+              indicatorSize: TabBarIndicatorSize.tab,
             ),
           ),
           body: const TabBarView(children: [
