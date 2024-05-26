@@ -19,11 +19,11 @@ class SectionsScreen extends StatelessWidget {
 
     if (provider.isLoading) return const SectionsShimmer();
 
-    final List<SectionWidget> sections = provider.data!
+    final sections = provider.data!
         .map((section) => SectionWidget(section: section))
         .toList();
 
-    final Widget body = Theme.of(context).platform == TargetPlatform.android
+    final body = Theme.of(context).platform == TargetPlatform.android
         ? ListView(
             children: [
               ...sections,
@@ -37,13 +37,10 @@ class SectionsScreen extends StatelessWidget {
             ],
           );
 
-    return PullRefresh(
+    return RefreshIndicator.adaptive(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: body,
-        ),
+            padding: const EdgeInsets.symmetric(vertical: 10), child: body),
         onRefresh: () {
-          context.read<SectionProvider>().onRefresh();
           return provider.onRefresh();
         });
   }

@@ -6,35 +6,28 @@ import 'package:vims/services/api/user_service.dart';
 
 final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
   BookmarksProvider() : super(page: 1, limit: 20) {
-    isLoading = true;
     fetchData();
   }
 
   @override
   fetchData() async {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        data = null;
-        total = null;
-        hasNextPage = false;
-        notifyListeners();
-      } else {
-        getBookmarks(user.uid, page, limit)
-            .then((value) => {
-                  data == null
-                      ? data = List.of(value.results)
-                      : data!.addAll(value.results),
-                  total = value.total,
-                  hasNextPage = value.results.length == limit,
-                  exception = null,
-                })
-            .catchError((e) {
-          exception = e;
-        }).whenComplete(() {
-          isLoading = false;
-          notifyListeners();
-        });
-      }
+    isLoading = true;
+    notifyListeners();
+    final User user = FirebaseAuth.instance.currentUser!;
+    getBookmarks(user.uid, page, limit)
+        .then((value) => {
+              data == null
+                  ? data = List.of(value.results)
+                  : data!.addAll(value.results),
+              total = value.total,
+              hasNextPage = value.results.length == limit,
+              exception = null,
+            })
+        .catchError((e) {
+      exception = e;
+    }).whenComplete(() {
+      isLoading = false;
+      notifyListeners();
     });
   }
 
@@ -68,7 +61,4 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
       notifyListeners();
     });
   }
-
-  @override
-  onRefresh() {}
 }

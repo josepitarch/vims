@@ -17,7 +17,7 @@ abstract class InfiniteScrollProvider<T> extends BaseProvider<List<T>> {
   }
 
   @override
-  onRefresh() {
+  onRefresh() async {
     page = 1;
     total = null;
     hasNextPage = false;

@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
-import 'package:vims/pages/bookmark_movies_screen.dart';
+import 'package:vims/pages/bookmarks_screen.dart';
 import 'package:vims/pages/edit_profile_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
 import 'package:vims/pages/person_screen.dart';
@@ -33,7 +33,7 @@ Future<void> main() async {
   final remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
     fetchTimeout: const Duration(seconds: 10),
-    minimumFetchInterval: const Duration(hours: 4),
+    minimumFetchInterval: const Duration(hours: 24),
   ));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -53,11 +53,11 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SearchProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: true),
       ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: true),
       ChangeNotifierProvider(
           create: (_) => ActorProfileProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: false)
+      ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: true)
     ], child: const App());
   }
 }
