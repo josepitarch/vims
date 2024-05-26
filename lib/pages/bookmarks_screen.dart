@@ -40,19 +40,12 @@ class BookmarkMoviesScreen extends StatelessWidget {
               ))
           .toList();
 
-      body = Theme.of(context).platform == TargetPlatform.android
-          ? ListView(
-              children: [
-                ...bookmarks,
-                const SizedBox(height: 30),
-              ],
-            )
-          : Column(
-              children: [
-                ...bookmarks,
-                const SizedBox(height: 30),
-              ],
-            );
+      body = ListView(
+        children: [
+          ...bookmarks,
+          const SizedBox(height: 30),
+        ],
+      );
     }
 
     return Scaffold(

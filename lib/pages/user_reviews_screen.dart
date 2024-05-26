@@ -45,19 +45,12 @@ class UserReviewsScreen extends StatelessWidget {
               ))
           .toList();
 
-      body = Theme.of(context).platform == TargetPlatform.android
-          ? ListView(
-              children: [
-                ...reviews,
-                const SizedBox(height: 30),
-              ],
-            )
-          : Column(
-              children: [
-                ...reviews,
-                const SizedBox(height: 30),
-              ],
-            );
+      body = ListView(
+        children: [
+          ...reviews,
+          const SizedBox(height: 30),
+        ],
+      );
     }
 
     return Scaffold(

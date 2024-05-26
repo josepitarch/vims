@@ -23,23 +23,15 @@ class SectionsScreen extends StatelessWidget {
         .map((section) => SectionWidget(section: section))
         .toList();
 
-    final body = Theme.of(context).platform == TargetPlatform.android
-        ? ListView(
-            children: [
-              ...sections,
-              const SizedBox(height: 30),
-            ],
-          )
-        : Column(
-            children: [
-              ...sections,
-              const SizedBox(height: 30),
-            ],
-          );
-
     return RefreshIndicator.adaptive(
         child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10), child: body),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: ListView(
+              children: [
+                ...sections,
+                const SizedBox(height: 30),
+              ],
+            )),
         onRefresh: () {
           return provider.onRefresh();
         });
