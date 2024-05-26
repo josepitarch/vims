@@ -2,23 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PullRefresh extends StatelessWidget {
-  final Widget child;
+  final List<Widget> children;
   final Future<void> Function() onRefresh;
 
-  const PullRefresh({required this.child, required this.onRefresh, super.key});
+  const PullRefresh(
+      {required this.children, required this.onRefresh, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Theme.of(context).platform == TargetPlatform.android
-        ? _PullRefreshAndroid(onRefresh: onRefresh, child: child)
-        : _PullRefreshIOS(onRefresh: onRefresh, child: child);
+        ? _PullRefreshAndroid(onRefresh: onRefresh, children: children)
+        : _PullRefreshIOS(onRefresh: onRefresh, children: children);
   }
 }
 
 class _PullRefreshAndroid extends StatelessWidget {
-  final Widget child;
+  final List<Widget> children;
   final Future<void> Function() onRefresh;
-  const _PullRefreshAndroid({required this.child, required this.onRefresh});
+  const _PullRefreshAndroid({required this.children, required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +28,16 @@ class _PullRefreshAndroid extends StatelessWidget {
         backgroundColor: Colors.white,
         color: Colors.orange.shade300,
         onRefresh: onRefresh,
-        child: child,
+        child: ListView(children: [...children, const SizedBox(height: 20)]),
       ),
     );
   }
 }
 
 class _PullRefreshIOS extends StatelessWidget {
-  final Widget child;
+  final List<Widget> children;
   final Future<void> Function() onRefresh;
-  const _PullRefreshIOS({required this.child, required this.onRefresh});
+  const _PullRefreshIOS({required this.children, required this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +49,9 @@ class _PullRefreshIOS extends StatelessWidget {
             onRefresh: onRefresh,
           ),
           SliverToBoxAdapter(
-            child: child,
-          ),
+              child: Column(
+            children: [...children, const SizedBox(height: 20)],
+          )),
         ],
       ),
     );

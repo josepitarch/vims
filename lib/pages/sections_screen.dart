@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/pages/error/error_screen.dart';
-import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/providers/implementation/sections_provider.dart';
 import 'package:vims/widgets/pull_refresh.dart';
 import 'package:vims/widgets/section_widget.dart';
@@ -23,25 +22,11 @@ class SectionsScreen extends StatelessWidget {
         .map((section) => SectionWidget(section: section))
         .toList();
 
-    final body = Theme.of(context).platform == TargetPlatform.android
-        ? ListView(
-            children: [
-              ...sections,
-              const SizedBox(height: 30),
-            ],
-          )
-        : Column(
-            children: [
-              ...sections,
-              const SizedBox(height: 30),
-            ],
-          );
-
-    return RefreshIndicator.adaptive(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10), child: body),
-        onRefresh: () {
-          return provider.onRefresh();
-        });
+    return PullRefresh(
+      children: sections,
+      onRefresh: () {
+        return provider.onRefresh();
+      },
+    );
   }
 }

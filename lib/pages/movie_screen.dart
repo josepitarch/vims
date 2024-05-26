@@ -100,7 +100,8 @@ class _CustomAppBar extends StatefulWidget {
   final String url;
   final ScrollController scrollController;
 
-  _CustomAppBar(this.movieId, this.title, this.url, this.scrollController);
+  const _CustomAppBar(
+      this.movieId, this.title, this.url, this.scrollController);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -667,7 +668,7 @@ class _Button extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
           backgroundColor:
-              isSelected ? MaterialStateProperty.all(Colors.black26) : null),
+              isSelected ? WidgetStateProperty.all(Colors.black26) : null),
       onPressed: () => onPressed(),
       child: Text(text,
           style: Theme.of(context)
