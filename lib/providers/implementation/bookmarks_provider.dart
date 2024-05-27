@@ -11,23 +11,29 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
 
   @override
   fetchData() async {
-    isLoading = true;
-    notifyListeners();
-    final User user = FirebaseAuth.instance.currentUser!;
-    getBookmarks(user.uid, page, limit)
-        .then((value) => {
-              data == null
-                  ? data = List.of(value.results)
-                  : data!.addAll(value.results),
-              total = value.total,
-              hasNextPage = value.results.length == limit,
-              exception = null,
-            })
-        .catchError((e) {
-      exception = e;
-    }).whenComplete(() {
-      isLoading = false;
-      notifyListeners();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        data = null;
+        total = null;
+        hasNextPage = false;
+        notifyListeners();
+      } else {
+        getBookmarks(user.uid, page, limit)
+            .then((value) => {
+                  data == null
+                      ? data = List.of(value.results)
+                      : data!.addAll(value.results),
+                  total = value.total,
+                  hasNextPage = value.results.length == limit,
+                  exception = null,
+                })
+            .catchError((e) {
+          exception = e;
+        }).whenComplete(() {
+          isLoading = false;
+          notifyListeners();
+        });
+      }
     });
   }
 
