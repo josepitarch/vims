@@ -11,9 +11,10 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
 
   @override
   fetchData() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
     isLoading = true;
     notifyListeners();
-    final User user = FirebaseAuth.instance.currentUser!;
     getBookmarks(user.uid, page, limit)
         .then((value) => {
               data == null
@@ -32,6 +33,9 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
   }
 
   Future<bool> insertBookmarkMovie(Movie movie) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
     final bookmarkMovie = BookmarkMovie(
       id: movie.id,
       poster: movie.poster.large,
@@ -39,9 +43,7 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
       director: movie.director ?? '',
     );
 
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-
-    await createBookmark(userId, bookmarkMovie);
+    await createBookmark(user.uid, bookmarkMovie);
     data!.add(bookmarkMovie);
     notifyListeners();
 

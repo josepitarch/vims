@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vims/dialogs/delete_review_dialog.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/reviews_provider.dart';
+import 'package:vims/widgets/pull_refresh.dart';
 import 'package:vims/widgets/review_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
@@ -45,11 +46,11 @@ class UserReviewsScreen extends StatelessWidget {
               ))
           .toList();
 
-      body = ListView(
-        children: [
-          ...reviews,
-          const SizedBox(height: 30),
-        ],
+      body = PullRefresh(
+        children: reviews,
+        onRefresh: () {
+          return provider.onRefresh();
+        },
       );
     }
 

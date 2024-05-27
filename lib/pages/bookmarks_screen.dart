@@ -6,6 +6,7 @@ import 'package:vims/dialogs/delete_bookmark_dialog.dart';
 import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/pull_refresh.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 class BookmarkMoviesScreen extends StatelessWidget {
@@ -40,11 +41,11 @@ class BookmarkMoviesScreen extends StatelessWidget {
               ))
           .toList();
 
-      body = ListView(
-        children: [
-          ...bookmarks,
-          const SizedBox(height: 30),
-        ],
+      body = PullRefresh(
+        children: bookmarks,
+        onRefresh: () {
+          return provider.onRefresh();
+        },
       );
     }
 
@@ -52,11 +53,7 @@ class BookmarkMoviesScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(i18n.title_bookmarks_page),
         ),
-        body: RefreshIndicator.adaptive(
-            child: body,
-            onRefresh: () {
-              return provider.onRefresh();
-            }));
+        body: body);
   }
 
   Future _openDialog(BuildContext context) {

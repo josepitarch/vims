@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CardMovieShimmer extends StatelessWidget {
   final int total;
@@ -9,7 +8,6 @@ class CardMovieShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations i18n = AppLocalizations.of(context)!;
     final double height = MediaQuery.of(context).size.height;
 
     return ListView.builder(

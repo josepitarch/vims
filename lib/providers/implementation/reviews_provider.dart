@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path/path.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/providers/interface/infinite_scroll_provider.dart';
 import 'package:vims/services/api/user_service.dart';
