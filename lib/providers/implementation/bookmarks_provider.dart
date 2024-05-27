@@ -6,6 +6,7 @@ import 'package:vims/services/api/user_service.dart';
 
 final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
   BookmarksProvider() : super(page: 1, limit: 20) {
+    isLoading = true;
     fetchData();
   }
 
@@ -18,6 +19,8 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
         hasNextPage = false;
         notifyListeners();
       } else {
+        isLoading = true;
+        notifyListeners();
         getBookmarks(user.uid, page, limit)
             .then((value) => {
                   data == null
