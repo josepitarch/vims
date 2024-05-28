@@ -21,18 +21,18 @@ PODS:
   - Firebase/RemoteConfig (10.25.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 10.25.0)
-  - firebase_auth (4.19.6):
+  - firebase_auth (4.20.0):
     - Firebase/Auth (= 10.25.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.31.1):
+  - firebase_core (2.32.0):
     - Firebase/CoreOnly (= 10.25.0)
     - Flutter
   - firebase_dynamic_links (5.5.6):
     - Firebase/DynamicLinks (= 10.25.0)
     - firebase_core
     - Flutter
-  - firebase_remote_config (4.4.6):
+  - firebase_remote_config (4.4.7):
     - Firebase/RemoteConfig (= 10.25.0)
     - firebase_core
     - Flutter
@@ -214,10 +214,10 @@ SPEC CHECKSUMS:
   connectivity_plus: ddd7f30999e1faaef5967c23d5b6d503d10434db
   desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   Firebase: 0312a2352584f782ea56f66d91606891d4607f06
-  firebase_auth: 193301a23be35329120526c6a83672ea40676472
-  firebase_core: 22e117a2e0dec3cb318c8f53f2dd01c140375617
+  firebase_auth: 5719ddc9f654b813405899480e84971bd8e61235
+  firebase_core: a626d00494efa398e7c54f25f1454a64c8abf197
   firebase_dynamic_links: 907b778ac5781460847013d6f1041c6ceb06b1e0
-  firebase_remote_config: 347436da419c4b6d64995edc037e9ed56158354b
+  firebase_remote_config: 7b05c80210ab558c80f7a756681022b4ee98eea0
   FirebaseABTesting: e6e3c3e0e35813874f571d1b7bdae2aab319dd38
   FirebaseAppCheckInterop: 5da5ce93e8797a215e3f677fb0654b74e736c8b8
   FirebaseAuth: c0f93dcc570c9da2bffb576969d793e95c344fbb
