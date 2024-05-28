@@ -5,7 +5,7 @@ import 'package:vims/models/actor.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/models/enums/share_page.dart';
 import 'package:vims/pages/error/error_screen.dart';
-import 'package:vims/providers/implementation/person_profile_provider.dart';
+import 'package:vims/providers/implementation/profile_provider.dart';
 import 'package:vims/services/api/person_service.dart';
 import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/card_movie.dart';
@@ -15,16 +15,16 @@ import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/share_item.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
-class PersonScreen extends StatelessWidget {
+class ProfileScreen extends StatelessWidget {
   final int id;
   String? name;
   final String? image;
 
-  PersonScreen({required this.id, this.name, this.image, super.key});
+  ProfileScreen({required this.id, this.name, this.image, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ActorProfileProvider provider = Provider.of(context, listen: true)
+    final ProfileProvider provider = Provider.of(context, listen: true)
       ..fetchProfile(id);
 
     if (provider.exception != null) {
@@ -190,7 +190,7 @@ class _FilmographyState extends State<_Filmography> {
     if (widget.movies == null) {
       widget.movies = [];
       fetchData(widget.id, page).then((_) => context
-          .read<ActorProfileProvider>()
+          .read<ProfileProvider>()
           .addFirstMoviesPage(widget.id, widget.movies!));
     } else {
       page = 2;

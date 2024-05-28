@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:vims/constants/ui/assets.dart';
 import 'package:vims/services/cloudinary/cloudinary.dart';
 import 'package:vims/utils/snackbar.dart';
-import 'package:vims/widgets/user_info_profile.dart';
+import 'package:vims/widgets/account_info.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});

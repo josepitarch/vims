@@ -13,8 +13,8 @@ import 'package:vims/constants/ui/assets.dart';
 import 'package:vims/dialogs/delete_account_dialog.dart';
 import 'package:vims/services/api/user_service.dart';
 import 'package:vims/utils/snackbar.dart';
-import 'package:vims/widgets/user_info_profile.dart';
-import 'package:vims/widgets/user_menu_options.dart';
+import 'package:vims/widgets/account_info.dart';
+import 'package:vims/widgets/account_menu_options.dart';
 
 final GOOGLE_CLIENT_ID = dotenv.env['GOOGLE_CLIENT_ID'];
 

@@ -28,9 +28,8 @@ late AppLocalizations i18n;
 
 class MovieScreen extends StatefulWidget {
   final int id;
-  final String? heroTag;
 
-  const MovieScreen({required this.id, this.heroTag, super.key});
+  const MovieScreen({required this.id, super.key});
 
   @override
   State<MovieScreen> createState() => _MovieScreenState();

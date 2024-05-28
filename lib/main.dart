@@ -7,14 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
 import 'package:vims/pages/bookmarks_screen.dart';
-import 'package:vims/pages/edit_profile_screen.dart';
+import 'package:vims/pages/edit_account_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
-import 'package:vims/pages/person_screen.dart';
+import 'package:vims/pages/profile_screen.dart';
 import 'package:vims/pages/section_screen.dart';
 import 'package:vims/pages/user_reviews_screen.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
-import 'package:vims/providers/implementation/person_profile_provider.dart';
+import 'package:vims/providers/implementation/profile_provider.dart';
 import 'package:vims/providers/implementation/reviews_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/search_person_provider.dart';
@@ -55,8 +55,7 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: true),
       ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: true),
-      ChangeNotifierProvider(
-          create: (_) => ActorProfileProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => ProfileProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: true)
     ], child: const App());
   }
@@ -162,7 +161,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/profile/:id',
-      builder: (context, state) => PersonScreen(
+      builder: (context, state) => ProfileScreen(
           id: int.parse(state.pathParameters['id']!),
           name: state.uri.queryParameters['name'],
           image: state.uri.queryParameters['image']),
