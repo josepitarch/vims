@@ -51,7 +51,7 @@ dependencies:
   firebase_ui_oauth_apple: 1.2.20
   cloudinary_flutter: 1.3.0
   cloudinary_url_gen: 1.5.0
-  image_picker: 1.1.1
+  image_picker: 1.1.2
   share_plus: 9.0.0
   go_router: 14.1.4
   firebase_remote_config: 4.4.7

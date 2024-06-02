@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/api/person_service.dart';
 
 final class ProfileProvider
-    extends BaseProvider<Map<Actor, List<ActorMovie>?>> {
+    extends BaseProvider<Map<Person, List<ActorMovie>?>> {
   late int id;
-  Actor? currentActor;
+  Person? currentActor;
   ProfileProvider() : super(data: {});
 
   @override
@@ -35,13 +35,13 @@ final class ProfileProvider
 
   fetchProfile(int id) {
     this.id = id;
-    final Actor? actor =
+    final Person? actor =
         data!.keys.firstWhereOrNull((element) => element.id == id);
     actor != null ? currentActor = actor : fetchData();
   }
 
-  Map<Actor, List<ActorMovie>?> getActor(final int id) {
-    final Actor? actor =
+  Map<Person, List<ActorMovie>?> getActor(final int id) {
+    final Person? actor =
         data!.keys.firstWhereOrNull((element) => element.id == id);
     if (actor != null) {
       return {actor: data![actor]};
@@ -50,7 +50,7 @@ final class ProfileProvider
   }
 
   addFirstMoviesPage(final int id, final List<ActorMovie> movies) {
-    final Actor? actor =
+    final Person? actor =
         data!.keys.firstWhereOrNull((element) => element.id == id);
     if (actor != null) {
       data![actor] = movies;

@@ -7,8 +7,8 @@ import 'package:vims/constants/ui/search_person_placeholder.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
 
 class InputDecorations {
-  static InputDecoration searchMovieDecoration(AppLocalizations i18n,
-      TextEditingController controller, SearchProvider provider) {
+  static InputDecoration searchDecoration(AppLocalizations i18n,
+      void Function() onPressed, SearchProvider provider) {
     final List<String> placeholder = provider.tabIndex == 0
         ? SEARCH_MOVIES_PLACEHOLDER
         : SEARCH_PERSON_PLACEHOLDER;
@@ -30,11 +30,7 @@ class InputDecorations {
           borderRadius: BorderRadius.circular(30.0),
           borderSide: const BorderSide(color: Colors.orange)),
       suffixIcon: IconButton(
-        onPressed: () {
-          if (controller.text.isNotEmpty) {
-            controller.text = '';
-          }
-        },
+        onPressed: onPressed,
         icon: const Icon(Icons.clear),
       ),
     );

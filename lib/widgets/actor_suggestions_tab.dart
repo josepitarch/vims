@@ -88,7 +88,7 @@ class _ActorSuggestions extends StatelessWidget {
         controller: scrollController,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children:
-            provider.data!.map((actor) => CardActor(actor: actor)).toList());
+            provider.data!.map((actor) => CardPerson(person: actor)).toList());
 
     return Expanded(
         child: InfiniteScroll(

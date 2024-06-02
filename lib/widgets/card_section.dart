@@ -21,16 +21,13 @@ class CardSection extends StatelessWidget {
         margin: const EdgeInsets.only(right: 15),
         child: Column(
           children: [
-            Hero(
-              tag: movie.id,
-              child: AspectRatio(
-                aspectRatio: 3 / 4,
-                child: CustomImage(
-                    url: movie.poster.mmed,
-                    saveToCache: saveToCache,
-                    borderRadius: 20,
-                    cacheManager: CustomCacheManager.cacheTinyImages),
-              ),
+            AspectRatio(
+              aspectRatio: 3 / 4,
+              child: CustomImage(
+                  url: movie.poster.mmed,
+                  saveToCache: saveToCache,
+                  borderRadius: 20,
+                  cacheManager: CustomCacheManager.cacheTinyImages),
             ),
             const SizedBox(height: 5),
             _Title(movie.title)

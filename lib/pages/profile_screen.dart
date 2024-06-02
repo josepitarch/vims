@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/models/enums/share_page.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -51,8 +51,8 @@ class ProfileScreen extends StatelessWidget {
               body: const CardMovieShimmer()));
     }
 
-    final Map<Actor, List<ActorMovie>?> data = provider.getActor(id);
-    final Actor actor = data.keys.first;
+    final Map<Person, List<ActorMovie>?> data = provider.getActor(id);
+    final Person actor = data.keys.first;
     name = actor.name;
     final List<ActorMovie>? movies = data.values.first;
 

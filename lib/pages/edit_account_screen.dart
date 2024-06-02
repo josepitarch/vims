@@ -29,6 +29,12 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final i18n = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser!;

@@ -33,11 +33,11 @@ class TopMoviesDialog extends StatelessWidget {
         yearTo: topMoviesProvider.currentFilters.yearTo);
 
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      backgroundColor: const Color.fromARGB(255, 32, 32, 31),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 700, maxWidth: 650),
-        color: Colors.black12,
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           width: double.infinity,

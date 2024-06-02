@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
+import 'package:vims/providers/implementation/search_person_provider.dart';
 import 'package:vims/providers/implementation/search_provider.dart';
 import 'package:vims/ui/input_decoration.dart';
 import 'package:vims/widgets/actor_suggestions_tab.dart';
 import 'package:vims/widgets/movie_suggestions_tab.dart';
 
-class SearchMovieScreen extends StatelessWidget {
+final class SearchMovieScreen extends StatelessWidget {
   const SearchMovieScreen({super.key});
 
   @override
@@ -40,10 +40,14 @@ class SearchMovieScreen extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.tab,
             ),
           ),
-          body: const TabBarView(children: [
-            MovieSuggestionsTab(),
-            ActorSuggestionsTab(),
-          ]),
+          body: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: const TabBarView(children: [
+              MovieSuggestionsTab(),
+              ActorSuggestionsTab(),
+            ]),
+          ),
         );
       }),
     );
@@ -55,43 +59,37 @@ final class _SearchMovieForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations i18n = AppLocalizations.of(context)!;
+    final controller = TextEditingController();
+    final i18n = AppLocalizations.of(context)!;
     final SearchProvider provider = Provider.of(context, listen: true);
-    final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
-    final TextEditingController controller = TextEditingController();
+
+    clearText() {
+      if (controller.text.isNotEmpty) {
+        controller.text = '';
+      }
+    }
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: Form(
-        key: myFormKey,
-        child: TextFormField(
+      child: TextField(
           autofocus: false,
           controller: controller,
           keyboardType: TextInputType.text,
           enableSuggestions: false,
           keyboardAppearance: Brightness.dark,
-          decoration: InputDecorations.searchMovieDecoration(
-              i18n, controller, provider),
-          autovalidateMode: AutovalidateMode.disabled,
-          validator: (value) {
-            if (value!.isEmpty) return '';
-            return null;
-          },
+          decoration:
+              InputDecorations.searchDecoration(i18n, clearText, provider),
           onChanged: (value) {
             provider.tabIndex == 0
                 ? context.read<SearchMovieProvider>().onChanged(value)
                 : context.read<SearchActorProvider>().onChanged(value);
           },
-          onFieldSubmitted: (String value) {
-            if (myFormKey.currentState!.validate()) {
-              controller.text = '';
-              provider.tabIndex == 0
-                  ? context.read<SearchMovieProvider>().onSubmitted(value)
-                  : context.read<SearchActorProvider>().onSubmitted(value);
-            }
-          },
-        ),
-      ),
+          onSubmitted: (String value) {
+            controller.text = '';
+            provider.tabIndex == 0
+                ? context.read<SearchMovieProvider>().onSubmitted(value)
+                : context.read<SearchActorProvider>().onSubmitted(value);
+          }),
     );
   }
 }

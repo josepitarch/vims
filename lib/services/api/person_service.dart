@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/models/actor_movie.dart';
 import 'package:vims/models/paged_response.dart';
 import 'package:vims/utils/api.dart';
 
-Future<Actor> getPersonProfile(int id) async {
+Future<Person> getPersonProfile(int id) async {
   final Map<String, dynamic> response = await api('person/$id/profile', 1);
 
-  return Actor.fromMap(response);
+  return Person.fromMap(response);
 }
 
 Future<PagedResponse<ActorMovie>> getPersonFilmography(int id, int page) async {

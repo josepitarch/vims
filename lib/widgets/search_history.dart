@@ -24,12 +24,7 @@ class HistorySearch extends StatelessWidget {
           List<String> historySearch = snapshot.data as List<String>;
 
           if (historySearch.isEmpty) {
-            return Flexible(
-                flex: 1,
-                child: GestureDetector(
-                  onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-                  child: Container(color: Colors.transparent),
-                ));
+            return const SizedBox.shrink();
           }
 
           return Expanded(
@@ -51,14 +46,7 @@ class HistorySearch extends StatelessWidget {
                         );
                       }),
                     ]),
-                _DeleteSearchersButton(onPressed: onClear),
-                Flexible(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () =>
-                          FocusScope.of(context).requestFocus(FocusNode()),
-                      child: Container(color: Colors.transparent),
-                    ))
+                _DeleteSearchersButton(onPressed: onClear)
               ],
             ),
           );
