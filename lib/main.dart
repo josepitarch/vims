@@ -143,6 +143,8 @@ class App extends StatelessWidget {
 }
 
 final _router = GoRouter(
+  initialLocation: '/',
+  onException: (context, state, router) => router.go('/'),
   routes: [
     GoRoute(
       path: '/',
@@ -177,7 +179,7 @@ final _router = GoRouter(
     GoRoute(
       path: '/edit-profile',
       builder: (context, state) => const EditProfileScreen(),
-    ),
+    )
   ],
 );
 

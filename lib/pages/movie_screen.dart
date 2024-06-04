@@ -50,17 +50,17 @@ class _MovieScreenState extends State<MovieScreen> {
     final bookmarksProvider =
         Provider.of<BookmarksProvider>(context, listen: false);
 
-    if (provider.exception != null)
+    if (provider.exception != null) {
       return ErrorScreen(provider.exception!, provider.onRefresh);
+    }
 
-    if (provider.data!.containsKey(widget.id) &&
-        !provider.isLoading &&
-        !bookmarksProvider.isLoading) {
+    if (provider.data!.containsKey(widget.id)) {
       return screen(provider.data![widget.id]!, scrollController);
     } else {
       provider.fetchMovie(widget.id);
-      return const DetailsMovieShimmer();
     }
+
+    return const MovieScreenShimmer();
   }
 
   Scaffold screen(Movie movie, ScrollController scrollController) {
