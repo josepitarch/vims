@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CardActorShimmer extends StatelessWidget {
+class CardPersonShimmer extends StatelessWidget {
   final int total;
-  const CardActorShimmer({this.total = 10, super.key});
+  const CardPersonShimmer({this.total = 10, super.key});
 
   @override
   Widget build(BuildContext context) {

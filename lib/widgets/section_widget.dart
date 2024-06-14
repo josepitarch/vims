@@ -33,7 +33,6 @@ class SectionWidget extends StatelessWidget {
               const SizedBox(width: 12),
               ...section.movies.map((movie) => CardSection(
                     movie: movie,
-                    heroTag: "${movie.id}${section.title}",
                     saveToCache: true,
                   ))
             ],

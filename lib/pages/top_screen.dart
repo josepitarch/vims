@@ -145,7 +145,6 @@ class _TopMovies extends StatelessWidget {
         children: provider.data!
             .map((movie) => CardMovie(
                 id: movie.id,
-                heroTag: movie.id.toString(),
                 poster: movie.poster.mmed,
                 title: movie.title,
                 director: movie.director,

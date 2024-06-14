@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:vims/models/image.dart';
 
-class Actor {
+class Person {
   final int id;
   final String name;
   final Image? image;
@@ -14,7 +14,7 @@ class Actor {
   final String? height;
   final int? totalMovies;
 
-  Actor({
+  Person({
     required this.id,
     required this.name,
     this.image,
@@ -27,11 +27,11 @@ class Actor {
     required this.totalMovies,
   });
 
-  factory Actor.fromJson(String str) => Actor.fromMap(json.decode(str));
+  factory Person.fromJson(String str) => Person.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Actor.fromMap(Map<String, dynamic> json) => Actor(
+  factory Person.fromMap(Map<String, dynamic> json) => Person(
         id: json['id'],
         name: json['name'],
         image: json['image'] != null ? Image.fromMap(json['image']) : null,

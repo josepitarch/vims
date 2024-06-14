@@ -52,7 +52,7 @@ class _PlatformItemState extends State<PlatformItem> {
             width: height * 0.06,
             constraints: const BoxConstraints(maxHeight: 65, maxWidth: 65),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.65),
+              color: Colors.black.withOpacity(0.5),
               borderRadius: BorderRadius.circular(10),
             ),
           ),

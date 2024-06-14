@@ -104,7 +104,8 @@ class _ActorInitials extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String initials = text.split(' ').map((e) => e[0]).join();
+    final String initials =
+        text.isNotEmpty ? text.split(' ').map((e) => e[0]).join() : '';
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: Container(

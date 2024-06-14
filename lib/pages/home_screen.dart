@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vims/pages/search_screen.dart';
 import 'package:vims/pages/sections_screen.dart';
 import 'package:vims/pages/top_screen.dart';
-import 'package:vims/pages/user_profile_screen.dart';
+import 'package:vims/pages/account_screen.dart';
 import 'package:vims/providers/implementation/app_state_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
 import 'package:vims/providers/implementation/section_provider.dart';

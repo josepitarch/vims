@@ -6,6 +6,8 @@ import 'package:vims/dialogs/delete_bookmark_dialog.dart';
 import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/widgets/card_movie.dart';
+import 'package:vims/widgets/pull_refresh.dart';
+import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
 class BookmarkMoviesScreen extends StatelessWidget {
   const BookmarkMoviesScreen({super.key});
@@ -19,28 +21,39 @@ class BookmarkMoviesScreen extends StatelessWidget {
       return ErrorScreen(provider.exception!, provider.onRefresh);
     }
 
+    Widget body;
+
+    if (provider.isLoading && provider.data == null) {
+      body = const CardMovieShimmer();
+    } else if (!provider.isLoading && provider.data!.isEmpty) {
+      body = const NoBookmarkMovies();
+    } else {
+      final bookmarks = provider.data!
+          .map((bookmark) => InkWell(
+                onLongPress: () => _openDialog(context).then((value) =>
+                    {if (value) provider.removeBookmark(bookmark.id)}),
+                child: CardMovie(
+                  id: bookmark.id,
+                  title: bookmark.title,
+                  poster: bookmark.poster,
+                  saveToCache: true,
+                ),
+              ))
+          .toList();
+
+      body = PullRefresh(
+        children: bookmarks,
+        onRefresh: () {
+          return provider.onRefresh();
+        },
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(i18n.title_bookmarks_page),
-      ),
-      body: provider.data!.isEmpty
-          ? const NoBookmarkMovies()
-          : ListView(
-              children: provider.data!
-                  .map(
-                    (movie) => InkWell(
-                      onLongPress: () => _openDialog(context).then((value) =>
-                          {if (value) provider.removeBookmark(movie.id)}),
-                      child: CardMovie(
-                          id: movie.id,
-                          heroTag: movie.id.toString(),
-                          title: movie.title,
-                          poster: movie.poster,
-                          saveToCache: true),
-                    ),
-                  )
-                  .toList()),
-    );
+        appBar: AppBar(
+          title: Text(i18n.title_bookmarks_page),
+        ),
+        body: body);
   }
 
   Future _openDialog(BuildContext context) {

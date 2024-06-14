@@ -1,20 +1,21 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/firebase_options.dart';
 import 'package:vims/l10n/l10n.dart';
-import 'package:vims/pages/bookmark_movies_screen.dart';
-import 'package:vims/pages/edit_profile_screen.dart';
+import 'package:vims/pages/bookmarks_screen.dart';
+import 'package:vims/pages/edit_account_screen.dart';
 import 'package:vims/pages/movie_screen.dart';
-import 'package:vims/pages/person_screen.dart';
+import 'package:vims/pages/profile_screen.dart';
 import 'package:vims/pages/section_screen.dart';
 import 'package:vims/pages/user_reviews_screen.dart';
 import 'package:vims/providers/implementation/bookmarks_provider.dart';
 import 'package:vims/providers/implementation/movie_provider.dart';
-import 'package:vims/providers/implementation/person_profile_provider.dart';
+import 'package:vims/providers/implementation/profile_provider.dart';
 import 'package:vims/providers/implementation/reviews_provider.dart';
 import 'package:vims/providers/implementation/search_movie_provider.dart';
 import 'package:vims/providers/implementation/search_person_provider.dart';
@@ -35,6 +36,12 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(seconds: 10),
+    minimumFetchInterval: const Duration(hours: 24),
+  ));
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(const AppState()));
 }
@@ -52,11 +59,10 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => SearchProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchMovieProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => SearchActorProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => BookmarksProvider(), lazy: true),
       ChangeNotifierProvider(create: (_) => SectionProvider(), lazy: true),
-      ChangeNotifierProvider(
-          create: (_) => ActorProfileProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: false)
+      ChangeNotifierProvider(create: (_) => ProfileProvider(), lazy: true),
+      ChangeNotifierProvider(create: (_) => UserReviewsProvider(), lazy: true)
     ], child: const App());
   }
 }
@@ -144,6 +150,8 @@ class App extends StatelessWidget {
 }
 
 final _router = GoRouter(
+  initialLocation: '/',
+  onException: (context, state, router) => router.go('/'),
   routes: [
     GoRoute(
       path: '/',
@@ -162,7 +170,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/profile/:id',
-      builder: (context, state) => PersonScreen(
+      builder: (context, state) => ProfileScreen(
           id: int.parse(state.pathParameters['id']!),
           name: state.uri.queryParameters['name'],
           image: state.uri.queryParameters['image']),
@@ -178,7 +186,7 @@ final _router = GoRouter(
     GoRoute(
       path: '/edit-profile',
       builder: (context, state) => const EditProfileScreen(),
-    ),
+    )
   ],
 );
 

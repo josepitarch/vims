@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/models/movie_suggestion.dart';
 
 class Suggestion {
   final List<MovieSuggestion> movies;
-  final List<Actor> actors;
+  final List<Person> actors;
 
   Suggestion({required this.movies, required this.actors});
 
@@ -17,7 +17,7 @@ class Suggestion {
   factory Suggestion.fromMap(Map<String, dynamic> json) => Suggestion(
         movies: List<MovieSuggestion>.from(
             json['movies'].map((x) => MovieSuggestion.fromMap(x))),
-        actors: List<Actor>.from(json['actors'].map((x) => Actor.fromMap(x))),
+        actors: List<Person>.from(json['actors'].map((x) => Person.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {

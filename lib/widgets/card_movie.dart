@@ -8,7 +8,6 @@ import 'package:vims/widgets/rating.dart';
 
 class CardMovie extends StatelessWidget {
   final int id;
-  final String? heroTag;
   final String title;
   final String poster;
   final String? director;
@@ -18,7 +17,6 @@ class CardMovie extends StatelessWidget {
 
   const CardMovie({
     required this.id,
-    this.heroTag,
     required this.title,
     required this.poster,
     this.director,
@@ -32,7 +30,7 @@ class CardMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
 
-    onTap() => context.push('/movie/$id?heroTag=$heroTag');
+    onTap() => context.push('/movie/$id');
 
     return Container(
       height: height * 0.23,
@@ -51,7 +49,7 @@ class CardMovie extends StatelessWidget {
         radius: 25,
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Hero(
-            tag: heroTag ?? id,
+            tag: id,
             child: AspectRatio(
               aspectRatio: 3 / 4,
               child: _Poster(

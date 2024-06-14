@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/models/actor_movie.dart';
+import 'package:vims/models/enums/share_page.dart';
 import 'package:vims/pages/error/error_screen.dart';
-import 'package:vims/providers/implementation/person_profile_provider.dart';
+import 'package:vims/providers/implementation/profile_provider.dart';
 import 'package:vims/services/api/person_service.dart';
 import 'package:vims/widgets/avatar.dart';
 import 'package:vims/widgets/card_movie.dart';
 import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/loading.dart';
 import 'package:vims/widgets/no_results.dart';
+import 'package:vims/widgets/share_item.dart';
 import 'package:vims/widgets/shimmer/card_movie_shimmer.dart';
 
-class PersonScreen extends StatelessWidget {
+class ProfileScreen extends StatelessWidget {
   final int id;
   String? name;
   final String? image;
 
-  PersonScreen({required this.id, this.name, this.image, super.key});
+  ProfileScreen({required this.id, this.name, this.image, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ActorProfileProvider provider = Provider.of(context, listen: true)
+    final ProfileProvider provider = Provider.of(context, listen: true)
       ..fetchProfile(id);
 
     if (provider.exception != null) {
@@ -35,12 +36,8 @@ class PersonScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text(name ?? ''),
             actions: [
-              IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () async {
-                    await Share.share('https://vims.app/profile/$id',
-                        subject: 'Compartir $name');
-                  })
+              ShareItem(
+                  subject: name ?? '', sharePage: SharePage.PROFILE, id: id)
             ],
           ),
           body: NestedScrollView(
@@ -54,8 +51,8 @@ class PersonScreen extends StatelessWidget {
               body: const CardMovieShimmer()));
     }
 
-    final Map<Actor, List<ActorMovie>?> data = provider.getActor(id);
-    final Actor actor = data.keys.first;
+    final Map<Person, List<ActorMovie>?> data = provider.getActor(id);
+    final Person actor = data.keys.first;
     name = actor.name;
     final List<ActorMovie>? movies = data.values.first;
 
@@ -76,12 +73,7 @@ class PersonScreen extends StatelessWidget {
               }),
           title: Text(name!),
           actions: [
-            IconButton(
-                icon: const Icon(Icons.share),
-                onPressed: () async {
-                  await Share.share('https://vims.app/profile/$id',
-                      subject: 'Compartir $name');
-                })
+            ShareItem(subject: name ?? '', sharePage: SharePage.PROFILE, id: id)
           ],
         ),
         body: NestedScrollView(
@@ -198,7 +190,7 @@ class _FilmographyState extends State<_Filmography> {
     if (widget.movies == null) {
       widget.movies = [];
       fetchData(widget.id, page).then((_) => context
-          .read<ActorProfileProvider>()
+          .read<ProfileProvider>()
           .addFirstMoviesPage(widget.id, widget.movies!));
     } else {
       page = 2;
@@ -273,7 +265,6 @@ class _FilmographyState extends State<_Filmography> {
           children: widget.movies!
               .map((e) => CardMovie(
                   id: e.id,
-                  heroTag: '${e.id.toString()}-${widget.id}',
                   title: e.title,
                   poster: e.poster.mmed,
                   saveToCache: false))

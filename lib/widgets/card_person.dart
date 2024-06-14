@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
 
-class CardActor extends StatelessWidget {
-  final Actor actor;
+class CardPerson extends StatelessWidget {
+  final Person person;
 
-  const CardActor({required this.actor, super.key});
+  const CardPerson({required this.person, super.key});
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
 
     onTap() => context.push(
-        '/profile/${actor.id}?name=${actor.name}&image=${actor.image?.mmed}');
+        '/profile/${person.id}?name=${person.name}&image=${person.image?.mmed}');
 
     return Container(
       height: height * 0.23,
@@ -33,12 +33,12 @@ class CardActor extends StatelessWidget {
         radius: 25,
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Hero(
-            tag: actor.id,
+            tag: person.id,
             child: AspectRatio(
               aspectRatio: 3 / 4,
               child: _Poster(
-                id: actor.id,
-                poster: actor.image?.mmed ?? '',
+                id: person.id,
+                poster: person.image?.mmed ?? '',
                 saveToCache: true,
               ),
             ),
@@ -46,7 +46,7 @@ class CardActor extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             child: Text(
-              actor.name,
+              person.name,
               style: Theme.of(context).textTheme.displaySmall,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,

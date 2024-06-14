@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
+import 'package:vims/models/enums/share_page.dart';
+
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -21,15 +23,15 @@ import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
+import 'package:vims/widgets/share_item.dart';
 import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
 
 late AppLocalizations i18n;
 
 class MovieScreen extends StatefulWidget {
   final int id;
-  final String? heroTag;
 
-  const MovieScreen({required this.id, this.heroTag, super.key});
+  const MovieScreen({required this.id, super.key});
 
   @override
   State<MovieScreen> createState() => _MovieScreenState();
@@ -50,29 +52,24 @@ class _MovieScreenState extends State<MovieScreen> {
     final bookmarksProvider =
         Provider.of<BookmarksProvider>(context, listen: false);
 
-    final String heroTag = widget.heroTag ?? widget.id.toString();
-
-    if (provider.exception != null)
+    if (provider.exception != null) {
       return ErrorScreen(provider.exception!, provider.onRefresh);
+    }
 
-    if (provider.data!.containsKey(widget.id) &&
-        !provider.isLoading &&
-        !bookmarksProvider.isLoading) {
-      final Movie movie = provider.data![widget.id]!;
-      movie.heroTag = heroTag;
+    if (provider.data!.containsKey(widget.id)) {
       return screen(provider.data![widget.id]!, scrollController);
     } else {
       provider.fetchMovie(widget.id);
-      return const DetailsMovieShimmer();
     }
+
+    return const MovieScreenShimmer();
   }
 
   Scaffold screen(Movie movie, ScrollController scrollController) {
-    final String heroTag = movie.heroTag ?? movie.id.toString();
     return Scaffold(
       body: CustomScrollView(controller: scrollController, slivers: [
-        _CustomAppBar(movie.id, movie.title, movie.poster.large, heroTag,
-            scrollController),
+        _CustomAppBar(
+            movie.id, movie.title, movie.poster.large, scrollController),
         SliverList(
             delegate: SliverChildListDelegate([
           Padding(
@@ -104,11 +101,10 @@ class _CustomAppBar extends StatefulWidget {
   final int movieId;
   final String title;
   final String url;
-  final String heroTag;
   final ScrollController scrollController;
 
-  _CustomAppBar(
-      this.movieId, this.title, this.url, this.heroTag, this.scrollController);
+  const _CustomAppBar(
+      this.movieId, this.title, this.url, this.scrollController);
 
   @override
   State<_CustomAppBar> createState() => _CustomAppBarState();
@@ -140,14 +136,6 @@ class _CustomAppBarState extends State<_CustomAppBar> {
         : Icons.arrow_back;
 
     return SliverAppBar(
-      actions: [
-        IconButton(
-            onPressed: () async {
-              await Share.share('https://vims.app/movie/${widget.movieId}',
-                  subject: 'Compartir ${widget.title}');
-            },
-            icon: const Icon(Icons.share))
-      ],
       expandedHeight: MediaQuery.of(context).size.height * 0.37,
       leading: IconButton(
           icon: Icon(icon),
@@ -158,6 +146,12 @@ class _CustomAppBarState extends State<_CustomAppBar> {
               context.go('/');
             }
           }),
+      actions: [
+        ShareItem(
+            subject: widget.title,
+            sharePage: SharePage.MOVIE,
+            id: widget.movieId)
+      ],
       floating: false,
       pinned: true,
       centerTitle: true,
@@ -168,7 +162,7 @@ class _CustomAppBarState extends State<_CustomAppBar> {
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Hero(
-          tag: widget.heroTag,
+          tag: widget.movieId,
           child: CustomImage(
               url: widget.url,
               saveToCache: true,
@@ -734,7 +728,7 @@ class _Button extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
           backgroundColor:
-              isSelected ? MaterialStateProperty.all(Colors.black26) : null),
+              isSelected ? WidgetStateProperty.all(Colors.black26) : null),
       onPressed: () => onPressed(),
       child: Text(text,
           style: Theme.of(context)

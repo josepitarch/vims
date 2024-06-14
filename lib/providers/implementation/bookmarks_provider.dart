@@ -6,7 +6,6 @@ import 'package:vims/services/api/user_service.dart';
 
 final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
   BookmarksProvider() : super(page: 1, limit: 20) {
-    isLoading = true;
     fetchData();
   }
 
@@ -19,6 +18,8 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
         hasNextPage = false;
         notifyListeners();
       } else {
+        isLoading = true;
+        notifyListeners();
         getBookmarks(user.uid, page, limit)
             .then((value) => {
                   data == null
@@ -39,6 +40,9 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
   }
 
   Future<bool> insertBookmarkMovie(Movie movie) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
     final bookmarkMovie = BookmarkMovie(
       id: movie.id,
       poster: movie.poster.large,
@@ -46,9 +50,7 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
       director: movie.director ?? '',
     );
 
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-
-    await createBookmark(userId, bookmarkMovie);
+    await createBookmark(user.uid, bookmarkMovie);
     data!.add(bookmarkMovie);
     notifyListeners();
 
@@ -68,7 +70,4 @@ final class BookmarksProvider extends InfiniteScrollProvider<BookmarkMovie> {
       notifyListeners();
     });
   }
-
-  @override
-  onRefresh() {}
 }

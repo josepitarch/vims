@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/search_person_provider.dart';
-import 'package:vims/widgets/card_actor.dart';
+import 'package:vims/widgets/card_person.dart';
 import 'package:vims/widgets/infinite_scroll.dart';
 import 'package:vims/widgets/no_results.dart';
 import 'package:vims/widgets/search_history.dart';
@@ -88,7 +88,7 @@ class _ActorSuggestions extends StatelessWidget {
         controller: scrollController,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children:
-            provider.data!.map((actor) => CardActor(actor: actor)).toList());
+            provider.data!.map((actor) => CardPerson(person: actor)).toList());
 
     return Expanded(
         child: InfiniteScroll(

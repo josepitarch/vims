@@ -1,4 +1,4 @@
-import 'package:vims/models/actor.dart';
+import 'package:vims/models/person.dart';
 import 'package:vims/models/paged_response.dart';
 import 'package:vims/models/movie_suggestion.dart';
 import 'package:vims/models/suggestion.dart';
@@ -27,7 +27,7 @@ Future<PagedResponse<MovieSuggestion>> getMovieSuggestions(
       results: results);
 }
 
-Future<PagedResponse<Actor>> getPeopleSuggestions(
+Future<PagedResponse<Person>> getPeopleSuggestions(
     String query, int page, String order) async {
   if (query.isEmpty) return PagedResponse.origin();
 
@@ -39,11 +39,11 @@ Future<PagedResponse<Actor>> getPeopleSuggestions(
 
   final Map response = await api('search/person', 1, queryParams: parameters);
 
-  final List<Actor> results = response['results']
-      .map<Actor>((suggestion) => Actor.fromMap(suggestion))
+  final List<Person> results = response['results']
+      .map<Person>((suggestion) => Person.fromMap(suggestion))
       .toList();
 
-  return PagedResponse<Actor>(
+  return PagedResponse<Person>(
       page: response['page'],
       limit: response['limit'],
       total: response['total'],

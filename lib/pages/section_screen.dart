@@ -54,7 +54,6 @@ class _Body extends StatelessWidget {
       children: moviesSection
           .map((movieSection) => CardSection(
                 movie: movieSection,
-                heroTag: movieSection.id.toString(),
                 saveToCache: false,
               ))
           .toList(),
