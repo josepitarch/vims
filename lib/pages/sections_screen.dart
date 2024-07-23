@@ -13,8 +13,9 @@ class SectionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final SectionsProvider provider = Provider.of(context, listen: true);
 
-    if (provider.exception != null)
+    if (provider.exception != null) {
       return ErrorScreen(provider.exception!, provider.onRefresh);
+    }
 
     if (provider.isLoading) return const SectionsShimmer();
 
