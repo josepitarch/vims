@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vims/models/section.dart';
+import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/card_section.dart';
+import 'package:vims/widgets/custom_image.dart';
 
 class SectionWidget extends StatelessWidget {
   final Section section;
@@ -15,30 +17,36 @@ class SectionWidget extends StatelessWidget {
 
     onTap() => context.push('/section/${section.id}?title=${section.title}');
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: onTap,
-          child: _HeadlineSection(icon: section.icon, title: section.title),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          height: width <= 514 ? height * 0.3 : height * 0.36,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              const SizedBox(width: 12),
-              ...section.movies.map((movie) => CardSection(
-                    movie: movie,
-                    saveToCache: true,
-                  ))
-            ],
+    return Container(
+      margin: const EdgeInsets.only(top: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: onTap,
+            child: _HeadlineSection(icon: section.icon, title: section.title),
           ),
-        )
-      ],
+          const SizedBox(height: 5),
+          SizedBox(
+            height: width <= 514 ? height * 0.3 : height * 0.36,
+            child: CarouselView(
+                itemExtent: width <= 500 ? 210 : 300,
+                shrinkExtent: 150,
+                padding: const EdgeInsets.all(7),
+                onTap: (value) =>
+                    context.push('/movie/${section.movies[value].id}'),
+                children: section.movies
+                    .map((movie) => CustomImage(
+                        url: movie.poster.mmed,
+                        saveToCache: true,
+                        borderRadius: 20,
+                        cacheManager: CustomCacheManager.cacheTinyImages))
+                    .toList()),
+          )
+        ],
+      ),
     );
   }
 }

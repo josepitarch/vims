@@ -14,43 +14,13 @@ class CardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     onTap() => context.push('/movie/${movie.id}');
 
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.34,
-        margin: const EdgeInsets.only(right: 15),
-        child: Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 3 / 4,
-              child: CustomImage(
-                  url: movie.poster.mmed,
-                  saveToCache: saveToCache,
-                  borderRadius: 20,
-                  cacheManager: CustomCacheManager.cacheTinyImages),
-            ),
-            const SizedBox(height: 5),
-            _Title(movie.title)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Title extends StatelessWidget {
-  final String title;
-
-  const _Title(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 2,
-      textAlign: TextAlign.center,
-      style: Theme.of(context).textTheme.bodyMedium,
+      child: CustomImage(
+          url: movie.poster.mmed,
+          saveToCache: saveToCache,
+          borderRadius: 20,
+          cacheManager: CustomCacheManager.cacheTinyImages),
     );
   }
 }
