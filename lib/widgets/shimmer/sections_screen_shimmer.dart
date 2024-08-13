@@ -40,7 +40,7 @@ class SectionShimmer extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            height: width <= 514 ? height * 0.28 : height * 0.3,
+            height: width <= 514 ? height * 0.28 : height * 0.33,
             child: ListView.builder(
               itemCount: 10,
               scrollDirection: Axis.horizontal,

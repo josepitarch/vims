@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vims/models/section.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
-import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/custom_image.dart';
 
 class SectionWidget extends StatelessWidget {

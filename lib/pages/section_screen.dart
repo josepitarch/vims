@@ -5,7 +5,6 @@ import 'package:vims/models/section.dart';
 import 'package:vims/pages/error/error_screen.dart';
 import 'package:vims/providers/implementation/section_provider.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
-import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/shimmer/section_screen_shimmer.dart';
 
@@ -27,7 +26,7 @@ class SectionScreen extends StatelessWidget {
       Widget body;
       if (provider.data![id] == null) {
         provider.fetchSection(id);
-        body = SectionShimmer(title: title, height: 190, width: 120);
+        body = SectionShimmer(title: title);
       } else {
         body = _Body(moviesSection: provider.data![id]!);
       }
