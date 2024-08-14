@@ -17,7 +17,7 @@ class SectionWidget extends StatelessWidget {
     onTap() => context.push('/section/${section.id}?title=${section.title}');
 
     return Container(
-      margin: const EdgeInsets.only(top: 15),
+      margin: const EdgeInsets.only(top: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,7 +31,7 @@ class SectionWidget extends StatelessWidget {
           SizedBox(
             height: width <= 514 ? height * 0.3 : height * 0.36,
             child: CarouselView(
-                itemExtent: width <= 500 ? 210 : 300,
+                itemExtent: width <= 500 ? 200 : 300,
                 shrinkExtent: 150,
                 padding: const EdgeInsets.all(7),
                 onTap: (value) =>

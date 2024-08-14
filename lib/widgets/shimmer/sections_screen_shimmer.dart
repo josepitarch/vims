@@ -24,39 +24,43 @@ class SectionShimmer extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: Colors.black,
       highlightColor: Colors.grey.shade100,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Container(
-              width: 200,
-              height: width <= 414 ? 25 : 30,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(width <= 414 ? 10.0 : 15.0),
+      child: Container(
+        margin: const EdgeInsets.only(top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                width: 200,
+                height: width <= 414 ? 25 : 30,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius:
+                      BorderRadius.circular(width <= 414 ? 10.0 : 15.0),
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(right: 10.0),
-            height: width <= 514 ? height * 0.28 : height * 0.33,
-            child: ListView.builder(
-              itemCount: 10,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (_, __) => AspectRatio(
-                aspectRatio: 3 / 4,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
+            Container(
+              margin: const EdgeInsets.only(right: 10.0),
+              height: width <= 514 ? height * 0.28 : height * 0.33,
+              child: ListView.builder(
+                itemCount: 10,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, __) => AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

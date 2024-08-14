@@ -126,7 +126,8 @@ class App extends StatelessWidget {
                 borderSide: const BorderSide(color: Colors.red),
               ),
               labelStyle: const TextStyle(color: Colors.grey),
-              hintStyle: const TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(
+                  fontStyle: FontStyle.italic, color: Colors.grey),
               errorStyle: const TextStyle(color: Colors.red),
             ),
             snackBarTheme: SnackBarThemeData(

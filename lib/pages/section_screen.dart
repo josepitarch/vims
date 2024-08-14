@@ -50,7 +50,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       crossAxisCount: 3,
       childAspectRatio: 0.6,
       mainAxisSpacing: 10,
