@@ -25,7 +25,7 @@ class SectionShimmer extends StatelessWidget {
       baseColor: Colors.black,
       highlightColor: Colors.grey.shade100,
       child: Container(
-        margin: const EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -41,16 +41,15 @@ class SectionShimmer extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(right: 10.0),
-              height: width <= 514 ? height * 0.28 : height * 0.33,
+            SizedBox(
+              height: width <= 514 ? height * 0.28 : height * 0.32,
               child: ListView.builder(
                 itemCount: 10,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (_, __) => AspectRatio(
                   aspectRatio: 3 / 4,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 7),
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(20),

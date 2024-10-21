@@ -468,7 +468,7 @@ class _PlatformsState extends State<_Platforms> {
   @override
   Widget build(BuildContext context) {
     final double widthScreen = MediaQuery.of(context).size.width;
-    final double height = widthScreen <= 514 ? 60 : 80;
+    final double height = widthScreen <= 514 ? 60 : 65;
 
     Map<String, String> textButton = {
       'flatrate': i18n.flatrate,

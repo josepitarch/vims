@@ -16,6 +16,15 @@ class SectionWidget extends StatelessWidget {
 
     onTap() => context.push('/section/${section.id}?title=${section.title}');
 
+    double itemExtent;
+    if (width <= 400) {
+      itemExtent = 160;
+    } else if (width <= 500) {
+      itemExtent = 200;
+    } else {
+      itemExtent = 300;
+    }
+
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: Column(
@@ -29,9 +38,9 @@ class SectionWidget extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           SizedBox(
-            height: width <= 514 ? height * 0.3 : height * 0.36,
+            height: width <= 514 ? height * 0.3 : height * 0.34,
             child: CarouselView(
-                itemExtent: width <= 500 ? 200 : 300,
+                itemExtent: itemExtent,
                 shrinkExtent: 150,
                 padding: const EdgeInsets.all(7),
                 onTap: (value) =>
