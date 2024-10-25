@@ -17,7 +17,8 @@ class InputDecorations {
 
     return InputDecoration(
       prefixIcon: const Icon(Icons.search),
-      hintStyle: const TextStyle(fontStyle: FontStyle.italic),
+      hintStyle:
+          const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
       hintText: '${placeholder[random]}...',
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
