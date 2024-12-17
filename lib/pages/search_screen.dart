@@ -75,7 +75,7 @@ final class _SearchMovieForm extends StatelessWidget {
           autofocus: false,
           controller: controller,
           keyboardType: TextInputType.text,
-          enableSuggestions: false,
+          enableSuggestions: true,
           keyboardAppearance: Brightness.dark,
           decoration:
               InputDecorations.searchDecoration(i18n, clearText, provider),
