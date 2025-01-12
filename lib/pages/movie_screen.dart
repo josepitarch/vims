@@ -24,7 +24,6 @@ import 'package:vims/widgets/review_item.dart';
 import 'package:vims/widgets/share_item.dart';
 import 'package:vims/widgets/shimmer/movie_friends_shimmer.dart';
 import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
-import 'package:vims/widgets/shimmer/sections_screen_shimmer.dart';
 
 late AppLocalizations i18n;
 
@@ -39,10 +38,17 @@ class MovieScreen extends StatefulWidget {
 
 class _MovieScreenState extends State<MovieScreen> {
   late ScrollController scrollController;
+
   @override
   void initState() {
     scrollController = ScrollController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -66,6 +72,7 @@ class _MovieScreenState extends State<MovieScreen> {
 
   Scaffold screen(Movie movie, ScrollController scrollController) {
     return Scaffold(
+      key: UniqueKey(),
       body: CustomScrollView(controller: scrollController, slivers: [
         _CustomAppBar(
             movie.id, movie.title, movie.poster.large, scrollController),
@@ -168,12 +175,6 @@ class _CustomAppBarState extends State<_CustomAppBar> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    widget.scrollController.dispose();
-    super.dispose();
   }
 }
 
