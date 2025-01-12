@@ -541,6 +541,8 @@ class _MovieFriends extends StatelessWidget {
     }
 
     if (provider.friends.containsKey(movieId)) {
+      if (provider.friends[movieId]!.isEmpty) return const SizedBox.shrink();
+
       return Column(
         children: [
           const _TitleHeader('También podría interesarte'),
