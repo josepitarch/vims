@@ -1,6 +1,8 @@
 import 'dart:convert' as json;
 
+import 'package:vims/models/base_movie.dart';
 import 'package:vims/models/image.dart';
+import 'package:vims/models/movie_friend.dart';
 import 'package:vims/models/poster.dart';
 import 'package:vims/models/review.dart';
 
@@ -25,28 +27,29 @@ class Movie extends BaseMovie {
   final List<String>? platforms;
   String? heroTag;
 
-  Movie(
-      {required super.id,
-      required super.title,
-      required super.poster,
-      required this.flag,
-      required this.originalTitle,
-      required this.year,
-      required this.country,
-      required this.cast,
-      required this.genres,
-      required this.synopsis,
-      this.rating,
-      required this.justwatch,
-      required this.reviews,
-      this.duration,
-      this.director,
-      this.screenwriter,
-      this.music,
-      this.cinematography,
-      this.producer,
-      this.groups,
-      this.platforms});
+  Movie({
+    required super.id,
+    required super.title,
+    required super.poster,
+    required this.flag,
+    required this.originalTitle,
+    required this.year,
+    required this.country,
+    required this.cast,
+    required this.genres,
+    required this.synopsis,
+    this.rating,
+    required this.justwatch,
+    required this.reviews,
+    this.duration,
+    this.director,
+    this.screenwriter,
+    this.music,
+    this.cinematography,
+    this.producer,
+    this.groups,
+    this.platforms,
+  });
 
   factory Movie.fromJson(String str) => Movie.fromMap(json.jsonDecode(str));
 
@@ -67,27 +70,26 @@ class Movie extends BaseMovie {
         : [];
 
     return Movie(
-      id: json['id'],
-      title: json['title'],
-      poster: Poster.fromMap(json['poster']),
-      flag: json['flag'],
-      originalTitle: json['original_title'],
-      year: json['year'],
-      duration: json['duration'],
-      country: json['country'],
-      director: json['director'],
-      screenwriter: json['screenwriter'],
-      music: json['music'],
-      cinematography: json['cinematography'],
-      cast: cast,
-      producer: json['producer'],
-      genres: genres,
-      groups: groups,
-      synopsis: json['synopsis'],
-      rating: rating,
-      justwatch: Justwatch.fromMap(json['justwatch']),
-      reviews: Review.fromMap(json['reviews']),
-    );
+        id: json['id'],
+        title: json['title'],
+        poster: Poster.fromMap(json['poster']),
+        flag: json['flag'],
+        originalTitle: json['original_title'],
+        year: json['year'],
+        duration: json['duration'],
+        country: json['country'],
+        director: json['director'],
+        screenwriter: json['screenwriter'],
+        music: json['music'],
+        cinematography: json['cinematography'],
+        cast: cast,
+        producer: json['producer'],
+        genres: genres,
+        groups: groups,
+        synopsis: json['synopsis'],
+        rating: rating,
+        justwatch: Justwatch.fromMap(json['justwatch']),
+        reviews: Review.fromMap(json['reviews']));
   }
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -107,7 +109,7 @@ class Movie extends BaseMovie {
         'poster': poster,
         'average': rating,
         'justwatch': justwatch,
-        'reviews': reviews.toMap(),
+        'reviews': reviews.toMap()
       };
 }
 
@@ -174,25 +176,4 @@ class Platform {
         'url': url,
         'icon': icon,
       };
-}
-
-class BaseMovie {
-  final int id;
-  final String title;
-  final Poster poster;
-
-  BaseMovie({
-    required this.id,
-    required this.title,
-    required this.poster,
-  });
-
-  factory BaseMovie.fromMap(Map<String, dynamic> json) => BaseMovie(
-        id: json['id'],
-        title: json['title'],
-        poster: Poster.fromMap(json['poster']),
-      );
-
-  factory BaseMovie.origin() => BaseMovie(
-      id: 0, title: '', poster: Poster(mtiny: '', mmed: '', large: ''));
 }

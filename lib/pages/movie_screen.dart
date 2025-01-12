@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
 import 'package:vims/models/enums/share_page.dart';
-
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -16,13 +15,16 @@ import 'package:vims/providers/implementation/reviews_provider.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/avatar.dart';
+import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
 import 'package:vims/widgets/share_item.dart';
+import 'package:vims/widgets/shimmer/movie_friends_shimmer.dart';
 import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
+import 'package:vims/widgets/shimmer/sections_screen_shimmer.dart';
 
 late AppLocalizations i18n;
 
@@ -47,20 +49,19 @@ class _MovieScreenState extends State<MovieScreen> {
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
-    final bookmarksProvider =
-        Provider.of<BookmarksProvider>(context, listen: false);
 
     if (provider.exception != null) {
       return ErrorScreen(provider.exception!, provider.onRefresh);
     }
 
-    if (provider.data!.containsKey(widget.id)) {
-      return screen(provider.data![widget.id]!, scrollController);
-    } else {
+    if (!provider.data!.containsKey(widget.id)) {
       provider.fetchMovie(widget.id);
+      return const MovieScreenShimmer();
     }
 
-    return const MovieScreenShimmer();
+    if (provider.isLoading) return const MovieScreenShimmer();
+
+    return screen(provider.data![widget.id]!, scrollController);
   }
 
   Scaffold screen(Movie movie, ScrollController scrollController) {
@@ -83,6 +84,7 @@ class _MovieScreenState extends State<MovieScreen> {
               _Genres(movie.genres),
               _Cast(movie.cast),
               _Platforms(movie.justwatch),
+              _MovieFriends(movie.id),
               _Reviews(movie.reviews),
               const SizedBox(height: 10)
             ]),
@@ -518,6 +520,50 @@ class _PlatformsState extends State<_Platforms> {
       platforms = justwatch[platform]!;
       setState(() {});
     }
+  }
+}
+
+class _MovieFriends extends StatelessWidget {
+  final int movieId;
+  const _MovieFriends(this.movieId);
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<MovieProvider>(context);
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
+    if (provider.isFriendsLoading) {
+      return Column(
+        children: [
+          const _TitleHeader('También podría interesarte'),
+          MovieFriendsShimmer()
+        ],
+      );
+    }
+
+    if (provider.friends.containsKey(movieId)) {
+      return Column(
+        children: [
+          const _TitleHeader('También podría interesarte'),
+          SizedBox(
+            height: width <= 514 ? height * 0.25 : height * 0.36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                ...provider.friends[movieId]!.map((movie) => CardSection(
+                      movie: movie,
+                      saveToCache: false,
+                      width: 0.3,
+                    ))
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    return SizedBox.shrink();
   }
 }
 

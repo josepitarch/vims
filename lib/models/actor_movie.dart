@@ -1,6 +1,6 @@
 import 'dart:convert' as json;
 
-import 'package:vims/models/movie.dart';
+import 'package:vims/models/base_movie.dart';
 import 'package:vims/models/poster.dart';
 
 class ActorMovie extends BaseMovie {
