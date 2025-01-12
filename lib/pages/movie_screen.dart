@@ -529,16 +529,14 @@ class _MovieFriends extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
     if (provider.isFriendsLoading) {
       return Column(
-        children: [
-          const _TitleHeader('También podría interesarte'),
-          MovieFriendsShimmer()
-        ],
+        children: [_TitleHeader(i18n.movie_friends), MovieFriendsShimmer()],
       );
     }
 
@@ -547,7 +545,7 @@ class _MovieFriends extends StatelessWidget {
         children: [
           const _TitleHeader('También podría interesarte'),
           SizedBox(
-            height: width <= 514 ? height * 0.25 : height * 0.36,
+            height: width <= 514 ? height * 0.25 : height * 0.3,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
