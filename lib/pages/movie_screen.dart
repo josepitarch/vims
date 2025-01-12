@@ -546,7 +546,7 @@ class _MovieFriends extends StatelessWidget {
 
       return Column(
         children: [
-          const _TitleHeader('También podría interesarte'),
+          _TitleHeader(i18n.movie_friends),
           SizedBox(
             height: width <= 514 ? height * 0.25 : height * 0.3,
             child: ListView(
