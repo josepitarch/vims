@@ -7,12 +7,16 @@ import 'package:vims/services/api/movie_service.dart';
 final class MovieProvider extends BaseProvider<Map<int, Movie>> {
   late int id;
   Map<int, List<MovieFriend>> friends = {};
-  bool isFriendsLoading = true;
+  bool isFriendsLoading = false;
 
-  MovieProvider() : super(data: {}, isLoading: true);
+  MovieProvider() : super(data: {}, isLoading: false);
 
   @override
   fetchData() {
+    if (data!.containsKey(id) || isLoading) return;
+
+    isLoading = true;
+
     getMovie(id).then((movie) {
       data![movie.id] = movie;
       exception = null;
@@ -24,7 +28,11 @@ final class MovieProvider extends BaseProvider<Map<int, Movie>> {
     });
   }
 
-  fetchMovieFriends(int id) {
+  fetchMovieFriends(int id) async {
+    if (friends.containsKey(id) || isFriendsLoading) return;
+
+    isFriendsLoading = true;
+
     getMovieFriends(id)
         .then((movies) {
           friends.putIfAbsent(id, () => movies);
@@ -46,8 +54,6 @@ final class MovieProvider extends BaseProvider<Map<int, Movie>> {
 
   fetchMovie(int id) {
     this.id = id;
-    isLoading = true;
-    isFriendsLoading = true;
     fetchData();
     fetchMovieFriends(id);
   }
