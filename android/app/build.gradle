@@ -31,16 +31,17 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
+    namespace "com.jopimi.vims"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     sourceSets {
@@ -51,7 +52,7 @@ android {
         applicationId "com.jopimi.vims"
         minSdkVersion 28
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 50
+        versionCode 58
         versionName flutterVersionName
     }
 

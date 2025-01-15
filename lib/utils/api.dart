@@ -15,7 +15,6 @@ import 'dart:io' as io show Platform;
 
 final String BASE_URL = dotenv.env['URL']!;
 final String TIMEOUT = dotenv.env['TIMEOUT']!;
-final String API_TOKEN = dotenv.env['API_TOKEN']!;
 
 Future api(String path, int versionApi,
     {HttpMethod? method = HttpMethod.GET,
@@ -23,7 +22,6 @@ Future api(String path, int versionApi,
     Object? body}) async {
   final String userAgent = io.Platform.isAndroid ? 'android' : 'ios';
   final apiToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-  //print('apiToken: $apiToken');
 
   final Uri uri = BASE_URL.contains('vims')
       ? Uri.https(BASE_URL, '/v$versionApi/$path', queryParams)

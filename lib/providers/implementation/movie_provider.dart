@@ -1,14 +1,22 @@
 import 'package:vims/models/movie.dart';
+import 'package:vims/models/movie_friend.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/providers/interface/base_providert.dart';
 import 'package:vims/services/api/movie_service.dart';
 
 final class MovieProvider extends BaseProvider<Map<int, Movie>> {
   late int id;
-  MovieProvider() : super(data: {}, isLoading: true);
+  Map<int, List<MovieFriend>> friends = {};
+  bool isFriendsLoading = false;
+
+  MovieProvider() : super(data: {}, isLoading: false);
 
   @override
   fetchData() {
+    if (data!.containsKey(id) || isLoading) return;
+
+    isLoading = true;
+
     getMovie(id).then((movie) {
       data![movie.id] = movie;
       exception = null;
@@ -18,6 +26,22 @@ final class MovieProvider extends BaseProvider<Map<int, Movie>> {
       isLoading = false;
       notifyListeners();
     });
+  }
+
+  fetchMovieFriends(int id) async {
+    if (friends.containsKey(id) || isFriendsLoading) return;
+
+    isFriendsLoading = true;
+
+    getMovieFriends(id)
+        .then((movies) {
+          friends.putIfAbsent(id, () => movies);
+        })
+        .catchError((e) {})
+        .whenComplete(() {
+          isFriendsLoading = false;
+          notifyListeners();
+        });
   }
 
   @override
@@ -31,11 +55,13 @@ final class MovieProvider extends BaseProvider<Map<int, Movie>> {
   fetchMovie(int id) {
     this.id = id;
     fetchData();
+    fetchMovieFriends(id);
   }
 
   clear() {
     exception = null;
     data!.clear();
+    friends.clear();
   }
 
   Future<UserReview> createReview(

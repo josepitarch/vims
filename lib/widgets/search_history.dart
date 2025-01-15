@@ -16,6 +16,7 @@ class HistorySearch extends StatelessWidget {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double size = width <= 414 ? 25 : 30;
+
     return FutureBuilder(
         future: future(),
         builder: (_, snapshot) {

@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:vims/dialogs/create_review_dialog.dart';
 import 'package:vims/models/enums/share_page.dart';
-
 import 'package:vims/models/movie.dart';
 import 'package:vims/models/review.dart';
 import 'package:vims/pages/error/error_screen.dart';
@@ -18,12 +17,14 @@ import 'package:vims/providers/implementation/reviews_provider.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/utils/snackbar.dart';
 import 'package:vims/widgets/avatar.dart';
+import 'package:vims/widgets/card_section.dart';
 import 'package:vims/widgets/country.dart';
 import 'package:vims/widgets/custom_image.dart';
 import 'package:vims/widgets/justwatch_item.dart';
 import 'package:vims/widgets/rating.dart';
 import 'package:vims/widgets/review_item.dart';
 import 'package:vims/widgets/share_item.dart';
+import 'package:vims/widgets/shimmer/movie_friends_shimmer.dart';
 import 'package:vims/widgets/shimmer/movie_screen_shimmer.dart';
 
 late AppLocalizations i18n;
@@ -39,6 +40,7 @@ class MovieScreen extends StatefulWidget {
 
 class _MovieScreenState extends State<MovieScreen> {
   late ScrollController scrollController;
+
   @override
   void initState() {
     scrollController = ScrollController();
@@ -46,27 +48,33 @@ class _MovieScreenState extends State<MovieScreen> {
   }
 
   @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     i18n = AppLocalizations.of(context)!;
     final provider = Provider.of<MovieProvider>(context);
-    final bookmarksProvider =
-        Provider.of<BookmarksProvider>(context, listen: false);
 
     if (provider.exception != null) {
       return ErrorScreen(provider.exception!, provider.onRefresh);
     }
 
-    if (provider.data!.containsKey(widget.id)) {
-      return screen(provider.data![widget.id]!, scrollController);
-    } else {
+    if (!provider.data!.containsKey(widget.id)) {
       provider.fetchMovie(widget.id);
+      return const MovieScreenShimmer();
     }
 
-    return const MovieScreenShimmer();
+    if (provider.isLoading) return const MovieScreenShimmer();
+
+    return screen(provider.data![widget.id]!, scrollController);
   }
 
   Scaffold screen(Movie movie, ScrollController scrollController) {
     return Scaffold(
+      key: UniqueKey(),
       body: CustomScrollView(controller: scrollController, slivers: [
         _CustomAppBar(
             movie.id, movie.title, movie.poster.large, scrollController),
@@ -74,22 +82,21 @@ class _MovieScreenState extends State<MovieScreen> {
             delegate: SliverChildListDelegate([
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _Title(movie.title, movie.originalTitle),
-                  const SizedBox(height: 7),
-                  _Director(movie.director),
-                  Align(alignment: Alignment.center, child: _Box(movie)),
-                  _YearAndDuration(movie.year, movie.duration),
-                  _Synopsis(movie.synopsis),
-                  _Genres(movie.genres),
-                  _Cast(movie.cast),
-                  _Platforms(movie.justwatch),
-                  _Reviews(movie.reviews),
-                  const SizedBox(height: 10)
-                ]),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              _Title(movie.title, movie.originalTitle),
+              const SizedBox(height: 7),
+              _Director(movie.director),
+              Align(alignment: Alignment.center, child: _Box(movie)),
+              _YearAndDuration(movie.year, movie.duration),
+              _Synopsis(movie.synopsis),
+              _Genres(movie.genres),
+              _Cast(movie.cast),
+              _Platforms(movie.justwatch),
+              _MovieFriends(movie.id),
+              _Reviews(movie.reviews),
+              const SizedBox(height: 10)
+            ]),
           )
         ]))
       ]),
@@ -170,12 +177,6 @@ class _CustomAppBarState extends State<_CustomAppBar> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    widget.scrollController.dispose();
-    super.dispose();
   }
 }
 
@@ -578,6 +579,50 @@ class _PlatformsState extends State<_Platforms> {
       platforms = justwatch[platform]!;
       setState(() {});
     }
+  }
+}
+
+class _MovieFriends extends StatelessWidget {
+  final int movieId;
+  const _MovieFriends(this.movieId);
+
+  @override
+  Widget build(BuildContext context) {
+    final i18n = AppLocalizations.of(context)!;
+    final provider = Provider.of<MovieProvider>(context);
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
+    if (provider.isFriendsLoading) {
+      return Column(
+        children: [_TitleHeader(i18n.movie_friends), MovieFriendsShimmer()],
+      );
+    }
+
+    if (provider.friends.containsKey(movieId)) {
+      if (provider.friends[movieId]!.isEmpty) return const SizedBox.shrink();
+
+      return Column(
+        children: [
+          _TitleHeader(i18n.movie_friends),
+          SizedBox(
+            height: width <= 514 ? height * 0.25 : height * 0.3,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                ...provider.friends[movieId]!.map((movie) => CardSection(
+                      movie: movie,
+                      saveToCache: false,
+                      width: 0.3,
+                    ))
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    return SizedBox.shrink();
   }
 }
 

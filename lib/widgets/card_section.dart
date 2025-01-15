@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vims/models/section.dart';
+import 'package:vims/models/base_movie.dart';
 import 'package:vims/utils/custom_cache_manager.dart';
 import 'package:vims/widgets/custom_image.dart';
 
 class CardSection extends StatelessWidget {
-  final MovieSection movie;
+  final BaseMovie movie;
   final bool saveToCache;
+  final double width;
 
-  const CardSection({required this.movie, this.saveToCache = false, super.key});
+  const CardSection(
+      {required this.movie,
+      this.saveToCache = false,
+      this.width = 0.34,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class CardSection extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.34,
+        width: MediaQuery.of(context).size.width * width,
         margin: const EdgeInsets.only(right: 15),
         child: Column(
           children: [
